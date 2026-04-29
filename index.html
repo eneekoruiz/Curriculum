@@ -487,49 +487,41 @@
     }
 
     /* ─── LANGUAGES ───────────────────────────────────────── */
-    /* --- Idiomas: Estilo Minimalista y Oficial --- */
+    /* --- Idiomas: Estética Editorial Pro --- */
+    .lang-list { 
+      display: flex; 
+      flex-direction: column; 
+      gap: 12px; 
+    }
     .lang-row {
       display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      padding-bottom: var(--s2);
-      border-bottom: 1px solid var(--c-rule);
+      flex-direction: column; /* Idioma arriba, nivel abajo */
+      gap: 2px;
     }
-    .lang-row:last-child { border-bottom: none; padding-bottom: 0; }
-    
     .lang-name { 
-      font-size: 13px; 
-      font-weight: 500; 
+      font-size: 13.5px; 
+      font-weight: 600; 
       color: var(--c-ink); 
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
     }
-    
+    .lang-cert {
+      font-family: var(--f-serif); /* Serif para el certificado, más elegante */
+      font-size: 13px;
+      font-style: italic;
+      color: var(--c-accent);
+    }
     .lang-native-label {
       font-size: 12px;
       color: var(--c-ink-3);
       font-style: italic;
     }
 
-    /* Certificado Oficial (Minimalista) */
-    .lang-cert {
-      font-family: var(--f-mono);
-      font-size: 10.5px;
-      font-weight: 600;
-      color: var(--c-ink); /* Color oscuro principal */
-      letter-spacing: 0.05em;
-      border-bottom: 1px solid var(--c-accent); /* Subrayado elegante */
-      padding-bottom: 2px;
-    }
-
     /* Ajuste para el PDF */
     @media print {
-      .lang-cert {
-        font-size: 9pt !important;
-        border-bottom: 1pt solid var(--c-accent) !important;
-        padding-bottom: 1px !important;
-        background: transparent !important;
-        border-radius: 0 !important;
-      }
-      .lang-native-label { font-size: 9pt !important; }
+      .lang-name { font-size: 10pt !important; }
+      .lang-cert { font-size: 9.5pt !important; }
+      .lang-list { gap: 8px !important; }
     }
 
     /* ─── COURSES ─────────────────────────────────────────── */
@@ -772,10 +764,8 @@
 <div class="dashboard">
 
     <div class="col-main">
-
       <section class="reveal" aria-labelledby="h-edu">
         <h2 class="sec-title" id="h-edu" data-i18n="edu_title">Formación Académica</h2>
-
         <div class="tl-item">
           <p class="tl-date" data-i18n="edu_1_date">2023 – Hoy</p>
           <div class="tl-body">
@@ -785,7 +775,6 @@
             <span class="tl-badge" data-i18n="edu_1_badge">3.º curso · Ing. del Software</span>
           </div>
         </div>
-
         <div class="tl-item compact">
           <p class="tl-date">2017–2023</p>
           <div class="tl-body">
@@ -795,86 +784,41 @@
         </div>
       </section>
 
-      <section class="reveal" aria-labelledby="h-courses">
-        <h2 class="sec-title" id="h-courses" data-i18n="courses_title">Formación Complementaria</h2>
-        <div class="course-list" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-          <div class="course-item">
-            <p class="course-name" data-i18n="course_1">Aplicaciones avanzadas de IA generativa</p>
-            <p class="course-inst" data-i18n="course_1_inst">Universidad de Burgos</p>
-          </div>
-          <div class="course-item">
-            <p class="course-name" data-i18n="course_2">Microsoft Word Avanzado</p>
-            <p class="course-inst" data-i18n="course_2_inst">Gobierno Vasco</p>
-          </div>
-          <div class="course-item">
-            <p class="course-name" data-i18n="course_3">Introducción a Python</p>
-            <p class="course-inst">Coursera</p>
-          </div>
-          <div class="course-item">
-            <p class="course-name" data-i18n="course_4">Marketing Digital</p>
-            <p class="course-inst" data-i18n="course_4_inst">Google Actívate</p>
-          </div>
-        </div>
-      </section>
-
-      <section class="reveal" aria-labelledby="h-langs">
-        <h2 class="sec-title" id="h-langs" data-i18n="lang_title">Idiomas</h2>
-        <div class="lang-list" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px;">
-          <div class="lang-row" style="border: none; padding-bottom: 0;">
-            <span class="lang-name" data-i18n="lang_es">Castellano</span>
-            <span class="lang-native-label" data-i18n="lang_native">Nativo</span>
-          </div>
-          <div class="lang-row" style="border: none; padding-bottom: 0;">
-            <span class="lang-name" data-i18n="lang_eu">Euskera</span>
-            <span class="lang-cert">C1 · HABE</span>
-          </div>
-          <div class="lang-row" style="border: none; padding-bottom: 0;">
-            <span class="lang-name" data-i18n="lang_en">Inglés</span>
-            <span class="lang-cert">C1 · Cambridge</span>
-          </div>
-        </div>
-      </section>
-
       <section class="reveal" aria-labelledby="h-exp">
         <h2 class="sec-title" id="h-exp" data-i18n="exp_title">Experiencia Laboral</h2>
-
         <div class="tl-item">
           <p class="tl-date">Jun–Sep 2025</p>
           <div class="tl-body">
             <p class="tl-title" data-i18n="exp_1_role">Ayudante de Dependiente</p>
             <p class="tl-org">EROSKI</p>
-            <p class="tl-desc" data-i18n="exp_1_desc">Atención al cliente, gestión de caja, cobros, reposición y control de inventario.</p>
+            <p class="tl-desc">Atención al cliente, gestión de caja y reposición.</p>
           </div>
         </div>
-
         <div class="tl-item">
-          <p class="tl-date">Dic 2023–Ene 2025</p>
+          <p class="tl-date">2023–2025</p>
           <div class="tl-body">
             <p class="tl-title" data-i18n="exp_2_role">Promotor de Marca</p>
             <p class="tl-org">STAFF GLOBAL GROUP</p>
-            <p class="tl-desc" data-i18n="exp_2_desc">Promoción de marcas premium (Johnnie Walker, Tanqueray) y marketing experiencial.</p>
+            <p class="tl-desc">Marketing experiencial y promoción de marcas premium.</p>
           </div>
         </div>
-
         <div class="tl-item">
           <p class="tl-date">Jul–Sep 2023</p>
           <div class="tl-body">
             <p class="tl-title" data-i18n="exp_3_role">Ayudante de Conductor</p>
             <p class="tl-org">Tren "Txu-Txu" · Zarautz</p>
-            <p class="tl-desc" data-i18n="exp_3_desc">Atención a pasajeros, gestión de tickets y supervisión de seguridad en entorno turístico.</p>
+            <p class="tl-desc">Gestión de tickets y seguridad en entorno turístico.</p>
           </div>
         </div>
-
         <div class="tl-item">
           <p class="tl-date">Jul–Ago 2022</p>
           <div class="tl-body">
             <p class="tl-title" data-i18n="exp_4_role">Venta de Calzado</p>
             <p class="tl-org">CARAVANAS OIARTZUN</p>
-            <p class="tl-desc" data-i18n="exp_4_desc">Asesoramiento a clientes y gestión de pagos.</p>
+            <p class="tl-desc">Asesoramiento a clientes y gestión de pagos.</p>
           </div>
         </div>
       </section>
-
     </div>
 
     <div class="col-side">
@@ -895,22 +839,53 @@
             <span class="pill">GitHub</span>
           </div>
         </div>
-        <div class="skill-group">
-          <p class="sg-label" data-i18n="sg_tools">Herramientas</p>
-          <div class="pills">
-            <span class="pill">VS Code</span>
-            <span class="pill" data-i18n="sg_db">Bases de Datos</span>
+      </section>
+
+      <section class="reveal" aria-labelledby="h-langs">
+        <h2 class="sec-title" id="h-langs" data-i18n="lang_title">Idiomas</h2>
+        <div class="lang-list">
+          <div class="lang-row">
+            <span class="lang-name">Castellano</span>
+            <span class="lang-native-label">Nativo</span>
+          </div>
+          <div class="lang-row">
+            <span class="lang-name">Euskera</span>
+            <span class="lang-cert">C1 Oficial · HABE</span>
+          </div>
+          <div class="lang-row">
+            <span class="lang-name">Inglés</span>
+            <span class="lang-cert">C1 Oficial · Cambridge</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="reveal" aria-labelledby="h-courses">
+        <h2 class="sec-title" id="h-courses" data-i18n="courses_title">Cursos</h2>
+        <div class="course-list">
+          <div class="course-item">
+            <p class="course-name">IA Generativa Avanzada</p>
+            <p class="course-inst">Univ. de Burgos</p>
+          </div>
+          <div class="course-item">
+            <p class="course-name">Introducción a Python</p>
+            <p class="course-inst">Coursera</p>
+          </div>
+          <div class="course-item">
+            <p class="course-name">Microsoft Word Avanzado</p>
+            <p class="course-inst">Gobierno Vasco</p>
+          </div>
+          <div class="course-item">
+            <p class="course-name">Marketing Digital</p>
+            <p class="course-inst">Google Actívate</p>
           </div>
         </div>
       </section>
 
       <section class="reveal" aria-labelledby="h-soft">
-        <h2 class="sec-title" id="h-soft" data-i18n="skills_soft">Habilidades Personales</h2>
-        <div class="pills" style="display: flex; flex-direction: column; align-items: flex-start;">
-          <span class="pill" data-i18n="soft_1">Resolución de Problemas</span>
-          <span class="pill" data-i18n="soft_2">Comunicación Activa</span>
-          <span class="pill" data-i18n="soft_3">Trabajo en Equipo</span>
-          <span class="pill" data-i18n="soft_4">Adaptabilidad</span>
+        <h2 class="sec-title" id="h-soft" data-i18n="skills_soft">Habilidades</h2>
+        <div class="pills">
+          <span class="pill">Resolución de Problemas</span>
+          <span class="pill">Trabajo en Equipo</span>
         </div>
       </section>
     </div>
