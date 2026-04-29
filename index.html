@@ -487,36 +487,49 @@
     }
 
     /* ─── LANGUAGES ───────────────────────────────────────── */
-    .lang-list { display:flex; flex-direction:column; gap:var(--s2); }
-    .lang-name { font-size:13px; font-weight:500; color:var(--c-ink); }
-    /* --- Estilo de Certificado Oficial --- */
-    .lang-cert {
-      font-family: var(--f-mono);
-      font-size: 10px;
-      font-weight: 600;
-      color: var(--c-key-ink);
-      background: var(--c-key-bg);
-      border: 1px solid var(--c-key-border);
-      padding: 2px 12px;
-      border-radius: 20px; /* Forma de cápsula */
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      transition: all var(--dur) var(--ease);
-      display: inline-flex;
-      align-items: center;
+    /* --- Idiomas: Estilo Minimalista y Oficial --- */
+    .lang-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding-bottom: var(--s2);
+      border-bottom: 1px solid var(--c-rule);
     }
-
-    .lang-row:hover .lang-cert {
-      border-color: var(--c-accent);
-      background: var(--c-accent-b);
-      color: var(--c-accent);
+    .lang-row:last-child { border-bottom: none; padding-bottom: 0; }
+    
+    .lang-name { 
+      font-size: 13px; 
+      font-weight: 500; 
+      color: var(--c-ink); 
     }
-
-    /* Estilo más discreto para el idioma nativo */
+    
     .lang-native-label {
       font-size: 12px;
       color: var(--c-ink-3);
       font-style: italic;
+    }
+
+    /* Certificado Oficial (Minimalista) */
+    .lang-cert {
+      font-family: var(--f-mono);
+      font-size: 10.5px;
+      font-weight: 600;
+      color: var(--c-ink); /* Color oscuro principal */
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid var(--c-accent); /* Subrayado elegante */
+      padding-bottom: 2px;
+    }
+
+    /* Ajuste para el PDF */
+    @media print {
+      .lang-cert {
+        font-size: 9pt !important;
+        border-bottom: 1pt solid var(--c-accent) !important;
+        padding-bottom: 1px !important;
+        background: transparent !important;
+        border-radius: 0 !important;
+      }
+      .lang-native-label { font-size: 9pt !important; }
     }
 
     /* ─── COURSES ─────────────────────────────────────────── */
@@ -804,6 +817,24 @@
         </div>
       </section>
 
+      <section class="reveal" aria-labelledby="h-langs">
+        <h2 class="sec-title" id="h-langs" data-i18n="lang_title">Idiomas</h2>
+        <div class="lang-list" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px;">
+          <div class="lang-row" style="border: none; padding-bottom: 0;">
+            <span class="lang-name" data-i18n="lang_es">Castellano</span>
+            <span class="lang-native-label" data-i18n="lang_native">Nativo</span>
+          </div>
+          <div class="lang-row" style="border: none; padding-bottom: 0;">
+            <span class="lang-name" data-i18n="lang_eu">Euskera</span>
+            <span class="lang-cert">C1 · HABE</span>
+          </div>
+          <div class="lang-row" style="border: none; padding-bottom: 0;">
+            <span class="lang-name" data-i18n="lang_en">Inglés</span>
+            <span class="lang-cert">C1 · Cambridge</span>
+          </div>
+        </div>
+      </section>
+
       <section class="reveal" aria-labelledby="h-exp">
         <h2 class="sec-title" id="h-exp" data-i18n="exp_title">Experiencia Laboral</h2>
 
@@ -875,29 +906,11 @@
 
       <section class="reveal" aria-labelledby="h-soft">
         <h2 class="sec-title" id="h-soft" data-i18n="skills_soft">Habilidades Personales</h2>
-        <div class="pills">
+        <div class="pills" style="display: flex; flex-direction: column; align-items: flex-start;">
           <span class="pill" data-i18n="soft_1">Resolución de Problemas</span>
           <span class="pill" data-i18n="soft_2">Comunicación Activa</span>
           <span class="pill" data-i18n="soft_3">Trabajo en Equipo</span>
           <span class="pill" data-i18n="soft_4">Adaptabilidad</span>
-        </div>
-      </section>
-
-      <section class="reveal" aria-labelledby="h-langs">
-        <h2 class="sec-title" id="h-langs" data-i18n="lang_title">Idiomas</h2>
-        <div class="lang-list">
-          <div class="lang-row">
-            <span class="lang-name" data-i18n="lang_es">Castellano</span>
-            <span class="lang-native-label" data-i18n="lang_native">Nativo</span>
-          </div>
-          <div class="lang-row">
-            <span class="lang-name" data-i18n="lang_eu">Euskera</span>
-            <span class="lang-cert">C1 · HABE</span>
-          </div>
-          <div class="lang-row">
-            <span class="lang-name" data-i18n="lang_en">Inglés</span>
-            <span class="lang-cert">C1 · Cambridge</span>
-          </div>
         </div>
       </section>
     </div>
