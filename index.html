@@ -555,10 +555,11 @@
     [dir="rtl"] #lang-menu           { right:auto; left:0; }
 
     /* ─── PRINT — A4 hiper-optimizado ────────────────────── */
+    /* ─── PRINT — A4 1 SOLA PÁGINA ────────────────────── */
     @media print {
       @page {
         size:   A4 portrait;
-        margin: 18mm 20mm; /* Márgenes de folio estándar y elegantes */
+        margin: 12mm 15mm; /* Márgenes optimizados para 1 hoja */
       }
 
       :root {
@@ -577,7 +578,7 @@
 
       html, body {
         background: #fff !important;
-        font-size:  13px !important; /* Subimos el tamaño base para aprovechar el folio */
+        font-size:  11.5px !important; /* Equilibrio perfecto de lectura */
         -webkit-print-color-adjust: exact !important;
         print-color-adjust:         exact !important;
       }
@@ -592,65 +593,62 @@
 
       .site-header {
         grid-template-columns: 1fr auto !important;
-        gap:           20px 30px !important;
-        padding-bottom:20px !important;
-        margin-bottom: 25px !important;
+        gap:           15px 25px !important;
+        padding-bottom:15px !important;
+        margin-bottom: 20px !important;
       }
 
-      h1       { font-size:36pt !important; } /* Nombre imponente y protagonista */
-      .eyebrow { font-size:10pt !important; margin-bottom:8px !important; }
-      .tagline { font-size:11.5pt !important; }
+      h1       { font-size:28pt !important; line-height: 0.9 !important; } 
+      .eyebrow { font-size:8.5pt !important; margin-bottom:6px !important; }
+      .tagline { font-size:10pt !important; }
 
-      .contacts    { gap:6px !important; }
-      .social-row  { gap:8px !important; margin-bottom:6px !important; }
-      .social-link { padding:0 !important; font-size:10pt !important; border:none !important; background:transparent !important; } /* Quitamos el botón en PDF para que sea más limpio */
-      .contact-row { font-size:10pt !important; }
+      .contacts    { gap:5px !important; }
+      .social-row  { gap:6px !important; margin-bottom:4px !important; }
+      .social-link { padding:0 !important; font-size:9pt !important; border:none !important; background:transparent !important; }
+      .contact-row { font-size:9pt !important; }
 
       .profile {
-        grid-template-columns: 80px 1fr !important;
-        gap:           20px !important;
-        padding-bottom:20px !important;
-        margin-bottom: 30px !important;
+        grid-template-columns: 65px 1fr !important;
+        gap:           15px !important;
+        padding-bottom:15px !important;
+        margin-bottom: 20px !important;
       }
-      .profile-label { font-size:10pt !important; }
-      .profile-text  { font-size:11.5pt !important; line-height: 1.6 !important; }
+      .profile-label { font-size:8.5pt !important; }
+      .profile-text  { font-size:10pt !important; line-height: 1.55 !important; }
 
       .dashboard {
-        grid-template-columns: 1fr 240px !important; /* Columna derecha más ancha y proporcionada */
-        gap: 50px !important; /* Separación amplia para respirar */
+        grid-template-columns: 1fr 210px !important;
+        gap: 35px !important;
       }
       
-      .col-main { gap:30px !important; }
-      .col-side { gap:25px !important; order:0 !important; }
+      .col-main { gap:20px !important; }
+      .col-side { gap:18px !important; order:0 !important; }
 
-      .sec-title { font-size:10pt !important; padding-bottom:6px !important; margin-bottom:16px !important; }
+      .sec-title { font-size:8.5pt !important; padding-bottom:4px !important; margin-bottom:12px !important; }
 
-      .tl-item         { grid-template-columns:85px 1fr !important; gap:0 15px !important; padding-bottom:18px !important; }
-      .tl-item.compact { padding-bottom:12px !important; }
-      .tl-title        { font-size:12pt !important; margin-bottom:4px !important; }
-      .tl-org          { font-size:10.5pt !important; margin-bottom:4px !important; }
-      .tl-desc         { font-size:10pt !important; margin-top:4px !important; line-height: 1.5 !important; }
-      .tl-date         { font-size:9.5pt !important; }
-      .tl-badge        { font-size:8.5pt !important; padding:3px 8px !important; margin-top:6px !important; }
+      .tl-item         { grid-template-columns:75px 1fr !important; gap:0 12px !important; padding-bottom:12px !important; }
+      .tl-item.compact { padding-bottom:8px !important; }
+      .tl-title        { font-size:11pt !important; margin-bottom:3px !important; }
+      .tl-org          { font-size:9.5pt !important; margin-bottom:2px !important; }
+      .tl-desc         { font-size:9pt !important; margin-top:3px !important; line-height: 1.45 !important; }
+      .tl-date         { font-size:8.5pt !important; }
+      .tl-badge        { font-size:7.5pt !important; padding:2px 6px !important; margin-top:4px !important; }
 
-      .sg-label    { font-size:9pt !important; margin-bottom: 8px !important;}
-      .skill-group { margin-bottom:16px !important; }
-      .pill        { font-size:9.5pt !important; padding:4px 10px !important; }
-      .pill.key    { font-size:10pt !important; padding:4px 10px !important; }
+      .sg-label    { font-size:7.5pt !important; margin-bottom: 6px !important;}
+      .skill-group { margin-bottom:12px !important; }
+      .pill        { font-size:8.5pt !important; padding:3px 8px !important; }
+      .pill.key    { font-size:9pt !important; padding:3px 8px !important; }
 
-      .lang-name { font-size:11pt !important; }
-      .lang-cert { font-size:9.5pt !important; }
-      .lang-row  { padding-bottom:8px !important; }
+      .lang-name { font-size:10pt !important; }
+      .lang-cert { font-size:8.5pt !important; }
+      .lang-row  { padding-bottom:6px !important; }
 
-      .course-name { font-size:10.5pt !important; margin-bottom: 3px !important; }
-      .course-inst { font-size:9.5pt !important; }
-      .course-item { padding-left:14px !important; }
-      .course-list { gap:16px !important; }
+      .course-name { font-size:9.5pt !important; margin-bottom: 2px !important; line-height: 1.2 !important; }
+      .course-inst { font-size:8.5pt !important; }
+      .course-item { padding-left:12px !important; }
+      .course-list { gap:10px !important; }
 
       .reveal { opacity:1 !important; transform:none !important; transition:none !important; }
-
-      section, .tl-item, .course-item, .lang-row, .skill-group { break-inside:avoid; }
-      h2 { break-after:avoid; }
     }
   </style>
 
