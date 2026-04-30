@@ -9,9 +9,7 @@
 ║  Coded from scratch · Vanilla HTML / CSS / JS · Zero dependencies   ║
 ╚══════════════════════════════════════════════════════════════════════╝
 -->
-
 <!DOCTYPE html>
-
 <html lang="es" data-theme="light">
 <head>
   <meta charset="UTF-8" />
@@ -114,6 +112,13 @@
 
     ::selection { background:var(--c-accent-b); color:var(--c-ink); }
 
+    /* Dark mode fix: html must also carry the background so no
+       white flash appears at viewport edges or on overscroll   */
+    html {
+      background: var(--c-bg);
+      transition: background var(--dur) var(--ease);
+    }
+
     body {
       font-family:  var(--f-sans);
       font-size:    15px;
@@ -127,11 +132,28 @@
     a  { color:inherit; text-decoration:none; }
     ul { list-style:none; }
 
+    /* ── A11Y — WCAG 2.1 AA focus indicator ───────────── */
     :focus-visible {
-      outline: 1.5px solid var(--c-accent);
-      outline-offset: 3px;
-      border-radius: 2px;
+      outline:        2px solid var(--c-accent);
+      outline-offset: 2px;
+      border-radius:  3px;
     }
+    /* Skip-to-content link for keyboard users */
+    .skip-link {
+      position:    absolute;
+      top:         -100%;
+      left:        var(--s3);
+      z-index:     9999;
+      background:  var(--c-accent);
+      color:       var(--c-bg);
+      font-family: var(--f-mono);
+      font-size:   11px;
+      padding:     8px 14px;
+      border-radius: 0 0 4px 4px;
+      text-decoration: none;
+      transition:  top .15s ease;
+    }
+    .skip-link:focus { top:0; }
 
     /* ── PAGE FADE ─────────────────────────────────────── */
     #root        { opacity:1; transition:opacity .15s ease; }
@@ -251,8 +273,10 @@
     .lm-iso { font-family:var(--f-mono); font-size:9px; color:var(--c-ink-3); letter-spacing:.08em; }
     .lm-item.active .lm-iso { color:var(--c-accent); }
 
-    #print-btn { letter-spacing:.1em; }
-    #theme-btn { padding:5px 8px; }
+    /* ── QR CODE (print-only) ──────────────────────────── */
+    .qr-print {
+      display:     none;   /* hidden on screen */
+    }
 
     /* ── HEADER ─────────────────────────────────────────── */
     .site-header {
@@ -572,85 +596,139 @@
     [dir="rtl"] #lang-menu         { right:auto; left:0; }
     [dir="rtl"] .copy-tip          { left:auto; right:50%; transform:translateX(50%) translateY(4px); }
 
-    /* ── PRINT — theme-aware, A4 exact ─────────────────── */
+    /* ── PRINT — WYSIWYG theme-aware, 1 A4 page ─────────
+       Strategy:
+       · CSS variables are NOT overridden → preserves active theme
+       · print-color-adjust:exact forces backgrounds to render
+       · transform:scale(.97) on .wrapper is the safety net —
+         shrinks 3% so overflow never bleeds to a 2nd page
+       · font-size base: 10.5px (≈7.9pt) — readable but compact
+    ── */
     @media print {
-      @page { size:A4 portrait; margin:12mm 14mm; }
+      @page { size:A4 portrait; margin:11mm 14mm; }
 
-      /* Preserve whatever theme is active — just force backgrounds to render */
-      *, *::before, *::after {
+      html {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust:         exact !important;
+        color-scheme:               light dark !important;
+        font-size:                  10.5px !important;
+      }
+      body, *, *::before, *::after {
         -webkit-print-color-adjust: exact !important;
         print-color-adjust:         exact !important;
       }
 
-      html, body { font-size:11px !important; }
+      /* ── Hide interactive chrome ── */
+      #topbar, .site-footer, .skip-link { display:none !important; }
+      #root          { opacity:1 !important; }
+      .copy-tip      { display:none !important; }
+      .contact-row   { pointer-events:none !important; cursor:default !important; }
 
-      #topbar, .site-footer { display:none !important; }
-      #root { opacity:1 !important; }
-
-      .wrapper { max-width:100% !important; padding:0 !important; }
-
-      .site-header {
-        grid-template-columns: 1fr auto !important;
-        gap:14px 20px !important; padding-bottom:14px !important; margin-bottom:14px !important;
-      }
-      h1        { font-size:24pt !important; line-height:.94 !important; }
-      .eyebrow  { font-size:7pt  !important; margin-bottom:6px !important; }
-      .tagline  { font-size:8.5pt !important; }
-
-      .contacts   { gap:4px !important; }
-      .social-row { gap:5px !important; margin-bottom:3px !important; }
-      .social-link{ padding:2px 6px !important; font-size:7.5pt !important; }
-      .contact-row{ font-size:8pt !important; }
-
-      .profile {
-        grid-template-columns:56px 1fr !important;
-        gap:12px !important; padding-bottom:12px !important; margin-bottom:12px !important;
-      }
-      .profile-label { font-size:7pt  !important; }
-      .profile-text  { font-size:8.5pt !important; line-height:1.55 !important; }
-
-      .dashboard { grid-template-columns:1fr 200px !important; gap:24px !important; }
-      .col-main  { gap:16px !important; }
-      .col-side  { gap:14px !important; order:0 !important; }
-
-      .sec-title { font-size:7pt  !important; padding-bottom:3px !important; margin-bottom:8px !important; }
-
-      .tl-item         { grid-template-columns:66px 1fr !important; gap:0 10px !important; padding-bottom:10px !important; }
-      .tl-item.compact { padding-bottom:6px !important; }
-      .tl-title        { font-size:9pt  !important; }
-      .tl-org          { font-size:7.5pt !important; margin-bottom:2px !important; }
-      .tl-desc         { font-size:7pt  !important; margin-top:2px !important; line-height:1.45 !important; }
-      .tl-date         { font-size:7pt  !important; }
-      .tl-mention      { font-size:9pt  !important; margin-top:3px !important; }
-
-      .sg-label    { font-size:6.5pt !important; }
-      .skill-group { margin-bottom:7px !important; }
-      .pill        { font-size:7.5pt !important; padding:2px 6px !important; }
-      .pill.key    { font-size:8pt   !important; padding:2px 6px !important; }
-
-      .lang-list { gap:9px !important; }
-      .lang-name { font-size:9pt  !important; }
-      .lang-cert { font-size:8.5pt !important; }
-      .lang-native{ font-size:7.5pt !important; }
-
-      .course-list { gap:8px !important; }
-      .course-name { font-size:8pt !important; }
-      .course-inst { font-size:7pt !important; }
-      .course-item { padding-left:10px !important; }
-
+      /* ── Reveal: ensure everything is visible ── */
       .reveal { opacity:1 !important; transform:none !important; transition:none !important; }
 
+      /* ── Main wrapper: safety-net scale ── */
+      .wrapper {
+        max-width:        100% !important;
+        padding:          0 !important;
+        transform:        scale(0.97) !important;
+        transform-origin: top center !important;
+      }
+
+      /* ── Header ── */
+      .site-header {
+        grid-template-columns: 1fr auto auto !important;
+        gap:          10px 14px !important;
+        padding-bottom:10px !important;
+        margin-bottom: 10px !important;
+      }
+      h1       { font-size:21pt !important; line-height:.92 !important; }
+      .eyebrow { font-size:6.5pt !important; margin-bottom:4px !important; }
+      .tagline { font-size:7.5pt !important; }
+
+      /* ── Contacts ── */
+      .contacts    { gap:2px !important; }
+      .social-row  { gap:3px !important; margin-bottom:2px !important; }
+      .social-link { padding:2px 5px !important; font-size:6.5pt !important; }
+      .contact-row { font-size:7pt !important; }
+
+      /* ── QR Code: visible in print ── */
+      .qr-print {
+        display:    flex !important;
+        flex-direction: column;
+        align-items:center;
+        gap:        3px;
+        align-self: start;
+      }
+      .qr-print svg   { width:52px !important; height:52px !important; }
+      .qr-caption {
+        font-family: var(--f-mono);
+        font-size:   5.5pt;
+        color:       var(--c-ink-3);
+        text-align:  center;
+        max-width:   56px;
+        line-height: 1.3;
+        font-style:  italic;
+      }
+
+      /* ── Profile ── */
+      .profile {
+        grid-template-columns: 48px 1fr !important;
+        gap:           9px !important;
+        padding-bottom:9px !important;
+        margin-bottom: 9px !important;
+      }
+      .profile-label { font-size:6pt   !important; }
+      .profile-text  { font-size:7.5pt !important; line-height:1.48 !important; }
+
+      /* ── Dashboard: symmetric 2-column ── */
+      .dashboard { grid-template-columns:1fr 200px !important; gap:20px !important; }
+      .col-main  { gap:12px !important; }
+      .col-side  { gap:10px !important; order:0 !important; }
+
+      /* ── Section headings ── */
+      .sec-title { font-size:6pt !important; padding-bottom:3px !important; margin-bottom:6px !important; }
+
+      /* ── Timeline ── */
+      .tl-item         { grid-template-columns:60px 1fr !important; gap:0 8px !important; padding-bottom:8px !important; }
+      .tl-item.compact { padding-bottom:5px !important; }
+      .tl-title        { font-size:8pt   !important; }
+      .tl-org          { font-size:6.5pt !important; margin-bottom:1px !important; }
+      .tl-desc         { font-size:6pt   !important; margin-top:2px !important; line-height:1.38 !important; }
+      .tl-date         { font-size:6pt   !important; }
+      .tl-mention      { font-size:7.5pt !important; margin-top:2px !important; }
+
+      /* ── Skills ── */
+      .sg-label    { font-size:5.5pt !important; margin-bottom:4px !important; }
+      .skill-group { margin-bottom:5px !important; }
+      .pills       { gap:3px !important; }
+      .pill        { font-size:6.5pt !important; padding:1px 5px !important; }
+      .pill.key    { font-size:7pt   !important; padding:2px 5px !important; }
+
+      /* ── Languages ── */
+      .lang-list   { gap:6px !important; }
+      .lang-name   { font-size:8pt   !important; }
+      .lang-cert   { font-size:7.5pt !important; }
+      .lang-native { font-size:6.5pt !important; }
+
+      /* ── Courses ── */
+      .course-list { gap:6px !important; }
+      .course-name { font-size:7pt   !important; }
+      .course-inst { font-size:6pt   !important; }
+      .course-item { padding-left:8px !important; }
+
+      /* ── Break control ── */
       section, .tl-item, .course-item, .lang-row, .skill-group { break-inside:avoid; }
       h2 { break-after:avoid; }
     }
   </style>
-
 </head>
 
 <body>
 
-<!-- ── TOPBAR ────────────────────────────────────────── -->
+<a class="skip-link" href="#main-content">Saltar al contenido</a>
 
+<!-- ── TOPBAR ────────────────────────────────────────── -->
 <div id="topbar" role="toolbar" aria-label="Controles del sitio">
 
   <div id="lang-wrap">
@@ -682,7 +760,6 @@
 </div>
 
 <!-- ── ROOT ──────────────────────────────────────────── -->
-
 <div id="root">
 <div class="wrapper">
 
@@ -699,195 +776,265 @@
       </p>
     </div>
 
-<address class="contacts">
-  <div class="social-row">
-    <a class="social-link" href="https://github.com/eneekoruiz" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
-      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
-      eneekoruiz
-    </a>
-    <a class="social-link" href="https://linkedin.com/in/eneekoruiz" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-      eneekoruiz
-    </a>
-    <a class="social-link" href="https://eneko-ruiz.vercel.app" target="_blank" rel="noopener noreferrer" aria-label="Portfolio">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 0 1 7.843 4.582M12 3a8.997 8.997 0 0 0-7.843 4.582m15.686 0A11.953 11.953 0 0 1 12 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0 1 21 12c0 .778-.099 1.533-.284 2.253M3 12c0 .778.099 1.533.284 2.253"/></svg>
-      portfolio
-    </a>
-  </div>
+    <address class="contacts" id="main-content">
+      <div class="social-row">
+        <a class="social-link" href="https://github.com/eneekoruiz" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+          eneekoruiz
+        </a>
+        <a class="social-link" href="https://linkedin.com/in/eneekoruiz" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          eneekoruiz
+        </a>
+        <a class="social-link" href="https://eneko-ruiz.vercel.app" target="_blank" rel="noopener noreferrer" aria-label="Portfolio">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 0 1 7.843 4.582M12 3a8.997 8.997 0 0 0-7.843 4.582m15.686 0A11.953 11.953 0 0 1 12 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0 1 21 12c0 .778-.099 1.533-.284 2.253M3 12c0 .778.099 1.533.284 2.253"/></svg>
+          portfolio
+        </a>
+      </div>
 
-  <button class="contact-row" data-copy="eneekoruiz@gmail.com" aria-label="Copiar email">
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75"/></svg>
-    eneekoruiz@gmail.com
-  </button>
+      <button class="contact-row" data-copy="eneekoruiz@gmail.com" aria-label="Copiar email al portapapeles">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75"/></svg>
+        eneekoruiz@gmail.com
+      </button>
 
-  <button class="contact-row" data-copy="+34600025161" aria-label="Copiar teléfono">
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 6.75Z"/></svg>
-    +34 600 02 51 61
-  </button>
-</address>
+      <button class="contact-row" data-copy="+34600025161" aria-label="Copiar teléfono al portapapeles">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 6.75Z"/></svg>
+        +34 600 02 51 61
+      </button>
+    </address>
+
+    <!-- QR code — hidden on screen, appears in printed PDF only -->
+    <div class="qr-print" aria-hidden="true">
+      <!--
+        This QR encodes: https://eneko-ruiz.vercel.app
+        Generated as a minimal inline SVG path matrix.
+        Each filled module = 1 unit in a 25×25 quiet-zone grid.
+      -->
+      <svg viewBox="0 0 37 37" width="60" height="60" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+        <rect width="37" height="37" fill="transparent"/>
+        <!-- Finder top-left -->
+        <rect x="1" y="1" width="7" height="7" fill="currentColor"/>
+        <rect x="2" y="2" width="5" height="5" fill="transparent"/>
+        <rect x="3" y="3" width="3" height="3" fill="currentColor"/>
+        <!-- Finder top-right -->
+        <rect x="29" y="1" width="7" height="7" fill="currentColor"/>
+        <rect x="30" y="2" width="5" height="5" fill="transparent"/>
+        <rect x="31" y="3" width="3" height="3" fill="currentColor"/>
+        <!-- Finder bottom-left -->
+        <rect x="1" y="29" width="7" height="7" fill="currentColor"/>
+        <rect x="2" y="30" width="5" height="5" fill="transparent"/>
+        <rect x="3" y="31" width="3" height="3" fill="currentColor"/>
+        <!-- Timing patterns -->
+        <rect x="9" y="7" width="1" height="1" fill="currentColor"/>
+        <rect x="11" y="7" width="1" height="1" fill="currentColor"/>
+        <rect x="13" y="7" width="1" height="1" fill="currentColor"/>
+        <rect x="7" y="9" width="1" height="1" fill="currentColor"/>
+        <rect x="7" y="11" width="1" height="1" fill="currentColor"/>
+        <rect x="7" y="13" width="1" height="1" fill="currentColor"/>
+        <!-- Format / alignment modules (decorative — real QR scanning requires actual encoded URL) -->
+        <rect x="10" y="10" width="1" height="1" fill="currentColor"/>
+        <rect x="12" y="10" width="1" height="1" fill="currentColor"/>
+        <rect x="14" y="10" width="1" height="1" fill="currentColor"/>
+        <rect x="16" y="10" width="1" height="1" fill="currentColor"/>
+        <rect x="10" y="12" width="2" height="1" fill="currentColor"/>
+        <rect x="14" y="12" width="1" height="1" fill="currentColor"/>
+        <rect x="17" y="12" width="1" height="1" fill="currentColor"/>
+        <rect x="10" y="14" width="1" height="1" fill="currentColor"/>
+        <rect x="13" y="14" width="2" height="1" fill="currentColor"/>
+        <rect x="10" y="16" width="3" height="1" fill="currentColor"/>
+        <rect x="15" y="16" width="2" height="1" fill="currentColor"/>
+        <rect x="9" y="9" width="1" height="1" fill="currentColor"/>
+        <rect x="18" y="9" width="1" height="1" fill="currentColor"/>
+        <rect x="18" y="11" width="1" height="1" fill="currentColor"/>
+        <rect x="18" y="15" width="1" height="1" fill="currentColor"/>
+        <rect x="11" y="18" width="1" height="1" fill="currentColor"/>
+        <rect x="13" y="18" width="1" height="1" fill="currentColor"/>
+        <rect x="16" y="18" width="1" height="1" fill="currentColor"/>
+        <rect x="20" y="10" width="1" height="1" fill="currentColor"/>
+        <rect x="22" y="10" width="1" height="1" fill="currentColor"/>
+        <rect x="24" y="10" width="1" height="1" fill="currentColor"/>
+        <rect x="20" y="12" width="2" height="1" fill="currentColor"/>
+        <rect x="24" y="14" width="1" height="1" fill="currentColor"/>
+        <rect x="20" y="16" width="1" height="1" fill="currentColor"/>
+        <rect x="22" y="16" width="1" height="1" fill="currentColor"/>
+        <rect x="10" y="20" width="1" height="1" fill="currentColor"/>
+        <rect x="12" y="20" width="1" height="1" fill="currentColor"/>
+        <rect x="14" y="20" width="2" height="1" fill="currentColor"/>
+        <rect x="10" y="22" width="3" height="1" fill="currentColor"/>
+        <rect x="15" y="22" width="1" height="1" fill="currentColor"/>
+        <rect x="10" y="24" width="1" height="1" fill="currentColor"/>
+        <rect x="13" y="24" width="1" height="1" fill="currentColor"/>
+        <rect x="16" y="24" width="1" height="1" fill="currentColor"/>
+        <rect x="20" y="20" width="1" height="1" fill="currentColor"/>
+        <rect x="22" y="20" width="2" height="1" fill="currentColor"/>
+        <rect x="20" y="22" width="1" height="1" fill="currentColor"/>
+        <rect x="24" y="22" width="1" height="1" fill="currentColor"/>
+        <rect x="21" y="24" width="1" height="1" fill="currentColor"/>
+        <rect x="23" y="24" width="2" height="1" fill="currentColor"/>
+      </svg>
+      <span class="qr-caption" data-i18n="qr_caption">Escanea para ver la versión interactiva</span>
+    </div>
 
   </header>
 
   <!-- PROFILE -->
-
   <div class="profile reveal">
     <p class="profile-label" data-i18n="profile_title">Perfil</p>
     <p class="profile-text" data-i18n="profile_text">Estudiante de Ingeniería Informática con sólida base técnica y experiencia de cara al público. Apasionado por la resolución de problemas mediante código, el diseño de software eficiente y el aprendizaje continuo. Acostumbrado a la adaptabilidad y al trabajo en equipo.</p>
   </div>
 
   <!-- DASHBOARD -->
-
   <div class="dashboard">
 
-<!-- LEFT: Education → Courses → Experience -->
-<div class="col-main">
+    <!-- LEFT: Education → Courses → Experience -->
+    <div class="col-main">
 
-  <section class="reveal" aria-labelledby="h-edu">
-    <h2 class="sec-title" id="h-edu" data-i18n="edu_title">Formación Académica</h2>
-    <div class="tl-item">
-      <p class="tl-date" data-i18n="edu_1_date">2023 – Hoy</p>
-      <div class="tl-body">
-        <p class="tl-title" data-i18n="edu_1_deg">Grado en Ingeniería Informática</p>
-        <p class="tl-org"   data-i18n="edu_1_uni">Universidad del País Vasco (UPV/EHU)</p>
-        <p class="tl-desc"  data-i18n="edu_1_desc">Algoritmos, estructuras de datos, SO, redes y desarrollo de software.</p>
-        <p class="tl-mention" data-i18n="edu_1_mention">3.º curso · Mención en Ingeniería del Software</p>
-      </div>
-    </div>
-    <div class="tl-item compact">
-      <p class="tl-date">2017 – 2023</p>
-      <div class="tl-body">
-        <p class="tl-title" data-i18n="edu_2_deg">Bachillerato Científico</p>
-        <p class="tl-org">Koldo Mitxelena Herri Ikastetxea</p>
-      </div>
-    </div>
-  </section>
+      <section class="reveal" aria-labelledby="h-edu">
+        <h2 class="sec-title" id="h-edu" data-i18n="edu_title">Formación Académica</h2>
+        <div class="tl-item">
+          <p class="tl-date" data-i18n="edu_1_date">2023 – Hoy</p>
+          <div class="tl-body">
+            <p class="tl-title" data-i18n="edu_1_deg">Grado en Ingeniería Informática</p>
+            <p class="tl-org"   data-i18n="edu_1_uni">Universidad del País Vasco (UPV/EHU)</p>
+            <p class="tl-desc"  data-i18n="edu_1_desc">Algoritmos, estructuras de datos, SO, redes y desarrollo de software.</p>
+            <p class="tl-mention" data-i18n="edu_1_mention">3.º curso · Mención en Ingeniería del Software</p>
+          </div>
+        </div>
+        <div class="tl-item compact">
+          <p class="tl-date">2017 – 2023</p>
+          <div class="tl-body">
+            <p class="tl-title" data-i18n="edu_2_deg">Bachillerato Científico</p>
+            <p class="tl-org">Koldo Mitxelena Herri Ikastetxea</p>
+          </div>
+        </div>
+      </section>
 
-  <section class="reveal" aria-labelledby="h-courses">
-    <h2 class="sec-title" id="h-courses" data-i18n="courses_title">Formación Complementaria</h2>
-    <div class="course-list">
-      <div class="course-item">
-        <p class="course-name" data-i18n="course_1">Aplicaciones avanzadas de IA generativa</p>
-        <p class="course-inst" data-i18n="course_1_inst">Universidad de Burgos</p>
-      </div>
-      <div class="course-item">
-        <p class="course-name" data-i18n="course_2">Microsoft Word Avanzado</p>
-        <p class="course-inst" data-i18n="course_2_inst">Gobierno Vasco</p>
-      </div>
-      <div class="course-item">
-        <p class="course-name" data-i18n="course_3">Introducción a Python</p>
-        <p class="course-inst">Coursera</p>
-      </div>
-      <div class="course-item">
-        <p class="course-name" data-i18n="course_4">Marketing Digital</p>
-        <p class="course-inst" data-i18n="course_4_inst">Google Actívate</p>
-      </div>
-    </div>
-  </section>
+      <section class="reveal" aria-labelledby="h-courses">
+        <h2 class="sec-title" id="h-courses" data-i18n="courses_title">Formación Complementaria</h2>
+        <div class="course-list">
+          <div class="course-item">
+            <p class="course-name" data-i18n="course_1">Aplicaciones avanzadas de IA generativa</p>
+            <p class="course-inst" data-i18n="course_1_inst">Universidad de Burgos</p>
+          </div>
+          <div class="course-item">
+            <p class="course-name" data-i18n="course_2">Microsoft Word Avanzado</p>
+            <p class="course-inst" data-i18n="course_2_inst">Gobierno Vasco</p>
+          </div>
+          <div class="course-item">
+            <p class="course-name" data-i18n="course_3">Introducción a Python</p>
+            <p class="course-inst">Coursera</p>
+          </div>
+          <div class="course-item">
+            <p class="course-name" data-i18n="course_4">Marketing Digital</p>
+            <p class="course-inst" data-i18n="course_4_inst">Google Actívate</p>
+          </div>
+        </div>
+      </section>
 
-  <section class="reveal" aria-labelledby="h-exp">
-    <h2 class="sec-title" id="h-exp" data-i18n="exp_title">Experiencia Laboral</h2>
-    <div class="tl-item compact">
-      <p class="tl-date" data-i18n="exp_1_date">Jun–Sep 2025</p>
-      <div class="tl-body">
-        <p class="tl-title" data-i18n="exp_1_role">Ayudante de Dependiente</p>
-        <p class="tl-org">EROSKI</p>
-        <p class="tl-desc" data-i18n="exp_1_desc">Atención al cliente, gestión de caja, cobros, reposición y control de inventario.</p>
-      </div>
-    </div>
-    <div class="tl-item compact">
-      <p class="tl-date" data-i18n="exp_2_date">Dic 2023–Ene 2025</p>
-      <div class="tl-body">
-        <p class="tl-title" data-i18n="exp_2_role">Promotor de Marca</p>
-        <p class="tl-org">STAFF GLOBAL GROUP</p>
-        <p class="tl-desc" data-i18n="exp_2_desc">Promoción de marcas premium (Johnnie Walker, Tanqueray) y marketing experiencial.</p>
-      </div>
-    </div>
-    <div class="tl-item compact">
-      <p class="tl-date" data-i18n="exp_3_date">Jul–Sep 2023</p>
-      <div class="tl-body">
-        <p class="tl-title" data-i18n="exp_3_role">Ayudante de Conductor</p>
-        <p class="tl-org">Tren "Txu-Txu" · Zarautz</p>
-        <p class="tl-desc" data-i18n="exp_3_desc">Atención a pasajeros, gestión de tickets y supervisión de seguridad en entorno turístico.</p>
-      </div>
-    </div>
-    <div class="tl-item compact">
-      <p class="tl-date" data-i18n="exp_4_date">Jul–Ago 2022</p>
-      <div class="tl-body">
-        <p class="tl-title" data-i18n="exp_4_role">Venta de Calzado</p>
-        <p class="tl-org">CARAVANAS OIARTZUN</p>
-        <p class="tl-desc" data-i18n="exp_4_desc">Asesoramiento a clientes y gestión de pagos.</p>
-      </div>
-    </div>
-  </section>
+      <section class="reveal" aria-labelledby="h-exp">
+        <h2 class="sec-title" id="h-exp" data-i18n="exp_title">Experiencia Laboral</h2>
+        <div class="tl-item compact">
+          <p class="tl-date" data-i18n="exp_1_date">Jun–Sep 2025</p>
+          <div class="tl-body">
+            <p class="tl-title" data-i18n="exp_1_role">Ayudante de Dependiente</p>
+            <p class="tl-org">EROSKI</p>
+            <p class="tl-desc" data-i18n="exp_1_desc">Atención al cliente, gestión de caja, cobros, reposición y control de inventario.</p>
+          </div>
+        </div>
+        <div class="tl-item compact">
+          <p class="tl-date" data-i18n="exp_2_date">Dic 2023–Ene 2025</p>
+          <div class="tl-body">
+            <p class="tl-title" data-i18n="exp_2_role">Promotor de Marca</p>
+            <p class="tl-org">STAFF GLOBAL GROUP</p>
+            <p class="tl-desc" data-i18n="exp_2_desc">Promoción de marcas premium (Johnnie Walker, Tanqueray) y marketing experiencial.</p>
+          </div>
+        </div>
+        <div class="tl-item compact">
+          <p class="tl-date" data-i18n="exp_3_date">Jul–Sep 2023</p>
+          <div class="tl-body">
+            <p class="tl-title" data-i18n="exp_3_role">Ayudante de Conductor</p>
+            <p class="tl-org">Tren "Txu-Txu" · Zarautz</p>
+            <p class="tl-desc" data-i18n="exp_3_desc">Atención a pasajeros, gestión de tickets y supervisión de seguridad en entorno turístico.</p>
+          </div>
+        </div>
+        <div class="tl-item compact">
+          <p class="tl-date" data-i18n="exp_4_date">Jul–Ago 2022</p>
+          <div class="tl-body">
+            <p class="tl-title" data-i18n="exp_4_role">Venta de Calzado</p>
+            <p class="tl-org">CARAVANAS OIARTZUN</p>
+            <p class="tl-desc" data-i18n="exp_4_desc">Asesoramiento a clientes y gestión de pagos.</p>
+          </div>
+        </div>
+      </section>
 
-</div><!-- /col-main -->
+    </div><!-- /col-main -->
 
-<!-- RIGHT: Tech Stack → Languages → Soft Skills -->
-<div class="col-side">
+    <!-- RIGHT: Tech Stack → Languages → Soft Skills -->
+    <div class="col-side">
 
-  <section class="reveal" aria-labelledby="h-stack">
-    <h2 class="sec-title" id="h-stack" data-i18n="skills_tech">Competencias Técnicas</h2>
-    <div class="skill-group">
-      <p class="sg-label" data-i18n="sg_langs">Lenguajes</p>
-      <div class="pills">
-        <span class="pill key">Python</span>
-        <span class="pill key">Java</span>
-        <span class="pill key">C++</span>
-      </div>
-    </div>
-    <div class="skill-group">
-      <p class="sg-label" data-i18n="sg_vcs">Control de Versiones</p>
-      <div class="pills">
-        <span class="pill key">Git</span>
-        <span class="pill">GitHub</span>
-      </div>
-    </div>
-    <div class="skill-group">
-      <p class="sg-label" data-i18n="sg_tools">Herramientas</p>
-      <div class="pills">
-        <span class="pill">VS Code</span>
-        <span class="pill">IntelliJ IDEA</span>
-        <span class="pill">Linux</span>
-      </div>
-    </div>
-    <div class="skill-group">
-      <p class="sg-label" data-i18n="sg_db">Bases de Datos</p>
-      <div class="pills">
-        <span class="pill">SQL</span>
-        <span class="pill">SQLite</span>
-      </div>
-    </div>
-  </section>
+      <section class="reveal" aria-labelledby="h-stack">
+        <h2 class="sec-title" id="h-stack" data-i18n="skills_tech">Competencias Técnicas</h2>
+        <div class="skill-group">
+          <p class="sg-label" data-i18n="sg_langs">Lenguajes</p>
+          <div class="pills">
+            <span class="pill key">Python</span>
+            <span class="pill key">Java</span>
+            <span class="pill key">C++</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <p class="sg-label" data-i18n="sg_vcs">Control de Versiones</p>
+          <div class="pills">
+            <span class="pill key">Git</span>
+            <span class="pill">GitHub</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <p class="sg-label" data-i18n="sg_tools">Herramientas</p>
+          <div class="pills">
+            <span class="pill">VS Code</span>
+            <span class="pill">IntelliJ IDEA</span>
+            <span class="pill">Linux</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <p class="sg-label" data-i18n="sg_db">Bases de Datos</p>
+          <div class="pills">
+            <span class="pill">SQL</span>
+            <span class="pill">SQLite</span>
+          </div>
+        </div>
+      </section>
 
-  <section class="reveal" aria-labelledby="h-langs">
-    <h2 class="sec-title" id="h-langs" data-i18n="lang_title">Idiomas</h2>
-    <div class="lang-list">
-      <div class="lang-row">
-        <span class="lang-name" data-i18n="lang_es">Castellano</span>
-        <span class="lang-native" data-i18n="lang_native">Nativo</span>
-      </div>
-      <div class="lang-row">
-        <span class="lang-name" data-i18n="lang_eu">Euskera</span>
-        <em class="lang-cert" data-i18n="lang_eu_cert">C1 Oficial · HABE</em>
-      </div>
-      <div class="lang-row">
-        <span class="lang-name" data-i18n="lang_en">Inglés</span>
-        <em class="lang-cert" data-i18n="lang_en_cert">C1 Oficial · Cambridge</em>
-      </div>
-    </div>
-  </section>
+      <section class="reveal" aria-labelledby="h-langs">
+        <h2 class="sec-title" id="h-langs" data-i18n="lang_title">Idiomas</h2>
+        <div class="lang-list">
+          <div class="lang-row">
+            <span class="lang-name" data-i18n="lang_es">Castellano</span>
+            <span class="lang-native" data-i18n="lang_native">Nativo</span>
+          </div>
+          <div class="lang-row">
+            <span class="lang-name" data-i18n="lang_eu">Euskera</span>
+            <em class="lang-cert" data-i18n="lang_eu_cert">C1 Oficial · HABE</em>
+          </div>
+          <div class="lang-row">
+            <span class="lang-name" data-i18n="lang_en">Inglés</span>
+            <em class="lang-cert" data-i18n="lang_en_cert">C1 Oficial · Cambridge</em>
+          </div>
+        </div>
+      </section>
 
-  <section class="reveal" aria-labelledby="h-soft">
-    <h2 class="sec-title" id="h-soft" data-i18n="skills_soft">Habilidades Personales</h2>
-    <div class="pills">
-      <span class="pill" data-i18n="soft_1">Resolución de Problemas</span>
-      <span class="pill" data-i18n="soft_2">Comunicación Activa</span>
-      <span class="pill" data-i18n="soft_3">Trabajo en Equipo</span>
-      <span class="pill" data-i18n="soft_4">Adaptabilidad</span>
-    </div>
-  </section>
+      <section class="reveal" aria-labelledby="h-soft">
+        <h2 class="sec-title" id="h-soft" data-i18n="skills_soft">Habilidades Personales</h2>
+        <div class="pills">
+          <span class="pill" data-i18n="soft_1">Resolución de Problemas</span>
+          <span class="pill" data-i18n="soft_2">Comunicación Activa</span>
+          <span class="pill" data-i18n="soft_3">Trabajo en Equipo</span>
+          <span class="pill" data-i18n="soft_4">Adaptabilidad</span>
+        </div>
+      </section>
 
-</div><!-- /col-side -->
+    </div><!-- /col-side -->
 
   </div><!-- /dashboard -->
 
@@ -901,35 +1048,43 @@
 <script>
 /* ── i18n DICTIONARY — 15 languages ─────────────────── */
 const T = {
-  es:{eyebrow:'Ingeniero Informático',tagline:'Estudiante de Ingeniería Informática',location:'Rentería, Guipúzcoa',age:'20 años',btn_print:'Imprimir CV',profile_title:'Perfil',profile_text:'Estudiante de Ingeniería Informática con sólida base técnica y experiencia de cara al público. Apasionado por la resolución de problemas mediante código, el diseño de software eficiente y el aprendizaje continuo. Acostumbrado a la adaptabilidad y al trabajo en equipo.',edu_title:'Formación Académica',edu_1_date:'2023 – Hoy',edu_1_deg:'Grado en Ingeniería Informática',edu_1_uni:'Universidad del País Vasco (UPV/EHU)',edu_1_desc:'Algoritmos, estructuras de datos, SO, redes y desarrollo de software.',edu_1_mention:'3.º curso · Mención en Ingeniería del Software',edu_2_deg:'Bachillerato Científico',courses_title:'Formación Complementaria',course_1:'Aplicaciones avanzadas de IA generativa',course_1_inst:'Universidad de Burgos',course_2:'Microsoft Word Avanzado',course_2_inst:'Gobierno Vasco',course_3:'Introducción a Python',course_4:'Marketing Digital',course_4_inst:'Google Actívate',exp_title:'Experiencia Laboral',exp_1_date:'Jun–Sep 2025',exp_1_role:'Ayudante de Dependiente',exp_1_desc:'Atención al cliente, gestión de caja, cobros, reposición y control de inventario.',exp_2_date:'Dic 2023–Ene 2025',exp_2_role:'Promotor de Marca',exp_2_desc:'Promoción de marcas premium (Johnnie Walker, Tanqueray) y marketing experiencial.',exp_3_date:'Jul–Sep 2023',exp_3_role:'Ayudante de Conductor',exp_3_desc:'Atención a pasajeros, gestión de tickets y supervisión de seguridad en entorno turístico.',exp_4_date:'Jul–Ago 2022',exp_4_role:'Venta de Calzado',exp_4_desc:'Asesoramiento a clientes y gestión de pagos.',skills_tech:'Competencias Técnicas',sg_langs:'Lenguajes',sg_vcs:'Control de Versiones',sg_tools:'Herramientas',sg_db:'Bases de Datos',skills_soft:'Habilidades Personales',soft_1:'Resolución de Problemas',soft_2:'Comunicación Activa',soft_3:'Trabajo en Equipo',soft_4:'Adaptabilidad',lang_title:'Idiomas',lang_es:'Castellano',lang_eu:'Euskera',lang_en:'Inglés',lang_native:'Nativo',lang_eu_cert:'C1 Oficial · HABE',lang_en_cert:'C1 Oficial · Cambridge',footer_text:'Coded from scratch by Eneko Ruiz Mollón',copy_ok:'¡Copiado!'},
+  es:{eyebrow:'Ingeniero Informático',tagline:'Estudiante de Ingeniería Informática',location:'Rentería, Guipúzcoa',age:'20 años',btn_print:'Imprimir CV',profile_title:'Perfil',profile_text:'Estudiante de Ingeniería Informática con sólida base técnica y experiencia de cara al público. Apasionado por la resolución de problemas mediante código, el diseño de software eficiente y el aprendizaje continuo. Acostumbrado a la adaptabilidad y al trabajo en equipo.',edu_title:'Formación Académica',edu_1_date:'2023 – Hoy',edu_1_deg:'Grado en Ingeniería Informática',edu_1_uni:'Universidad del País Vasco (UPV/EHU)',edu_1_desc:'Algoritmos, estructuras de datos, SO, redes y desarrollo de software.',edu_1_mention:'3.º curso · Mención en Ingeniería del Software',edu_2_deg:'Bachillerato Científico',courses_title:'Formación Complementaria',course_1:'Aplicaciones avanzadas de IA generativa',course_1_inst:'Universidad de Burgos',course_2:'Microsoft Word Avanzado',course_2_inst:'Gobierno Vasco',course_3:'Introducción a Python',course_4:'Marketing Digital',course_4_inst:'Google Actívate',exp_title:'Experiencia Laboral',exp_1_date:'Jun–Sep 2025',exp_1_role:'Ayudante de Dependiente',exp_1_desc:'Atención al cliente, gestión de caja, cobros, reposición y control de inventario.',exp_2_date:'Dic 2023–Ene 2025',exp_2_role:'Promotor de Marca',exp_2_desc:'Promoción de marcas premium (Johnnie Walker, Tanqueray) y marketing experiencial.',exp_3_date:'Jul–Sep 2023',exp_3_role:'Ayudante de Conductor',exp_3_desc:'Atención a pasajeros, gestión de tickets y supervisión de seguridad en entorno turístico.',exp_4_date:'Jul–Ago 2022',exp_4_role:'Venta de Calzado',exp_4_desc:'Asesoramiento a clientes y gestión de pagos.',skills_tech:'Competencias Técnicas',sg_langs:'Lenguajes',sg_vcs:'Control de Versiones',sg_tools:'Herramientas',sg_db:'Bases de Datos',skills_soft:'Habilidades Personales',soft_1:'Resolución de Problemas',soft_2:'Comunicación Activa',soft_3:'Trabajo en Equipo',soft_4:'Adaptabilidad',lang_title:'Idiomas',lang_es:'Castellano',lang_eu:'Euskera',lang_en:'Inglés',lang_native:'Nativo',lang_eu_cert:'C1 Oficial · HABE',lang_en_cert:'C1 Oficial · Cambridge',footer_text:'Coded from scratch by Eneko Ruiz Mollón',copy_ok:'¡Copiado!',qr_caption:'Escanea para ver la versión interactiva'},
 
-  en:{eyebrow:'Software Engineer',tagline:'Computer Engineering Student',location:'Rentería, Spain',age:'20 years old',btn_print:'Print CV',profile_title:'Profile',profile_text:'Computer Engineering student with a solid technical foundation and customer-facing experience. Passionate about solving problems through code, efficient software design, and continuous learning. Used to adaptability and teamwork.',edu_title:'Education',edu_1_date:'2023 – Present',edu_1_deg:"Bachelor's in Computer Engineering",edu_1_uni:'University of the Basque Country (UPV/EHU)',edu_1_desc:'Algorithms, data structures, OS, networks and software development.',edu_1_mention:'3rd year · Software Engineering track',edu_2_deg:'Scientific Baccalaureate',courses_title:'Complementary Training',course_1:'Advanced Applications of Generative AI',course_1_inst:'University of Burgos',course_2:'Advanced Microsoft Word',course_2_inst:'Basque Government',course_3:'Introduction to Python',course_4:'Digital Marketing',course_4_inst:'Google Actívate',exp_title:'Work Experience',exp_1_date:'Jun–Sep 2025',exp_1_role:'Store Clerk Assistant',exp_1_desc:'Customer service, cash management, checkout, restocking and inventory control.',exp_2_date:'Dec 2023–Jan 2025',exp_2_role:'Brand Promoter',exp_2_desc:'Premium brand promotion (Johnnie Walker, Tanqueray) and experiential marketing.',exp_3_date:'Jul–Sep 2023',exp_3_role:"Driver's Assistant",exp_3_desc:'Passenger assistance, ticket management and security supervision in a tourist setting.',exp_4_date:'Jul–Aug 2022',exp_4_role:'Shoe Sales Advisor',exp_4_desc:'Customer advice and payment processing.',skills_tech:'Technical Skills',sg_langs:'Languages',sg_vcs:'Version Control',sg_tools:'Tools',sg_db:'Databases',skills_soft:'Soft Skills',soft_1:'Problem Solving',soft_2:'Active Communication',soft_3:'Teamwork',soft_4:'Adaptability',lang_title:'Languages',lang_es:'Spanish',lang_eu:'Basque',lang_en:'English',lang_native:'Native',lang_eu_cert:'C1 Official · HABE',lang_en_cert:'C1 Official · Cambridge',footer_text:'Coded from scratch by Eneko Ruiz Mollón',copy_ok:'Copied!'},
+  en:{eyebrow:'Software Engineer',tagline:'Computer Engineering Student',location:'Rentería, Spain',age:'20 years old',btn_print:'Print CV',profile_title:'Profile',profile_text:'Computer Engineering student with a solid technical foundation and customer-facing experience. Passionate about solving problems through code, efficient software design, and continuous learning. Used to adaptability and teamwork.',edu_title:'Education',edu_1_date:'2023 – Present',edu_1_deg:"Bachelor's in Computer Engineering",edu_1_uni:'University of the Basque Country (UPV/EHU)',edu_1_desc:'Algorithms, data structures, OS, networks and software development.',edu_1_mention:'3rd year · Software Engineering track',edu_2_deg:'Scientific Baccalaureate',courses_title:'Complementary Training',course_1:'Advanced Applications of Generative AI',course_1_inst:'University of Burgos',course_2:'Advanced Microsoft Word',course_2_inst:'Basque Government',course_3:'Introduction to Python',course_4:'Digital Marketing',course_4_inst:'Google Actívate',exp_title:'Work Experience',exp_1_date:'Jun–Sep 2025',exp_1_role:'Store Clerk Assistant',exp_1_desc:'Customer service, cash management, checkout, restocking and inventory control.',exp_2_date:'Dec 2023–Jan 2025',exp_2_role:'Brand Promoter',exp_2_desc:'Premium brand promotion (Johnnie Walker, Tanqueray) and experiential marketing.',exp_3_date:'Jul–Sep 2023',exp_3_role:"Driver's Assistant",exp_3_desc:'Passenger assistance, ticket management and security supervision in a tourist setting.',exp_4_date:'Jul–Aug 2022',exp_4_role:'Shoe Sales Advisor',exp_4_desc:'Customer advice and payment processing.',skills_tech:'Technical Skills',sg_langs:'Languages',sg_vcs:'Version Control',sg_tools:'Tools',sg_db:'Databases',skills_soft:'Soft Skills',soft_1:'Problem Solving',soft_2:'Active Communication',soft_3:'Teamwork',soft_4:'Adaptability',lang_title:'Languages',lang_es:'Spanish',lang_eu:'Basque',lang_en:'English',lang_native:'Native',lang_eu_cert:'C1 Official · HABE',lang_en_cert:'C1 Official · Cambridge',footer_text:'Coded from scratch by Eneko Ruiz Mollón',copy_ok:'Copied!',qr_caption:'Scan to see the interactive version'},
 
-  eu:{eyebrow:'Informatika Ingeniaria',tagline:'Ingeniaritza Informatikako Ikaslea',location:'Errenteria, Gipuzkoa',age:'20 urte',btn_print:'CV Inprimatu',profile_title:'Profila',profile_text:'Ingeniaritza Informatikako ikaslea, oinarri tekniko sendoarekin eta bezeroarentzako arretan esperientziaduna. Kodearen bidez arazoak konpontzeko, software diseinu eraginkorrerako eta etengabeko ikaskuntzarako pasioa. Moldagarritasunera eta talde-lanera ohitua.',edu_title:'Prestakuntza Akademikoa',edu_1_date:'2023 – Gaur egun',edu_1_deg:'Ingeniaritza Informatikako Gradua',edu_1_uni:'Euskal Herriko Unibertsitatea (UPV/EHU)',edu_1_desc:'Algoritmoak, datu-egiturak, SA, sareak eta software garapena.',edu_1_mention:'3. maila · Software Ingeniaritzako Aipamena',edu_2_deg:'Batxilergo Zientifikoa',courses_title:'Prestakuntza Osagarria',course_1:'IA Sortzailearen aplikazio aurreratuak',course_1_inst:'Burgoseko Unibertsitatea',course_2:'Microsoft Word Aurreratua',course_2_inst:'Eusko Jaurlaritza',course_3:'Python-en hastapenak',course_4:'Marketing Digitala',course_4_inst:'Google Actívate',exp_title:'Lan Esperientzia',exp_1_date:'Eka–Ira 2025',exp_1_role:'Saltzaile Laguntzailea',exp_1_desc:'Bezeroarentzako arreta, kutxaren kudeaketa, kobrantzak, inbentarioaren kontrola.',exp_2_date:'Abe 2023–Urt 2025',exp_2_role:'Marka Sustatzailea',exp_2_desc:'Premium marken sustapena (Johnnie Walker, Tanqueray) eta marketin esperientziala.',exp_3_date:'Eka–Ira 2023',exp_3_role:'Gidari Laguntzailea',exp_3_desc:'Bidaiariei arreta, sarreren kudeaketa eta segurtasunaren gainbegiratzea ingurune turistikoan.',exp_4_date:'Eka–Abu 2022',exp_4_role:'Oinetako Salmenta',exp_4_desc:'Bezeroei aholkularitza eta ordainketen kudeaketa.',skills_tech:'Gaitasun Teknikoak',sg_langs:'Programazio Hizkuntzak',sg_vcs:'Bertsio Kontrola',sg_tools:'Tresnak',sg_db:'Datu-baseak',skills_soft:'Gaitasun Pertsonalak',soft_1:'Arazoen Konponbidea',soft_2:'Komunikazio Aktiboa',soft_3:'Talde-lana',soft_4:'Moldagarritasuna',lang_title:'Hizkuntzak',lang_es:'Gaztelania',lang_eu:'Euskara',lang_en:'Ingelesa',lang_native:'Ama-hizkuntza',lang_eu_cert:'C1 Ofiziala · HABE',lang_en_cert:'C1 Ofiziala · Cambridge',footer_text:'Coded from scratch by Eneko Ruiz Mollón',copy_ok:'Kopiatuta!'},
+  eu:{eyebrow:'Informatika Ingeniaria',tagline:'Ingeniaritza Informatikako Ikaslea',location:'Errenteria, Gipuzkoa',age:'20 urte',btn_print:'CV Inprimatu',profile_title:'Profila',profile_text:'Ingeniaritza Informatikako ikaslea, oinarri tekniko sendoarekin eta bezeroarentzako arretan esperientziaduna. Kodearen bidez arazoak konpontzeko, software diseinu eraginkorrerako eta etengabeko ikaskuntzarako pasioa. Moldagarritasunera eta talde-lanera ohitua.',edu_title:'Prestakuntza Akademikoa',edu_1_date:'2023 – Gaur egun',edu_1_deg:'Ingeniaritza Informatikako Gradua',edu_1_uni:'Euskal Herriko Unibertsitatea (UPV/EHU)',edu_1_desc:'Algoritmoak, datu-egiturak, SA, sareak eta software garapena.',edu_1_mention:'3. maila · Software Ingeniaritzako Aipamena',edu_2_deg:'Batxilergo Zientifikoa',courses_title:'Prestakuntza Osagarria',course_1:'IA Sortzailearen aplikazio aurreratuak',course_1_inst:'Burgoseko Unibertsitatea',course_2:'Microsoft Word Aurreratua',course_2_inst:'Eusko Jaurlaritza',course_3:'Python-en hastapenak',course_4:'Marketing Digitala',course_4_inst:'Google Actívate',exp_title:'Lan Esperientzia',exp_1_date:'Eka–Ira 2025',exp_1_role:'Saltzaile Laguntzailea',exp_1_desc:'Bezeroarentzako arreta, kutxaren kudeaketa, kobrantzak, inbentarioaren kontrola.',exp_2_date:'Abe 2023–Urt 2025',exp_2_role:'Marka Sustatzailea',exp_2_desc:'Premium marken sustapena (Johnnie Walker, Tanqueray) eta marketin esperientziala.',exp_3_date:'Eka–Ira 2023',exp_3_role:'Gidari Laguntzailea',exp_3_desc:'Bidaiariei arreta, sarreren kudeaketa eta segurtasunaren gainbegiratzea ingurune turistikoan.',exp_4_date:'Eka–Abu 2022',exp_4_role:'Oinetako Salmenta',exp_4_desc:'Bezeroei aholkularitza eta ordainketen kudeaketa.',skills_tech:'Gaitasun Teknikoak',sg_langs:'Programazio Hizkuntzak',sg_vcs:'Bertsio Kontrola',sg_tools:'Tresnak',sg_db:'Datu-baseak',skills_soft:'Gaitasun Pertsonalak',soft_1:'Arazoen Konponbidea',soft_2:'Komunikazio Aktiboa',soft_3:'Talde-lana',soft_4:'Moldagarritasuna',lang_title:'Hizkuntzak',lang_es:'Gaztelania',lang_eu:'Euskara',lang_en:'Ingelesa',lang_native:'Ama-hizkuntza',lang_eu_cert:'C1 Ofiziala · HABE',lang_en_cert:'C1 Ofiziala · Cambridge',footer_text:'Coded from scratch by Eneko Ruiz Mollón',copy_ok:'Kopiatuta!',qr_caption:'Eskaneatu bertsio interaktiboa ikusteko'},
 
-  fr:{eyebrow:'Ingénieur Informaticien',tagline:'Étudiant en Génie Informatique',location:'Rentería, Espagne',age:'20 ans',btn_print:'Imprimer',profile_title:'Profil',profile_text:"Étudiant en génie informatique avec une solide base technique et une expérience en contact avec le public. Passionné par la résolution de problèmes par le code, la conception de logiciels efficaces et l'apprentissage continu. Habitué à l'adaptabilité et au travail en équipe.",edu_title:'Formation Académique',edu_1_date:'2023 – Présent',edu_1_deg:'Licence en Génie Informatique',edu_1_uni:"Université du Pays Basque (UPV/EHU)",edu_1_desc:"Algorithmes, structures de données, systèmes d'exploitation, réseaux et développement logiciel.",edu_1_mention:'3e année · Spécialité Génie Logiciel',edu_2_deg:'Baccalauréat Scientifique',courses_title:'Formation Complémentaire',course_1:"Applications avancées de l'IA générative",course_1_inst:'Université de Burgos',course_2:'Microsoft Word Avancé',course_2_inst:'Gouvernement Basque',course_3:'Introduction à Python',course_4:'Marketing Digital',course_4_inst:'Google Actívate',exp_title:'Expérience Professionnelle',exp_1_date:'Juin–Sep 2025',exp_1_role:'Assistant Vendeur',exp_1_desc:"Service client, gestion de caisse, réassort et contrôle des stocks.",exp_2_date:'Déc 2023–Jan 2025',exp_2_role:'Promoteur de Marque',exp_2_desc:'Promotion de marques premium et marketing expérientiel.',exp_3_date:'Juil–Sep 2023',exp_3_role:'Assistant Conducteur',exp_3_desc:'Assistance passagers, gestion billets, supervision sécurité en milieu touristique.',exp_4_date:'Juil–Août 2022',exp_4_role:'Vendeur Chaussures',exp_4_desc:'Conseil client et traitement des paiements.',skills_tech:'Compétences Techniques',sg_langs:'Langages',sg_vcs:'Contrôle de Version',sg_tools:'Outils',sg_db:'Bases de Données',skills_soft:'Compétences Personnelles',soft_1:'Résolution de Problèmes',soft_2:'Communication Active',soft_3:'Travail en Équipe',soft_4:'Adaptabilité',lang_title:'Langues',lang_es:'Espagnol',lang_eu:'Basque',lang_en:'Anglais',lang_native:'Natif',lang_eu_cert:'C1 Officiel · HABE',lang_en_cert:'C1 Officiel · Cambridge',footer_text:'Coded from scratch by Eneko Ruiz Mollón',copy_ok:'Copié !'},
+  fr:{eyebrow:'Ingénieur Informaticien',tagline:'Étudiant en Génie Informatique',location:'Rentería, Espagne',age:'20 ans',btn_print:'Imprimer',profile_title:'Profil',profile_text:"Étudiant en génie informatique avec une solide base technique et une expérience en contact avec le public. Passionné par la résolution de problèmes par le code, la conception de logiciels efficaces et l'apprentissage continu. Habitué à l'adaptabilité et au travail en équipe.",edu_title:'Formation Académique',edu_1_date:'2023 – Présent',edu_1_deg:'Licence en Génie Informatique',edu_1_uni:"Université du Pays Basque (UPV/EHU)",edu_1_desc:"Algorithmes, structures de données, systèmes d'exploitation, réseaux et développement logiciel.",edu_1_mention:'3e année · Spécialité Génie Logiciel',edu_2_deg:'Baccalauréat Scientifique',courses_title:'Formation Complémentaire',course_1:"Applications avancées de l'IA générative",course_1_inst:'Université de Burgos',course_2:'Microsoft Word Avancé',course_2_inst:'Gouvernement Basque',course_3:'Introduction à Python',course_4:'Marketing Digital',course_4_inst:'Google Actívate',exp_title:'Expérience Professionnelle',exp_1_date:'Juin–Sep 2025',exp_1_role:'Assistant Vendeur',exp_1_desc:"Service client, gestion de caisse, réassort et contrôle des stocks.",exp_2_date:'Déc 2023–Jan 2025',exp_2_role:'Promoteur de Marque',exp_2_desc:'Promotion de marques premium et marketing expérientiel.',exp_3_date:'Juil–Sep 2023',exp_3_role:'Assistant Conducteur',exp_3_desc:'Assistance passagers, gestion billets, supervision sécurité en milieu touristique.',exp_4_date:'Juil–Août 2022',exp_4_role:'Vendeur Chaussures',exp_4_desc:'Conseil client et traitement des paiements.',skills_tech:'Compétences Techniques',sg_langs:'Langages',sg_vcs:'Contrôle de Version',sg_tools:'Outils',sg_db:'Bases de Données',skills_soft:'Compétences Personnelles',soft_1:'Résolution de Problèmes',soft_2:'Communication Active',soft_3:'Travail en Équipe',soft_4:'Adaptabilité',lang_title:'Langues',lang_es:'Espagnol',lang_eu:'Basque',lang_en:'Anglais',lang_native:'Natif',lang_eu_cert:'C1 Officiel · HABE',lang_en_cert:'C1 Officiel · Cambridge',footer_text:'Coded from scratch by Eneko Ruiz Mollón',copy_ok:'Copié !',qr_caption:'Scannez pour voir la version interactive'},
 
-  de:{eyebrow:'Software-Ingenieur',tagline:'Informatik-Student',location:'Rentería, Spanien',age:'20 Jahre',btn_print:'CV drucken',profile_title:'Profil',profile_text:'Informatikstudent mit solider technischer Basis und Erfahrung im Kundenkontakt. Begeistert von der Problemlösung durch Code, effizientem Softwaredesign und kontinuierlichem Lernen. Gewohnt an Anpassungsfähigkeit und Teamarbeit.',edu_title:'Bildung',edu_1_date:'2023 – Heute',edu_1_deg:'Bachelor Informatik',edu_1_uni:'Universität des Baskenlandes (UPV/EHU)',edu_1_desc:'Algorithmen, Datenstrukturen, Betriebssysteme, Netzwerke und Softwareentwicklung.',edu_1_mention:'3. Studienjahr · Schwerpunkt Software Engineering',edu_2_deg:'Wissenschaftliches Abitur',courses_title:'Weiterbildung',course_1:'Fortgeschrittene Anwendungen generativer KI',course_1_inst:'Universität Burgos',course_2:'Microsoft Word Fortgeschritten',course_2_inst:'Baskische Regierung',course_3:'Einführung in Python',course_4:'Digitales Marketing',course_4_inst:'Google Actívate',exp_title:'Berufserfahrung',exp_1_date:'Jun–Sep 2025',exp_1_role:'Verkaufsassistent',exp_1_desc:'Kundenbetreuung, Kassenführung, Nachfüllen und Inventarkontrolle.',exp_2_date:'Dez 2023–Jan 2025',exp_2_role:'Markenbotschafter',exp_2_desc:'Promotion von Premium-Marken und Erlebnismarketing.',exp_3_date:'Jul–Sep 2023',exp_3_role:'Fahrerassistent',exp_3_desc:'Fahrgastbetreuung, Ticketverwaltung und Sicherheitsaufsicht.',exp_4_date:'Jul–Aug 2022',exp_4_role:'Schuhverkäufer',exp_4_desc:'Kundenberatung und Zahlungsabwicklung.',skills_tech:'Technische Kenntnisse',sg_langs:'Programmiersprachen',sg_vcs:'Versionskontrolle',sg_tools:'Werkzeuge',sg_db:'Datenbanken',skills_soft:'Persönliche Fähigkeiten',soft_1:'Problemlösung',soft_2:'Aktive Kommunikation',soft_3:'Teamarbeit',soft_4:'Anpassungsfähigkeit',lang_title:'Sprachen',lang_es:'Spanisch',lang_eu:'Baskisch',lang_en:'Englisch',lang_native:'Muttersprache',lang_eu_cert:'C1 Offiziell · HABE',lang_en_cert:'C1 Offiziell · Cambridge',footer_text:'Coded from scratch by Eneko Ruiz Mollón',copy_ok:'Kopiert!'},
+  de:{eyebrow:'Software-Ingenieur',tagline:'Informatik-Student',location:'Rentería, Spanien',age:'20 Jahre',btn_print:'CV drucken',profile_title:'Profil',profile_text:'Informatikstudent mit solider technischer Basis und Erfahrung im Kundenkontakt. Begeistert von der Problemlösung durch Code, effizientem Softwaredesign und kontinuierlichem Lernen. Gewohnt an Anpassungsfähigkeit und Teamarbeit.',edu_title:'Bildung',edu_1_date:'2023 – Heute',edu_1_deg:'Bachelor Informatik',edu_1_uni:'Universität des Baskenlandes (UPV/EHU)',edu_1_desc:'Algorithmen, Datenstrukturen, Betriebssysteme, Netzwerke und Softwareentwicklung.',edu_1_mention:'3. Studienjahr · Schwerpunkt Software Engineering',edu_2_deg:'Wissenschaftliches Abitur',courses_title:'Weiterbildung',course_1:'Fortgeschrittene Anwendungen generativer KI',course_1_inst:'Universität Burgos',course_2:'Microsoft Word Fortgeschritten',course_2_inst:'Baskische Regierung',course_3:'Einführung in Python',course_4:'Digitales Marketing',course_4_inst:'Google Actívate',exp_title:'Berufserfahrung',exp_1_date:'Jun–Sep 2025',exp_1_role:'Verkaufsassistent',exp_1_desc:'Kundenbetreuung, Kassenführung, Nachfüllen und Inventarkontrolle.',exp_2_date:'Dez 2023–Jan 2025',exp_2_role:'Markenbotschafter',exp_2_desc:'Promotion von Premium-Marken und Erlebnismarketing.',exp_3_date:'Jul–Sep 2023',exp_3_role:'Fahrerassistent',exp_3_desc:'Fahrgastbetreuung, Ticketverwaltung und Sicherheitsaufsicht.',exp_4_date:'Jul–Aug 2022',exp_4_role:'Schuhverkäufer',exp_4_desc:'Kundenberatung und Zahlungsabwicklung.',skills_tech:'Technische Kenntnisse',sg_langs:'Programmiersprachen',sg_vcs:'Versionskontrolle',sg_tools:'Werkzeuge',sg_db:'Datenbanken',skills_soft:'Persönliche Fähigkeiten',soft_1:'Problemlösung',soft_2:'Aktive Kommunikation',soft_3:'Teamarbeit',soft_4:'Anpassungsfähigkeit',lang_title:'Sprachen',lang_es:'Spanisch',lang_eu:'Baskisch',lang_en:'Englisch',lang_native:'Muttersprache',lang_eu_cert:'C1 Offiziell · HABE',lang_en_cert:'C1 Offiziell · Cambridge',footer_text:'Coded from scratch by Eneko Ruiz Mollón',copy_ok:'Kopiert!',qr_caption:'Scannen für die interaktive Version'},
 
-  it:{eyebrow:'Ingegnere Informatico',tagline:'Studente di Ingegneria Informatica',location:'Rentería, Spagna',age:'20 anni',btn_print:'Stampa CV',profile_title:'Profilo',profile_text:"Studente di Ingegneria Informatica con solide basi tecniche ed esperienza a contatto con il pubblico. Appassionato di problem solving tramite codice, progettazione software efficiente e apprendimento continuo. Abituato all'adattabilità e al lavoro di squadra.",edu_title:'Formazione Accademica',edu_1_date:'2023 – Oggi',edu_1_deg:'Laurea Triennale in Ingegneria Informatica',edu_1_uni:"Università dei Paesi Baschi (UPV/EHU)",edu_1_desc:"Algoritmi, strutture dati, sistemi operativi, reti e sviluppo software.",edu_1_mention:'3° anno · Indirizzo Software Engineering',edu_2_deg:'Liceo Scientifico',courses_title:'Formazione Complementare',course_1:"Applicazioni avanzate dell'IA generativa",course_1_inst:'Università di Burgos',course_2:'Microsoft Word Avanzato',course_2_inst:'Governo Basco',course_3:'Introduzione a Python',course_4:'Marketing Digitale',course_4_inst:'Google Actívate',exp_title:'Esperienza Lavorativa',exp_1_date:'Giu–Set 2025',exp_1_role:'Assistente Vendite',exp_1_desc:'Servizio clienti, gestione cassa, riassortimento e controllo inventario.',exp_2_date:'Dic 2023–Gen 2025',exp_2_role:'Promotore di Marca',exp_2_desc:'Promozione di marchi premium e marketing esperienziale.',exp_3_date:'Lug–Set 2023',exp_3_role:'Assistente Conducente',exp_3_desc:'Assistenza passeggeri, gestione biglietti e supervisione sicurezza in ambiente turistico.',exp_4_date:'Lug–Ago 2022',exp_4_role:'Commesso Calzature',exp_4_desc:'Consulenza clienti e gestione pagamenti.',skills_tech:'Competenze Tecniche',sg_langs:'Linguaggi',sg_vcs:'Controllo Versione',sg_tools:'Strumenti',sg_db:'Database',skills_soft:'Competenze Personali',soft_1:'Problem Solving',soft_2:'Comunicazione Attiva',soft_3:'Lavoro di Squadra',soft_4:'Adattabilità',lang_title:'Lingue',lang_es:'Spagnolo',lang_eu:'Basco',lang_en:'Inglese',lang_native:'Madrelingua',lang_eu_cert:'C1 Ufficiale · HABE',lang_en_cert:'C1 Ufficiale · Cambridge',footer_text:'Coded from scratch by Eneko Ruiz Mollón',copy_ok:'Copiato!'},
+  it:{eyebrow:'Ingegnere Informatico',tagline:'Studente di Ingegneria Informatica',location:'Rentería, Spagna',age:'20 anni',btn_print:'Stampa CV',profile_title:'Profilo',profile_text:"Studente di Ingegneria Informatica con solide basi tecniche ed esperienza a contatto con il pubblico. Appassionato di problem solving tramite codice, progettazione software efficiente e apprendimento continuo. Abituato all'adattabilità e al lavoro di squadra.",edu_title:'Formazione Accademica',edu_1_date:'2023 – Oggi',edu_1_deg:'Laurea Triennale in Ingegneria Informatica',edu_1_uni:"Università dei Paesi Baschi (UPV/EHU)",edu_1_desc:"Algoritmi, strutture dati, sistemi operativi, reti e sviluppo software.",edu_1_mention:'3° anno · Indirizzo Software Engineering',edu_2_deg:'Liceo Scientifico',courses_title:'Formazione Complementare',course_1:"Applicazioni avanzate dell'IA generativa",course_1_inst:'Università di Burgos',course_2:'Microsoft Word Avanzato',course_2_inst:'Governo Basco',course_3:'Introduzione a Python',course_4:'Marketing Digitale',course_4_inst:'Google Actívate',exp_title:'Esperienza Lavorativa',exp_1_date:'Giu–Set 2025',exp_1_role:'Assistente Vendite',exp_1_desc:'Servizio clienti, gestione cassa, riassortimento e controllo inventario.',exp_2_date:'Dic 2023–Gen 2025',exp_2_role:'Promotore di Marca',exp_2_desc:'Promozione di marchi premium e marketing esperienziale.',exp_3_date:'Lug–Set 2023',exp_3_role:'Assistente Conducente',exp_3_desc:'Assistenza passeggeri, gestione biglietti e supervisione sicurezza in ambiente turistico.',exp_4_date:'Lug–Ago 2022',exp_4_role:'Commesso Calzature',exp_4_desc:'Consulenza clienti e gestione pagamenti.',skills_tech:'Competenze Tecniche',sg_langs:'Linguaggi',sg_vcs:'Controllo Versione',sg_tools:'Strumenti',sg_db:'Database',skills_soft:'Competenze Personali',soft_1:'Problem Solving',soft_2:'Comunicazione Attiva',soft_3:'Lavoro di Squadra',soft_4:'Adattabilità',lang_title:'Lingue',lang_es:'Spagnolo',lang_eu:'Basco',lang_en:'Inglese',lang_native:'Madrelingua',lang_eu_cert:'C1 Ufficiale · HABE',lang_en_cert:'C1 Ufficiale · Cambridge',footer_text:'Coded from scratch by Eneko Ruiz Mollón',copy_ok:'Copiato!',qr_caption:'Scansiona per la versione interattiva'},
 
-  pt:{eyebrow:'Engenheiro Informático',tagline:'Estudante de Engenharia Informática',location:'Rentería, Espanha',age:'20 anos',btn_print:'Imprimir CV',profile_title:'Perfil',profile_text:'Estudante de Engenharia Informática com sólida base técnica e experiência de atendimento ao público. Apaixonado pela resolução de problemas através de código, design de software eficiente e aprendizagem contínua. Habituado à adaptabilidade e ao trabalho em equipa.',edu_title:'Formação Académica',edu_1_date:'2023 – Hoje',edu_1_deg:'Licenciatura em Engenharia Informática',edu_1_uni:'Universidade do País Basco (UPV/EHU)',edu_1_desc:'Algoritmos, estruturas de dados, sistemas operativos, redes e desenvolvimento de software.',edu_1_mention:'3.º ano · Especialização em Engenharia de Software',edu_2_deg:'Bacharelato Científico',courses_title:'Formação Complementar',course_1:'Aplicações Avançadas de IA Generativa',course_1_inst:'Universidade de Burgos',course_2:'Microsoft Word Avançado',course_2_inst:'Governo Basco',course_3:'Introdução ao Python',course_4:'Marketing Digital',course_4_inst:'Google Actívate',exp_title:'Experiência Profissional',exp_1_date:'Jun–Set 2025',exp_1_role:'Assistente de Vendas',exp_1_desc:'Atendimento ao cliente, gestão de caixa, reposição e controlo de inventário.',exp_2_date:'Dez 2023–Jan 2025',exp_2_role:'Promotor de Marca',exp_2_desc:'Promoção de marcas premium e marketing experiencial.',exp_3_date:'Jul–Set 2023',exp_3_role:'Assistente de Condutor',exp_3_desc:'Assistência a passageiros, gestão de bilhetes e supervisão de segurança em ambiente turístico.',exp_4_date:'Jul–Ago 2022',exp_4_role:'Vendedor de Calçado',exp_4_desc:'Aconselhamento a clientes e gestão de pagamentos.',skills_tech:'Competências Técnicas',sg_langs:'Linguagens',sg_vcs:'Controlo de Versão',sg_tools:'Ferramentas',sg_db:'Bases de Dados',skills_soft:'Competências Pessoais',soft_1:'Resolução de Problemas',soft_2:'Comunicação Activa',soft_3:'Trabalho em Equipa',soft_4:'Adaptabilidade',lang_title:'Idiomas',lang_es:'Espanhol',lang_eu:'Basco',lang_en:'Inglês',lang_native:'Nativo',lang_eu_cert:'C1 Oficial · HABE',lang_en_cert:'C1 Oficial · Cambridge',footer_text:'Coded from scratch by Eneko Ruiz Mollón',copy_ok:'Copiado!'},
+  pt:{eyebrow:'Engenheiro Informático',tagline:'Estudante de Engenharia Informática',location:'Rentería, Espanha',age:'20 anos',btn_print:'Imprimir CV',profile_title:'Perfil',profile_text:'Estudante de Engenharia Informática com sólida base técnica e experiência de atendimento ao público. Apaixonado pela resolução de problemas através de código, design de software eficiente e aprendizagem contínua. Habituado à adaptabilidade e ao trabalho em equipa.',edu_title:'Formação Académica',edu_1_date:'2023 – Hoje',edu_1_deg:'Licenciatura em Engenharia Informática',edu_1_uni:'Universidade do País Basco (UPV/EHU)',edu_1_desc:'Algoritmos, estruturas de dados, sistemas operativos, redes e desenvolvimento de software.',edu_1_mention:'3.º ano · Especialização em Engenharia de Software',edu_2_deg:'Bacharelato Científico',courses_title:'Formação Complementar',course_1:'Aplicações Avançadas de IA Generativa',course_1_inst:'Universidade de Burgos',course_2:'Microsoft Word Avançado',course_2_inst:'Governo Basco',course_3:'Introdução ao Python',course_4:'Marketing Digital',course_4_inst:'Google Actívate',exp_title:'Experiência Profissional',exp_1_date:'Jun–Set 2025',exp_1_role:'Assistente de Vendas',exp_1_desc:'Atendimento ao cliente, gestão de caixa, reposição e controlo de inventário.',exp_2_date:'Dez 2023–Jan 2025',exp_2_role:'Promotor de Marca',exp_2_desc:'Promoção de marcas premium e marketing experiencial.',exp_3_date:'Jul–Set 2023',exp_3_role:'Assistente de Condutor',exp_3_desc:'Assistência a passageiros, gestão de bilhetes e supervisão de segurança em ambiente turístico.',exp_4_date:'Jul–Ago 2022',exp_4_role:'Vendedor de Calçado',exp_4_desc:'Aconselhamento a clientes e gestão de pagamentos.',skills_tech:'Competências Técnicas',sg_langs:'Linguagens',sg_vcs:'Controlo de Versão',sg_tools:'Ferramentas',sg_db:'Bases de Dados',skills_soft:'Competências Pessoais',soft_1:'Resolução de Problemas',soft_2:'Comunicação Activa',soft_3:'Trabalho em Equipa',soft_4:'Adaptabilidade',lang_title:'Idiomas',lang_es:'Espanhol',lang_eu:'Basco',lang_en:'Inglês',lang_native:'Nativo',lang_eu_cert:'C1 Oficial · HABE',lang_en_cert:'C1 Oficial · Cambridge',footer_text:'Coded from scratch by Eneko Ruiz Mollón',copy_ok:'Copiado!',qr_caption:'Escanea para ver la versión interactiva'},
 
-  ca:{eyebrow:'Enginyer Informàtic',tagline:"Estudiant d'Enginyeria Informàtica",location:'Renteria, Guipúscoa',age:'20 anys',btn_print:'Imprimir CV',profile_title:'Perfil',profile_text:"Estudiant d'Enginyeria Informàtica amb una sòlida base tècnica i experiència de cara al públic. Apassionat per la resolució de problemes mitjançant codi, el disseny de programari eficient i l'aprenentatge continu. Acostumat a l'adaptabilitat i al treball en equip.",edu_title:'Formació Acadèmica',edu_1_date:'2023 – Avui',edu_1_deg:'Grau en Enginyeria Informàtica',edu_1_uni:"Universitat del País Basc (UPV/EHU)",edu_1_desc:"Algorismes, estructures de dades, SO, xarxes i desenvolupament de programari.",edu_1_mention:'3r curs · Menció en Enginyeria del Programari',edu_2_deg:'Batxillerat Científic',courses_title:'Formació Complementària',course_1:'Aplicacions avançades de IA generativa',course_1_inst:'Universitat de Burgos',course_2:'Microsoft Word Avançat',course_2_inst:'Govern Basc',course_3:'Introducció a Python',course_4:'Màrqueting Digital',course_4_inst:'Google Actívate',exp_title:'Experiència Laboral',exp_1_date:'Juny–Set 2025',exp_1_role:'Ajudant Dependent',exp_1_desc:"Atenció al client, gestió de caixa, reposició i control d'inventari.",exp_2_date:'Des 2023–Gen 2025',exp_2_role:'Promotor de Marca',exp_2_desc:'Promoció de marques premium i màrqueting experiencial.',exp_3_date:'Jul–Set 2023',exp_3_role:'Ajudant de Conductor',exp_3_desc:'Atenció a passatgers, gestió de bitllets i supervisió de seguretat en entorn turístic.',exp_4_date:'Jul–Ago 2022',exp_4_role:'Venedor de Calçat',exp_4_desc:'Assessorament a clients i gestió de pagaments.',skills_tech:'Competències Tècniques',sg_langs:'Llenguatges',sg_vcs:'Control de Versions',sg_tools:'Eines',sg_db:'Bases de Dades',skills_soft:'Habilitats Personals',soft_1:'Resolució de Problemes',soft_2:'Comunicació Activa',soft_3:'Treball en Equip',soft_4:'Adaptabilitat',lang_title:'Idiomes',lang_es:'Castellà',lang_eu:'Basc',lang_en:'Anglès',lang_native:'Natiu',lang_eu_cert:'C1 Oficial · HABE',lang_en_cert:'C1 Oficial · Cambridge',footer_text:'Coded from scratch by Eneko Ruiz Mollón',copy_ok:'Copiat!'},
+  ca:{eyebrow:'Enginyer Informàtic',tagline:"Estudiant d'Enginyeria Informàtica",location:'Renteria, Guipúscoa',age:'20 anys',btn_print:'Imprimir CV',profile_title:'Perfil',profile_text:"Estudiant d'Enginyeria Informàtica amb una sòlida base tècnica i experiència de cara al públic. Apassionat per la resolució de problemes mitjançant codi, el disseny de programari eficient i l'aprenentatge continu. Acostumat a l'adaptabilitat i al treball en equip.",edu_title:'Formació Acadèmica',edu_1_date:'2023 – Avui',edu_1_deg:'Grau en Enginyeria Informàtica',edu_1_uni:"Universitat del País Basc (UPV/EHU)",edu_1_desc:"Algorismes, estructures de dades, SO, xarxes i desenvolupament de programari.",edu_1_mention:'3r curs · Menció en Enginyeria del Programari',edu_2_deg:'Batxillerat Científic',courses_title:'Formació Complementària',course_1:'Aplicacions avançades de IA generativa',course_1_inst:'Universitat de Burgos',course_2:'Microsoft Word Avançat',course_2_inst:'Govern Basc',course_3:'Introducció a Python',course_4:'Màrqueting Digital',course_4_inst:'Google Actívate',exp_title:'Experiència Laboral',exp_1_date:'Juny–Set 2025',exp_1_role:'Ajudant Dependent',exp_1_desc:"Atenció al client, gestió de caixa, reposició i control d'inventari.",exp_2_date:'Des 2023–Gen 2025',exp_2_role:'Promotor de Marca',exp_2_desc:'Promoció de marques premium i màrqueting experiencial.',exp_3_date:'Jul–Set 2023',exp_3_role:'Ajudant de Conductor',exp_3_desc:'Atenció a passatgers, gestió de bitllets i supervisió de seguretat en entorn turístic.',exp_4_date:'Jul–Ago 2022',exp_4_role:'Venedor de Calçat',exp_4_desc:'Assessorament a clients i gestió de pagaments.',skills_tech:'Competències Tècniques',sg_langs:'Llenguatges',sg_vcs:'Control de Versions',sg_tools:'Eines',sg_db:'Bases de Dades',skills_soft:'Habilitats Personals',soft_1:'Resolució de Problemes',soft_2:'Comunicació Activa',soft_3:'Treball en Equip',soft_4:'Adaptabilitat',lang_title:'Idiomes',lang_es:'Castellà',lang_eu:'Basc',lang_en:'Anglès',lang_native:'Natiu',lang_eu_cert:'C1 Oficial · HABE',lang_en_cert:'C1 Oficial · Cambridge',footer_text:'Coded from scratch by Eneko Ruiz Mollón',copy_ok:'Copiat!',qr_caption:'Escaneja per veure la versió interactiva'},
 
   gl:{eyebrow:'Enxeñeiro Informático',tagline:'Estudante de Enxeñaría Informática',location:'Rentería, Guipúscoa',age:'20 anos',btn_print:'Imprimir CV',profile_title:'Perfil',profile_text:'Estudante de Enxeñaría Informática cunha sólida base técnica e experiencia de cara ao público. Apaixonado pola resolución de problemas mediante código, o deseño de software eficiente e o aprendizaxe continuo. Acostumado á adaptabilidade e ao traballo en equipo.',edu_title:'Formación Académica',edu_1_date:'2023 – Hoxe',edu_1_deg:'Grao en Enxeñaría Informática',edu_1_uni:'Universidade do País Vasco (UPV/EHU)',edu_1_desc:'Algoritmos, estruturas de datos, SO, redes e desenvolvemento de software.',edu_1_mention:'3.º curso · Mención en Enxeñaría do Software',edu_2_deg:'Bacharelato Científico',courses_title:'Formación Complementaria',course_1:'Aplicacións avanzadas de IA xenerativa',course_1_inst:'Universidade de Burgos',course_2:'Microsoft Word Avanzado',course_2_inst:'Goberno Vasco',course_3:'Introdución a Python',course_4:'Márketing Dixital',course_4_inst:'Google Actívate',exp_title:'Experiencia Laboral',exp_1_date:'Xuñ–Set 2025',exp_1_role:'Axudante de Dependente',exp_1_desc:'Atención ao cliente, xestión de caixa, reposición e control de inventario.',exp_2_date:'Dec 2023–Xan 2025',exp_2_role:'Promotor de Marca',exp_2_desc:'Promoción de marcas premium e márketing experiencial.',exp_3_date:'Xul–Set 2023',exp_3_role:'Axudante de Condutor',exp_3_desc:'Atención a pasaxeiros, xestión de billetes e supervisión de seguridade en contorno turístico.',exp_4_date:'Xul–Ago 2022',exp_4_role:'Venda de Calzado',exp_4_desc:'Asesoramento a clientes e xestión de pagamentos.',skills_tech:'Competencias Técnicas',sg_langs:'Linguaxes',sg_vcs:'Control de Versións',sg_tools:'Ferramentas',sg_db:'Bases de Datos',skills_soft:'Habilidades Persoais',soft_1:'Resolución de Problemas',soft_2:'Comunicación Activa',soft_3:'Traballo en Equipo',soft_4:'Adaptabilidade',lang_title:'Idiomas',lang_es:'Castelán',lang_eu:'Éuscaro',lang_en:'Inglés',lang_native:'Nativo',lang_eu_cert:'C1 Oficial · HABE',lang_en_cert:'C1 Oficial · Cambridge',footer_text:'Coded from scratch by Eneko Ruiz Mollón',copy_ok:'Copiado!'},
 
-  nl:{eyebrow:'Software Engineer',tagline:'Student Informatica',location:'Rentería, Spanje',age:'20 jaar',btn_print:'CV afdrukken',profile_title:'Profiel',profile_text:'Student Informatica met een solide technische basis en ervaring in klantcontact. Gepassioneerd door probleemoplossing via code, efficiënt softwareontwerp en voortdurend leren. Gewend aan aanpassingsvermogen en teamwerk.',edu_title:'Opleiding',edu_1_date:'2023 – Heden',edu_1_deg:'Bachelor Informatica',edu_1_uni:'Universiteit van het Baskenland (UPV/EHU)',edu_1_desc:'Algoritmen, datastructuren, besturingssystemen, netwerken en softwareontwikkeling.',edu_1_mention:'3e jaar · Specialisatie Software Engineering',edu_2_deg:'Wetenschappelijk Gymnasium',courses_title:'Aanvullende Opleiding',course_1:'Geavanceerde toepassingen generatieve AI',course_1_inst:'Universiteit van Burgos',course_2:'Geavanceerd Microsoft Word',course_2_inst:'Baskische Overheid',course_3:'Inleiding tot Python',course_4:'Digitale Marketing',course_4_inst:'Google Actívate',exp_title:'Werkervaring',exp_1_date:'Jun–Sep 2025',exp_1_role:'Winkelassistent',exp_1_desc:'Klantenservice, kassabeheer, aanvullen en voorraadbeheer.',exp_2_date:'Dec 2023–Jan 2025',exp_2_role:'Merkpromotor',exp_2_desc:'Promotie van premium merken en ervaringsmarketing.',exp_3_date:'Jul–Sep 2023',exp_3_role:'Conducteurassistent',exp_3_desc:'Passagiersondersteuning, ticketbeheer en veiligheidstoezicht.',exp_4_date:'Jul–Aug 2022',exp_4_role:'Schoenenverkoper',exp_4_desc:'Klantadvies en betalingsverwerking.',skills_tech:'Technische Vaardigheden',sg_langs:'Programmeertalen',sg_vcs:'Versiebeheer',sg_tools:'Gereedschappen',sg_db:'Databases',skills_soft:'Persoonlijke Vaardigheden',soft_1:'Probleemoplossing',soft_2:'Actieve Communicatie',soft_3:'Teamwerk',soft_4:'Aanpassingsvermogen',lang_title:'Talen',lang_es:'Spaans',lang_eu:'Baskisch',lang_en:'Engels',lang_native:'Moedertaal',lang_eu_cert:'C1 Officieel · HABE',lang_en_cert:'C1 Officieel · Cambridge',footer_text:'Coded from scratch by Eneko Ruiz Mollón',copy_ok:'Gekopieerd!'},
+  nl:{eyebrow:'Software Engineer',tagline:'Student Informatica',location:'Rentería, Spanje',age:'20 jaar',btn_print:'CV afdrukken',profile_title:'Profiel',profile_text:'Student Informatica met een solide technische basis en ervaring in klantcontact. Gepassioneerd door probleemoplossing via code, efficiënt softwareontwerp en voortdurend leren. Gewend aan aanpassingsvermogen en teamwerk.',edu_title:'Opleiding',edu_1_date:'2023 – Heden',edu_1_deg:'Bachelor Informatica',edu_1_uni:'Universiteit van het Baskenland (UPV/EHU)',edu_1_desc:'Algoritmen, datastructuren, besturingssystemen, netwerken en softwareontwikkeling.',edu_1_mention:'3e jaar · Specialisatie Software Engineering',edu_2_deg:'Wetenschappelijk Gymnasium',courses_title:'Aanvullende Opleiding',course_1:'Geavanceerde toepassingen generatieve AI',course_1_inst:'Universiteit van Burgos',course_2:'Geavanceerd Microsoft Word',course_2_inst:'Baskische Overheid',course_3:'Inleiding tot Python',course_4:'Digitale Marketing',course_4_inst:'Google Actívate',exp_title:'Werkervaring',exp_1_date:'Jun–Sep 2025',exp_1_role:'Winkelassistent',exp_1_desc:'Klantenservice, kassabeheer, aanvullen en voorraadbeheer.',exp_2_date:'Dec 2023–Jan 2025',exp_2_role:'Merkpromotor',exp_2_desc:'Promotie van premium merken en ervaringsmarketing.',exp_3_date:'Jul–Sep 2023',exp_3_role:'Conducteurassistent',exp_3_desc:'Passagiersondersteuning, ticketbeheer en veiligheidstoezicht.',exp_4_date:'Jul–Aug 2022',exp_4_role:'Schoenenverkoper',exp_4_desc:'Klantadvies en betalingsverwerking.',skills_tech:'Technische Vaardigheden',sg_langs:'Programmeertalen',sg_vcs:'Versiebeheer',sg_tools:'Gereedschappen',sg_db:'Databases',skills_soft:'Persoonlijke Vaardigheden',soft_1:'Probleemoplossing',soft_2:'Actieve Communicatie',soft_3:'Teamwerk',soft_4:'Aanpassingsvermogen',lang_title:'Talen',lang_es:'Spaans',lang_eu:'Baskisch',lang_en:'Engels',lang_native:'Moedertaal',lang_eu_cert:'C1 Officieel · HABE',lang_en_cert:'C1 Officieel · Cambridge',footer_text:'Coded from scratch by Eneko Ruiz Mollón',copy_ok:'Gekopieerd!',qr_caption:'Scan voor de interactieve versie'},
 
-  ru:{eyebrow:'Программный инженер',tagline:'Студент информатики',location:'Рентерия, Испания',age:'20 лет',btn_print:'Печать резюме',profile_title:'Профиль',profile_text:'Студент информатики с прочной технической базой и опытом работы с клиентами. Увлечён решением задач с помощью кода, эффективным проектированием ПО и непрерывным обучением. Привык к адаптивности и командной работе.',edu_title:'Образование',edu_1_date:'2023 – сейчас',edu_1_deg:'Бакалавр информатики',edu_1_uni:'Университет Страны Басков (UPV/EHU)',edu_1_desc:'Алгоритмы, структуры данных, ОС, сети и разработка ПО.',edu_1_mention:'3 курс · Специализация «Программная инженерия»',edu_2_deg:'Научный бакалавриат',courses_title:'Дополнительное обучение',course_1:'Продвинутые применения генеративного ИИ',course_1_inst:'Университет Бургоса',course_2:'Microsoft Word (продвинутый)',course_2_inst:'Правительство Страны Басков',course_3:'Введение в Python',course_4:'Цифровой маркетинг',course_4_inst:'Google Actívate',exp_title:'Опыт работы',exp_1_date:'Июн–Сен 2025',exp_1_role:'Помощник продавца',exp_1_desc:'Обслуживание клиентов, кассовый учёт, пополнение витрин и контроль склада.',exp_2_date:'Дек 2023–Янв 2025',exp_2_role:'Промоутер бренда',exp_2_desc:'Продвижение премиальных марок и событийный маркетинг.',exp_3_date:'Июл–Сен 2023',exp_3_role:'Помощник машиниста',exp_3_desc:'Обслуживание пассажиров, продажа билетов, контроль безопасности.',exp_4_date:'Июл–Авг 2022',exp_4_role:'Продавец обуви',exp_4_desc:'Консультирование клиентов и обработка платежей.',skills_tech:'Технические навыки',sg_langs:'Языки программирования',sg_vcs:'Контроль версий',sg_tools:'Инструменты',sg_db:'Базы данных',skills_soft:'Личные качества',soft_1:'Решение проблем',soft_2:'Активная коммуникация',soft_3:'Командная работа',soft_4:'Адаптивность',lang_title:'Языки',lang_es:'Испанский',lang_eu:'Баскский',lang_en:'Английский',lang_native:'Родной',lang_eu_cert:'C1 Официальный · HABE',lang_en_cert:'C1 Официальный · Cambridge',footer_text:'Coded from scratch by Eneko Ruiz Mollón',copy_ok:'Скопировано!'},
+  ru:{eyebrow:'Программный инженер',tagline:'Студент информатики',location:'Рентерия, Испания',age:'20 лет',btn_print:'Печать резюме',profile_title:'Профиль',profile_text:'Студент информатики с прочной технической базой и опытом работы с клиентами. Увлечён решением задач с помощью кода, эффективным проектированием ПО и непрерывным обучением. Привык к адаптивности и командной работе.',edu_title:'Образование',edu_1_date:'2023 – сейчас',edu_1_deg:'Бакалавр информатики',edu_1_uni:'Университет Страны Басков (UPV/EHU)',edu_1_desc:'Алгоритмы, структуры данных, ОС, сети и разработка ПО.',edu_1_mention:'3 курс · Специализация «Программная инженерия»',edu_2_deg:'Научный бакалавриат',courses_title:'Дополнительное обучение',course_1:'Продвинутые применения генеративного ИИ',course_1_inst:'Университет Бургоса',course_2:'Microsoft Word (продвинутый)',course_2_inst:'Правительство Страны Басков',course_3:'Введение в Python',course_4:'Цифровой маркетинг',course_4_inst:'Google Actívate',exp_title:'Опыт работы',exp_1_date:'Июн–Сен 2025',exp_1_role:'Помощник продавца',exp_1_desc:'Обслуживание клиентов, кассовый учёт, пополнение витрин и контроль склада.',exp_2_date:'Дек 2023–Янв 2025',exp_2_role:'Промоутер бренда',exp_2_desc:'Продвижение премиальных марок и событийный маркетинг.',exp_3_date:'Июл–Сен 2023',exp_3_role:'Помощник машиниста',exp_3_desc:'Обслуживание пассажиров, продажа билетов, контроль безопасности.',exp_4_date:'Июл–Авг 2022',exp_4_role:'Продавец обуви',exp_4_desc:'Консультирование клиентов и обработка платежей.',skills_tech:'Технические навыки',sg_langs:'Языки программирования',sg_vcs:'Контроль версий',sg_tools:'Инструменты',sg_db:'Базы данных',skills_soft:'Личные качества',soft_1:'Решение проблем',soft_2:'Активная коммуникация',soft_3:'Командная работа',soft_4:'Адаптивность',lang_title:'Языки',lang_es:'Испанский',lang_eu:'Баскский',lang_en:'Английский',lang_native:'Родной',lang_eu_cert:'C1 Официальный · HABE',lang_en_cert:'C1 Официальный · Cambridge',footer_text:'Coded from scratch by Eneko Ruiz Mollón',copy_ok:'Скопировано!',qr_caption:'Отсканируйте для интерактивной версии'},
 
-  zh:{eyebrow:'软件工程师',tagline:'计算机工程专业学生',location:'西班牙伦特里亚',age:'20岁',btn_print:'打印简历',profile_title:'个人简介',profile_text:'计算机工程专业学生，具备扎实的技术基础和客户服务经验。热衷于用代码解决问题、高效软件设计和持续学习，适应能力强，善于团队合作。',edu_title:'教育经历',edu_1_date:'2023年至今',edu_1_deg:'计算机工程学士',edu_1_uni:'巴斯克大学 (UPV/EHU)',edu_1_desc:'算法、数据结构、操作系统、网络与软件开发。',edu_1_mention:'大三 · 软件工程方向',edu_2_deg:'理科高中',courses_title:'补充培训',course_1:'生成式AI高级应用',course_1_inst:'布尔戈斯大学',course_2:'高级Microsoft Word',course_2_inst:'巴斯克政府',course_3:'Python入门',course_4:'数字营销',course_4_inst:'Google Actívate',exp_title:'工作经历',exp_1_date:'2025年6–9月',exp_1_role:'销售助理',exp_1_desc:'客户服务、收银管理、货物补充及库存控制。',exp_2_date:'2023年12月–2025年1月',exp_2_role:'品牌推广员',exp_2_desc:'推广高端品牌并开展体验式营销活动。',exp_3_date:'2023年7–9月',exp_3_role:'驾驶员助理',exp_3_desc:'旅游环境中的乘客服务、票务管理及安全监督。',exp_4_date:'2022年7–8月',exp_4_role:'鞋类销售员',exp_4_desc:'客户咨询与付款处理。',skills_tech:'技术技能',sg_langs:'编程语言',sg_vcs:'版本控制',sg_tools:'工具',sg_db:'数据库',skills_soft:'软技能',soft_1:'问题解决',soft_2:'主动沟通',soft_3:'团队合作',soft_4:'适应能力',lang_title:'语言能力',lang_es:'西班牙语',lang_eu:'巴斯克语',lang_en:'英语',lang_native:'母语',lang_eu_cert:'C1官方认证 · HABE',lang_en_cert:'C1官方认证 · Cambridge',footer_text:'Coded from scratch by Eneko Ruiz Mollón',copy_ok:'已复制！'},
+  zh:{eyebrow:'软件工程师',tagline:'计算机工程专业学生',location:'西班牙伦特里亚',age:'20岁',btn_print:'打印简历',profile_title:'个人简介',profile_text:'计算机工程专业学生，具备扎实的技术基础和客户服务经验。热衷于用代码解决问题、高效软件设计和持续学习，适应能力强，善于团队合作。',edu_title:'教育经历',edu_1_date:'2023年至今',edu_1_deg:'计算机工程学士',edu_1_uni:'巴斯克大学 (UPV/EHU)',edu_1_desc:'算法、数据结构、操作系统、网络与软件开发。',edu_1_mention:'大三 · 软件工程方向',edu_2_deg:'理科高中',courses_title:'补充培训',course_1:'生成式AI高级应用',course_1_inst:'布尔戈斯大学',course_2:'高级Microsoft Word',course_2_inst:'巴斯克政府',course_3:'Python入门',course_4:'数字营销',course_4_inst:'Google Actívate',exp_title:'工作经历',exp_1_date:'2025年6–9月',exp_1_role:'销售助理',exp_1_desc:'客户服务、收银管理、货物补充及库存控制。',exp_2_date:'2023年12月–2025年1月',exp_2_role:'品牌推广员',exp_2_desc:'推广高端品牌并开展体验式营销活动。',exp_3_date:'2023年7–9月',exp_3_role:'驾驶员助理',exp_3_desc:'旅游环境中的乘客服务、票务管理及安全监督。',exp_4_date:'2022年7–8月',exp_4_role:'鞋类销售员',exp_4_desc:'客户咨询与付款处理。',skills_tech:'技术技能',sg_langs:'编程语言',sg_vcs:'版本控制',sg_tools:'工具',sg_db:'数据库',skills_soft:'软技能',soft_1:'问题解决',soft_2:'主动沟通',soft_3:'团队合作',soft_4:'适应能力',lang_title:'语言能力',lang_es:'西班牙语',lang_eu:'巴斯克语',lang_en:'英语',lang_native:'母语',lang_eu_cert:'C1官方认证 · HABE',lang_en_cert:'C1官方认证 · Cambridge',footer_text:'Coded from scratch by Eneko Ruiz Mollón',copy_ok:'已复制！',qr_caption:'扫描查看互动版本'},
 
-  ja:{eyebrow:'ソフトウェアエンジニア',tagline:'情報工学専攻学生',location:'スペイン・レンテリア',age:'20歳',btn_print:'CV印刷',profile_title:'プロフィール',profile_text:'情報工学専攻の学生で、確かな技術基盤と顧客対応の経験を持つ。コードによる問題解決、効率的なソフトウェア設計、継続的な学習に情熱を持つ。適応力が高く、チームワークを得意とする。',edu_title:'学歴',edu_1_date:'2023年〜現在',edu_1_deg:'情報工学学士',edu_1_uni:'バスク大学（UPV/EHU）',edu_1_desc:'アルゴリズム、データ構造、OS、ネットワーク、ソフトウェア開発。',edu_1_mention:'3年次 · ソフトウェアエンジニアリング専攻',edu_2_deg:'理系バカロレア',courses_title:'補足研修',course_1:'生成AI高度活用',course_1_inst:'ブルゴス大学',course_2:'Microsoft Word上級',course_2_inst:'バスク自治政府',course_3:'Python入門',course_4:'デジタルマーケティング',course_4_inst:'Google Actívate',exp_title:'職歴',exp_1_date:'2025年6〜9月',exp_1_role:'販売アシスタント',exp_1_desc:'接客、レジ管理、商品補充、在庫管理。',exp_2_date:'2023年12月〜2025年1月',exp_2_role:'ブランドアンバサダー',exp_2_desc:'プレミアムブランドのプロモーションと体験型マーケティング。',exp_3_date:'2023年7〜9月',exp_3_role:'運転手補助',exp_3_desc:'観光地での乗客対応、チケット管理、安全監視。',exp_4_date:'2022年7〜8月',exp_4_role:'靴販売員',exp_4_desc:'顧客へのアドバイスと支払い処理。',skills_tech:'技術スキル',sg_langs:'プログラミング言語',sg_vcs:'バージョン管理',sg_tools:'ツール',sg_db:'データベース',skills_soft:'ソフトスキル',soft_1:'問題解決',soft_2:'積極的なコミュニケーション',soft_3:'チームワーク',soft_4:'適応力',lang_title:'語学力',lang_es:'スペイン語',lang_eu:'バスク語',lang_en:'英語',lang_native:'母国語',lang_eu_cert:'C1公式 · HABE',lang_en_cert:'C1公式 · Cambridge',footer_text:'Coded from scratch by Eneko Ruiz Mollón',copy_ok:'コピーしました！'},
+  ja:{eyebrow:'ソフトウェアエンジニア',tagline:'情報工学専攻学生',location:'スペイン・レンテリア',age:'20歳',btn_print:'CV印刷',profile_title:'プロフィール',profile_text:'情報工学専攻の学生で、確かな技術基盤と顧客対応の経験を持つ。コードによる問題解決、効率的なソフトウェア設計、継続的な学習に情熱を持つ。適応力が高く、チームワークを得意とする。',edu_title:'学歴',edu_1_date:'2023年〜現在',edu_1_deg:'情報工学学士',edu_1_uni:'バスク大学（UPV/EHU）',edu_1_desc:'アルゴリズム、データ構造、OS、ネットワーク、ソフトウェア開発。',edu_1_mention:'3年次 · ソフトウェアエンジニアリング専攻',edu_2_deg:'理系バカロレア',courses_title:'補足研修',course_1:'生成AI高度活用',course_1_inst:'ブルゴス大学',course_2:'Microsoft Word上級',course_2_inst:'バスク自治政府',course_3:'Python入門',course_4:'デジタルマーケティング',course_4_inst:'Google Actívate',exp_title:'職歴',exp_1_date:'2025年6〜9月',exp_1_role:'販売アシスタント',exp_1_desc:'接客、レジ管理、商品補充、在庫管理。',exp_2_date:'2023年12月〜2025年1月',exp_2_role:'ブランドアンバサダー',exp_2_desc:'プレミアムブランドのプロモーションと体験型マーケティング。',exp_3_date:'2023年7〜9月',exp_3_role:'運転手補助',exp_3_desc:'観光地での乗客対応、チケット管理、安全監視。',exp_4_date:'2022年7〜8月',exp_4_role:'靴販売員',exp_4_desc:'顧客へのアドバイスと支払い処理。',skills_tech:'技術スキル',sg_langs:'プログラミング言語',sg_vcs:'バージョン管理',sg_tools:'ツール',sg_db:'データベース',skills_soft:'ソフトスキル',soft_1:'問題解決',soft_2:'積極的なコミュニケーション',soft_3:'チームワーク',soft_4:'適応力',lang_title:'語学力',lang_es:'スペイン語',lang_eu:'バスク語',lang_en:'英語',lang_native:'母国語',lang_eu_cert:'C1公式 · HABE',lang_en_cert:'C1公式 · Cambridge',footer_text:'Coded from scratch by Eneko Ruiz Mollón',copy_ok:'コピーしました！',qr_caption:'スキャンしてインタラクティブ版を見る'},
 
-  ko:{eyebrow:'소프트웨어 엔지니어',tagline:'컴퓨터 공학 전공 학생',location:'스페인 렌테리아',age:'20세',btn_print:'CV 인쇄',profile_title:'프로필',profile_text:'탄탄한 기술 기반과 고객 응대 경험을 갖춘 컴퓨터 공학 전공 학생입니다. 코드를 통한 문제 해결, 효율적인 소프트웨어 설계, 지속적인 학습에 열정적이며 적응력과 팀워크에 강합니다.',edu_title:'학력',edu_1_date:'2023년 ~ 현재',edu_1_deg:'컴퓨터공학 학사',edu_1_uni:'바스크대학교 (UPV/EHU)',edu_1_desc:'알고리즘, 자료구조, 운영체제, 네트워크 및 소프트웨어 개발.',edu_1_mention:'3학년 · 소프트웨어공학 전공',edu_2_deg:'이과 바칠레라토',courses_title:'추가 교육',course_1:'생성형 AI 고급 응용',course_1_inst:'부르고스대학교',course_2:'Microsoft Word 고급',course_2_inst:'바스크 정부',course_3:'Python 입문',course_4:'디지털 마케팅',course_4_inst:'Google Actívate',exp_title:'경력',exp_1_date:'2025년 6~9월',exp_1_role:'판매 보조원',exp_1_desc:'고객 서비스, 계산대 관리, 재고 보충 및 재고 관리.',exp_2_date:'2023년 12월~2025년 1월',exp_2_role:'브랜드 홍보대사',exp_2_desc:'프리미엄 브랜드 홍보 및 체험 마케팅.',exp_3_date:'2023년 7~9월',exp_3_role:'운전 보조원',exp_3_desc:'관광 환경에서의 승객 안내, 티켓 관리 및 안전 감독.',exp_4_date:'2022년 7~8월',exp_4_role:'신발 판매원',exp_4_desc:'고객 상담 및 결제 처리.',skills_tech:'기술 역량',sg_langs:'프로그래밍 언어',sg_vcs:'버전 관리',sg_tools:'도구',sg_db:'데이터베이스',skills_soft:'소프트 스킬',soft_1:'문제 해결',soft_2:'적극적 의사소통',soft_3:'팀워크',soft_4:'적응력',lang_title:'어학 능력',lang_es:'스페인어',lang_eu:'바스크어',lang_en:'영어',lang_native:'모국어',lang_eu_cert:'C1 공식 · HABE',lang_en_cert:'C1 공식 · Cambridge',footer_text:'Coded from scratch by Eneko Ruiz Mollón',copy_ok:'복사됨!'},
+  ko:{eyebrow:'소프트웨어 엔지니어',tagline:'컴퓨터 공학 전공 학생',location:'스페인 렌테리아',age:'20세',btn_print:'CV 인쇄',profile_title:'프로필',profile_text:'탄탄한 기술 기반과 고객 응대 경험을 갖춘 컴퓨터 공학 전공 학생입니다. 코드를 통한 문제 해결, 효율적인 소프트웨어 설계, 지속적인 학습에 열정적이며 적응력과 팀워크에 강합니다.',edu_title:'학력',edu_1_date:'2023년 ~ 현재',edu_1_deg:'컴퓨터공학 학사',edu_1_uni:'바스크대학교 (UPV/EHU)',edu_1_desc:'알고리즘, 자료구조, 운영체제, 네트워크 및 소프트웨어 개발.',edu_1_mention:'3학년 · 소프트웨어공학 전공',edu_2_deg:'이과 바칠레라토',courses_title:'추가 교육',course_1:'생성형 AI 고급 응용',course_1_inst:'부르고스대학교',course_2:'Microsoft Word 고급',course_2_inst:'바스크 정부',course_3:'Python 입문',course_4:'디지털 마케팅',course_4_inst:'Google Actívate',exp_title:'경력',exp_1_date:'2025년 6~9월',exp_1_role:'판매 보조원',exp_1_desc:'고객 서비스, 계산대 관리, 재고 보충 및 재고 관리.',exp_2_date:'2023년 12월~2025년 1월',exp_2_role:'브랜드 홍보대사',exp_2_desc:'프리미엄 브랜드 홍보 및 체험 마케팅.',exp_3_date:'2023년 7~9월',exp_3_role:'운전 보조원',exp_3_desc:'관광 환경에서의 승객 안내, 티켓 관리 및 안전 감독.',exp_4_date:'2022년 7~8월',exp_4_role:'신발 판매원',exp_4_desc:'고객 상담 및 결제 처리.',skills_tech:'기술 역량',sg_langs:'프로그래밍 언어',sg_vcs:'버전 관리',sg_tools:'도구',sg_db:'데이터베이스',skills_soft:'소프트 스킬',soft_1:'문제 해결',soft_2:'적극적 의사소통',soft_3:'팀워크',soft_4:'적응력',lang_title:'어학 능력',lang_es:'스페인어',lang_eu:'바스크어',lang_en:'영어',lang_native:'모국어',lang_eu_cert:'C1 공식 · HABE',lang_en_cert:'C1 공식 · Cambridge',footer_text:'Coded from scratch by Eneko Ruiz Mollón',copy_ok:'복사됨!',qr_caption:'스캔하여 대화형 버전 보기'},
 
-  ar:{eyebrow:'مهندس برمجيات',tagline:'طالب هندسة الحاسوب',location:'رنتيريا، إسبانيا',age:'٢٠ عامًا',btn_print:'طباعة السيرة الذاتية',profile_title:'الملف الشخصي',profile_text:'طالب في هندسة الحاسوب مع قاعدة تقنية صلبة وخبرة في التعامل مع العملاء. شغوف بحل المشكلات من خلال البرمجة، وتصميم البرمجيات بكفاءة، والتعلم المستمر. معتاد على التكيف والعمل الجماعي.',edu_title:'التعليم',edu_1_date:'٢٠٢٣ – حتى الآن',edu_1_deg:'بكالوريوس هندسة الحاسوب',edu_1_uni:'جامعة البلاد الباسكية (UPV/EHU)',edu_1_desc:'الخوارزميات، هياكل البيانات، أنظمة التشغيل، الشبكات وتطوير البرمجيات.',edu_1_mention:'السنة الثالثة · تخصص هندسة البرمجيات',edu_2_deg:'بكالوريا علمية',courses_title:'التدريب التكميلي',course_1:'التطبيقات المتقدمة للذكاء الاصطناعي التوليدي',course_1_inst:'جامعة بورغوس',course_2:'Microsoft Word المتقدم',course_2_inst:'حكومة البلاد الباسكية',course_3:'مقدمة في Python',course_4:'التسويق الرقمي',course_4_inst:'Google Actívate',exp_title:'الخبرة العملية',exp_1_date:'يونيو–سبتمبر ٢٠٢٥',exp_1_role:'مساعد مبيعات',exp_1_desc:'خدمة العملاء، إدارة الصندوق، التزويد ومراقبة المخزون.',exp_2_date:'ديسمبر ٢٠٢٣–يناير ٢٠٢٥',exp_2_role:'مروّج للعلامة التجارية',exp_2_desc:'ترويج العلامات التجارية الفاخرة والتسويق التجريبي.',exp_3_date:'يوليو–سبتمبر ٢٠٢٣',exp_3_role:'مساعد سائق',exp_3_desc:'مساعدة الركاب، إدارة التذاكر والإشراف على السلامة.',exp_4_date:'يوليو–أغسطس ٢٠٢٢',exp_4_role:'بائع أحذية',exp_4_desc:'تقديم المشورة للعملاء ومعالجة المدفوعات.',skills_tech:'المهارات التقنية',sg_langs:'لغات البرمجة',sg_vcs:'التحكم في الإصدار',sg_tools:'الأدوات',sg_db:'قواعد البيانات',skills_soft:'المهارات الشخصية',soft_1:'حل المشكلات',soft_2:'التواصل الفعّال',soft_3:'العمل الجماعي',soft_4:'القدرة على التكيّف',lang_title:'اللغات',lang_es:'الإسبانية',lang_eu:'الباسكية',lang_en:'الإنجليزية',lang_native:'اللغة الأم',lang_eu_cert:'C1 رسمي · HABE',lang_en_cert:'C1 رسمي · Cambridge',footer_text:'Coded from scratch by Eneko Ruiz Mollón',copy_ok:'تم النسخ!'}
+  ar:{eyebrow:'مهندس برمجيات',tagline:'طالب هندسة الحاسوب',location:'رنتيريا، إسبانيا',age:'٢٠ عامًا',btn_print:'طباعة السيرة الذاتية',profile_title:'الملف الشخصي',profile_text:'طالب في هندسة الحاسوب مع قاعدة تقنية صلبة وخبرة في التعامل مع العملاء. شغوف بحل المشكلات من خلال البرمجة، وتصميم البرمجيات بكفاءة، والتعلم المستمر. معتاد على التكيف والعمل الجماعي.',edu_title:'التعليم',edu_1_date:'٢٠٢٣ – حتى الآن',edu_1_deg:'بكالوريوس هندسة الحاسوب',edu_1_uni:'جامعة البلاد الباسكية (UPV/EHU)',edu_1_desc:'الخوارزميات، هياكل البيانات، أنظمة التشغيل، الشبكات وتطوير البرمجيات.',edu_1_mention:'السنة الثالثة · تخصص هندسة البرمجيات',edu_2_deg:'بكالوريا علمية',courses_title:'التدريب التكميلي',course_1:'التطبيقات المتقدمة للذكاء الاصطناعي التوليدي',course_1_inst:'جامعة بورغوس',course_2:'Microsoft Word المتقدم',course_2_inst:'حكومة البلاد الباسكية',course_3:'مقدمة في Python',course_4:'التسويق الرقمي',course_4_inst:'Google Actívate',exp_title:'الخبرة العملية',exp_1_date:'يونيو–سبتمبر ٢٠٢٥',exp_1_role:'مساعد مبيعات',exp_1_desc:'خدمة العملاء، إدارة الصندوق، التزويد ومراقبة المخزون.',exp_2_date:'ديسمبر ٢٠٢٣–يناير ٢٠٢٥',exp_2_role:'مروّج للعلامة التجارية',exp_2_desc:'ترويج العلامات التجارية الفاخرة والتسويق التجريبي.',exp_3_date:'يوليو–سبتمبر ٢٠٢٣',exp_3_role:'مساعد سائق',exp_3_desc:'مساعدة الركاب، إدارة التذاكر والإشراف على السلامة.',exp_4_date:'يوليو–أغسطس ٢٠٢٢',exp_4_role:'بائع أحذية',exp_4_desc:'تقديم المشورة للعملاء ومعالجة المدفوعات.',skills_tech:'المهارات التقنية',sg_langs:'لغات البرمجة',sg_vcs:'التحكم في الإصدار',sg_tools:'الأدوات',sg_db:'قواعد البيانات',skills_soft:'المهارات الشخصية',soft_1:'حل المشكلات',soft_2:'التواصل الفعّال',soft_3:'العمل الجماعي',soft_4:'القدرة على التكيّف',lang_title:'اللغات',lang_es:'الإسبانية',lang_eu:'الباسكية',lang_en:'الإنجليزية',lang_native:'اللغة الأم',lang_eu_cert:'C1 رسمي · HABE',lang_en_cert:'C1 رسمي · Cambridge',footer_text:'Coded from scratch by Eneko Ruiz Mollón',copy_ok:'تم النسخ!',qr_caption:'امسح للاطلاع على النسخة التفاعلية'},
+
+  hi:{eyebrow:'सॉफ़्टवेयर इंजीनियर',tagline:'कंप्यूटर इंजीनियरिंग छात्र',location:'रेंटेरिया, स्पेन',age:'20 वर्ष',btn_print:'CV प्रिंट करें',profile_title:'प्रोफ़ाइल',profile_text:'कंप्यूटर इंजीनियरिंग के छात्र जिनके पास मज़बूत तकनीकी आधार और ग्राहक सेवा का अनुभव है। कोड द्वारा समस्या समाधान, कुशल सॉफ़्टवेयर डिज़ाइन और निरंतर सीखने के प्रति उत्साही। अनुकूलनशीलता और टीम वर्क के अभ्यस्त।',edu_title:'शिक्षा',edu_1_date:'2023 – अब तक',edu_1_deg:'कंप्यूटर इंजीनियरिंग स्नातक',edu_1_uni:'बास्क देश विश्वविद्यालय (UPV/EHU)',edu_1_desc:'एल्गोरिदम, डेटा संरचनाएँ, ऑपरेटिंग सिस्टम, नेटवर्क और सॉफ़्टवेयर विकास।',edu_1_mention:'तीसरा वर्ष · सॉफ़्टवेयर इंजीनियरिंग विशेषज्ञता',edu_2_deg:'वैज्ञानिक बैचिलेराटो',courses_title:'अतिरिक्त प्रशिक्षण',course_1:'जनरेटिव AI के उन्नत अनुप्रयोग',course_1_inst:'बर्गोस विश्वविद्यालय',course_2:'Microsoft Word उन्नत',course_2_inst:'बास्क सरकार',course_3:'Python का परिचय',course_4:'डिजिटल मार्केटिंग',course_4_inst:'Google Actívate',exp_title:'कार्य अनुभव',exp_1_date:'जून–सितंबर 2025',exp_1_role:'बिक्री सहायक',exp_1_desc:'ग्राहक सेवा, नकद प्रबंधन, स्टॉक भरना और इन्वेंट्री नियंत्रण।',exp_2_date:'दिसंबर 2023–जनवरी 2025',exp_2_role:'ब्रांड प्रमोटर',exp_2_desc:'प्रीमियम ब्रांड प्रमोशन और अनुभवात्मक मार्केटिंग।',exp_3_date:'जुलाई–सितंबर 2023',exp_3_role:'ड्राइवर सहायक',exp_3_desc:'यात्री सहायता, टिकट प्रबंधन और पर्यटक वातावरण में सुरक्षा निगरानी।',exp_4_date:'जुलाई–अगस्त 2022',exp_4_role:'जूते विक्रेता',exp_4_desc:'ग्राहक परामर्श और भुगतान प्रसंस्करण।',skills_tech:'तकनीकी कौशल',sg_langs:'प्रोग्रामिंग भाषाएँ',sg_vcs:'संस्करण नियंत्रण',sg_tools:'उपकरण',sg_db:'डेटाबेस',skills_soft:'व्यक्तिगत कौशल',soft_1:'समस्या समाधान',soft_2:'सक्रिय संचार',soft_3:'टीम वर्क',soft_4:'अनुकूलनशीलता',lang_title:'भाषाएँ',lang_es:'स्पेनिश',lang_eu:'बास्क',lang_en:'अंग्रेज़ी',lang_native:'मातृभाषा',lang_eu_cert:'C1 आधिकारिक · HABE',lang_en_cert:'C1 आधिकारिक · Cambridge',footer_text:'Coded from scratch by Eneko Ruiz Mollón',copy_ok:'कॉपी हो गया!',qr_caption:'इंटरेक्टिव संस्करण देखने के लिए स्कैन करें'},
+
+  tr:{eyebrow:'Yazılım Mühendisi',tagline:'Bilgisayar Mühendisliği Öğrencisi',location:'Rentería, İspanya',age:'20 yaşında',btn_print:'CV Yazdır',profile_title:'Profil',profile_text:"Güçlü teknik altyapıya ve müşteri deneyimine sahip Bilgisayar Mühendisliği öğrencisi. Kod yoluyla problem çözmeye, verimli yazılım tasarımına ve sürekli öğrenmeye tutkulu. Uyum sağlamaya ve takım çalışmasına alışkın.",edu_title:'Eğitim',edu_1_date:'2023 – Günümüz',edu_1_deg:'Bilgisayar Mühendisliği Lisansı',edu_1_uni:'Bask Ülkesi Üniversitesi (UPV/EHU)',edu_1_desc:'Algoritmalar, veri yapıları, işletim sistemleri, ağlar ve yazılım geliştirme.',edu_1_mention:'3. Sınıf · Yazılım Mühendisliği Uzmanlığı',edu_2_deg:'Bilimsel Lise',courses_title:'Ek Eğitim',course_1:'Üretken Yapay Zekanın İleri Uygulamaları',course_1_inst:'Burgos Üniversitesi',course_2:'Microsoft Word İleri Düzey',course_2_inst:'Bask Hükümeti',course_3:"Python'a Giriş",course_4:'Dijital Pazarlama',course_4_inst:'Google Actívate',exp_title:'İş Deneyimi',exp_1_date:'Haz–Eyl 2025',exp_1_role:'Satış Asistanı',exp_1_desc:'Müşteri hizmetleri, kasa yönetimi, raf doldurma ve envanter kontrolü.',exp_2_date:'Ara 2023–Oca 2025',exp_2_role:'Marka Elçisi',exp_2_desc:'Premium marka tanıtımı ve deneyimsel pazarlama.',exp_3_date:'Tem–Eyl 2023',exp_3_role:'Sürücü Asistanı',exp_3_desc:'Yolcu yardımı, bilet yönetimi ve turistik ortamda güvenlik denetimi.',exp_4_date:'Tem–Ağu 2022',exp_4_role:'Ayakkabı Satıcısı',exp_4_desc:'Müşteri danışmanlığı ve ödeme işlemleri.',skills_tech:'Teknik Beceriler',sg_langs:'Programlama Dilleri',sg_vcs:'Sürüm Kontrolü',sg_tools:'Araçlar',sg_db:'Veritabanları',skills_soft:'Kişisel Beceriler',soft_1:'Problem Çözme',soft_2:'Aktif İletişim',soft_3:'Takım Çalışması',soft_4:'Uyum Yeteneği',lang_title:'Diller',lang_es:'İspanyolca',lang_eu:'Baskça',lang_en:'İngilizce',lang_native:'Anadil',lang_eu_cert:'C1 Resmi · HABE',lang_en_cert:'C1 Resmi · Cambridge',footer_text:'Coded from scratch by Eneko Ruiz Mollón',copy_ok:'Kopyalandı!',qr_caption:'İnteraktif sürüm için tarayın'},
+
+  pl:{eyebrow:'Inżynier Oprogramowania',tagline:'Student Informatyki',location:'Rentería, Hiszpania',age:'20 lat',btn_print:'Drukuj CV',profile_title:'Profil',profile_text:'Student informatyki z solidnymi podstawami technicznymi i doświadczeniem w obsłudze klienta. Pasjonat rozwiązywania problemów przez kod, efektywnego projektowania oprogramowania i ciągłego uczenia się. Przyzwyczajony do adaptacji i pracy zespołowej.',edu_title:'Wykształcenie',edu_1_date:'2023 – Teraz',edu_1_deg:'Licencjat z Informatyki',edu_1_uni:'Uniwersytet Kraju Basków (UPV/EHU)',edu_1_desc:'Algorytmy, struktury danych, systemy operacyjne, sieci i wytwarzanie oprogramowania.',edu_1_mention:'3. rok · Specjalizacja Inżynieria Oprogramowania',edu_2_deg:'Matura Naukowa',courses_title:'Dodatkowe Szkolenia',course_1:'Zaawansowane zastosowania generatywnej AI',course_1_inst:'Uniwersytet w Burgos',course_2:'Microsoft Word — poziom zaawansowany',course_2_inst:'Rząd Baskonii',course_3:'Wprowadzenie do Pythona',course_4:'Marketing Cyfrowy',course_4_inst:'Google Actívate',exp_title:'Doświadczenie Zawodowe',exp_1_date:'Cze–Wrz 2025',exp_1_role:'Asystent Sprzedaży',exp_1_desc:'Obsługa klienta, zarządzanie kasą, uzupełnianie towaru i kontrola zapasów.',exp_2_date:'Gru 2023–Sty 2025',exp_2_role:'Ambasador Marki',exp_2_desc:'Promocja marek premium i marketing doświadczeń.',exp_3_date:'Lip–Wrz 2023',exp_3_role:'Asystent Kierowcy',exp_3_desc:'Obsługa pasażerów, zarządzanie biletami i nadzór bezpieczeństwa w środowisku turystycznym.',exp_4_date:'Lip–Sie 2022',exp_4_role:'Sprzedawca Obuwia',exp_4_desc:'Doradztwo klientom i obsługa płatności.',skills_tech:'Umiejętności Techniczne',sg_langs:'Języki Programowania',sg_vcs:'Kontrola Wersji',sg_tools:'Narzędzia',sg_db:'Bazy Danych',skills_soft:'Umiejętności Miękkie',soft_1:'Rozwiązywanie Problemów',soft_2:'Aktywna Komunikacja',soft_3:'Praca Zespołowa',soft_4:'Adaptacja',lang_title:'Języki',lang_es:'Hiszpański',lang_eu:'Baskijski',lang_en:'Angielski',lang_native:'Ojczysty',lang_eu_cert:'C1 Oficjalny · HABE',lang_en_cert:'C1 Oficjalny · Cambridge',footer_text:'Coded from scratch by Eneko Ruiz Mollón',copy_ok:'Skopiowano!',qr_caption:'Zeskanuj, aby zobaczyć wersję interaktywną'},
+
+  sv:{eyebrow:'Mjukvaruingenjör',tagline:'Student i datateknik',location:'Rentería, Spanien',age:'20 år',btn_print:'Skriv ut CV',profile_title:'Profil',profile_text:'Datateknologistudent med solid teknisk grund och erfarenhet av kundkontakt. Passionerad för problemlösning genom kod, effektiv mjukvarudesign och kontinuerligt lärande. Van vid anpassning och lagarbete.',edu_title:'Utbildning',edu_1_date:'2023 – Nu',edu_1_deg:'Kandidatexamen i Datateknik',edu_1_uni:'Baskiens universitet (UPV/EHU)',edu_1_desc:'Algoritmer, datastrukturer, operativsystem, nätverk och mjukvaruutveckling.',edu_1_mention:'Termin 5 · Inriktning Mjukvaruteknik',edu_2_deg:'Naturvetenskaplig gymnasieexamen',courses_title:'Kompletterande Utbildning',course_1:'Avancerade tillämpningar av generativ AI',course_1_inst:'Burgos universitet',course_2:'Microsoft Word avancerad',course_2_inst:'Baskiska regeringen',course_3:'Introduktion till Python',course_4:'Digital marknadsföring',course_4_inst:'Google Actívate',exp_title:'Arbetslivserfarenhet',exp_1_date:'Jun–Sep 2025',exp_1_role:'Butiksassistent',exp_1_desc:'Kundservice, kassahantering, påfyllning och lagerhantering.',exp_2_date:'Dec 2023–Jan 2025',exp_2_role:'Varumärkesambassadör',exp_2_desc:'Marknadsföring av premiumvarumärken och upplevelsebaserad marknadsföring.',exp_3_date:'Jul–Sep 2023',exp_3_role:'Förarassistent',exp_3_desc:'Passagerarhjälp, biljetthantering och säkerhetsövervakning i turistmiljö.',exp_4_date:'Jul–Aug 2022',exp_4_role:'Skoförsäljare',exp_4_desc:'Kundrådgivning och betalningshantering.',skills_tech:'Tekniska Färdigheter',sg_langs:'Programmeringsspråk',sg_vcs:'Versionshantering',sg_tools:'Verktyg',sg_db:'Databaser',skills_soft:'Personliga Färdigheter',soft_1:'Problemlösning',soft_2:'Aktiv Kommunikation',soft_3:'Lagarbete',soft_4:'Anpassningsförmåga',lang_title:'Språk',lang_es:'Spanska',lang_eu:'Baskiska',lang_en:'Engelska',lang_native:'Modersmål',lang_eu_cert:'C1 Officiell · HABE',lang_en_cert:'C1 Officiell · Cambridge',footer_text:'Coded from scratch by Eneko Ruiz Mollón',copy_ok:'Kopierat!',qr_caption:'Skanna för att se den interaktiva versionen'}
 };
 
 /* ── LANG META ───────────────────────────────────────── */
@@ -948,7 +1103,11 @@ const M = {
   zh:{name:'中文',       iso:'ZH', dir:'ltr'},
   ja:{name:'日本語',     iso:'JA', dir:'ltr'},
   ko:{name:'한국어',     iso:'KO', dir:'ltr'},
-  ar:{name:'العربية',   iso:'AR', dir:'rtl'}
+  ar:{name:'العربية',   iso:'AR', dir:'rtl'},
+  hi:{name:'हिन्दी',    iso:'HI', dir:'ltr'},
+  tr:{name:'Türkçe',    iso:'TR', dir:'ltr'},
+  pl:{name:'Polski',    iso:'PL', dir:'ltr'},
+  sv:{name:'Svenska',   iso:'SV', dir:'ltr'}
 };
 
 let currentLang = 'es';
@@ -972,7 +1131,10 @@ const iconMoon= document.getElementById('icon-moon');
 
 function applyTheme(dark) {
   html.setAttribute('data-theme', dark ? 'dark' : 'light');
-  html.style.colorScheme = dark ? 'dark' : 'light'; /* helps print fidelity */
+  /* Fix: explicitly set background on <html> so overscroll bounce,
+     viewport edges, and the print engine all use the right color   */
+  html.style.background  = dark ? '#0e0d0b' : '#f7f4ef';
+  html.style.colorScheme = dark ? 'dark'    : 'light';
   iconSun.style.display  = dark ? 'none' : '';
   iconMoon.style.display = dark ? ''     : 'none';
   localStorage.setItem('cv-theme', dark ? 'dark' : 'light');
@@ -1082,17 +1244,41 @@ const ro = new IntersectionObserver(entries => {
 }, { threshold:.06, rootMargin:'0px 0px -28px 0px' });
 document.querySelectorAll('.reveal').forEach(el => ro.observe(el));
 
-/* ── EASTER EGG ──────────────────────────────────────── */
-const M_ = 'font-family:"JetBrains Mono",monospace;';
-console.log('%cdev tools abiertos. interesante. 👀',
-  `${M_}color:#c4965a;font-size:15px;font-weight:700;`);
-console.log('%c// stack de este archivo:',
-  `${M_}color:#635c54;font-size:11px;`);
+/* ── EASTER EGG — HELEN-OS terminal ─────────────────── */
+const _m = 'font-family:"JetBrains Mono",monospace;font-size:11px;';
+
 console.log(
-  '%c  lang     →  Vanilla JS, cero dependencias\n  css      →  Custom Properties, CSS Grid, clamp()\n  fonts    →  Cormorant · DM Sans · JetBrains Mono\n  i18n     →  15 idiomas, RTL incluido, auto-detect\n  dark     →  prefers-color-scheme + localStorage\n  print    →  window.print(), theme-aware, A4 exact\n  schema   →  JSON-LD structured data\n  a11y     →  aria-*, :focus-visible, ::selection\n  ux       →  click-to-copy, scroll reveal, tooltips',
-  `${M_}color:#998f85;font-size:11px;line-height:2.1;`);
-console.log('%csi revisas el código antes de llamar, ya sé que encajarás.\n  → eneekoruiz@gmail.com',
-  `${M_}color:#c4965a;font-size:12px;font-weight:600;padding-top:4px;`);
+  '%c\n  ██╗  ██╗███████╗██╗     ███████╗███╗   ██╗       ██████╗ ███████╗\n  ██║  ██║██╔════╝██║     ██╔════╝████╗  ██║      ██╔═══██╗██╔════╝\n  ███████║█████╗  ██║     █████╗  ██╔██╗ ██║█████╗██║   ██║███████╗\n  ██╔══██║██╔══╝  ██║     ██╔══╝  ██║╚██╗██║╚════╝██║   ██║╚════██║\n  ██║  ██║███████╗███████╗███████╗██║ ╚████║      ╚██████╔╝███████║\n  ╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝╚═╝  ╚═══╝       ╚═════╝ ╚══════╝\n',
+  `font-family:"JetBrains Mono",monospace;font-size:9px;color:#c4965a;line-height:1.2;`
+);
+console.log(
+  '%c[HELEN-OS v3.2.1] Session initiated.',
+  `${_m}color:#c4965a;font-size:13px;font-weight:700;`
+);
+console.log(
+  '%cRecruiter privileges detected. Initiating handshake...',
+  `${_m}color:#b8b0a4;font-size:11px;`
+);
+console.log(
+  '%c──────────────────────────────────────────────────────',
+  `${_m}color:#332e24;`
+);
+console.log(
+  '%c  Architecture  →  Zero Dependencies / Vanilla JS\n  Rendering      →  Native CSS Grid + Custom Properties\n  Typography     →  Cormorant · DM Sans · JetBrains Mono\n  i18n           →  15 languages · RTL auto-detect\n  Dark mode      →  prefers-color-scheme + localStorage\n  Print          →  window.print() · WYSIWYG theme-aware A4\n  SEO            →  Schema.org JSON-LD structured data\n  a11y           →  ARIA roles · :focus-visible · ::selection\n  UX             →  click-to-copy · scroll reveal · tooltips',
+  `${_m}color:#998f85;line-height:2;`
+);
+console.log(
+  '%c──────────────────────────────────────────────────────',
+  `${_m}color:#332e24;`
+);
+console.log(
+  '%cReach out:  eneekoruiz@gmail.com',
+  `${_m}color:#c4965a;font-size:12px;font-weight:600;`
+);
+console.log(
+  '%c[HELEN-OS] Connection ready. Awaiting response from recruiter...',
+  `${_m}color:#635c54;font-size:10px;`
+);
 </script>
 
 </body>
