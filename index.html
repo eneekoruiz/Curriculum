@@ -54,10 +54,8 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <!-- Load fonts only for screen, not for print to speed up print dialog -->
-  <link media="screen" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <!-- Print fallback: use system fonts immediately, don't wait for Google Fonts -->
-  <link media="print" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500&family=DM+Sans:wght@400&display=fallback" rel="stylesheet" />
+  <!-- Fonts load async: screen uses swap (shows system font immediately), print uses optional (fastest fallback) -->
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 
   <style>
     /* ── TOKENS ────────────────────────────────────────── */
@@ -677,31 +675,28 @@
     .reveal { 
       opacity: 0; 
       transform: translateY(20px); 
-      filter: blur(3px);
       transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1), 
-                  transform 0.55s cubic-bezier(0.16, 1, 0.3, 1),
-                  filter 0.55s cubic-bezier(0.16, 1, 0.3, 1);
-      will-change: transform, opacity, filter;
+                  transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform;
     }
     .reveal.visible { 
       opacity: 1; 
       transform: none; 
-      filter: blur(0);
     }
     @media (prefers-reduced-motion: reduce) {
-      .reveal { opacity: 1; transform: none; filter: none; transition: none; }
+      .reveal { opacity: 1; transform: none; transition: none; }
     }
 
     /* Staggered delays for a professional flow */
-    .site-header.reveal { transition-delay: 0.03s; }
-    .profile.reveal     { transition-delay: 0.06s; }
-    .col-main > section:nth-child(1) { transition-delay: 0.09s; }
-    .col-main > section:nth-child(2) { transition-delay: 0.12s; }
-    .col-main > section:nth-child(3) { transition-delay: 0.15s; }
-    .col-side > section:nth-child(1) { transition-delay: 0.1s; }
-    .col-side > section:nth-child(2) { transition-delay: 0.13s; }
-    .col-side > section:nth-child(3) { transition-delay: 0.16s; }
-    .col-side > section:nth-child(4) { transition-delay: 0.19s; }
+    .site-header.reveal { transition-delay: 0.02s; }
+    .profile.reveal     { transition-delay: 0.03s; }
+    .col-main > section:nth-child(1) { transition-delay: 0.04s; }
+    .col-main > section:nth-child(2) { transition-delay: 0.05s; }
+    .col-main > section:nth-child(3) { transition-delay: 0.06s; }
+    .col-side > section:nth-child(1) { transition-delay: 0.05s; }
+    .col-side > section:nth-child(2) { transition-delay: 0.06s; }
+    .col-side > section:nth-child(3) { transition-delay: 0.07s; }
+    .col-side > section:nth-child(4) { transition-delay: 0.08s; }
 
     /* Skeleton Loading State */
     .skeleton {
@@ -826,88 +821,158 @@
     @media print {
       @page { size:A4 portrait; margin:0; }
 
-      /* Fast reset for print - minimal specificity */
-      html, body { width:100%; height:100%; margin:0; padding:0; }
-      html { background:var(--c-bg) !important; }
-      body {
-        background:var(--c-bg) !important;
-        color:var(--c-ink-2) !important;
-        font-size:11.5px !important;
-        font-family:Georgia, serif !important;
-        -webkit-print-color-adjust:exact !important;
-        print-color-adjust:exact !important;
+      html, body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        background: var(--c-bg) !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust:         exact !important;
+        color-scheme:               light dark !important;
+        font-size:                  11.5px !important;
+        font-family:                var(--f-sans) !important;
       }
 
-      /* Hide chrome - single rule */
-      #topbar, .site-footer, .skip-link, .copy-tip { display:none !important; }
+      /* ── Hide interactive chrome ── */
+      #topbar, .site-footer, .skip-link { display:none !important; }
+      #root       { opacity:1 !important; display: block !important; height: 100% !important; }
+      .copy-tip   { display:none !important; }
+      .contact-row{ pointer-events:none !important; cursor:default !important; }
 
-      /* Disable ALL animations/effects globally - fewer selectors */
-      * { animation:none !important; transition:none !important; text-shadow:none !important; box-shadow:none !important; }
-      .reveal, .reveal * { opacity:1 !important; transform:none !important; filter:none !important; }
+      /* ── Reveal: force all visible ── */
+      .reveal,
+      .reveal * {
+        opacity: 1 !important;
+        transform: none !important;
+        filter: none !important;
+        backdrop-filter: none !important;
+        animation: none !important;
+        transition: none !important;
+      }
 
-      /* Root and wrapper */
-      #root { opacity:1 !important; display:block !important; }
-      .wrapper { height:auto !important; max-width:100% !important; padding:10mm 15mm !important; }
+      * {
+        text-shadow: none !important;
+        box-shadow: none !important;
+      }
 
-      /* Header compact */
-      .site-header { gap:18px 24px !important; padding-bottom:30px !important; margin-bottom:26px !important; }
-      h1 { font-size:31pt !important; line-height:.88 !important; margin-bottom:10px !important; font-family:Georgia, serif !important; }
-      .eyebrow { font-size:8pt !important; margin-bottom:5px !important; }
-      .tagline { font-size:9pt !important; margin-top:13px !important; }
+      /* ── Wrapper: natural height, no forced expansion ── */
+      .wrapper {
+        min-height: 0 !important;
+        height: auto !important;
+        max-width: 100% !important;
+        padding: 10mm 15mm !important;
+        margin: 0 !important;
+        box-sizing: border-box !important;
+        transform: none !important;
+        display: block !important;
+        filter: none !important;
+      }
 
-      /* Typography - consolidated */
-      .profile-label { font-size:7.25pt !important; }
-      .profile-text { font-size:9.5pt !important; line-height:1.58 !important; }
+      /* ── Header: 3-column grid to keep QR aligned ── */
+      .site-header {
+        grid-template-columns: 1fr auto auto !important;
+        gap:           18px 24px !important;
+        padding-bottom:30px !important;
+        margin-bottom: 26px !important;
+      }
+      h1        { font-size:31pt !important; line-height:.88 !important; margin-bottom:10px !important; font-family: var(--f-serif) !important; }
+      .eyebrow  { font-size:8pt !important; margin-bottom:5px !important; }
+      .tagline  { font-size:9pt !important; margin-top:13px !important; }
+
+      /* ── Contacts: compact ── */
+      .contacts     { gap:3px !important; }
+      .contact-row  { font-size:8pt !important; }
+
+      /* ── QR: visible, aligned to header corner ── */
+      .qr-print {
+        display:        flex !important;
+        flex-direction: column;
+        align-items:    center;
+        gap:            4px;
+        align-self:     start;
+      }
+      .qr-print img { width:56px !important; height:56px !important; }
+      .qr-caption {
+        font-family: var(--f-mono);
+        font-size:   6pt;
+        color:       var(--c-ink-3);
+        text-align:  center;
+        max-width:   60px;
+        line-height: 1.3;
+        font-style:  italic;
+      }
+
+      /* ── Profile ── */
+      .profile {
+        grid-template-columns: 56px 1fr !important;
+        gap:           15px !important;
+        padding-bottom:15px !important;
+        margin-bottom: 16px !important;
+      }
+      .profile-label { font-size:7.25pt  !important; }
+      .profile-text  { font-size:9.5pt !important; line-height:1.58 !important; }
+
+      /* ── Dashboard: 2 column, natural stacking ── */
+      .dashboard { 
+        grid-template-columns:1fr 195px !important; 
+        gap:24px !important; 
+        align-items:flex-start !important; 
+      }
+      .col-main, .col-side {
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: flex-start !important;
+      }
+      .col-main  { gap:22px !important; }
+      .col-side  { gap:22px !important; order:0 !important; }
+
+      /* ── Section headings ── */
       .sec-title { font-size:7.5pt !important; padding-bottom:5px !important; margin-bottom:9px !important; }
-      .tl-title { font-size:9.5pt !important; }
-      .tl-org { font-size:8pt !important; margin-bottom:2px !important; }
-      .tl-desc { font-size:7.5pt !important; margin-top:3px !important; line-height:1.48 !important; }
-      .tl-date { font-size:7.5pt !important; }
-      .tl-mention { font-size:9pt !important; margin-top:3px !important; }
 
-      /* Layout adjustments */
-      .profile { grid-template-columns:56px 1fr !important; gap:15px !important; padding-bottom:15px !important; margin-bottom:16px !important; }
-      .contacts { gap:3px !important; }
-      .contact-row { font-size:8pt !important; pointer-events:none !important; cursor:default !important; }
-      .dashboard { grid-template-columns:1fr 195px !important; gap:24px !important; }
-      .col-main, .col-side { display:flex !important; flex-direction:column !important; gap:22px !important; }
-      .tl-item { grid-template-columns:68px 1fr !important; gap:0 12px !important; padding-bottom:10px !important; }
+      /* ── Timeline ── */
+      .tl-item         { grid-template-columns:68px 1fr !important; gap:0 12px !important; padding-bottom:10px !important; }
       .tl-item.compact { padding-bottom:6px !important; }
-      .tl-item.micro { padding-bottom:4px !important; }
-      .tl-item.micro .tl-title { font-size:8.5pt !important; }
-      .tl-item.micro .tl-org { font-size:7.5pt !important; }
+      .tl-title        { font-size:9.5pt  !important; }
+      .tl-org          { font-size:8pt !important; margin-bottom:2px !important; }
+      .tl-desc         { font-size:7.5pt  !important; margin-top:3px !important; line-height:1.48 !important; }
+      .tl-date         { font-size:7.5pt  !important; }
+      .tl-mention      { font-size:9pt !important; margin-top:3px !important; }
 
-      /* Skills - fast consolidation */
-      .sg-label { font-size:6.75pt !important; margin-bottom:5px !important; }
+      /* ── Skills ── */
+      .sg-label    { font-size:6.75pt !important; margin-bottom:5px !important; }
       .skill-group { margin-bottom:7px !important; display:block !important; }
-      .pills { display:flex !important; flex-wrap:wrap !important; gap:5px !important; }
-      .pill { font-size:7.75pt !important; padding:2px 6px !important; }
-      .pill.key { font-size:8.25pt !important; padding:2px 7px !important; }
+      .pills       { display:flex !important; flex-direction:row !important; flex-wrap:wrap !important; gap:5px !important; }
+      #h-soft + .pills { flex-direction: row !important; }
+      .pill        { font-size:7.75pt !important; padding:2px 6px !important; }
+      .pill.key    { font-size:8.25pt   !important; padding:2px 7px !important; }
 
-      /* Languages */
-      .lang-inline { display:flex !important; flex-direction:column !important; gap:6px !important; }
-      .lang-chip { display:flex !important; flex-direction:row !important; align-items:baseline !important; gap:6px !important; }
+      /* ── Languages (inline chips) ── */
+      .lang-inline      { display:flex !important; flex-direction:column !important; gap:6px !important; }
+      .lang-chip        { display:flex !important; flex-direction:row !important; align-items:baseline !important; gap:6px !important; }
       .lang-chip strong { font-size:8.75pt !important; }
-      .lang-chip em { font-size:8.25pt !important; }
-      .lang-dot { display:none !important; }
+      .lang-chip em     { font-size:8.25pt   !important; }
+      .lang-dot         { display:none !important; }
 
-      /* Courses */
+      /* ── Courses ── */
       .course-list { gap:8px !important; }
-      .course-name { font-size:8.5pt !important; }
+      .course-name { font-size:8.5pt  !important; }
       .course-inst { font-size:7.5pt !important; }
       .course-item { padding-left:9px !important; }
 
-      /* Projects */
+      /* ── Projects ── */
       .project-links { display:flex !important; flex-wrap:wrap !important; gap:4px !important; }
-      .proj-link { padding:3px 9px !important; font-size:7.5pt !important; border-radius:14px !important; }
+      .proj-link     { padding:3px 9px !important; font-size:7.5pt !important; border-radius:14px !important; }
 
-      /* QR */
-      .qr-print { display:flex !important; flex-direction:column; align-items:center; gap:4px; align-self:start; }
-      .qr-print img { width:56px !important; height:56px !important; }
-      .qr-caption { font-family:monospace; font-size:6pt; text-align:center; max-width:60px; line-height:1.3; }
+      /* ── Exp subsections ── */
+      .exp-sub           { font-size:7pt !important; padding-top:6px !important; margin-top:6px !important; margin-bottom:4px !important; }
+      .tl-item.micro     { padding-bottom:4px !important; }
+      .tl-item.micro .tl-title { font-size:8.5pt !important; }
+      .tl-item.micro .tl-org   { font-size:7.5pt !important; }
 
-      /* Break control - combine into one rule */
-      section, .tl-item, .course-item, .lang-chip, .skill-group, h2 { break-inside:avoid; }
+      /* ── Break control ── */
+      section, .tl-item, .course-item, .lang-chip, .skill-group { break-inside:avoid; }
+      h2 { break-after:avoid; }
 
     }
   </style>
@@ -1345,7 +1410,7 @@ const printBtn = document.getElementById('print-btn');
 if (printBtn) printBtn.addEventListener('click', () => {
   setTimeout(() => {
     window.print();
-  }, 150);
+  }, 50);
 });
 
 /* ── DROPDOWN ────────────────────────────────────────── */
