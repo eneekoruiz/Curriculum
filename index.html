@@ -886,13 +886,13 @@
       /* ── Header ── */
       .site-header {
         grid-template-columns: 1fr auto auto !important;
-        gap:           8px 16px !important;
-        padding-bottom:10px !important;
-        margin-bottom: 12px !important;
+        gap:           12px 18px !important;
+        padding-bottom:18px !important;
+        margin-bottom: 18px !important;
       }
-      h1        { font-size:24pt !important; line-height:.94 !important; }
+      h1        { font-size:24pt !important; line-height:.94 !important; margin-bottom:6px !important; }
       .eyebrow  { font-size:7.5pt !important; margin-bottom:5px !important; }
-      .tagline  { font-size:8.5pt !important; }
+      .tagline  { font-size:8.5pt !important; margin-top:10px !important; }
 
       /* ── Contacts: compact ── */
       .contacts     { gap:3px !important; }
@@ -1443,7 +1443,34 @@ const html = document.documentElement;
 
 /* ── PRINT ───────────────────────────────────────────── */
 const printBtn = document.getElementById('print-btn');
-if (printBtn) printBtn.addEventListener('click', () => { setTimeout(() => window.print(), 150); });
+function openPrintableWindow() {
+  const preview = window.open('', '_blank', 'noopener,noreferrer');
+  if (!preview) {
+    window.print();
+    return;
+  }
+
+  const doc = preview.document;
+  const headMarkup = Array.from(document.head.children)
+    .filter(node => node.tagName !== 'SCRIPT')
+    .map(node => node.outerHTML)
+    .join('');
+  const bodyMarkup = document.body.innerHTML.replace(/<script\b[\s\S]*?<\/script>/gi, '');
+
+  doc.open();
+  doc.write(`<!DOCTYPE html><html lang="${document.documentElement.lang || 'es'}" dir="${document.documentElement.dir || 'ltr'}" data-theme="${document.documentElement.getAttribute('data-theme') || 'light'}"><head>${headMarkup}</head><body>${bodyMarkup}</body></html>`);
+  doc.close();
+
+  preview.focus();
+  setTimeout(() => preview.print(), 350);
+}
+
+if (printBtn) printBtn.addEventListener('click', () => {
+  setTimeout(() => {
+    if (window.location.protocol === 'file:') openPrintableWindow();
+    else window.print();
+  }, 150);
+});
 
 /* ── DROPDOWN ────────────────────────────────────────── */
 const trigger = document.getElementById('lang-trigger');
