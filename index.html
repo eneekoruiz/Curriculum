@@ -23,6 +23,7 @@
   <meta name="author"       content="Eneko Ruiz Mollón" />
   <meta name="robots"       content="index, follow" />
   <link rel="canonical"     href="https://eneko-ruiz.vercel.app" />
+  <link rel="manifest"      href="manifest.json" />
 
   <meta property="og:type"         content="profile" />
   <meta property="og:title"        content="Eneko Ruiz Mollón — Ingeniería Informática · UPV/EHU" />
@@ -214,8 +215,16 @@
       align-items:     center;
       gap:        var(--s2);
       padding:    13px clamp(var(--s4),5vw,var(--s6));
-      background: linear-gradient(to bottom, var(--c-bg) 55%, transparent);
+      background: rgba(247, 244, 239, 0.72);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.04);
       pointer-events: none;
+      transition: background var(--dur) var(--ease);
+    }
+    [data-theme="dark"] #topbar {
+      background: rgba(14, 13, 11, 0.72);
+      border-bottom-color: rgba(255, 255, 255, 0.04);
     }
     #topbar > * { pointer-events: auto; }
 
@@ -532,6 +541,24 @@
       letter-spacing:.02em;
     }
     .pill.key:hover { color:var(--c-accent); border-color:var(--c-accent); background:var(--c-accent-b); transform:translateY(-1px); }
+    .pill.key { position:relative; overflow:hidden; }
+    .pill.key::after {
+      content: "";
+      position: absolute;
+      top: 0; left: -150%;
+      width: 50%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+      transform: skewX(-20deg);
+      animation: pillShimmer 5s infinite;
+    }
+    [data-theme="dark"] .pill.key::after {
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    }
+    @keyframes pillShimmer {
+      0%   { left: -150%; }
+      20%  { left: 150%; }
+      100% { left: 150%; }
+    }
 
     /* ── LANGUAGES — editorial, no borders ──────────────── */
     .lang-list { display:flex; flex-direction:column; gap:14px; }
@@ -1661,6 +1688,13 @@ window.addEventListener('keydown', (e) => {
 
 // Expose a global helper to trigger the CLI manually from the console.
 window.showEasterEgg = function(){ if (!_devOpen) { _devOpen = true; _runCLI(); } };
+
+// PWA Service Worker Registration
+if ('serviceWorker' in navigator && window.location.protocol !== 'file:') {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  });
+}
 </script>
 
 </body>

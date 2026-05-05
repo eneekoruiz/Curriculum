@@ -1,0 +1,23 @@
+{
+  "name": "Eneko Ruiz Mollón — CV",
+  "short_name": "Eneko CV",
+  "description": "Currículum de Eneko Ruiz Mollón, Ingeniería Informática (UPV/EHU)",
+  "start_url": "/?pwa=true",
+  "display": "standalone",
+  "background_color": "#f7f4ef",
+  "theme_color": "#7a6240",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "favicon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "favicon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
