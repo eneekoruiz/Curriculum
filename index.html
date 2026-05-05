@@ -239,6 +239,7 @@
       text-transform: uppercase;
     }
     .ctrl:hover { border-color:var(--c-accent); color:var(--c-accent); }
+    .ctrl:active { background:var(--c-accent-s); transform:scale(0.98); }
     .ctrl svg   { width:12px; height:12px; flex-shrink:0; }
 
     #theme-btn { position: relative; overflow: hidden; width: 34px; height: 24px; padding: 0; display: flex; align-items: center; justify-content: center; }
@@ -1427,22 +1428,22 @@ const html = document.documentElement;
 
 /* ── PRINT ───────────────────────────────────────────── */
 const printBtn = document.getElementById('print-btn');
-if (printBtn) printBtn.addEventListener('click', () => {
-  // Mobile / Iframe check
-  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-  const isIframe = window.self !== window.top;
+if (printBtn) {
+  printBtn.addEventListener('click', (e) => {
+    const isIframe = window.self !== window.top;
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
-  if (isMobile || isIframe) {
-    // Open in a new tab for native printing (better than iframe print on mobile)
-    const url = new URL(window.location.href);
-    url.searchParams.set('print', 'true');
-    window.open(url.toString(), '_blank');
-  } else {
-    setTimeout(() => {
+    if (isIframe) {
+      // If in iframe, we MUST open in new tab to print properly
+      const url = new URL(window.location.href);
+      url.searchParams.set('print', 'true');
+      window.open(url.toString(), '_blank');
+    } else {
+      // Standalone: trigger print directly
       window.print();
-    }, 50);
-  }
-});
+    }
+  });
+}
 
 /* ── DROPDOWN ────────────────────────────────────────── */
 const trigger = document.getElementById('lang-trigger');
