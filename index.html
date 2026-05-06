@@ -1,4 +1,4 @@
-﻿<!--
+<!--
 ╔══════════════════════════════════════════════════════════════════════╗
 ║  ENEKO RUIZ MOLLÓN                                                   ║
 ║  Grado en Ingeniería Informática (UPV/EHU) · 3.º curso              ║
@@ -1393,9 +1393,10 @@ const html = document.documentElement;
   } catch(e) { /* silent */ }
 
   if (themeBtn) {
-    themeBtn.addEventListener('click', () =>
-      applyTheme(html.getAttribute('data-theme') !== 'dark')
-    );
+    themeBtn.addEventListener('click', () => {
+      if (navigator.vibrate) navigator.vibrate(5);
+      applyTheme(html.getAttribute('data-theme') !== 'dark');
+    });
   }
 
   // ── THEME & ACTION SYNC (for embedding) ──
@@ -1454,6 +1455,7 @@ const html = document.documentElement;
 const printBtn = document.getElementById('print-btn');
 if (printBtn) {
   printBtn.addEventListener('click', (e) => {
+    if (navigator.vibrate) navigator.vibrate(5);
     const isIframe = window.self !== window.top;
     
     // Try direct print first - modern browsers support it even inside iframes
