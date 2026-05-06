@@ -2244,7 +2244,29 @@ window.addEventListener('keydown', (e) => {
   const urlParams = new URLSearchParams(window.location.search);
   const lang = urlParams.get('lang') || localStorage.getItem('cv-lang') || 'es';
   applyTranslations(lang);
-  if (urlParams.get('print') === 'true') setTimeout(window.print, 1200);
+  
+  if (urlParams.get('print') === 'true') {
+    // Add a temporary "Force Print" button in case the browser blocks the auto-call
+    const forceBtn = document.createElement('button');
+    forceBtn.innerHTML = '<span>🖨️</span> Confirmar Impresión / PDF';
+    Object.assign(forceBtn.style, {
+      position: 'fixed', bottom: '20px', left: '50%', transform: 'translateX(-50%)',
+      zIndex: '10000', padding: '12px 24px', background: '#c4965a', color: '#fff',
+      border: 'none', borderRadius: '50px', fontWeight: 'bold', boxShadow: '0 4px 15px rgba(0,0,0,0.3)',
+      cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', animation: 'pulse 2s infinite'
+    });
+    forceBtn.onclick = () => window.print();
+    document.body.appendChild(forceBtn);
+    
+    // Auto-trigger
+    const trigger = () => {
+      window.print();
+      // Hide button after print dialog opens (some browsers allow this detection)
+      window.onafterprint = () => forceBtn.remove();
+    };
+    if (document.readyState === 'complete') setTimeout(trigger, 1000);
+    else window.addEventListener('load', () => setTimeout(trigger, 1000));
+  }
 
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
