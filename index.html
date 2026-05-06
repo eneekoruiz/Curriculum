@@ -1,4 +1,4 @@
-<!--
+﻿<!--
 ╔══════════════════════════════════════════════════════════════════════╗
 ║  ENEKO RUIZ MOLLÓN                                                   ║
 ║  Grado en Ingeniería Informática (UPV/EHU) · 3.º curso              ║
@@ -1549,6 +1549,11 @@ function applyTranslations(code) {
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const v = t[el.getAttribute('data-i18n')];
     if (v !== undefined) el.textContent = v;
+      // Update ARIA labels if key is for them
+      if (key === 'aria_theme') document.getElementById('theme-btn')?.setAttribute('aria-label', v);
+      if (key === 'aria_print') document.getElementById('print-btn')?.setAttribute('aria-label', v);
+      if (key === 'aria_share') document.getElementById('share-btn')?.setAttribute('aria-label', v);
+      if (key === 'aria_lang')  document.getElementById('lang-trigger')?.setAttribute('aria-label', v);
   });
   html.setAttribute('lang', code);
   html.setAttribute('dir',  meta.dir);
