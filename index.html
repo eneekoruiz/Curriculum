@@ -2153,7 +2153,15 @@ const handleShare = async () => {
   }
 };
 
-/* ── EASTER EGG — CONFETTI ──────────────────────────── */
+/* ── EASTER EGG — CONFETTI & CLI ────────────────────── */
+const _runCLI = () => {
+  const mo = 'font-family:"JetBrains Mono",monospace;';
+  const gradient = `background: linear-gradient(135deg, #7a6240, #c4965a); -webkit-background-clip: text; color: transparent; font-weight: 800; font-size: 20px; ${mo}`;
+  console.clear();
+  console.log("%cENEKO RUIZ MOLLÓN — CV v3.0", gradient);
+  console.log("%c> Terminal access granted. Type hire() to connect.", "color: #998f85;");
+};
+
 window.hire = function() {
   const colors = ['#7a6240', '#c4965a', '#ede8df', '#161210', '#998f85'];
   for (let i = 0; i < 80; i++) {
@@ -2171,9 +2179,16 @@ window.hire = function() {
     ], { duration: dur * 1000, easing: 'cubic-bezier(0,0,0.2,1)', fill: 'forwards' });
     setTimeout(() => el.remove(), dur * 1000);
   }
-  console.log("%c🚀 Eneko Ruiz Mollón — Hire me: eneekoruiz@gmail.com", "color: #c4965a; font-size: 16px; font-weight: bold;");
+  console.log("%c🚀 Contact: eneekoruiz@gmail.com", "color: #c4965a; font-size: 14px; font-weight: bold;");
   return "Confetti launched!";
 };
+
+let _devOpen = false;
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I', 'J', 'C'].includes(e.key.toUpperCase()))) {
+    if (!_devOpen) { _devOpen = true; setTimeout(_runCLI, 500); }
+  }
+});
 
 /* ── INITIALIZATION ─────────────────────────────────── */
 (function init() {
