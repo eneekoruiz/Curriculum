@@ -1297,16 +1297,18 @@
 
       html,
       body {
-        width: 100%;
-        height: 100%;
-        margin: 0;
-        padding: 0;
-        background: var(--c-bg) !important;
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-        color-scheme: light dark !important;
+        width: 210mm !important;
+        height: 297mm !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #fff !important;
+        color: #000 !important;
+        color-scheme: light !important;
         font-size: 11.5px !important;
         font-family: var(--f-sans) !important;
+        overflow: hidden !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
       }
 
       /* ── Hide interactive chrome ── */
@@ -1319,7 +1321,7 @@
         display: none !important;
       }
 
-      #root {
+      #main-content {
         opacity: 1 !important;
         display: block !important;
         height: 100% !important;
@@ -1353,21 +1355,20 @@
         box-shadow: none !important;
       }
 
-      /* ── Wrapper: force full-page height for vertical centering ── */
+      /* ── Wrapper: force full-page height ── */
       .wrapper {
         display: flex !important;
         flex-direction: column !important;
-        justify-content: center !important;
-        min-height: 297mm !important;
-        /* Standard A4 height */
-        max-width: 100% !important;
-        height: 100% !important;
-        padding: 20mm 15mm !important;
-        /* 2cm top/bottom margin */
+        justify-content: flex-start !important;
+        max-width: 210mm !important;
+        height: 297mm !important;
+        padding: 10mm 15mm !important;
         margin: 0 !important;
         box-sizing: border-box !important;
         transform: none !important;
         filter: none !important;
+        overflow: hidden !important;
+      }
         text-rendering: optimizeSpeed !important;
         image-rendering: optimizeSpeed !important;
       }
@@ -1380,8 +1381,8 @@
       .site-header {
         grid-template-columns: 1fr auto auto !important;
         gap: 18px 24px !important;
-        padding-bottom: 30px !important;
-        margin-bottom: 26px !important;
+        padding-bottom: 15px !important;
+        margin-bottom: 15px !important;
       }
 
       h1 {
@@ -1438,8 +1439,8 @@
       .profile {
         grid-template-columns: 56px 1fr !important;
         gap: 15px !important;
-        padding-bottom: 15px !important;
-        margin-bottom: 16px !important;
+        padding-bottom: 8px !important;
+        margin-bottom: 8px !important;
       }
 
       .profile-label {
@@ -1454,7 +1455,7 @@
       /* ── Dashboard: 2 column, natural stacking ── */
       .dashboard {
         grid-template-columns: 1fr 195px !important;
-        gap: 30px !important;
+        gap: 15px !important;
         align-items: flex-start !important;
       }
 
@@ -1466,26 +1467,26 @@
       }
 
       .col-main {
-        gap: 28px !important;
+        gap: 20px !important;
       }
 
       .col-side {
-        gap: 28px !important;
+        gap: 20px !important;
         order: 0 !important;
       }
 
       /* ── Section headings ── */
       .sec-title {
-        font-size: 7.5pt !important;
-        padding-bottom: 5px !important;
-        margin-bottom: 9px !important;
+        font-size: 10.5pt !important;
+        padding-bottom: 3px !important;
+        margin-bottom: 6px !important;
       }
 
       /* ── Timeline ── */
       .tl-item {
         grid-template-columns: 68px 1fr !important;
         gap: 0 12px !important;
-        padding-bottom: 10px !important;
+        padding-bottom: 6px !important;
       }
 
       .tl-item.compact {
