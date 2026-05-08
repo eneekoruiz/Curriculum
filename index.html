@@ -1301,18 +1301,18 @@
 
       html,
       body {
-        width: 210mm !important;
-        height: 297mm !important;
+        width: 100% !important;
+        height: 100% !important;
         margin: 0 !important;
         padding: 0 !important;
-        background: #fff !important;
-        color: #000 !important;
-        color-scheme: light !important;
+        background: var(--c-bg) !important;
+        color: var(--c-ink) !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-scheme: light dark !important;
         font-size: 11.5px !important;
         font-family: var(--f-sans) !important;
         overflow: hidden !important;
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
       }
 
       /* ── Hide interactive chrome ── */
@@ -1363,10 +1363,13 @@
       .wrapper {
         display: flex !important;
         flex-direction: column !important;
-        justify-content: flex-start !important;
-        max-width: 210mm !important;
-        height: 297mm !important;
-        padding: 10mm 15mm !important;
+        justify-content: center !important;
+        min-height: 297mm !important;
+        /* Standard A4 height */
+        max-width: 100% !important;
+        height: 100% !important;
+        padding: 20mm 15mm !important;
+        /* 2cm top/bottom margin */
         margin: 0 !important;
         box-sizing: border-box !important;
         transform: none !important;
@@ -1384,8 +1387,8 @@
       .site-header {
         grid-template-columns: 1fr auto auto !important;
         gap: 18px 24px !important;
-        padding-bottom: 15px !important;
-        margin-bottom: 15px !important;
+        padding-bottom: 30px !important;
+        margin-bottom: 26px !important;
       }
 
       h1 {
@@ -1442,8 +1445,8 @@
       .profile {
         grid-template-columns: 56px 1fr !important;
         gap: 15px !important;
-        padding-bottom: 8px !important;
-        margin-bottom: 8px !important;
+        padding-bottom: 15px !important;
+        margin-bottom: 16px !important;
       }
 
       .profile-label {
@@ -1458,7 +1461,7 @@
       /* ── Dashboard: 2 column, natural stacking ── */
       .dashboard {
         grid-template-columns: 1fr 195px !important;
-        gap: 15px !important;
+        gap: 30px !important;
         align-items: flex-start !important;
       }
 
@@ -1470,26 +1473,26 @@
       }
 
       .col-main {
-        gap: 20px !important;
+        gap: 28px !important;
       }
 
       .col-side {
-        gap: 20px !important;
+        gap: 28px !important;
         order: 0 !important;
       }
 
       /* ── Section headings ── */
       .sec-title {
-        font-size: 10.5pt !important;
-        padding-bottom: 3px !important;
-        margin-bottom: 6px !important;
+        font-size: 12.5pt !important;
+        margin-bottom: 18px !important;
+        padding-bottom: 6px !important;
       }
 
       /* ── Timeline ── */
       .tl-item {
         grid-template-columns: 68px 1fr !important;
         gap: 0 12px !important;
-        padding-bottom: 6px !important;
+        padding-bottom: 10px !important;
       }
 
       .tl-item.compact {
