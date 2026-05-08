@@ -1,7 +1,7 @@
 <!--
 ╔══════════════════════════════════════════════════════════════════════╗
 ║  ENEKO RUIZ MOLLÓN                                                   ║
-║  Grado en Ingeniería Informática (UPV/EHU) · 3.º curso              ║
+║  Grado en Ingeniería Informática (UPV/EHU) · 4.º curso              ║
 ║  Mención en Ingeniería del Software                                  ║
 ║  ─────────────────────────────────────────────────────────────────  ║
 ║  github.com/eneekoruiz · linkedin.com/in/eneekoruiz                 ║
@@ -33,6 +33,8 @@
     content="Estudiante de Ingeniería Informática, mención Software Engineering. Python · Java · C++ · Git. 4.º curso UPV/EHU." />
   <meta property="og:url" content="https://eneko-ruiz.vercel.app" />
   <meta property="og:image" content="https://eneko-ruiz.vercel.app/og.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
   <meta property="og:locale" content="es_ES" />
   <meta property="og:site_name" content="Eneko Ruiz Mollón" />
   <meta name="twitter:card" content="summary_large_image" />
@@ -90,20 +92,6 @@
       transition: width 0.1s ease-out;
     }
 
-    /* Grain Texture Overlay */
-    /* old grain removed */
-    .old-grain {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: url('https://grainy-gradients.vercel.app/noise.svg');
-      opacity: 0.04;
-      pointer-events: none;
-      z-index: 9999;
-    }
-
     /* Custom Scrollbar Premium */
     ::-webkit-scrollbar {
       width: 6px;
@@ -132,10 +120,6 @@
       background: rgba(255, 255, 255, 0.2);
     }
 
-    html {
-      scroll-behavior: smooth;
-    }
-
     /* ── TOKENS ────────────────────────────────────────── */
     :root {
       --c-bg: #f7f4ef;
@@ -144,13 +128,13 @@
       --c-rule-2: #c8c0b6;
       --c-ink: #161210;
       --c-ink-2: #46403a;
-      --c-ink-3: #998f85;
-      --c-accent: #7a6240;
-      --c-accent-s: rgba(122, 98, 64, .07);
-      --c-accent-b: rgba(122, 98, 64, .16);
-      --c-key-bg: rgba(122, 98, 64, .09);
-      --c-key-bdr: rgba(122, 98, 64, .35);
-      --c-key-ink: #5c4828;
+      --c-ink-3: #635c54;
+      --c-accent: #4a3a2a;
+      --c-accent-s: rgba(74, 58, 42, .07);
+      --c-accent-b: rgba(74, 58, 42, .16);
+      --c-key-bg: rgba(74, 58, 42, .09);
+      --c-key-bdr: rgba(74, 58, 42, .35);
+      --c-key-ink: #2a2018;
 
       --f-serif: 'Cormorant Garamond', Georgia, serif;
       --f-sans: 'DM Sans', system-ui, sans-serif;
@@ -174,13 +158,13 @@
       --c-rule-2: #332e24;
       --c-ink: #ede8df;
       --c-ink-2: #b8b0a4;
-      --c-ink-3: #635c54;
-      --c-accent: #c4965a;
-      --c-accent-s: rgba(196, 150, 90, .07);
-      --c-accent-b: rgba(196, 150, 90, .16);
-      --c-key-bg: rgba(196, 150, 90, .10);
-      --c-key-bdr: rgba(196, 150, 90, .32);
-      --c-key-ink: #d4a96a;
+      --c-ink-3: #8c8279;
+      --c-accent: #d4a66a;
+      --c-accent-s: rgba(212, 166, 106, .07);
+      --c-accent-b: rgba(212, 166, 106, .16);
+      --c-key-bg: rgba(212, 166, 106, .10);
+      --c-key-bdr: rgba(212, 166, 106, .32);
+      --c-key-ink: #e5bf8a;
     }
 
     /* ── RESET ─────────────────────────────────────────── */
@@ -197,19 +181,6 @@
       -webkit-text-size-adjust: 100%;
       scrollbar-width: thin;
       scrollbar-color: var(--c-rule-2) transparent;
-    }
-
-    ::-webkit-scrollbar {
-      width: 4px;
-    }
-
-    ::-webkit-scrollbar-track {
-      background: transparent;
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: var(--c-rule-2);
-      border-radius: 2px;
     }
 
     ::selection {
@@ -377,9 +348,10 @@
       cursor: pointer;
       color: var(--c-ink-2);
       font-family: var(--f-mono);
-      font-size: 10.5px;
+      font-size: 11px;
       letter-spacing: .08em;
-      padding: 5px 10px;
+      padding: 7px 12px;
+      min-height: 32px;
       transition: border-color var(--dur) var(--ease),
         color var(--dur) var(--ease),
         background var(--dur) var(--ease);
@@ -482,7 +454,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 7px 12px;
+      padding: 10px 14px;
       background: none;
       border: none;
       border-bottom: 1px solid var(--c-rule);
@@ -1045,27 +1017,6 @@
       padding-top: 0;
     }
 
-    /* Empty tech-experience placeholder */
-    .exp-placeholder {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-family: var(--f-mono);
-      font-size: 10.5px;
-      color: var(--c-ink-3);
-      padding: 9px var(--s3);
-      border: 1px dashed var(--c-rule);
-      border-radius: 3px;
-      font-style: italic;
-    }
-
-    .exp-placeholder svg {
-      width: 13px;
-      height: 13px;
-      flex-shrink: 0;
-      opacity: .45;
-    }
-
     /* Micro rows — compact other-experience entries */
     .tl-item.micro {
       padding-bottom: var(--s2);
@@ -1179,23 +1130,6 @@
       }
     }
 
-    /* Vertical stacking for Soft Skills and Languages on Desktop */
-    #h-soft+.pills {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 6px;
-    }
-
-    .lang-inline {
-      gap: 8px;
-    }
-
-    .lang-chip {
-      grid-template-columns: minmax(96px, 1fr) auto;
-      gap: 10px;
-    }
-
-
     /* ── RESPONSIVE ─────────────────────────────────────── */
 
     /* Tablet / small desktop: single column reflow */
@@ -1264,11 +1198,7 @@
         justify-content: center;
       }
 
-      /* Soft skills: grid spread */
-      #h-soft+.pills {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-      }
+      /* Project links: allow full-width spread */
     }
 
     @media (max-width:600px) {
@@ -1379,9 +1309,10 @@
       }
 
       /* ── Hide interactive chrome ── */
-      .top-nav,
-      .theme-btn,
-      .print-btn,
+      #topbar,
+      #theme-btn,
+      #print-btn,
+      #scroll-progress,
       #share-btn,
       .copy-tip {
         display: none !important;
@@ -1784,7 +1715,7 @@
   </div>
 
   <!-- ── ROOT ──────────────────────────────────────────── -->
-  <main id="root" role="main">
+  <main id="main-content" role="main" aria-live="polite">
     <div class="wrapper">
 
       <header class="site-header reveal">
@@ -1800,7 +1731,7 @@
           </p>
         </div>
 
-        <address class="contacts" id="main-content">
+        <address class="contacts">
 
           <button class="contact-row" data-copy="eneekoruiz@gmail.com" aria-label="Copiar email al portapapeles">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -2047,7 +1978,7 @@
 
 const BIRTH_DATE = '2005-07-28';
 const html = document.documentElement;
-const root = document.getElementById('root');
+const root = document.getElementById('main-content');
 let currentLang = 'es';
 
 /* ── HELPERS ────────────────────────────────────────── */
@@ -2128,9 +2059,12 @@ const setLang = (code) => {
 /* ── CORE ACTIONS ───────────────────────────────────── */
 const handlePrint = () => {
   if (navigator.vibrate) navigator.vibrate(5);
-  // Always open print view in new tab - works for all devices
-  const url = window.location.href + (window.location.href.includes('?') ? '&' : '?') + 'print=true';
-  window.open(url, '_blank');
+  const isMobile = window.matchMedia('(max-width: 768px)').matches;
+  if (isMobile) {
+    window.location.href = '/api/pdf';
+  } else {
+    window.print();
+  }
 };
 
 const handleShare = async () => {
@@ -2138,9 +2072,33 @@ const handleShare = async () => {
   if (navigator.share) {
     try { await navigator.share({ title: document.title, url: window.location.href }); } catch(e){}
   } else {
-    navigator.clipboard.writeText(window.location.href);
-    alert(T[currentLang]?.copy_ok || 'Link Copied!');
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      showCopyTip(document.getElementById('share-btn'), T[currentLang]?.copy_ok || 'Link Copied!');
+    } catch(e){}
   }
+};
+
+const showCopyTip = (el, msg) => {
+  if (!el) return;
+  const old = el.querySelector('.copy-tip');
+  if (old) old.remove();
+  const tip = document.createElement('span');
+  tip.className = 'copy-tip';
+  tip.textContent = msg;
+  el.appendChild(tip);
+  setTimeout(() => tip.remove(), 1900);
+};
+
+const handleCopy = async (e) => {
+  const btn = e.currentTarget;
+  const text = btn.getAttribute('data-copy');
+  if (!text) return;
+  try {
+    await navigator.clipboard.writeText(text);
+    if (navigator.vibrate) navigator.vibrate(5);
+    showCopyTip(btn, T[currentLang]?.copy_ok || 'Copied!');
+  } catch (err) {}
 };
 
 /* ── EASTER EGG — CONFETTI & CLI ────────────────────── */
@@ -2192,20 +2150,40 @@ window.addEventListener('keydown', (e) => {
     Object.entries(M).forEach(([code, meta]) => {
       const btn = document.createElement('button');
       btn.className = 'lm-item';
+      btn.setAttribute('role', 'option');
       btn.innerHTML = `<span>${meta.name}</span><span class="lm-iso">${meta.iso}</span>`;
-      btn.onclick = () => setLang(code);
+      btn.onclick = () => {
+        setLang(code);
+        document.querySelectorAll('.lm-item').forEach(i => i.setAttribute('aria-selected', 'false'));
+        btn.setAttribute('aria-selected', 'true');
+      };
       menu.appendChild(btn);
     });
   }
 
   document.getElementById('theme-btn')?.addEventListener('click', () => applyTheme(html.getAttribute('data-theme') !== 'dark'));
   document.getElementById('print-btn')?.addEventListener('click', handlePrint);
-  document.getElementById('share-btn')?.addEventListener('click', handleShare);
+  
+  const shareBtn = document.getElementById('share-btn');
+  if (shareBtn) {
+    if (navigator.share || navigator.clipboard) shareBtn.style.display = 'flex';
+    shareBtn.addEventListener('click', handleShare);
+  }
+
+  document.querySelectorAll('[data-copy]').forEach(el => el.addEventListener('click', handleCopy));
   document.getElementById('lang-trigger')?.addEventListener('click', (e) => {
     e.stopPropagation();
-    document.getElementById('lang-menu')?.classList.toggle('open');
+    const menu = document.getElementById('lang-menu');
+    const isOpen = menu?.classList.toggle('open');
+    e.currentTarget.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
   });
-  document.addEventListener('click', () => document.getElementById('lang-menu')?.classList.remove('open'));
+  document.addEventListener('click', () => {
+    const menu = document.getElementById('lang-menu');
+    if (menu?.classList.contains('open')) {
+      menu.classList.remove('open');
+      document.getElementById('lang-trigger')?.setAttribute('aria-expanded', 'false');
+    }
+  });
   
   window.addEventListener('keydown', (e) => {
     if (e.key.toLowerCase() === 'p' && !e.ctrlKey && !e.metaKey) { e.preventDefault(); handlePrint(); }
@@ -2234,53 +2212,6 @@ window.addEventListener('keydown', (e) => {
   const urlParams = new URLSearchParams(window.location.search);
   const lang = urlParams.get('lang') || localStorage.getItem('cv-lang') || 'es';
   applyTranslations(lang);
-  
-  if (urlParams.get('print') === 'true') {
-    // Show print confirmation button
-    const confirmBtn = document.createElement('button');
-    confirmBtn.innerHTML = '<span>📥</span> Descargar PDF / Guardar';
-    Object.assign(confirmBtn.style, {
-      position: 'fixed', 
-      bottom: '20px', 
-      left: '50%', 
-      transform: 'translateX(-50%)',
-      zIndex: '10001', 
-      padding: '14px 28px', 
-      background: '#c4965a', 
-      color: '#fff',
-      border: 'none', 
-      borderRadius: '50px', 
-      fontWeight: 'bold', 
-      boxShadow: '0 4px 15px rgba(0,0,0,0.3)',
-      cursor: 'pointer', 
-      display: 'flex', 
-      alignItems: 'center', 
-      gap: '8px', 
-      animation: 'pulse 2s infinite',
-      fontSize: '16px', 
-      fontFamily: 'inherit'
-    });
-    
-    confirmBtn.onclick = (e) => {
-      e.preventDefault();
-      window.print();
-    };
-    
-    document.body.appendChild(confirmBtn);
-    
-    // Auto-trigger print dialog after a delay
-    const triggerPrint = () => {
-      setTimeout(() => {
-        window.print();
-      }, 500);
-    };
-    
-    if (document.readyState === 'complete') {
-      triggerPrint();
-    } else {
-      window.addEventListener('load', triggerPrint);
-    }
-  }
 
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {

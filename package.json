@@ -1,0 +1,16 @@
+{
+  "name": "eneko-cv-pdf-api",
+  "version": "1.0.0",
+  "description": "API for PDF generation on Vercel",
+  "main": "api/pdf.js",
+  "dependencies": {
+    "@sparticuz/chromium": "^123.0.0",
+    "puppeteer-core": "^22.6.0"
+  },
+  "devDependencies": {
+    "puppeteer": "^22.6.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

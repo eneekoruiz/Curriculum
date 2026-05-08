@@ -1,6 +1,15 @@
 {
   "headers": [
     {
+      "source": "/api/pdf",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400"
+        }
+      ]
+    },
+    {
       "source": "/(.*)",
       "headers": [
         {
@@ -25,5 +34,11 @@
         }
       ]
     }
-  ]
+  ],
+  "functions": {
+    "api/pdf.js": {
+      "memory": 1024,
+      "maxDuration": 30
+    }
+  }
 }
