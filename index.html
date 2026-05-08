@@ -137,9 +137,9 @@
       --c-key-bdr: rgba(74, 58, 42, .35);
       --c-key-ink: #2a2018;
 
-      --f-serif: 'Cormorant Garamond', Georgia, serif;
-      --f-sans: 'DM Sans', system-ui, sans-serif;
-      --f-mono: 'JetBrains Mono', monospace;
+      --f-serif: 'Cormorant Garamond', 'Iowan Old Style', 'Apple Garamond', Baskerville, 'Times New Roman', 'Droid Serif', Times, 'Source Serif Pro', serif;
+      --f-sans: 'DM Sans', 'Geist Sans', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      --f-mono: 'JetBrains Mono', 'Geist Mono', 'SF Mono', 'Fira Code', 'Roboto Mono', monospace;
 
       --ease: cubic-bezier(.4, 0, .2, 1);
       --dur: 200ms;
@@ -182,6 +182,10 @@
       -webkit-text-size-adjust: 100%;
       scrollbar-width: thin;
       scrollbar-color: var(--c-rule-2) transparent;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      font-feature-settings: "kern" 1, "onum" 1, "liga" 1;
     }
 
     ::selection {
