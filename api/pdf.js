@@ -20,8 +20,8 @@ module.exports = async (req, res) => {
     const url = targetUrl.toString();
 
     await page.goto(url, { 
-      waitUntil: 'networkidle0',
-      timeout: 30000 
+      waitUntil: 'networkidle2', 
+      timeout: 20000 
     });
 
     // Emulate print media
