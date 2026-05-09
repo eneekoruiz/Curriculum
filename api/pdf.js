@@ -1,30 +1,58 @@
 const chromium = require('@sparticuz/chromium');
 const puppeteer = require('puppeteer-core');
 
-module.exports = async (req, res) => {
-  let browser = null;
-  try {
-    browser = await puppeteer.launch({
-      args: chromium.args,
-      defaultViewport: chromium.defaultViewport,
-      executablePath: await chromium.executablePath(),
-      headless: chromium.headless,
-      ignoreHTTPSErrors: true,
-    });
+// Singleton browser instance for serverless reuse
+let _browser = null;
 
-    const page = await browser.newPage();
-    // Security: strictly construct the target URL from the request host to prevent SSRF
+const getBrowser = async () => {
+  // Check if browser exists and is still responsive
+  if (_browser) {
+    try {
+      const contexts = _browser.browserContexts();
+      if (contexts && contexts.length > 0) return _browser;
+    } catch (e) {
+      _browser = null; // Stale browser, reset
+    }
+  }
+
+  let retries = 3;
+  while (retries > 0) {
+    try {
+      const executablePath = await chromium.executablePath();
+      _browser = await puppeteer.launch({
+        args: chromium.args,
+        defaultViewport: chromium.defaultViewport,
+        executablePath: executablePath,
+        headless: chromium.headless,
+      });
+      return _browser;
+    } catch (error) {
+      retries--;
+      console.error(`Launch fail (${3-retries}/3):`, error.message);
+      if (retries === 0) throw error;
+      // Random delay to break ETXTBSY race conditions
+      await new Promise(r => setTimeout(r, 500 + Math.random() * 1000));
+    }
+  }
+};
+
+module.exports = async (req, res) => {
+  let page = null;
+  
+  try {
+    const browser = await getBrowser();
+    page = await browser.newPage();
+
+    // Security: strictly construct the target URL from the request host
     const protocol = req.headers['x-forwarded-proto'] || 'https';
     const host = req.headers['host'];
     const targetUrl = new URL('/?print=true', `${protocol}://${host}`);
-    const url = targetUrl.toString();
-
-    await page.goto(url, { 
-      waitUntil: 'networkidle2', 
-      timeout: 20000 
+    
+    await page.goto(targetUrl.toString(), { 
+      waitUntil: 'networkidle0', 
+      timeout: 25000 
     });
 
-    // Emulate print media
     await page.emulateMediaType('print');
 
     const pdf = await page.pdf({
@@ -38,12 +66,18 @@ module.exports = async (req, res) => {
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Disposition', 'attachment; filename="Eneko_Ruiz_CV.pdf"');
     res.send(pdf);
+
   } catch (error) {
-    console.error('PDF Generation Error:', error);
-    res.status(500).send(`Error generating PDF: ${error.message}`);
+    console.error('PDF API Error:', error);
+    res.status(500).json({
+      error: 'Error generating PDF',
+      message: error.message,
+      code: error.code || 'UNKNOWN'
+    });
   } finally {
-    if (browser !== null) {
-      await browser.close();
+    if (page) {
+      try { await page.close(); } catch(e) {}
     }
+    // We DON'T close the browser here to keep it warm for the next request
   }
 };

@@ -75,7 +75,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: url('https://grainy-gradients.vercel.app/noise.svg');
+      background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
       opacity: 0.04;
       pointer-events: none;
       z-index: 9999;
@@ -186,18 +186,9 @@
       -moz-osx-font-smoothing: grayscale;
       text-rendering: optimizeLegibility;
       font-feature-settings: "kern" 1, "onum" 1, "liga" 1;
-    }
-
-    ::selection {
-      background: var(--c-accent-b);
-      color: var(--c-ink);
-    }
-
-    /* Dark mode fix: html must also carry the background so no
-       white flash appears at viewport edges or on overscroll   */
-    html {
       height: 100%;
       background-color: var(--c-bg);
+      overflow-x: hidden;
     }
 
     html.theme-loaded {
@@ -215,6 +206,8 @@
       line-height: 1.65;
       -webkit-font-smoothing: antialiased;
       transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
+      overflow-x: hidden;
+      width: 100%;
     }
 
     a {
@@ -254,7 +247,7 @@
     }
 
     /* ── PAGE FADE ─────────────────────────────────────── */
-    #root {
+    #main-content {
       opacity: 1;
       transition: opacity .15s ease;
       flex: 1;
@@ -262,7 +255,7 @@
       flex-direction: column;
     }
 
-    #root.fading {
+    #main-content.fading {
       opacity: 0;
     }
 
@@ -349,17 +342,15 @@
       gap: 6px;
       background: var(--c-surface);
       border: 1px solid var(--c-rule-2);
-      border-radius: 4px;
+      border-radius: 6px;
       cursor: pointer;
       color: var(--c-ink-2);
       font-family: var(--f-mono);
       font-size: 11px;
-      letter-spacing: .08em;
-      padding: 7px 12px;
-      min-height: 32px;
-      transition: border-color var(--dur) var(--ease),
-        color var(--dur) var(--ease),
-        background var(--dur) var(--ease);
+      letter-spacing: .05em;
+      padding: 6px 10px;
+      min-height: 30px;
+      transition: all var(--dur) var(--ease);
       white-space: nowrap;
       text-transform: uppercase;
     }
@@ -383,12 +374,13 @@
     #theme-btn {
       position: relative;
       overflow: hidden;
-      width: 34px;
-      height: 24px;
+      width: 32px;
+      height: 30px;
       padding: 0;
       display: flex;
       align-items: center;
       justify-content: center;
+      border-radius: 6px;
     }
 
     #theme-btn svg {
@@ -445,10 +437,13 @@
       border: 1px solid var(--c-rule-2);
       border-radius: 4px;
       min-width: 168px;
-      max-height: 360px;
+      max-width: calc(100vw - 32px);
+      max-height: 70vh;
       overflow-y: auto;
       display: none;
       flex-direction: column;
+      z-index: 1000;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     }
 
     #lang-menu.open {
@@ -1208,6 +1203,28 @@
     }
 
     @media (max-width:600px) {
+      #topbar {
+        padding: 8px var(--s3);
+        gap: var(--s1);
+      }
+
+      .ctrl {
+        padding: 4px 8px;
+        min-height: 28px;
+        font-size: 10px;
+        gap: 4px;
+      }
+
+      #theme-btn {
+        width: 28px;
+        height: 28px;
+      }
+
+      #theme-btn svg {
+        width: 13px;
+        height: 13px;
+      }
+
       .site-header {
         grid-template-columns: 1fr;
       }
@@ -1227,81 +1244,51 @@
       }
     }
 
-    @media (max-width:360px) {
-      .tl-item {
-        grid-template-columns: 1fr;
+    @media (max-width:400px) {
+      .ctrl span:not(#lang-label) {
+        display: none;
       }
+      .ctrl { padding: 6px; }
+    }
 
-      .tl-date {
-        text-align: left;
-        padding-top: 0;
-        margin-bottom: 4px;
-      }
+    @media (max-width:360px) {
+      .tl-item { grid-template-columns: 1fr; }
+      .tl-date { text-align: left; padding-top: 0; margin-bottom: 4px; }
     }
 
     /* ── RTL ────────────────────────────────────────────── */
-    [dir="rtl"] .contacts {
-      align-items: flex-start;
-    }
-
-    [dir="rtl"] .social-row {
-      flex-direction: row-reverse;
-    }
-
+    [dir="rtl"] .contacts { align-items: flex-start; }
+    [dir="rtl"] .social-row { flex-direction: row-reverse; }
     [dir="rtl"] .tl-body {
       border-left: none;
       border-right: 1px solid var(--c-rule);
       padding-left: 0;
       padding-right: var(--s3);
     }
-
-    [dir="rtl"] .tl-body::before {
-      left: auto;
-      right: -4px;
-    }
-
-    [dir="rtl"] .tl-date {
-      text-align: left;
-    }
-
+    [dir="rtl"] .tl-body::before { left: auto; right: -4px; }
+    [dir="rtl"] .tl-date { text-align: left; }
     [dir="rtl"] .course-item {
       padding-left: 0;
       border-left: none;
       padding-right: var(--s3);
       border-right: 1px solid var(--c-rule);
     }
-
-    [dir="rtl"] .course-item:hover {
-      border-right-color: var(--c-accent);
-    }
-
-    [dir="rtl"] #lang-menu {
-      right: auto;
-      left: 0;
-    }
-
+    [dir="rtl"] .course-item:hover { border-right-color: var(--c-accent); }
+    [dir="rtl"] #lang-menu { right: auto; left: 0; }
     [dir="rtl"] .copy-tip {
       left: auto;
       right: 50%;
       transform: translateX(50%) translateY(4px);
     }
 
-    /* ── PRINT — Staff Level A4: full-page, no aggressive scale ──
-       Strategy:
-       · @page margin 8mm — maximum printable area
-       · No transform:scale below 0.98 — use CSS gap instead
-       · Font base 11.5px — readable at A4 resolution
-       · CSS Grid gap tuning stretches content to fill the page
-       · theme-aware: variables NOT overridden (light OR dark prints correctly)
-    ── */
+    /* ── PRINT — Elite A4 Layout ── */
     @media print {
       @page {
         size: A4 portrait;
         margin: 0;
       }
 
-      html,
-      body {
+      html, body {
         width: 100% !important;
         height: 100% !important;
         margin: 0 !important;
@@ -1310,35 +1297,14 @@
         color: var(--c-ink) !important;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
-        color-scheme: light dark !important;
-        font-size: 11.5px !important;
+        font-size: 12px !important;
         font-family: var(--f-sans) !important;
         overflow: hidden !important;
       }
-
-      /* ── Hide interactive chrome ── */
       #topbar,
-      #theme-btn,
-      #print-btn,
       #scroll-progress,
-      #share-btn,
       .copy-tip {
         display: none !important;
-      }
-
-      #main-content {
-        opacity: 1 !important;
-        display: block !important;
-        height: 100% !important;
-      }
-
-      .copy-tip {
-        display: none !important;
-      }
-
-      .contact-row {
-        pointer-events: none !important;
-        cursor: default !important;
       }
 
       /* ── Reveal: force all visible ── */
@@ -1360,36 +1326,44 @@
         box-shadow: none !important;
       }
 
+      /* ── Force border visibility in print ── */
+      .site-header,
+      .profile,
+      .sec-title,
+      .tl-body,
+      .course-item,
+      .site-footer {
+        border-color: var(--c-rule) !important;
+      }
+
+      .tl-body::before {
+        border-color: var(--c-rule) !important;
+        background: var(--c-bg) !important;
+      }
+
       /* ── Wrapper: force full-page height ── */
       .wrapper {
         display: flex !important;
         flex-direction: column !important;
-        justify-content: center !important;
+        justify-content: flex-start !important;
         min-height: 297mm !important;
-        /* Standard A4 height */
+        width: 210mm !important;
         max-width: 100% !important;
-        height: 100% !important;
-        padding: 20mm 15mm !important;
-        /* 2cm top/bottom margin */
+        height: auto !important;
+        padding: 12mm 15mm !important;
         margin: 0 !important;
         box-sizing: border-box !important;
         transform: none !important;
         filter: none !important;
-        overflow: hidden !important;
-      }
-
-      /* ── Vertical Spacing ── */
-
-      .wrapper> :last-child {
-        margin-bottom: 0 !important;
+        background: var(--c-bg) !important;
       }
 
       /* ── Header: 3-column grid to keep QR aligned ── */
       .site-header {
         grid-template-columns: 1fr auto auto !important;
         gap: 18px 24px !important;
-        padding-bottom: 30px !important;
-        margin-bottom: 26px !important;
+        padding-bottom: 25px !important;
+        margin-bottom: 22px !important;
       }
 
       h1 {
@@ -1416,6 +1390,10 @@
 
       .contact-row {
         font-size: 8pt !important;
+        background: none !important;
+        border: none !important;
+        padding: 0 !important;
+        pointer-events: none !important;
       }
 
       /* ── QR: visible, aligned to header corner ── */
@@ -1432,22 +1410,35 @@
         height: 56px !important;
       }
 
+      .qr-title {
+        font-family: var(--f-sans);
+        font-size: 8.5pt;
+        font-weight: 600;
+        color: var(--c-ink);
+        text-align: center;
+        margin-bottom: 3px;
+        line-height: 1.1;
+      }
+
       .qr-caption {
         font-family: var(--f-mono);
-        font-size: 6pt;
+        font-size: 5.5pt;
         color: var(--c-ink-3);
         text-align: center;
-        max-width: 60px;
-        line-height: 1.3;
+        max-width: 65px;
+        line-height: 1.2;
         font-style: italic;
+        margin-top: 2px;
       }
+
+
 
       /* ── Profile ── */
       .profile {
         grid-template-columns: 56px 1fr !important;
         gap: 15px !important;
-        padding-bottom: 15px !important;
-        margin-bottom: 16px !important;
+        padding-bottom: 10px !important;
+        margin-bottom: 12px !important;
       }
 
       .profile-label {
@@ -1459,10 +1450,10 @@
         line-height: 1.58 !important;
       }
 
-      /* ── Dashboard: 2 column, natural stacking ── */
+      /* ── Dashboard: 2 column, balanced ratio ── */
       .dashboard {
-        grid-template-columns: 1fr 195px !important;
-        gap: 30px !important;
+        grid-template-columns: 1fr 240px !important;
+        gap: 35px !important;
         align-items: flex-start !important;
       }
 
@@ -1474,11 +1465,11 @@
       }
 
       .col-main {
-        gap: 28px !important;
+        gap: 20px !important;
       }
 
       .col-side {
-        gap: 28px !important;
+        gap: 22px !important;
         order: 0 !important;
       }
 
@@ -1489,14 +1480,14 @@
         font-weight: 500 !important;
         letter-spacing: .15em !important;
         color: var(--c-accent) !important;
-        margin-bottom: 15px !important;
+        margin-bottom: 12px !important;
         padding-bottom: 5px !important;
       }
 
       /* ── Timeline ── */
       .tl-item {
-        grid-template-columns: 68px 1fr !important;
-        gap: 0 12px !important;
+        grid-template-columns: 75px 1fr !important;
+        gap: 0 15px !important;
         padding-bottom: 10px !important;
       }
 
@@ -1527,38 +1518,17 @@
         font-size: 9pt !important;
         margin-top: 3px !important;
       }
-
       /* ── Skills ── */
-      .sg-label {
-        font-size: 6.75pt !important;
-        margin-bottom: 5px !important;
-      }
-
-      .skill-group {
-        margin-bottom: 7px !important;
-        display: block !important;
-      }
-
+      .sg-label { font-size: 6.75pt !important; margin-bottom: 5px !important; }
+      .skill-group { margin-bottom: 7px !important; display: block !important; }
       .pills {
         display: flex !important;
         flex-direction: row !important;
         flex-wrap: wrap !important;
         gap: 5px !important;
       }
-
-      #h-soft+.pills {
-        flex-direction: row !important;
-      }
-
-      .pill {
-        font-size: 7.75pt !important;
-        padding: 2px 6px !important;
-      }
-
-      .pill.key {
-        font-size: 8.25pt !important;
-        padding: 2px 7px !important;
-      }
+      .pill { font-size: 7.75pt !important; padding: 2px 6px !important; }
+      .pill.key { font-size: 8.25pt !important; padding: 2px 7px !important; }
 
       /* ── Languages (inline chips) ── */
       .lang-inline {
@@ -1566,54 +1536,47 @@
         flex-direction: column !important;
         gap: 6px !important;
       }
-
       .lang-chip {
         display: flex !important;
         flex-direction: row !important;
         align-items: baseline !important;
         gap: 6px !important;
       }
-
-      .lang-chip strong {
-        font-size: 8.75pt !important;
-      }
-
-      .lang-chip em {
-        font-size: 8.25pt !important;
-      }
-
-      .lang-dot {
-        display: none !important;
-      }
+      .lang-chip strong { font-size: 8.75pt !important; }
+      .lang-chip em { font-size: 8.25pt !important; }
+      .lang-dot { display: none !important; }
 
       /* ── Courses ── */
-      .course-list {
-        gap: 8px !important;
-      }
-
-      .course-name {
-        font-size: 8.5pt !important;
-      }
-
-      .course-inst {
-        font-size: 7.5pt !important;
-      }
-
-      .course-item {
-        padding-left: 9px !important;
-      }
+      .course-list { gap: 8px !important; }
+      .course-name { font-size: 8.5pt !important; }
+      .course-inst { font-size: 7.5pt !important; }
+      .course-item { padding-left: 9px !important; }
 
       /* ── Projects ── */
       .project-links {
         display: flex !important;
-        flex-wrap: wrap !important;
-        gap: 4px !important;
+        flex-direction: column !important;
+        gap: 5px !important;
       }
-
       .proj-link {
-        padding: 3px 9px !important;
+        border: none !important;
+        padding: 0 !important;
+        font-size: 8.5pt !important;
+        background: none !important;
+        color: var(--c-ink) !important;
+        display: block !important;
+        text-decoration: none !important;
+      }
+      .proj-link svg { display: none !important; }
+      .proj-link::after {
+        content: attr(href);
+        display: block !important;
         font-size: 7.5pt !important;
-        border-radius: 14px !important;
+        color: var(--c-ink-3) !important;
+        font-weight: 400 !important;
+        margin-top: 2px;
+        font-family: var(--f-mono);
+        word-break: break-all;
       }
 
       /* ── Exp subsections ── */
@@ -1623,33 +1586,29 @@
         margin-top: 6px !important;
         margin-bottom: 4px !important;
       }
-
-      .tl-item.micro {
-        padding-bottom: 4px !important;
-      }
-
-      .tl-item.micro .tl-title {
-        font-size: 8.5pt !important;
-      }
-
-      .tl-item.micro .tl-org {
-        font-size: 7.5pt !important;
-      }
+      .tl-item.micro { padding-bottom: 4px !important; }
+      .tl-item.micro .tl-title { font-size: 8.5pt !important; }
+      .tl-item.micro .tl-org { font-size: 7.5pt !important; }
 
       /* ── Break control ── */
-      section,
-      .tl-item,
-      .course-item,
-      .lang-chip,
-      .skill-group {
+      section, .tl-item, .course-item, .lang-chip, .skill-group {
         break-inside: avoid;
       }
+      h2 { break-after: avoid; }
 
-      h2 {
-        break-after: avoid;
+      .hide-print {
+        display: none !important;
       }
-
     }
+
+    /* ── Animations ─────────────────────────────────────── */
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes pulse { 
+      0% { transform: scale(1); box-shadow: 0 4px 15px var(--btn-shadow); } 
+      50% { transform: scale(1.05); box-shadow: 0 6px 20px var(--btn-shadow); } 
+      100% { transform: scale(1); box-shadow: 0 4px 15px var(--btn-shadow); } 
+    }
+    @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
   </style>
   <script>
     (function () {
@@ -1680,11 +1639,11 @@
   <a class="skip-link" href="#main-content">Saltar al contenido</a>
 
   <!-- ── TOPBAR ────────────────────────────────────────── -->
-  <div id="topbar" role="toolbar" aria-label="Controles del sitio">
+  <nav id="topbar" aria-label="Controles del sitio">
 
     <div id="lang-wrap">
       <button id="lang-trigger" class="ctrl" aria-haspopup="listbox" aria-expanded="false"
-        aria-label="Seleccionar idioma">
+        data-i18n="aria_lang">
         <span id="lang-label">Español</span>
         <svg class="chev" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
           stroke="currentColor" aria-hidden="true">
@@ -1694,7 +1653,7 @@
       <div id="lang-menu" role="listbox" aria-label="Idiomas"></div>
     </div>
 
-    <button id="print-btn" class="ctrl" aria-label="Imprimir CV">
+    <button id="print-btn" class="ctrl" data-i18n="aria_print">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
         aria-hidden="true">
         <path stroke-linecap="round" stroke-linejoin="round"
@@ -1703,7 +1662,7 @@
       <span data-i18n="btn_print">Imprimir CV</span>
     </button>
 
-    <button id="share-btn" class="ctrl" aria-label="Compartir CV" style="display:none;">
+    <button id="share-btn" class="ctrl" data-i18n="aria_share" style="display:none;">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
         aria-hidden="true">
         <path stroke-linecap="round" stroke-linejoin="round"
@@ -1712,7 +1671,7 @@
       <span data-i18n="btn_share">Compartir</span>
     </button>
 
-    <button id="theme-btn" class="ctrl" aria-label="Cambiar tema">
+    <button id="theme-btn" class="ctrl" data-i18n="aria_theme">
       <svg id="icon-sun" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8"
         stroke="currentColor" aria-hidden="true">
         <path stroke-linecap="round" stroke-linejoin="round"
@@ -1724,8 +1683,7 @@
           d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z" />
       </svg>
     </button>
-
-  </div>
+  </nav>
 
   <!-- ── ROOT ──────────────────────────────────────────── -->
   <main id="main-content" role="main" aria-live="polite">
@@ -1746,7 +1704,7 @@
 
         <address class="contacts">
 
-          <button class="contact-row" data-copy="eneekoruiz@gmail.com" aria-label="Copiar email al portapapeles">
+          <button class="contact-row" data-copy="eneekoruiz@gmail.com" data-i18n="aria_copy_email">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
               stroke="currentColor" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round"
@@ -1755,7 +1713,7 @@
             eneekoruiz@gmail.com
           </button>
 
-          <button class="contact-row" data-copy="+34600025161" aria-label="Copiar teléfono al portapapeles">
+          <button class="contact-row" data-copy="+34600025161" data-i18n="aria_copy_phone">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
               stroke="currentColor" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round"
@@ -1767,7 +1725,7 @@
 
         <!-- QR code — hidden on screen, appears in printed PDF only -->
         <div class="qr-print" aria-hidden="true">
-          <!-- Real QR code pointing to https://eneko-ruiz.vercel.app -->
+          <span class="qr-title" data-i18n="proj_portfolio">Portfolio Interactivo</span>
           <img
             src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=https%3A%2F%2Feneko-ruiz.vercel.app&format=png&margin=2&color=161210&bgcolor=faf8f5"
             alt="QR eneko-ruiz.vercel.app" width="56" height="56" style="display:block;border-radius:2px;"
@@ -1778,12 +1736,12 @@
       </header>
 
       <!-- PROFILE -->
-      <div class="profile reveal">
+      <section class="profile reveal">
         <p class="profile-label" data-i18n="profile_title">Perfil</p>
-        <p class="profile-text" data-i18n="profile_text">Estudiante de Ingeniería Informática con sólida base técnica y
+        <p class="profile-text" data-i18n="profile_text">Estudiante de Ingeniería Informática con una sólida base técnica y
           experiencia de cara al público. Apasionado por la resolución de problemas mediante código, el diseño de
           software eficiente y el aprendizaje continuo. Acostumbrado a la adaptabilidad y al trabajo en equipo.</p>
-      </div>
+      </section>
 
       <!-- DASHBOARD -->
       <div class="dashboard">
@@ -1795,7 +1753,7 @@
           <section class="reveal" aria-labelledby="h-edu">
             <h2 class="sec-title" id="h-edu" data-i18n="edu_title">Formación Académica</h2>
             <div class="tl-item">
-              <p class="tl-date" data-i18n="edu_1_date"><time>2023 – Hoy</time></p>
+              <p class="tl-date" data-i18n="edu_1_date"><time datetime="2023">2023 – Hoy</time></p>
               <div class="tl-body">
                 <p class="tl-title" data-i18n="edu_1_deg">Grado en Ingeniería Informática</p>
                 <p class="tl-org" data-i18n="edu_1_uni">Universidad del País Vasco (UPV/EHU)</p>
@@ -1805,7 +1763,7 @@
               </div>
             </div>
             <div class="tl-item compact">
-              <p class="tl-date"><time>2017 – 2023</time></p>
+              <p class="tl-date" data-i18n="edu_2_date"><time datetime="2021">2021 – 2023</time></p>
               <div class="tl-body">
                 <p class="tl-title" data-i18n="edu_2_deg">Bachillerato Científico</p>
                 <p class="tl-org">Koldo Mitxelena Herri Ikastetxea</p>
@@ -1834,39 +1792,38 @@
 
             <p class="exp-sub" data-i18n="exp_tech_label">Experiencia Técnica</p>
             <div class="tl-item compact">
-              <p class="tl-date"><time>Jun–Ago 2024</time></p>
+              <p class="tl-date" data-i18n="exp_intern_date"><time>May–Jul 2026</time></p>
               <div class="tl-body">
-                <p class="tl-title" data-i18n="exp_intern_role">Desarrollador Web (Prácticas)</p>
-                <p class="tl-org" data-i18n="exp_intern_org">InnovaTech Solutions · San Sebastián</p>
-                <p class="tl-desc" data-i18n="exp_intern_desc">Desarrollo de API REST con Node.js, optimización de
-                  consultas SQL y refactorización de componentes en React.</p>
+                <p class="tl-title" data-i18n="exp_intern_role">Desarrollador Full Stack (Prácticas)</p>
+                <p class="tl-org" data-i18n="exp_intern_org">SST Pro Dynamics</p>
+                <p class="tl-desc" data-i18n="exp_intern_desc">Desarrollo de plataforma full stack.</p>
               </div>
             </div>
 
             <p class="exp-sub" data-i18n="exp_other_label">Otras Experiencias</p>
             <div class="tl-item micro">
-              <p class="tl-date" data-i18n="exp_1_date"><time>Jun–Sep 2025</time></p>
+              <p class="tl-date" data-i18n="exp_1_date"><time datetime="2025-06">Jun–Sep 2025</time></p>
               <div class="tl-body">
                 <p class="tl-title" data-i18n="exp_1_role">Ayudante de Dependiente</p>
                 <p class="tl-org">EROSKI</p>
               </div>
             </div>
             <div class="tl-item micro">
-              <p class="tl-date" data-i18n="exp_2_date"><time>Dic 2023–Ene 2025</time></p>
+              <p class="tl-date" data-i18n="exp_2_date"><time datetime="2023-12">Dic 2023–Ene 2025</time></p>
               <div class="tl-body">
                 <p class="tl-title" data-i18n="exp_2_role">Promotor de Marca</p>
                 <p class="tl-org">STAFF GLOBAL GROUP</p>
               </div>
             </div>
             <div class="tl-item micro">
-              <p class="tl-date" data-i18n="exp_3_date"><time>Jul–Sep 2023</time></p>
+              <p class="tl-date" data-i18n="exp_3_date"><time datetime="2023-07">Jul–Sep 2023</time></p>
               <div class="tl-body">
                 <p class="tl-title" data-i18n="exp_3_role">Ayudante de Conductor</p>
                 <p class="tl-org">Tren "Txu-Txu" · Zarautz</p>
               </div>
             </div>
             <div class="tl-item micro">
-              <p class="tl-date" data-i18n="exp_4_date"><time>Jul–Ago 2022</time></p>
+              <p class="tl-date" data-i18n="exp_4_date"><time datetime="2022-07">Jul–Ago 2022</time></p>
               <div class="tl-body">
                 <p class="tl-title" data-i18n="exp_4_role">Venta de Calzado</p>
                 <p class="tl-org">CARAVANAS OIARTZUN</p>
@@ -1883,7 +1840,7 @@
           <section class="reveal" aria-labelledby="h-projects">
             <h2 class="sec-title" id="h-projects" data-i18n="projects_title">Proyectos y Código</h2>
             <div class="project-links">
-              <a class="proj-link" href="https://eneko-ruiz.vercel.app" target="_blank" rel="noopener noreferrer me">
+              <a class="proj-link hide-print" href="https://eneko-ruiz.vercel.app" target="_blank" rel="noopener noreferrer me">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8"
                   stroke="currentColor" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round"
@@ -1914,16 +1871,16 @@
             <div class="skill-group">
               <p class="sg-label" data-i18n="sg_langs">Lenguajes de Programación</p>
               <div class="pills" role="list">
-                <span class="pill key" role="listitem" tabindex="0">Python</span>
-                <span class="pill" role="listitem" tabindex="0">Java</span>
-                <span class="pill" role="listitem" tabindex="0">C++</span>
+                <span class="pill key" role="listitem" tabindex="0">Java</span>
+                <span class="pill" role="listitem" tabindex="0">Python</span>
+                <span class="pill" role="listitem" tabindex="0">C</span>
               </div>
             </div>
             <div class="skill-group">
               <p class="sg-label" data-i18n="sg_vcs">Control de Versiones</p>
               <div class="pills" role="list">
-                <span class="pill key" role="listitem" tabindex="0">Git</span>
-                <span class="pill" role="listitem" tabindex="0">GitHub</span>
+                <span class="pill key" role="listitem" tabindex="0">GitHub</span>
+                <span class="pill" role="listitem" tabindex="0">Git</span>
               </div>
             </div>
             <div class="skill-group">
@@ -1938,7 +1895,9 @@
               <p class="sg-label" data-i18n="sg_db">Bases de Datos</p>
               <div class="pills" role="list">
                 <span class="pill" role="listitem" tabindex="0">SQL</span>
-                <span class="pill" role="listitem" tabindex="0">SQLite</span>
+                <span class="pill" role="listitem" tabindex="0">Firebase</span>
+                <span class="pill" role="listitem" tabindex="0">Supabase</span>
+                <span class="pill" role="listitem" tabindex="0">Oracle</span>
               </div>
             </div>
           </section>
@@ -2035,11 +1994,11 @@ const applyTranslations = (code) => {
     let v = t[key];
     if (v !== undefined) {
       if (typeof v === 'string') v = v.replace('{{age}}', age);
-      el.textContent = v;
-      if (key === 'aria_theme') document.getElementById('theme-btn')?.setAttribute('aria-label', v);
-      if (key === 'aria_print') document.getElementById('print-btn')?.setAttribute('aria-label', v);
-      if (key === 'aria_share') document.getElementById('share-btn')?.setAttribute('aria-label', v);
-      if (key === 'aria_lang')  document.getElementById('lang-trigger')?.setAttribute('aria-label', v);
+      if (key.startsWith('aria_')) {
+        el.setAttribute('aria-label', v);
+      } else {
+        el.textContent = v;
+      }
     }
   });
 
@@ -2058,6 +2017,13 @@ const applyTranslations = (code) => {
     const year = new Date().getFullYear();
     footer.innerHTML = `Coded from scratch by Eneko Ruiz Mollón &copy; ${year}`;
   }
+
+  // Update language menu visual state
+  document.querySelectorAll('.lm-item').forEach(item => {
+    const isActive = item.getAttribute('data-code') === code;
+    item.classList.toggle('active', isActive);
+    item.setAttribute('aria-selected', isActive ? 'true' : 'false');
+  });
 };
 
 const setLang = (code) => {
@@ -2140,8 +2106,14 @@ window.hire = function() {
     ], { duration: dur * 1000, easing: 'cubic-bezier(0,0,0.2,1)', fill: 'forwards' });
     setTimeout(() => el.remove(), dur * 1000);
   }
-  console.log("%c🚀 Contact: eneekoruiz@gmail.com", "color: #c4965a; font-size: 14px; font-weight: bold;");
-  return "Confetti launched!";
+  console.log("%c🚀 Iniciando conexión... Abriendo cliente de correo.", "color: #c4965a; font-size: 14px; font-weight: bold;");
+  
+  // Abrir mailto con un pequeño delay para que se vea el confetti
+  setTimeout(() => {
+    window.location.href = "mailto:eneekoruiz@gmail.com?subject=Propuesta%20Laboral%20%E2%80%94%20Eneko%20Ruiz&body=Hola%20Eneko%2C%0A%0AHe%20visto%20tu%20curr%C3%ADculum%20interactivo%20y%20me%20gustar%C3%ADa%20contactar%20contigo...";
+  }, 1200);
+
+  return "🚀 Conexión establecida. ¡Suerte!";
 };
 
 let _devOpen = false;
@@ -2164,12 +2136,9 @@ window.addEventListener('keydown', (e) => {
       const btn = document.createElement('button');
       btn.className = 'lm-item';
       btn.setAttribute('role', 'option');
+      btn.setAttribute('data-code', code);
       btn.innerHTML = `<span>${meta.name}</span><span class="lm-iso">${meta.iso}</span>`;
-      btn.onclick = () => {
-        setLang(code);
-        document.querySelectorAll('.lm-item').forEach(i => i.setAttribute('aria-selected', 'false'));
-        btn.setAttribute('aria-selected', 'true');
-      };
+      btn.onclick = () => setLang(code);
       menu.appendChild(btn);
     });
   }
@@ -2199,18 +2168,24 @@ window.addEventListener('keydown', (e) => {
   });
   
   window.addEventListener('keydown', (e) => {
+    if (['input', 'textarea'].includes(e.target.tagName.toLowerCase()) || e.target.isContentEditable) return;
     if (e.key.toLowerCase() === 'p' && !e.ctrlKey && !e.metaKey) { e.preventDefault(); handlePrint(); }
     if (e.key.toLowerCase() === 's' && !e.ctrlKey && !e.metaKey) { e.preventDefault(); handleShare(); }
   });
 
   window.addEventListener('message', (e) => {
+    // Only accept messages from trusted origins (self)
+    if (e.origin !== window.location.origin) return;
     if (e.data.type === 'set-theme') applyTheme(e.data.theme === 'dark');
     if (e.data.type === 'print-cv') handlePrint();
     if (e.data.type === 'share-cv') handleShare();
   });
 
   window.addEventListener('mousemove', (e) => {
-    if (window.parent !== window) window.parent.postMessage({ type: 'portfolio-cursor-move', x: e.clientX, y: e.clientY }, '*');
+    if (window.parent !== window) {
+      // Send to parent only, with restricted targetOrigin
+      window.parent.postMessage({ type: 'portfolio-cursor-move', x: e.clientX, y: e.clientY }, window.location.origin);
+    }
   });
 
   if ('serviceWorker' in navigator && window.location.protocol !== 'file:') {
@@ -2241,6 +2216,12 @@ window.addEventListener('keydown', (e) => {
   } else {
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
   }
+  
+  // Mark theme as loaded to enable transitions
+  setTimeout(() => document.documentElement.classList.add('theme-loaded'), 100);
+  
+  // Easter Egg: Initialize CLI console message
+  _runCLI();
 })();
 
 </script>
