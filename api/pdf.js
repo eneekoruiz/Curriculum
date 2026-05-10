@@ -34,6 +34,21 @@ const getBrowser = async () => {
           '--disable-dev-shm-usage',
           '--disable-gpu',
           '--font-render-hinting=none',
+          '--disable-extensions',
+          '--disable-component-update',
+          '--disable-background-networking',
+          '--disable-background-timer-throttling',
+          '--disable-backgrounding-occluded-windows',
+          '--disable-breakpad',
+          '--disable-client-side-phishing-detection',
+          '--disable-default-apps',
+          '--disable-hang-monitor',
+          '--disable-popup-blocking',
+          '--disable-prompt-on-repost',
+          '--disable-sync',
+          '--metrics-recording-only',
+          '--no-first-run',
+          '--safebrowsing-disable-auto-update',
         ],
         defaultViewport: chromium.defaultViewport,
         executablePath: executablePath,
@@ -63,10 +78,14 @@ module.exports = async (req, res) => {
     const lang = req.query.lang || 'es';
     const targetUrl = new URL(`/?print=true&lang=${lang}`, `${protocol}://${host}`);
     
+    // Faster navigation: wait for DOM only, then a small fixed delay for fonts
     await page.goto(targetUrl.toString(), { 
-      waitUntil: 'networkidle2', 
-      timeout: 15000 
+      waitUntil: 'domcontentloaded', 
+      timeout: 10000 
     });
+    
+    // Give fonts a moment to settle (much faster than networkidle)
+    await new Promise(r => setTimeout(r, 2000));
 
     await page.emulateMediaType('print');
 
