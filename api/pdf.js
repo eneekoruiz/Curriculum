@@ -1,3 +1,4 @@
+const path = require('path');
 const chromium = require('@sparticuz/chromium');
 const puppeteer = require('puppeteer-core');
 
@@ -19,8 +20,21 @@ const getBrowser = async () => {
   while (retries > 0) {
     try {
       const executablePath = await chromium.executablePath();
+      
+      // Ensure libraries are found
+      if (executablePath.includes('/tmp/')) {
+        process.env.LD_LIBRARY_PATH = `${path.dirname(executablePath)}:${process.env.LD_LIBRARY_PATH || ''}`;
+      }
+      
       _browser = await puppeteer.launch({
-        args: chromium.args,
+        args: [
+          ...chromium.args,
+          '--no-sandbox',
+          '--disable-setuid-sandbox',
+          '--disable-dev-shm-usage',
+          '--disable-gpu',
+          '--font-render-hinting=none',
+        ],
         defaultViewport: chromium.defaultViewport,
         executablePath: executablePath,
         headless: chromium.headless,
@@ -46,7 +60,8 @@ module.exports = async (req, res) => {
     // Security: strictly construct the target URL from the request host
     const protocol = req.headers['x-forwarded-proto'] || 'https';
     const host = req.headers['host'];
-    const targetUrl = new URL('/?print=true', `${protocol}://${host}`);
+    const lang = req.query.lang || 'es';
+    const targetUrl = new URL(`/?print=true&lang=${lang}`, `${protocol}://${host}`);
     
     await page.goto(targetUrl.toString(), { 
       waitUntil: 'networkidle0', 
@@ -64,7 +79,7 @@ module.exports = async (req, res) => {
     });
 
     res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', 'attachment; filename="Eneko_Ruiz_CV.pdf"');
+    res.setHeader('Content-Disposition', 'inline; filename="Eneko_Ruiz_CV.pdf"');
     res.send(pdf);
 
   } catch (error) {

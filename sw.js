@@ -32,6 +32,9 @@ self.addEventListener('activate', (e) => {
 self.addEventListener('fetch', (e) => {
   const url = new URL(e.request.url);
   
+  // Skip API calls
+  if (url.pathname.startsWith('/api/')) return;
+
   // Cache Google Fonts
   if (url.origin === 'https://fonts.googleapis.com' || url.origin === 'https://fonts.gstatic.com') {
     e.respondWith(

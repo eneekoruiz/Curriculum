@@ -2039,8 +2039,37 @@ const setLang = (code) => {
 const handlePrint = () => {
   if (navigator.vibrate) navigator.vibrate(5);
   const isMobile = window.matchMedia('(max-width: 768px)').matches;
+  
   if (isMobile) {
-    window.location.href = '/api/pdf';
+    const btn = document.getElementById('print-btn');
+    if (btn.getAttribute('data-loading') === 'true') return;
+    
+    const originalHTML = btn.innerHTML;
+    btn.setAttribute('data-loading', 'true');
+    btn.style.opacity = '0.7';
+    btn.style.pointerEvents = 'none';
+    
+    // Show generating status
+    const label = btn.querySelector('span');
+    if (label) {
+      const originalText = label.textContent;
+      label.textContent = currentLang === 'es' ? 'Generando...' : 'Generating...';
+      
+      // Attempt to open in new tab (more reliable for PDFs on mobile)
+      const pdfWindow = window.open(`/api/pdf?lang=${currentLang}`, '_blank');
+      
+      // Fallback if popup blocked
+      if (!pdfWindow || pdfWindow.closed || typeof pdfWindow.closed === 'undefined') {
+        window.location.href = '/api/pdf';
+      }
+      
+      setTimeout(() => {
+        label.textContent = originalText;
+        btn.removeAttribute('data-loading');
+        btn.style.opacity = '1';
+        btn.style.pointerEvents = 'auto';
+      }, 15000);
+    }
   } else {
     window.print();
   }

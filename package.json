@@ -4,8 +4,8 @@
   "description": "API for PDF generation on Vercel",
   "main": "api/pdf.js",
   "dependencies": {
-    "@sparticuz/chromium": "123.0.1",
-    "puppeteer-core": "22.6.0"
+    "@sparticuz/chromium": "148.0.0",
+    "puppeteer-core": "24.43.0"
   },
   "devDependencies": {
     "puppeteer": "^22.13.0"
