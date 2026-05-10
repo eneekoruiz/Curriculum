@@ -1313,6 +1313,7 @@
       .reveal * {
         opacity: 1 !important;
         transform: none !important;
+        visibility: visible !important;
         filter: none !important;
         backdrop-filter: none !important;
         animation: none !important;
@@ -1614,9 +1615,18 @@
   <script>
     (function () {
       try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlTheme = urlParams.get('theme');
         const savedTheme = localStorage.getItem('cv-theme');
         const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const isDark = savedTheme ? savedTheme === 'dark' : !!prefersDark;
+        
+        let isDark;
+        if (urlTheme) {
+          isDark = urlTheme === 'dark';
+        } else {
+          isDark = savedTheme ? savedTheme === 'dark' : !!prefersDark;
+        }
+
         const htmlEl = document.documentElement;
         htmlEl.setAttribute('data-theme', isDark ? 'dark' : 'light');
         htmlEl.style.backgroundColor = isDark ? '#0e0d0b' : '#f7f4ef';

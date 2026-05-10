@@ -76,16 +76,20 @@ module.exports = async (req, res) => {
     const protocol = req.headers['x-forwarded-proto'] || 'https';
     const host = req.headers['host'];
     const lang = req.query.lang || 'es';
-    const targetUrl = new URL(`/?print=true&lang=${lang}`, `${protocol}://${host}`);
+    // Force light theme and print mode
+    const targetUrl = new URL(`/?print=true&lang=${lang}&theme=light`, `${protocol}://${host}`);
     
-    // Faster navigation: wait for DOM only, then a small fixed delay for fonts
+    // Set viewport to A4 dimensions at 96 DPI to ensure consistent layout rendering
+    await page.setViewport({ width: 794, height: 1123, deviceScaleFactor: 2 });
+
+    // Use networkidle0 to ensure fonts and QR code are 100% loaded
     await page.goto(targetUrl.toString(), { 
-      waitUntil: 'domcontentloaded', 
-      timeout: 10000 
+      waitUntil: 'networkidle0', 
+      timeout: 20000 
     });
     
-    // Give fonts a moment to settle (much faster than networkidle)
-    await new Promise(r => setTimeout(r, 2000));
+    // Final safety wait for CSS animations/transitions to settle
+    await new Promise(r => setTimeout(r, 1000));
 
     await page.emulateMediaType('print');
 
@@ -94,7 +98,8 @@ module.exports = async (req, res) => {
       printBackground: true,
       margin: { top: '0px', right: '0px', bottom: '0px', left: '0px' },
       displayHeaderFooter: false,
-      preferCSSPageSize: true
+      preferCSSPageSize: true,
+      printBackground: true
     });
 
     res.setHeader('Content-Type', 'application/pdf');
