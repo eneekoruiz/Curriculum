@@ -64,8 +64,8 @@ module.exports = async (req, res) => {
     const targetUrl = new URL(`/?print=true&lang=${lang}`, `${protocol}://${host}`);
     
     await page.goto(targetUrl.toString(), { 
-      waitUntil: 'networkidle0', 
-      timeout: 25000 
+      waitUntil: 'networkidle2', 
+      timeout: 15000 
     });
 
     await page.emulateMediaType('print');
@@ -79,6 +79,7 @@ module.exports = async (req, res) => {
     });
 
     res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Length', pdf.length);
     res.setHeader('Content-Disposition', 'inline; filename="Eneko_Ruiz_CV.pdf"');
     res.send(pdf);
 
