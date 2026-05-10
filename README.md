@@ -10,8 +10,8 @@ Puedes ver el resultado en directo aquí: [eneko-ruiz.vercel.app](https://eneko-
 
 ## Características principales
 
-* **Cero dependencias:** No hay `package.json`, ni React, ni Tailwind. El peso total es mínimo (menos de 100KB) y saca 100/100 en Lighthouse.
-* **Internacionalización (i18n) a medida:** Soporta 19 idiomas modificando el DOM en tiempo real. Guarda el estado en la URL (`?lang=en`) y adapta la lectura de derecha a izquierda (RTL) automáticamente para idiomas como el árabe o el hebreo.
+* **Cero dependencias en cliente:** No hay React, ni Tailwind. El peso total es mínimo (menos de 100KB) y saca 100/100 en Lighthouse. El único `package.json` existe para la API serverless de generación de PDF.
+* **Internacionalización (i18n) a medida:** Soporta 20 idiomas modificando el DOM en tiempo real. Guarda el estado en la URL (`?lang=en`) y adapta la lectura de derecha a izquierda (RTL) automáticamente para idiomas como el árabe o el hebreo.
 * **Motor de impresión A4:** Al intentar imprimir la web (Ctrl+P), un `@media print` reestructura todo el layout para que encaje exactamente en un solo folio A4 a sangre (sin bordes blancos), e inyecta un código QR dinámico.
 * **Dark Mode nativo:** Respeta las preferencias del sistema (`prefers-color-scheme`) desde el `<head>` para evitar parpadeos blancos al cargar, y guarda la elección del usuario en `localStorage`.
 * **Accesible:** Soporte para navegación por teclado, semántica cuidada y adaptado para `prefers-reduced-motion`.

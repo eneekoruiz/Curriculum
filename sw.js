@@ -1,4 +1,4 @@
-const CACHE_NAME = 'eneko-cv-v2';
+const CACHE_NAME = 'eneko-cv-v3';
 const ASSETS = [
   './',
   './index.html',
@@ -58,9 +58,7 @@ self.addEventListener('fetch', (e) => {
             });
           }
           return networkResponse;
-        }).catch(() => {
-          // Silent fail for network errors if we have cache
-        });
+        }).catch(() => cachedResponse || Response.error());
 
         return cachedResponse || fetchPromise;
       })

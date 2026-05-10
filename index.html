@@ -26,6 +26,10 @@
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://eneko-ruiz.vercel.app" />
   <link rel="manifest" href="manifest.json" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Eneko CV" />
+  <link rel="apple-touch-icon" href="favicon.png" />
 
   <meta property="og:type" content="profile" />
   <meta property="og:title" content="Eneko Ruiz Mollón — Ingeniería Informática · UPV/EHU" />
@@ -68,17 +72,32 @@
     rel="stylesheet" />
 
   <style>
-    /* Grain Texture Overlay */
+    /* Grain Texture Overlay — Elite Dynamic Version */
+    @keyframes grain {
+      0%, 100% { transform: translate(0, 0); }
+      10%       { transform: translate(-1%, -1%); }
+      30%       { transform: translate(1%, 1%); }
+      50%       { transform: translate(-1%, 0.5%); }
+      70%       { transform: translate(0.5%, -1%); }
+      90%       { transform: translate(-0.5%, 1%); }
+    }
+
     .grain {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-      opacity: 0.04;
+      inset: -50%;
+      width: 200%;
+      height: 200%;
+      background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.045;
+      mix-blend-mode: multiply;
       pointer-events: none;
       z-index: 9999;
+      animation: grain 4s steps(10) infinite;
+    }
+
+    [data-theme="dark"] .grain {
+      mix-blend-mode: overlay;
+      opacity: 0.04;
     }
 
     /* Scroll Progress Bar */
@@ -93,10 +112,10 @@
       transition: width 0.1s ease-out;
     }
 
-    /* Custom Scrollbar Premium */
+    /* Custom Scrollbar Premium — Floating Elite Version */
     ::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
+      width: 12px;
+      height: 12px;
     }
 
     ::-webkit-scrollbar-track {
@@ -104,21 +123,26 @@
     }
 
     ::-webkit-scrollbar-thumb {
-      background: rgba(0, 0, 0, 0.1);
-      border-radius: 10px;
-      transition: background 0.3s;
-    }
-
-    [data-theme='dark'] ::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.1);
+      background-color: var(--c-rule-2);
+      border-radius: 20px;
+      border: 3px solid var(--c-bg);
+      background-clip: content-box;
+      transition: background var(--dur) var(--ease);
     }
 
     ::-webkit-scrollbar-thumb:hover {
-      background: rgba(0, 0, 0, 0.2);
+      background-color: var(--c-accent);
     }
 
-    [data-theme='dark'] ::-webkit-scrollbar-thumb:hover {
-      background: rgba(255, 255, 255, 0.2);
+    /* Selection — Elite Contrast */
+    ::selection {
+      background: var(--c-accent-b);
+      color: var(--c-ink);
+    }
+
+    [data-theme="dark"] ::selection {
+      background: var(--c-accent);
+      color: var(--c-bg);
     }
 
     /* ── TOKENS ────────────────────────────────────────── */
@@ -208,6 +232,8 @@
       transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
       overflow-x: hidden;
       width: 100%;
+      -webkit-font-smoothing: subpixel-antialiased;
+      text-rendering: optimizeLegibility;
     }
 
     a {
@@ -362,7 +388,7 @@
 
     .ctrl:active {
       background: var(--c-accent-s);
-      transform: scale(0.98);
+      transform: scale(0.95);
     }
 
     .ctrl svg {
@@ -819,6 +845,8 @@
       background: var(--c-key-bg);
       border-color: var(--c-key-bdr);
       letter-spacing: .02em;
+      position: relative;
+      overflow: hidden;
     }
 
     .pill.key:hover {
@@ -826,11 +854,6 @@
       border-color: var(--c-accent);
       background: var(--c-accent-b);
       transform: translateY(-1px);
-    }
-
-    .pill.key {
-      position: relative;
-      overflow: hidden;
     }
 
     .pill.key::after {
@@ -1198,8 +1221,6 @@
       .proj-link {
         justify-content: center;
       }
-
-      /* Project links: allow full-width spread */
     }
 
     @media (max-width:600px) {
@@ -1605,11 +1626,6 @@
 
     /* ── Animations ─────────────────────────────────────── */
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes pulse { 
-      0% { transform: scale(1); box-shadow: 0 4px 15px var(--btn-shadow); } 
-      50% { transform: scale(1.05); box-shadow: 0 6px 20px var(--btn-shadow); } 
-      100% { transform: scale(1); box-shadow: 0 4px 15px var(--btn-shadow); } 
-    }
     @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
   </style>
   <script>
@@ -1647,7 +1663,7 @@
   <div id="scroll-progress" aria-hidden="true"></div>
 
 
-  <a class="skip-link" href="#main-content">Saltar al contenido</a>
+  <a class="skip-link" href="#main-content" data-i18n="skip_link">Saltar al contenido</a>
 
   <!-- ── TOPBAR ────────────────────────────────────────── -->
   <nav id="topbar" aria-label="Controles del sitio">
@@ -1697,7 +1713,7 @@
   </nav>
 
   <!-- ── ROOT ──────────────────────────────────────────── -->
-  <main id="main-content" role="main" aria-live="polite">
+  <main id="main-content">
     <div class="wrapper">
 
       <header class="site-header reveal">
@@ -1803,7 +1819,7 @@
 
             <p class="exp-sub" data-i18n="exp_tech_label">Experiencia Técnica</p>
             <div class="tl-item compact">
-              <p class="tl-date" data-i18n="exp_intern_date"><time>May–Jul 2026</time></p>
+              <p class="tl-date" data-i18n="exp_intern_date"><time datetime="2026-05">May–Jul 2026</time></p>
               <div class="tl-body">
                 <p class="tl-title" data-i18n="exp_intern_role">Desarrollador Full Stack (Prácticas)</p>
                 <p class="tl-org" data-i18n="exp_intern_org">SST Pro Dynamics</p>
@@ -2055,32 +2071,34 @@ const handlePrint = () => {
     const btn = document.getElementById('print-btn');
     if (btn.getAttribute('data-loading') === 'true') return;
     
-    const originalHTML = btn.innerHTML;
     btn.setAttribute('data-loading', 'true');
     btn.style.opacity = '0.7';
     btn.style.pointerEvents = 'none';
     
-    // Show generating status
     const label = btn.querySelector('span');
     if (label) {
       const originalText = label.textContent;
       label.textContent = currentLang === 'es' ? 'Generando...' : 'Generating...';
       
-      // Attempt to open in new tab (more reliable for PDFs on mobile)
-      const pdfUrl = `/CV_Eneko_Ruiz.pdf?lang=${currentLang}&theme=light`;
-      const pdfWindow = window.open(pdfUrl, '_blank');
+      const pdfUrl = `/CV_Eneko_Ruiz.pdf?lang=${currentLang}&theme=light&t=${Date.now()}`;
       
-      // Fallback if popup blocked
-      if (!pdfWindow || pdfWindow.closed || typeof pdfWindow.closed === 'undefined') {
-        window.location.href = pdfUrl;
-      }
-      
+      const a = document.createElement('a');
+      a.href = pdfUrl;
+      // The server sends Content-Disposition: attachment, so the browser will download it.
+      // We don't use fetch+blob to ensure the browser respects the server-provided filename.
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+
       setTimeout(() => {
-        label.textContent = originalText;
-        btn.removeAttribute('data-loading');
-        btn.style.opacity = '1';
-        btn.style.pointerEvents = 'auto';
-      }, 15000);
+        label.textContent = currentLang === 'es' ? '¡Descargado!' : 'Downloaded!';
+        setTimeout(() => {
+          label.textContent = originalText;
+          btn.removeAttribute('data-loading');
+          btn.style.opacity = '1';
+          btn.style.pointerEvents = 'auto';
+        }, 2500);
+      }, 4000); // Wait for generation time
     }
   } else {
     window.print();
@@ -2204,7 +2222,11 @@ window.addEventListener('keydown', (e) => {
     const menu = document.getElementById('lang-menu');
     if (menu?.classList.contains('open')) {
       menu.classList.remove('open');
-      document.getElementById('lang-trigger')?.setAttribute('aria-expanded', 'false');
+      const trigger = document.getElementById('lang-trigger');
+      if (trigger) {
+        trigger.setAttribute('aria-expanded', 'false');
+        trigger.classList.remove('open');
+      }
     }
   });
   
@@ -2235,7 +2257,10 @@ window.addEventListener('keydown', (e) => {
 
   window.addEventListener('scroll', () => {
     const p = document.getElementById('scroll-progress');
-    if (p) p.style.width = ((window.scrollY) / (document.documentElement.scrollHeight - window.innerHeight) * 100) + '%';
+    if (!p) return;
+    const total = document.documentElement.scrollHeight - window.innerHeight;
+    if (total <= 0) { p.style.width = '0%'; return; }
+    p.style.width = (window.scrollY / total * 100) + '%';
   });
 
   const urlParams = new URLSearchParams(window.location.search);

@@ -75,7 +75,9 @@ module.exports = async (req, res) => {
     // Security: strictly construct the target URL from the request host
     const protocol = req.headers['x-forwarded-proto'] || 'https';
     const host = req.headers['host'];
-    const lang = req.query.lang || 'es';
+    const VALID_LANGS = ['es','en','eu','fr','de','it','pt','ca','gl','nl','ru','zh','ja','ko','ar','he','sv','pl','no','da'];
+    const rawLang = (req.query.lang || 'es').slice(0, 5).replace(/[^a-z]/gi, '').toLowerCase();
+    const lang = VALID_LANGS.includes(rawLang) ? rawLang : 'es';
     // Force light theme and print mode
     const targetUrl = new URL(`/?print=true&lang=${lang}&theme=light`, `${protocol}://${host}`);
     
@@ -98,14 +100,16 @@ module.exports = async (req, res) => {
       printBackground: true,
       margin: { top: '0px', right: '0px', bottom: '0px', left: '0px' },
       displayHeaderFooter: false,
-      preferCSSPageSize: true,
-      printBackground: true
+      preferCSSPageSize: true
     });
 
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Length', pdf.length);
-    res.setHeader('Content-Disposition', 'attachment; filename="Eneko_Ruiz_CV.pdf"');
-    res.send(pdf);
+    res.setHeader('Content-Disposition', `attachment; filename="Eneko_Ruiz_CV_${lang.toUpperCase()}.pdf"`);
+    res.setHeader('Cache-Control', 'public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400');
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('Content-Transfer-Encoding', 'binary');
+    res.end(pdf);
 
   } catch (error) {
     console.error('PDF API Error:', error);
