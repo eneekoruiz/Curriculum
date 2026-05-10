@@ -40,5 +40,8 @@
       "memory": 2048,
       "maxDuration": 30
     }
-  }
+  },
+  "rewrites": [
+    { "source": "/CV_Eneko_Ruiz.pdf", "destination": "/api/pdf" }
+  ]
 }

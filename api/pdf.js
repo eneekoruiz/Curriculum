@@ -104,7 +104,7 @@ module.exports = async (req, res) => {
 
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Length', pdf.length);
-    res.setHeader('Content-Disposition', 'inline; filename="Eneko_Ruiz_CV.pdf"');
+    res.setHeader('Content-Disposition', 'attachment; filename="Eneko_Ruiz_CV.pdf"');
     res.send(pdf);
 
   } catch (error) {

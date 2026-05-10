@@ -2067,11 +2067,12 @@ const handlePrint = () => {
       label.textContent = currentLang === 'es' ? 'Generando...' : 'Generating...';
       
       // Attempt to open in new tab (more reliable for PDFs on mobile)
-      const pdfWindow = window.open(`/api/pdf?lang=${currentLang}`, '_blank');
+      const pdfUrl = `/CV_Eneko_Ruiz.pdf?lang=${currentLang}&theme=light`;
+      const pdfWindow = window.open(pdfUrl, '_blank');
       
       // Fallback if popup blocked
       if (!pdfWindow || pdfWindow.closed || typeof pdfWindow.closed === 'undefined') {
-        window.location.href = '/api/pdf';
+        window.location.href = pdfUrl;
       }
       
       setTimeout(() => {
