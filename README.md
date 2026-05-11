@@ -24,7 +24,7 @@ Como no hay dependencias ni proceso de build, probar este código es tan simple 
 1. Clonar el repositorio.
 2. Abrir `index.html` en cualquier navegador.
 
-Si quieres usarlo como plantilla para tu propio currículum, solo tienes que editar el diccionario de traducciones (`const T`) que está dentro de la etiqueta `<script>` y modificar los enlaces de la cabecera.
+Si quieres usarlo como plantilla para tu propio currículum, solo tienes que editar el diccionario de traducciones (`const T`) que está en el archivo `translations.js` y modificar los enlaces de la cabecera en `index.html`.
 
 ## Licencia
 
