@@ -2364,7 +2364,7 @@ window.handlePrint = () => {
     if (label) label.textContent = currentLang === 'es' ? 'Preparando...' : 'Preparing...';
     // Use absolute URL for the API to ensure it hits the production server even from local files if needed, 
     // but here we prefer local print for file://
-    const pdfUrl = `https://eneko-ruiz.vercel.app/api/pdf?lang=${currentLang}&theme=light&t=${Date.now()}`;
+    const pdfUrl = `/api/pdf?lang=${currentLang}&theme=light&t=${Date.now()}`;
     const a = document.createElement('a');
     a.href = pdfUrl;
     a.download = `Eneko_Ruiz_CV_${currentLang.toUpperCase()}.pdf`;
