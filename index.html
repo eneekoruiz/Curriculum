@@ -120,25 +120,23 @@
 
     .timeline-guide {
       position: absolute;
-      left: 88px; /* Matches tl-item columns */
+      left: calc(var(--tl-left) + (var(--tl-gap) / 2));
       top: 0;
       bottom: 0;
       width: 1px;
       background: var(--c-rule);
       z-index: 0;
-      margin-left: 16px; /* Half of gap */
     }
 
     .timeline-fill {
       position: absolute;
-      left: 88px;
+      left: calc(var(--tl-left) + (var(--tl-gap) / 2));
       top: 0;
       width: 1px;
       height: 0%;
       background: var(--c-accent);
       z-index: 1;
-      margin-left: 16px;
-      transition: height 0.3s ease-out;
+      transition: height 0.1s linear;
       box-shadow: 0 0 10px var(--c-accent-b);
     }
 
@@ -236,6 +234,9 @@
       --s4: 24px;
       --s5: 48px;
       --s6: 64px;
+
+      --tl-left: 88px;
+      --tl-gap: 24px;
     }
 
     /* ── DARK THEME ────────────────────────────────────── */
@@ -903,8 +904,8 @@
     /* ── TIMELINE ───────────────────────────────────────── */
     .tl-item {
       display: grid;
-      grid-template-columns: 88px 1fr;
-      gap: 0 var(--s4);
+      grid-template-columns: var(--tl-left) 1fr;
+      gap: 0 var(--tl-gap);
       padding-bottom: var(--s4);
     }
 
@@ -1417,9 +1418,21 @@
       .proj-link {
         justify-content: center;
       }
+
+      .tl-item {
+        grid-template-columns: var(--tl-left) 1fr;
+        gap: 0 var(--tl-gap);
+      }
     }
 
     @media (max-width:600px) {
+      :root {
+        --tl-left: 72px;
+        --tl-gap: 20px;
+      }
+      .wrapper {
+        padding: 60px 20px 40px;
+      }
       #topbar {
         padding: 8px var(--s3);
         gap: var(--s1);
@@ -1456,8 +1469,8 @@
       }
 
       .tl-item {
-        grid-template-columns: 68px 1fr;
-        gap: 0 var(--s3);
+        grid-template-columns: var(--tl-left) 1fr;
+        gap: 0 var(--tl-gap);
       }
     }
 
@@ -1507,7 +1520,7 @@
 
       html, body {
         width: 100% !important;
-        height: 100% !important;
+        height: auto !important;
         margin: 0 !important;
         padding: 0 !important;
         background: var(--c-bg) !important;
@@ -1516,7 +1529,7 @@
         print-color-adjust: exact !important;
         font-size: 12px !important;
         font-family: var(--f-sans) !important;
-        overflow: hidden !important;
+        overflow: visible !important;
       }
       #topbar,
       #scroll-progress,
@@ -1562,14 +1575,11 @@
 
       /* ── Wrapper: force full-page height ── */
       .wrapper {
-        display: flex !important;
-        flex-direction: column !important;
-        justify-content: flex-start !important;
-        min-height: 297mm !important;
-        width: 210mm !important;
+        display: block !important;
+        width: 100% !important;
         max-width: 100% !important;
         height: auto !important;
-        padding: 12mm 15mm !important;
+        padding: 8mm 12mm !important;
         margin: 0 !important;
         box-sizing: border-box !important;
         transform: none !important;
@@ -2543,16 +2553,12 @@ window.addEventListener('keydown', (e) => {
     if (fill && container) {
       const rect = container.getBoundingClientRect();
       const winH = window.innerHeight;
+      const triggerPoint = winH * 0.8; // Fill as items reach lower part of screen
       
-      // Calculate how much of the container is above the 80% mark of the screen
-      const start = rect.top - (winH * 0.8);
-      const end = rect.bottom - (winH * 0.8);
+      const distanceScrolled = -rect.top + triggerPoint;
       const totalH = rect.height;
       
-      let progress = 0;
-      if (start < 0) {
-        progress = Math.min(1, Math.abs(start) / totalH);
-      }
+      let progress = Math.max(0, Math.min(1, distanceScrolled / totalH));
       fill.style.height = (progress * 100) + '%';
     }
   });
