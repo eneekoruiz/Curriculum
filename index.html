@@ -120,24 +120,24 @@
 
     .timeline-guide {
       position: absolute;
-      left: calc(var(--tl-left) + (var(--tl-gap) / 2));
-      top: 0;
+      left: calc(var(--tl-left) + var(--tl-gap));
+      top: 60px;
       bottom: 0;
       width: 1px;
       background: var(--c-rule);
       z-index: 0;
+      opacity: 0.35;
     }
 
     .timeline-fill {
       position: absolute;
-      left: calc(var(--tl-left) + (var(--tl-gap) / 2));
-      top: 0;
+      left: calc(var(--tl-left) + var(--tl-gap));
+      top: 60px;
       width: 1px;
       height: 0%;
       background: var(--c-accent);
       z-index: 1;
-      transition: height 0.1s linear;
-      box-shadow: 0 0 10px var(--c-accent-b);
+      box-shadow: 0 0 8px var(--c-accent-b);
     }
 
     /* Custom Scrollbar Premium — Floating Elite Version */
@@ -734,7 +734,7 @@
       display: grid;
       grid-template-columns: 1fr auto;
       gap: var(--s4) var(--s5);
-      align-items: end;
+      align-items: center;
       padding-bottom: var(--s5);
       border-bottom: 1px solid var(--c-rule);
       margin-bottom: var(--s5);
@@ -871,6 +871,7 @@
       text-transform: uppercase;
       color: var(--c-ink-3);
       padding-top: 3px;
+      white-space: nowrap;
     }
 
     .profile-text {
@@ -913,6 +914,17 @@
       padding-bottom: var(--s2);
       border-bottom: 1px solid var(--c-rule);
       margin-bottom: var(--s4);
+      /* Indent title to avoid timeline line */
+      padding-left: calc(var(--tl-left) + var(--tl-gap) + var(--s3));
+      position: relative;
+    }
+    .sec-title::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -1px;
+      width: calc(var(--tl-left) + var(--tl-gap));
+      border-bottom: 1px solid var(--c-rule);
     }
 
     /* ── TIMELINE ───────────────────────────────────────── */
@@ -1441,8 +1453,8 @@
 
     @media (max-width:600px) {
       :root {
-        --tl-left: 72px;
-        --tl-gap: 20px;
+        --tl-left: 88px;
+        --tl-gap: 24px;
       }
       .wrapper {
         padding: 60px 20px 40px;
@@ -1535,6 +1547,7 @@
       html, body {
         width: 100% !important;
         height: auto !important;
+        min-height: 100% !important;
         margin: 0 !important;
         padding: 0 !important;
         background: var(--c-bg) !important;
@@ -1544,6 +1557,7 @@
         font-size: 12px !important;
         font-family: var(--f-sans) !important;
         overflow: visible !important;
+        position: relative !important;
       }
       #topbar,
       #scroll-progress,
@@ -2602,10 +2616,11 @@ window.addEventListener('keydown', (e) => {
     if (fill && container) {
       const rect = container.getBoundingClientRect();
       const winH = window.innerHeight;
-      const triggerPoint = winH * 0.8; // Fill as items reach lower part of screen
+      const startPoint = 60; // Offset where line starts
+      const triggerPoint = winH * 0.7;
       
-      const distanceScrolled = -rect.top + triggerPoint;
-      const totalH = rect.height;
+      const distanceScrolled = -rect.top + triggerPoint - startPoint;
+      const totalH = rect.height - startPoint;
       
       let progress = Math.max(0, Math.min(1, distanceScrolled / totalH));
       fill.style.height = (progress * 100) + '%';
