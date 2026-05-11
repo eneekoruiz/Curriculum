@@ -1,4 +1,4 @@
-const CACHE_NAME = 'eneko-cv-v5';
+const CACHE_NAME = 'eneko-cv-v6';
 const FONTS_CACHE = 'eneko-fonts-v1';
 
 const ASSETS = [

@@ -1940,7 +1940,7 @@
       <div id="lang-menu" role="listbox" aria-label="Idiomas"></div>
     </div>
 
-    <button id="print-btn" class="ctrl" onclick="handlePrint()" data-i18n="aria_print">
+    <button id="print-btn" class="ctrl" data-i18n="aria_print">
       <div class="spinner" aria-hidden="true"></div>
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
         aria-hidden="true">
@@ -2379,13 +2379,13 @@ const setLang = (code) => {
 window.toggleTheme = () => applyTheme(html.getAttribute('data-theme') !== 'dark');
 
 window.handlePrint = () => {
+  const btn = document.getElementById('print-btn');
+  if (!btn || btn.getAttribute('data-loading') === 'true') return;
+  
   if (navigator.vibrate) navigator.vibrate(5);
-  // Bug 9: Robust mobile detection using touch points and viewport
+  
   const isLocal = window.location.protocol === 'file:';
   const isMobile = !isLocal && (window.matchMedia('(max-width: 1024px)').matches && (navigator.maxTouchPoints > 0 || 'ontouchstart' in window));
-  
-  const btn = document.getElementById('print-btn');
-  if (btn.getAttribute('data-loading') === 'true') return;
   
   btn.setAttribute('data-loading', 'true');
   const label = btn.querySelector('span');
@@ -2393,31 +2393,29 @@ window.handlePrint = () => {
   
   if (isMobile) {
     if (label) label.textContent = currentLang === 'es' ? 'Preparando...' : 'Preparing...';
-    // Use absolute URL for the API to ensure it hits the production server even from local files if needed, 
-    // but here we prefer local print for file://
+    
+    // Use window.location.href for more reliable mobile downloads (fixes "double click" issue)
     const pdfUrl = `/api/pdf?lang=${currentLang}&theme=light&t=${Date.now()}`;
-    const a = document.createElement('a');
-    a.href = pdfUrl;
-    a.download = `Eneko_Ruiz_CV_${currentLang.toUpperCase()}.pdf`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+    window.location.href = pdfUrl;
+    
     setTimeout(() => {
       if (label) label.textContent = originalText;
       btn.removeAttribute('data-loading');
-    }, 4000);
+    }, 3000);
   } else {
     if (label) label.textContent = currentLang === 'es' ? 'Abriendo...' : 'Opening...';
     
-    // Bug fix: Ensure all revealed elements are visible immediately for print
+    // Ensure all revealed elements are visible immediately for print
     document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
     
-    // Short delay to let the DOM settle before print dialog
-    setTimeout(() => {
-      window.print();
-      if (label) label.textContent = originalText;
-      btn.removeAttribute('data-loading');
-    }, 100);
+    // Use requestAnimationFrame to ensure the UI updates before blocking print
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        window.print();
+        if (label) label.textContent = originalText;
+        btn.removeAttribute('data-loading');
+      }, 150);
+    });
   }
 };
 
@@ -2557,6 +2555,11 @@ window.addEventListener('keydown', (e) => {
       btn.onclick = () => setLang(code);
       menu.appendChild(btn);
     });
+  }
+
+  const printBtn = document.getElementById('print-btn');
+  if (printBtn) {
+    printBtn.addEventListener('click', handlePrint);
   }
 
   const shareBtn = document.getElementById('share-btn');
