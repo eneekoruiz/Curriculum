@@ -113,49 +113,22 @@
       transition: width 0.1s ease-out;
     }
 
-    /* Elite Timeline Fill Line */
-    .timeline-fill {
-      position: absolute;
-      left: calc(var(--tl-left) + var(--tl-gap));
-      top: 0;
-      width: 1px;
-      height: 0%;
-      background: var(--c-accent);
-      z-index: 2;
-      transition: height 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-      pointer-events: none;
-      box-shadow: 0 0 10px var(--c-accent-b);
+    /* Timeline static lines (classic) */
+    .tl-body {
+      border-left: 1px solid var(--c-rule);
+      padding-left: var(--s4);
+      position: relative;
     }
-
-    .timeline-fill::after {
+    .tl-body::before {
       content: '';
       position: absolute;
-      left: -2px;
-      bottom: -2px;
-      width: 5px;
-      height: 5px;
-      background: var(--c-accent);
+      left: -4.5px;
+      top: 6px;
+      width: 8px;
+      height: 8px;
+      background: var(--c-bg);
+      border: 1px solid var(--c-rule);
       border-radius: 50%;
-      box-shadow: 0 0 12px var(--c-accent);
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.5); opacity: 0.5; }
-      100% { transform: scale(1); opacity: 1; }
-    }
-
-    .timeline-guide {
-      position: absolute;
-      left: calc(var(--tl-left) + var(--tl-gap));
-      top: 0;
-      bottom: 0;
-      width: 1px;
-      background: var(--c-rule);
-      z-index: 1;
-      opacity: 0.3;
-      pointer-events: none;
     }
 
     /* Custom Scrollbar Premium — Floating Elite Version */
@@ -889,7 +862,6 @@
       text-transform: uppercase;
       color: var(--c-ink-3);
       padding-top: 3px;
-      white-space: nowrap;
     }
 
     .profile-text {
@@ -932,20 +904,6 @@
       padding-bottom: var(--s2);
       border-bottom: 1px solid var(--c-rule);
       margin-bottom: var(--s4);
-    }
-
-    /* Only indent titles in the timeline column to allow the line to pass */
-    .col-main .sec-title {
-      padding-left: calc(var(--tl-left) + var(--tl-gap) + var(--s3));
-      position: relative;
-    }
-    .col-main .sec-title::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      bottom: -1px;
-      width: calc(var(--tl-left) + var(--tl-gap));
-      border-bottom: 1px solid var(--c-rule);
     }
 
     /* ── TIMELINE ───────────────────────────────────────── */
@@ -1469,8 +1427,8 @@
 
     @media (max-width:600px) {
       :root {
-        --tl-left: 68px;
-        --tl-gap: 12px;
+        --tl-left: 88px;
+        --tl-gap: 24px;
       }
       .wrapper {
         /* Natural clamp gives ~36px at 600px — better than explicit 20px */
@@ -1927,7 +1885,7 @@
   <div id="scroll-progress" aria-hidden="true"></div>
 
 
-  <a class="skip-link" href="#main-content" data-i18n="skip_link">Saltar al contenido</a>
+  <main id="main-content">
 
   <!-- ── TOPBAR ────────────────────────────────────────── -->
   <nav id="topbar" aria-label="Controles del sitio">
@@ -2043,7 +2001,6 @@
             <span data-i18n="local_time">Local Time:</span> <span class="time-now" id="live-time">00:00</span>
           </div>
         </div>
-        </div>
 
         <address class="contacts">
 
@@ -2090,8 +2047,7 @@
       <div class="dashboard">
         <!-- LEFT: Education → Courses → Experience -->
         <div class="col-main">
-          <div class="timeline-guide hide-print" aria-hidden="true"></div>
-          <div class="timeline-fill hide-print" aria-hidden="true"></div>
+          <!-- Timeline elements removed for stability -->
 
           <!-- ② FORMACIÓN ACADÉMICA -->
           <section class="reveal" aria-labelledby="h-edu">
@@ -2636,15 +2592,6 @@ window.addEventListener('keydown', (e) => {
     
     const total = document.documentElement.scrollHeight - window.innerHeight;
     if (p) p.style.width = total <= 0 ? '0%' : (window.scrollY / total * 100) + '%';
-    
-    if (fill && container) {
-      const rect = container.getBoundingClientRect();
-      const winH = window.innerHeight;
-      // Fill as the timeline scrolls past the middle of the screen
-      const scrolled = -rect.top + winH * 0.5;
-      const progress = Math.max(0, Math.min(1, scrolled / rect.height));
-      fill.style.height = (progress * 100) + '%';
-    }
   });
 
   const lang = urlParams.get('lang') || localStorage.getItem('cv-lang') || 'es';
@@ -2673,6 +2620,7 @@ window.addEventListener('keydown', (e) => {
   _runCLI();
 })();
   </script>
+  </main>
 
   <div class="grain" aria-hidden="true"></div>
 </body>
