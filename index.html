@@ -2341,7 +2341,8 @@ window.toggleTheme = () => applyTheme(html.getAttribute('data-theme') !== 'dark'
 window.handlePrint = () => {
   if (navigator.vibrate) navigator.vibrate(5);
   // Bug 9: Robust mobile detection using touch points and viewport
-  const isMobile = (window.matchMedia('(max-width: 768px)').matches && (navigator.maxTouchPoints > 0 || 'ontouchstart' in window));
+  const isLocal = window.location.protocol === 'file:';
+  const isMobile = !isLocal && (window.matchMedia('(max-width: 768px)').matches && (navigator.maxTouchPoints > 0 || 'ontouchstart' in window));
   
   const btn = document.getElementById('print-btn');
   if (btn.getAttribute('data-loading') === 'true') return;
@@ -2352,7 +2353,9 @@ window.handlePrint = () => {
   
   if (isMobile) {
     if (label) label.textContent = currentLang === 'es' ? 'Preparando...' : 'Preparing...';
-    const pdfUrl = `/api/pdf?lang=${currentLang}&theme=light&t=${Date.now()}`;
+    // Use absolute URL for the API to ensure it hits the production server even from local files if needed, 
+    // but here we prefer local print for file://
+    const pdfUrl = `https://eneko-ruiz.vercel.app/api/pdf?lang=${currentLang}&theme=light&t=${Date.now()}`;
     const a = document.createElement('a');
     a.href = pdfUrl;
     a.download = `Eneko_Ruiz_CV_${currentLang.toUpperCase()}.pdf`;
