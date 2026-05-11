@@ -1515,14 +1515,13 @@
     /* ── PRINT — Elite A4 Layout ── */
     @media print {
       @page {
-        margin: 0;
+        margin: 15mm;
         size: A4 portrait;
       }
 
       html, body {
         width: 100% !important;
-        height: auto !important;
-        min-height: 100% !important;
+        height: 100% !important; /* Changed to 100% to allow centering */
         margin: 0 !important;
         padding: 0 !important;
         background: var(--c-bg) !important;
@@ -1532,7 +1531,10 @@
         font-size: 12px !important;
         font-family: var(--f-sans) !important;
         overflow: visible !important;
-        position: relative !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important; /* Vertical centering */
+        align-items: center !important; /* Horizontal centering */
       }
       #topbar,
       #scroll-progress,
@@ -1589,10 +1591,21 @@
         display: block !important;
         width: 100% !important;
         max-width: 100% !important;
-        padding: 8mm 8mm 3mm 8mm !important; /* Added more top margin */
+        padding: 0 !important; /* Padding handled by @page margin */
         margin: 0 !important;
         box-sizing: border-box !important;
-        background: var(--c-bg) !important;
+        background: transparent !important;
+      }
+
+      #root-container {
+        width: 100% !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+      }
+
+      #main-content {
+        width: 100% !important;
       }
 
       /* Compact vertical rhythm for print */
