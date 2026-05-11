@@ -114,30 +114,17 @@
     }
 
     /* Elite Timeline Fill Line */
-    .timeline-container {
-      position: relative;
-    }
-
-    .timeline-guide {
-      position: absolute;
-      left: calc(var(--tl-left) + var(--tl-gap));
-      top: 60px;
-      bottom: 0;
-      width: 1px;
-      background: var(--c-rule);
-      z-index: 0;
-      opacity: 0.35;
-    }
-
     .timeline-fill {
       position: absolute;
+      /* Aligned with the left border of .tl-body (which starts after tl-date column + gap) */
       left: calc(var(--tl-left) + var(--tl-gap));
-      top: 60px;
+      top: 0;
       width: 1px;
       height: 0%;
       background: var(--c-accent);
       z-index: 1;
-      box-shadow: 0 0 8px var(--c-accent-b);
+      transition: height 0.15s linear;
+      pointer-events: none;
     }
 
     /* Custom Scrollbar Premium — Floating Elite Version */
@@ -914,17 +901,6 @@
       padding-bottom: var(--s2);
       border-bottom: 1px solid var(--c-rule);
       margin-bottom: var(--s4);
-      /* Indent title to avoid timeline line */
-      padding-left: calc(var(--tl-left) + var(--tl-gap) + var(--s3));
-      position: relative;
-    }
-    .sec-title::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      bottom: -1px;
-      width: calc(var(--tl-left) + var(--tl-gap));
-      border-bottom: 1px solid var(--c-rule);
     }
 
     /* ── TIMELINE ───────────────────────────────────────── */
@@ -1453,8 +1429,8 @@
 
     @media (max-width:600px) {
       :root {
-        --tl-left: 88px;
-        --tl-gap: 24px;
+        --tl-left: 68px;
+        --tl-gap: 12px;
       }
       .wrapper {
         padding: 60px 20px 40px;
@@ -2066,8 +2042,7 @@
       <div class="dashboard">
         <!-- LEFT: Education → Courses → Experience -->
         <div class="col-main">
-          <div class="timeline-guide hide-print"></div>
-          <div class="timeline-fill hide-print"></div>
+          <div class="timeline-fill hide-print" aria-hidden="true"></div>
 
           <!-- ② FORMACIÓN ACADÉMICA -->
           <section class="reveal" aria-labelledby="h-edu">
@@ -2616,13 +2591,9 @@ window.addEventListener('keydown', (e) => {
     if (fill && container) {
       const rect = container.getBoundingClientRect();
       const winH = window.innerHeight;
-      const startPoint = 60; // Offset where line starts
-      const triggerPoint = winH * 0.7;
-      
-      const distanceScrolled = -rect.top + triggerPoint - startPoint;
-      const totalH = rect.height - startPoint;
-      
-      let progress = Math.max(0, Math.min(1, distanceScrolled / totalH));
+      // Fill as the timeline scrolls past the middle of the screen
+      const scrolled = -rect.top + winH * 0.5;
+      const progress = Math.max(0, Math.min(1, scrolled / rect.height));
       fill.style.height = (progress * 100) + '%';
     }
   });
