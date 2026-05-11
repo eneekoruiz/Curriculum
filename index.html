@@ -526,7 +526,14 @@
 
     .pv-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 4px; border-bottom: 0.5px solid var(--c-rule); padding-bottom: 6px; }
     .pv-title-wrap { display: flex; flex-direction: column; gap: 2px; }
-    .pv-line { height: 3px; background: var(--c-rule-2); border-radius: 1px; width: 100%; }
+    .pv-line { 
+      height: 3px; 
+      background: var(--c-rule-2); 
+      border-radius: 1px; 
+      width: 100%; 
+      position: relative;
+      overflow: hidden;
+    }
     .pv-line.name { height: 6px; background: var(--c-accent); width: 45px; }
     .pv-line.eyebrow { height: 2px; background: var(--c-accent-b); width: 25px; }
     .pv-line.contacts { width: 30px; height: 2px; align-self: flex-end; }
@@ -542,6 +549,19 @@
     .pv-item { display: flex; flex-direction: column; gap: 2px; }
     .pv-line.item-title { height: 3px; background: var(--c-ink-3); width: 90%; }
     .pv-line.item-sub { height: 2px; background: var(--c-rule-2); width: 60%; }
+
+    /* Skeleton Shimmer for PDF Preview */
+    .pdf-preview .pv-line::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      transform: translateX(-100%);
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      animation: shimmer 2s infinite;
+    }
+    [data-theme="dark"] .pdf-preview .pv-line::after {
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+    }
 
     .ctrl:active {
       background: var(--c-accent-s);
