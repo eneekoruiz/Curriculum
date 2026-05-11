@@ -26,7 +26,7 @@
   <meta name="author" content="Eneko Ruiz Mollón" />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://eneko-ruiz.vercel.app" />
-  <link rel="manifest" href="manifest.json" />
+  <!-- manifest injected via JS to avoid CORS errors on file:// -->
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="Eneko CV" />
@@ -116,14 +116,45 @@
     /* Elite Timeline Fill Line */
     .timeline-fill {
       position: absolute;
-      /* Aligned with the left border of .tl-body (which starts after tl-date column + gap) */
       left: calc(var(--tl-left) + var(--tl-gap));
       top: 0;
       width: 1px;
       height: 0%;
       background: var(--c-accent);
+      z-index: 2;
+      transition: height 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+      box-shadow: 0 0 10px var(--c-accent-b);
+    }
+
+    .timeline-fill::after {
+      content: '';
+      position: absolute;
+      left: -2px;
+      bottom: -2px;
+      width: 5px;
+      height: 5px;
+      background: var(--c-accent);
+      border-radius: 50%;
+      box-shadow: 0 0 12px var(--c-accent);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.5); opacity: 0.5; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .timeline-guide {
+      position: absolute;
+      left: calc(var(--tl-left) + var(--tl-gap));
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: var(--c-rule);
       z-index: 1;
-      transition: height 0.15s linear;
+      opacity: 0.3;
       pointer-events: none;
     }
 
@@ -903,6 +934,20 @@
       margin-bottom: var(--s4);
     }
 
+    /* Only indent titles in the timeline column to allow the line to pass */
+    .col-main .sec-title {
+      padding-left: calc(var(--tl-left) + var(--tl-gap) + var(--s3));
+      position: relative;
+    }
+    .col-main .sec-title::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -1px;
+      width: calc(var(--tl-left) + var(--tl-gap));
+      border-bottom: 1px solid var(--c-rule);
+    }
+
     /* ── TIMELINE ───────────────────────────────────────── */
     .tl-item {
       display: grid;
@@ -1420,11 +1465,6 @@
       .proj-link {
         justify-content: center;
       }
-
-      .tl-item {
-        grid-template-columns: var(--tl-left) 1fr;
-        gap: 0 var(--tl-gap);
-      }
     }
 
     @media (max-width:600px) {
@@ -1433,7 +1473,9 @@
         --tl-gap: 12px;
       }
       .wrapper {
-        padding: 60px 20px 40px;
+        /* Natural clamp gives ~36px at 600px — better than explicit 20px */
+        padding-top: 70px;
+        padding-bottom: var(--s5);
       }
       #topbar {
         padding: 8px var(--s3);
@@ -1863,6 +1905,12 @@
         const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="20" fill="${bg}"/><text x="50" y="66" font-family="sans-serif" font-size="52" font-weight='bold' fill="${color}" text-anchor="middle">ER</text></svg>`;
         const link = document.querySelector("link[rel~='icon']");
         if (link) link.href = `data:image/svg+xml,${encodeURIComponent(svg)}`;
+        // Inject manifest only on HTTP(S) — avoids CORS errors on file://
+        if (location.protocol === 'https:' || location.protocol === 'http:') {
+          const m = document.createElement('link');
+          m.rel = 'manifest'; m.href = 'manifest.json';
+          document.head.appendChild(m);
+        }
       } catch (e) {
         try {
           const htmlEl = document.documentElement;
@@ -2042,6 +2090,7 @@
       <div class="dashboard">
         <!-- LEFT: Education → Courses → Experience -->
         <div class="col-main">
+          <div class="timeline-guide hide-print" aria-hidden="true"></div>
           <div class="timeline-fill hide-print" aria-hidden="true"></div>
 
           <!-- ② FORMACIÓN ACADÉMICA -->
