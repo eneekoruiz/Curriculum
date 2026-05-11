@@ -370,11 +370,22 @@
       flex: 1;
       display: flex;
       flex-direction: column;
+      position: relative;
+      z-index: 10;
     }
 
     #main-content.fading {
       opacity: 0;
       transform: translateY(8px);
+    }
+
+    /* Container for layout stability */
+    #root-container {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      width: 100%;
+      flex: 1;
     }
 
     .copy-tip {
@@ -2376,17 +2387,18 @@ window.handlePrint = () => {
       btn.removeAttribute('data-loading');
     }, 4000);
   } else {
-  if (label) label.textContent = currentLang === 'es' ? 'Abriendo...' : 'Opening...';
-  
-  // Bug fix: Ensure all revealed elements are visible immediately for print
-  document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
-  
-  // Short delay to let the DOM settle before print dialog
-  setTimeout(() => {
-    window.print();
-    if (label) label.textContent = originalText;
-    btn.removeAttribute('data-loading');
-  }, 100);
+    if (label) label.textContent = currentLang === 'es' ? 'Abriendo...' : 'Opening...';
+    
+    // Bug fix: Ensure all revealed elements are visible immediately for print
+    document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
+    
+    // Short delay to let the DOM settle before print dialog
+    setTimeout(() => {
+      window.print();
+      if (label) label.textContent = originalText;
+      btn.removeAttribute('data-loading');
+    }, 100);
+  }
 };
 
 window.handleShare = async () => {
@@ -2640,18 +2652,29 @@ window.addEventListener('keydown', (e) => {
 
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
-      if (entry.isIntersecting) {
+      // Use intersectionRatio > 0 for better compatibility on mobile browsers
+      if (entry.isIntersecting || entry.intersectionRatio > 0) {
         entry.target.classList.add('visible');
         observer.unobserve(entry.target);
       }
     });
-  }, { threshold: 0.1 });
+  }, { 
+    threshold: 0, // Trigger as soon as 1px is visible
+    rootMargin: '0px 0px -50px 0px' // Slightly earlier trigger
+  });
 
   // Optimization: If printing, reveal everything immediately to avoid Puppeteer timeouts
   if (urlParams.has('print')) {
     document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
   } else {
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    
+    // Robust Fallback: Force reveal after 1.5s if observer hasn't triggered (crucial for mobile bugs)
+    setTimeout(() => {
+      document.querySelectorAll('.reveal:not(.visible)').forEach(el => {
+        el.classList.add('visible');
+      });
+    }, 1500);
   }
   
   // Mark theme as loaded to enable transitions
