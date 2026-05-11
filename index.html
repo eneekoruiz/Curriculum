@@ -172,13 +172,15 @@
       border-radius: 50%;
       position: relative;
     }
-    .live-dot::after {
-      content: '';
-      position: absolute;
-      inset: -4px;
-      border-radius: 50%;
-      border: 1px solid #34c759;
-      animation: pulse-dot 2s infinite;
+    @media (prefers-reduced-motion: no-preference) {
+      .live-dot::after {
+        content: '';
+        position: absolute;
+        inset: -4px;
+        border-radius: 50%;
+        border: 1px solid #34c759;
+        animation: pulse-dot 2s infinite;
+      }
     }
     @keyframes pulse-dot {
       0% { transform: scale(1); opacity: 1; }
@@ -206,7 +208,7 @@
       --c-ink: #161210;
       --c-ink-2: #46403a;
       --c-ink-3: #443d38;
-      --c-accent: #4a3a2a;
+      --c-accent: #3a2d21;
       --c-accent-s: rgba(74, 58, 42, .07);
       --c-accent-b: rgba(74, 58, 42, .16);
       --c-key-bg: rgba(74, 58, 42, .09);
@@ -228,6 +230,9 @@
 
       --tl-left: 88px;
       --tl-gap: 24px;
+
+      --page: var(--c-bg);
+      --brand: var(--c-accent);
     }
 
     /* ── DARK THEME ────────────────────────────────────── */
@@ -372,44 +377,6 @@
       transform: translateY(8px);
     }
 
-    /* ── COPY TOOLTIP ──────────────────────────────────── */
-    .copy-tip {
-      position: absolute;
-      bottom: calc(100% + 6px);
-      left: 50%;
-      transform: translateX(-50%) translateY(4px);
-      background: var(--c-ink);
-      color: var(--c-bg);
-      font-family: var(--f-mono);
-      font-size: 9.5px;
-      letter-spacing: .06em;
-      padding: 4px 9px;
-      border-radius: 3px;
-      white-space: nowrap;
-      pointer-events: none;
-      z-index: 300;
-      animation: tipFade 1.8s var(--ease) forwards;
-    }
-
-    @keyframes tipFade {
-      0% {
-        opacity: 0;
-        transform: translate(-50%, 10px);
-      }
-      10% {
-        opacity: 1;
-        transform: translate(-50%, 0);
-      }
-      80% {
-        opacity: 1;
-        transform: translate(-50%, 0);
-      }
-      100% {
-        opacity: 0;
-        transform: translate(-50%, -10px);
-      }
-    }
-
     .copy-tip {
       position: fixed;
       bottom: 40px;
@@ -492,6 +459,7 @@
       transition: all var(--dur) var(--ease);
       white-space: nowrap;
       text-transform: uppercase;
+      touch-action: manipulation;
     }
 
     .ctrl:hover {
@@ -1516,8 +1484,8 @@
     /* ── PRINT — Elite A4 Layout ── */
     @media print {
       @page {
-        size: A4 portrait;
         margin: 0;
+        size: A4 portrait;
       }
 
       html, body {
@@ -1560,6 +1528,12 @@
         animation: none !important;
         text-shadow: none !important;
         box-shadow: none !important;
+        filter: none !important;
+        backdrop-filter: none !important;
+      }
+
+      .grain, .hide-print {
+        display: none !important;
       }
 
       /* ── Force border visibility in print ── */
@@ -1567,9 +1541,11 @@
       .profile,
       .sec-title,
       .tl-body,
-      .course-item,
-      .site-footer {
+      .course-item {
         border-color: var(--c-rule) !important;
+      }
+      .site-footer {
+        display: none !important;
       }
 
       .tl-body::before {
@@ -1577,32 +1553,50 @@
         background: var(--c-bg) !important;
       }
 
-      /* ── Wrapper: force full-page height ── */
+      /* ── Wrapper: strictly single-page A4 ── */
       .wrapper {
         display: block !important;
         width: 100% !important;
         max-width: 100% !important;
-        height: auto !important;
-        padding: 8mm 12mm !important;
+        padding: 8mm 8mm 3mm 8mm !important; /* Added more top margin */
         margin: 0 !important;
         box-sizing: border-box !important;
-        transform: none !important;
-        filter: none !important;
         background: var(--c-bg) !important;
+      }
+
+      /* Compact vertical rhythm for print */
+      :root {
+        --s3: 12px;
+        --s4: 18px;
+        --s5: 24px;
+        --s6: 32px;
+      }
+
+      .dashboard {
+        gap: 12px !important;
+      }
+
+      .col-main, .col-side {
+        gap: 15px !important;
+      }
+
+      section {
+        page-break-inside: avoid;
+        margin-bottom: 15px !important;
       }
 
       /* ── Header: 3-column grid to keep QR aligned ── */
       .site-header {
         grid-template-columns: 1fr auto auto !important;
-        gap: 18px 24px !important;
-        padding-bottom: 25px !important;
-        margin-bottom: 22px !important;
+        gap: 12px 20px !important;
+        padding-bottom: 10px !important;
+        margin-bottom: 10px !important;
       }
 
       h1 {
-        font-size: 31pt !important;
-        line-height: .88 !important;
-        margin-bottom: 10px !important;
+        font-size: 24pt !important;
+        line-height: .9 !important;
+        margin-bottom: 4px !important;
         font-family: var(--f-serif) !important;
       }
 
@@ -1655,13 +1649,27 @@
 
       .qr-caption {
         font-family: var(--f-mono);
-        font-size: 5.5pt;
+        font-size: 6.5pt;
         color: var(--c-ink-3);
         text-align: center;
         max-width: 65px;
         line-height: 1.2;
         font-style: italic;
         margin-top: 2px;
+      }
+
+      .sec-title {
+        margin-bottom: 10px !important;
+        padding-bottom: 4px !important;
+        font-size: 9.5pt !important;
+      }
+
+      .tl-item {
+        margin-bottom: 12px !important;
+      }
+
+      .skill-group {
+        margin-bottom: 8px !important;
       }
 
 
@@ -1884,8 +1892,7 @@
 <body>
   <div id="scroll-progress" aria-hidden="true"></div>
 
-
-  <main id="main-content">
+  <div id="root-container">
 
   <!-- ── TOPBAR ────────────────────────────────────────── -->
   <nav id="topbar" aria-label="Controles del sitio">
@@ -1902,7 +1909,7 @@
       <div id="lang-menu" role="listbox" aria-label="Idiomas"></div>
     </div>
 
-    <button id="print-btn" class="ctrl" onclick="handlePrint()" ontouchstart="" data-i18n="aria_print">
+    <button id="print-btn" class="ctrl" onclick="handlePrint()" data-i18n="aria_print">
       <div class="spinner" aria-hidden="true"></div>
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
         aria-hidden="true">
@@ -1956,7 +1963,7 @@
       </div>
     </button>
 
-    <button id="share-btn" class="ctrl" onclick="handleShare()" ontouchstart="" data-i18n="aria_share" style="display:none;">
+    <button id="share-btn" class="ctrl" onclick="handleShare()" data-i18n="aria_share" style="display:none;">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
         aria-hidden="true">
         <path stroke-linecap="round" stroke-linejoin="round"
@@ -1965,7 +1972,7 @@
       <span data-i18n="btn_share">Compartir</span>
     </button>
 
-    <button id="theme-btn" class="ctrl" onclick="toggleTheme()" ontouchstart="" data-i18n="aria_theme">
+    <button id="theme-btn" class="ctrl" onclick="toggleTheme()" data-i18n="aria_theme">
       <svg id="icon-sun" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8"
         stroke="currentColor" aria-hidden="true">
         <path stroke-linecap="round" stroke-linejoin="round"
@@ -2205,15 +2212,15 @@
           <section class="reveal" aria-labelledby="h-langs">
             <h2 class="sec-title" id="h-langs" data-i18n="lang_title">Idiomas</h2>
             <div class="lang-inline">
-              <span class="lang-chip">
+              <span class="lang-chip" lang="es">
                 <strong data-i18n="lang_es">Castellano</strong>
                 <em data-i18n="lang_native">Nativo</em>
               </span>
-              <span class="lang-chip">
+              <span class="lang-chip" lang="eu">
                 <strong data-i18n="lang_eu">Euskera</strong>
                 <em data-i18n="lang_eu_cert">C1 Oficial · HABE</em>
               </span>
-              <span class="lang-chip">
+              <span class="lang-chip" lang="en">
                 <strong data-i18n="lang_en">Inglés</strong>
                 <em data-i18n="lang_en_cert">C1 Oficial · Cambridge</em>
               </span>
@@ -2234,7 +2241,7 @@
 
       </div><!-- /dashboard -->
 
-      <footer class="site-footer" data-i18n="footer_text">
+      <footer class="site-footer">
         Coded from scratch by Eneko Ruiz Mollón
       </footer>
 
@@ -2312,10 +2319,12 @@ const applyTranslations = (code) => {
   document.querySelector('meta[name="description"]')?.setAttribute('content', desc);
   document.querySelector('meta[property="og:description"]')?.setAttribute('content', desc);
 
+  document.querySelector('meta[property="og:locale"]')?.setAttribute('content', meta.iso.toLowerCase() + '_' + meta.iso);
+  
   const footer = document.querySelector('.site-footer');
   if (footer) {
     const year = new Date().getFullYear();
-    footer.innerHTML = `Coded from scratch by Eneko Ruiz Mollón &copy; ${year}`;
+    footer.innerHTML = `${t.footer_text} &copy; ${year}`;
   }
 
   // Update language menu visual state
@@ -2342,7 +2351,7 @@ window.handlePrint = () => {
   if (navigator.vibrate) navigator.vibrate(5);
   // Bug 9: Robust mobile detection using touch points and viewport
   const isLocal = window.location.protocol === 'file:';
-  const isMobile = !isLocal && (window.matchMedia('(max-width: 768px)').matches && (navigator.maxTouchPoints > 0 || 'ontouchstart' in window));
+  const isMobile = !isLocal && (window.matchMedia('(max-width: 1024px)').matches && (navigator.maxTouchPoints > 0 || 'ontouchstart' in window));
   
   const btn = document.getElementById('print-btn');
   if (btn.getAttribute('data-loading') === 'true') return;
@@ -2367,13 +2376,17 @@ window.handlePrint = () => {
       btn.removeAttribute('data-loading');
     }, 4000);
   } else {
-    if (label) label.textContent = currentLang === 'es' ? 'Abriendo...' : 'Opening...';
+  if (label) label.textContent = currentLang === 'es' ? 'Abriendo...' : 'Opening...';
+  
+  // Bug fix: Ensure all revealed elements are visible immediately for print
+  document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
+  
+  // Short delay to let the DOM settle before print dialog
+  setTimeout(() => {
     window.print();
-    setTimeout(() => {
-      if (label) label.textContent = originalText;
-      btn.removeAttribute('data-loading');
-    }, 1500);
-  }
+    if (label) label.textContent = originalText;
+    btn.removeAttribute('data-loading');
+  }, 100);
 };
 
 window.handleShare = async () => {
@@ -2418,10 +2431,24 @@ const handleCopy = async (e) => {
 /* ── EASTER EGG — CONFETTI & CLI ────────────────────── */
 const _runCLI = () => {
   const mo = 'font-family:"JetBrains Mono",monospace;';
-  const gradient = `background: linear-gradient(135deg, #7a6240, #c4965a); -webkit-background-clip: text; color: transparent; font-weight: 800; font-size: 20px; ${mo}`;
-  // Bug 12: Remove console.clear() to preserve other logs
-  console.log("%cENEKO RUIZ MOLLÓN — CV v3.0", gradient);
-  console.log("%c> Terminal access granted. Type hire() to connect.", "color: #998f85;");
+  const nameStyle = `
+    font-size: 48px;
+    font-weight: 900;
+    color: #c4965a;
+    text-shadow: 
+      3px 3px 0px #7a6240, 
+      6px 6px 0px rgba(122, 98, 64, 0.15);
+    padding: 10px 0;
+    ${mo}
+  `;
+  const subStyle = `color: #998f85; font-size: 14px; font-weight: 500; ${mo}`;
+  const promptStyle = `color: #7a6240; font-size: 13px; font-weight: bold; ${mo}`;
+
+  console.log("%cENEKO RUIZ", nameStyle);
+  console.log("%cINTERACTIVE CURRICULUM %c// %cVERSION 3.0.4", subStyle, "color:#c4965a", subStyle);
+  console.log("%c " , "font-size: 5px;"); // spacer
+  console.log("%c> [SYSTEM]: Kernel initialized. Memory stable.", promptStyle);
+  console.log("%c> [ACCESS]: Terminal granted. Type %chire()%c to connect.", promptStyle, "color:#c4965a; background:rgba(196,150,90,0.1); padding: 1px 4px; border-radius:3px;", promptStyle);
 };
 
 window.hire = function() {
@@ -2542,10 +2569,14 @@ window.addEventListener('keydown', (e) => {
     if (e.data.type === 'share-cv') handleShare();
   });
 
+  let lastMouseMsg = 0;
   window.addEventListener('mousemove', (e) => {
     if (window.parent !== window) {
-      // Bug 3: Use '*' for targetOrigin to allow cross-origin parent communication
-      window.parent.postMessage({ type: 'portfolio-cursor-move', x: e.clientX, y: e.clientY }, '*');
+      const now = Date.now();
+      if (now - lastMouseMsg > 16) {
+        window.parent.postMessage({ type: 'portfolio-cursor-move', x: e.clientX, y: e.clientY }, '*');
+        lastMouseMsg = now;
+      }
     }
   });
 
@@ -2553,31 +2584,38 @@ window.addEventListener('keydown', (e) => {
     window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(()=>{}); });
   }
 
+  let _timer = null;
   const updateTime = () => {
     const el = document.getElementById('live-time');
     if (!el) return;
     const now = new Date();
     el.textContent = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+    
+    // BUG 33: Optimize timer to update exactly at the next minute start
+    const delay = (60 - now.getSeconds()) * 1000 - now.getMilliseconds();
+    _timer = setTimeout(updateTime, delay + 100);
   };
-  setInterval(updateTime, 1000);
   updateTime();
 
+  let _audioCtx = null;
   const playClick = () => {
     try {
       const AudioContextClass = window.AudioContext || window.webkitAudioContext;
       if (!AudioContextClass) return;
-      const ctx = new AudioContextClass();
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
+      if (!_audioCtx) _audioCtx = new AudioContextClass();
+      if (_audioCtx.state === 'suspended') _audioCtx.resume();
+      
+      const osc = _audioCtx.createOscillator();
+      const gain = _audioCtx.createGain();
       osc.type = 'sine';
-      osc.frequency.setValueAtTime(1000, ctx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(100, ctx.currentTime + 0.1);
-      gain.gain.setValueAtTime(0.02, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
+      osc.frequency.setValueAtTime(1000, _audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(100, _audioCtx.currentTime + 0.1);
+      gain.gain.setValueAtTime(0.02, _audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, _audioCtx.currentTime + 0.1);
       osc.connect(gain);
-      gain.connect(ctx.destination);
+      gain.connect(_audioCtx.destination);
       osc.start();
-      osc.stop(ctx.currentTime + 0.1);
+      osc.stop(_audioCtx.currentTime + 0.1);
     } catch(e) {}
   };
 
@@ -2618,12 +2656,9 @@ window.addEventListener('keydown', (e) => {
   
   // Mark theme as loaded to enable transitions
   setTimeout(() => document.documentElement.classList.add('theme-loaded'), 100);
-  
-  // Easter Egg: Initialize CLI console message
-  _runCLI();
 })();
   </script>
-  </main>
+  </div>
 
   <div class="grain" aria-hidden="true"></div>
 </body>

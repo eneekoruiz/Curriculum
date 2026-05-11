@@ -7,50 +7,41 @@ let _browser = null;
 let _browserLock = null;
 
 const getBrowser = async () => {
-  // Use a lock to prevent concurrent launches
+  // 1. If we have a healthy browser, return it immediately
+  if (_browser && _browser.isConnected()) return _browser;
+
+  // 2. If a launch is already in progress, wait for it
   if (_browserLock) return _browserLock;
 
+  // 3. Launch with a lock
   _browserLock = (async () => {
-    // Check if browser exists and is still responsive
-    if (_browser) {
-      try {
-        if (_browser.isConnected()) {
-          const contexts = _browser.browserContexts();
-          // Even with 0 contexts (idle), a connected browser is valid
+    try {
+      let retries = 3;
+      while (retries > 0) {
+        try {
+          const executablePath = await chromium.executablePath();
+          
+          if (executablePath.includes('/tmp/')) {
+            process.env.LD_LIBRARY_PATH = `${path.dirname(executablePath)}:${process.env.LD_LIBRARY_PATH || ''}`;
+          }
+          
+          _browser = await puppeteer.launch({
+            args: [...chromium.args, '--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu'],
+            defaultViewport: chromium.defaultViewport,
+            executablePath: executablePath,
+            headless: chromium.headless,
+          });
           return _browser;
+        } catch (error) {
+          retries--;
+          console.error(`Launch fail (${3-retries}/3):`, error.message);
+          if (retries === 0) throw error;
+          await new Promise(r => setTimeout(r, 500 + Math.random() * 1000));
         }
-      } catch (e) {
-        _browser = null;
       }
-    }
-
-    // ... (rest of the logic will be handled below by continuing the function)
-    // Actually I'll just rewrite the whole getBrowser for clarity
-    let retries = 3;
-    while (retries > 0) {
-      try {
-        const executablePath = await chromium.executablePath();
-        
-        if (executablePath.includes('/tmp/')) {
-          process.env.LD_LIBRARY_PATH = `${path.dirname(executablePath)}:${process.env.LD_LIBRARY_PATH || ''}`;
-        }
-        
-        _browser = await puppeteer.launch({
-          args: [...chromium.args, '--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu'],
-          defaultViewport: chromium.defaultViewport,
-          executablePath: executablePath,
-          headless: chromium.headless,
-        });
-        return _browser;
-      } catch (error) {
-        retries--;
-        console.error(`Launch fail (${3-retries}/3):`, error.message);
-        if (retries === 0) {
-          _browserLock = null; // Reset lock on fatal failure
-          throw error;
-        }
-        await new Promise(r => setTimeout(r, 500 + Math.random() * 1000));
-      }
+    } finally {
+      // Always reset the lock so the next request can check health via isConnected()
+      _browserLock = null;
     }
   })();
 
@@ -100,7 +91,6 @@ module.exports = async (req, res) => {
     res.setHeader('Content-Disposition', `attachment; filename="Eneko_Ruiz_CV_${lang.toUpperCase()}.pdf"`);
     res.setHeader('Cache-Control', 'public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400');
     res.setHeader('X-Content-Type-Options', 'nosniff');
-    res.setHeader('Content-Transfer-Encoding', 'binary');
     res.end(pdf);
 
   } catch (error) {

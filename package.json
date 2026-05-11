@@ -5,10 +5,10 @@
   "main": "api/pdf.js",
   "dependencies": {
     "@sparticuz/chromium": "148.0.0",
-    "puppeteer-core": "22.13.0"
+    "puppeteer-core": "24.43.0"
   },
   "devDependencies": {
-    "puppeteer": "^22.13.0"
+    "puppeteer": "^24.43.0"
   },
   "engines": {
     "node": ">=18"

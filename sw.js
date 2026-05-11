@@ -1,4 +1,6 @@
 const CACHE_NAME = 'eneko-cv-v3';
+const FONTS_CACHE = 'eneko-fonts-v1';
+
 const ASSETS = [
   './',
   './index.html',
@@ -19,7 +21,7 @@ self.addEventListener('activate', (e) => {
     caches.keys().then((keys) => {
       return Promise.all(
         keys.map((key) => {
-          if (key !== CACHE_NAME && key !== 'fonts') {
+          if (key !== CACHE_NAME && key !== FONTS_CACHE) {
             return caches.delete(key);
           }
         })
@@ -37,7 +39,7 @@ self.addEventListener('fetch', (e) => {
   // Cache Google Fonts
   if (url.origin === 'https://fonts.googleapis.com' || url.origin === 'https://fonts.gstatic.com') {
     e.respondWith(
-      caches.open('fonts').then((cache) => {
+      caches.open(FONTS_CACHE).then((cache) => {
         return cache.match(e.request).then((res) => {
           return res || fetch(e.request).then((response) => {
             cache.put(e.request, response.clone());
