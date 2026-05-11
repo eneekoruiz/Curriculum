@@ -24,16 +24,15 @@ self.addEventListener('activate', (e) => {
           }
         })
       );
-    })
+    }).then(() => self.clients.claim())
   );
-  self.clients.claim();
 });
 
 self.addEventListener('fetch', (e) => {
   const url = new URL(e.request.url);
   
-  // Skip API calls
-  if (url.pathname.startsWith('/api/')) return;
+  // Skip API calls and PDF generation
+  if (url.pathname.startsWith('/api/') || url.pathname.includes('CV_Eneko_Ruiz.pdf')) return;
 
   // Cache Google Fonts
   if (url.origin === 'https://fonts.googleapis.com' || url.origin === 'https://fonts.gstatic.com') {

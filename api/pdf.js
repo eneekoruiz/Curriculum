@@ -4,65 +4,57 @@ const puppeteer = require('puppeteer-core');
 
 // Singleton browser instance for serverless reuse
 let _browser = null;
+let _browserLock = null;
 
 const getBrowser = async () => {
-  // Check if browser exists and is still responsive
-  if (_browser) {
-    try {
-      const contexts = _browser.browserContexts();
-      if (contexts && contexts.length > 0) return _browser;
-    } catch (e) {
-      _browser = null; // Stale browser, reset
-    }
-  }
+  // Use a lock to prevent concurrent launches
+  if (_browserLock) return _browserLock;
 
-  let retries = 3;
-  while (retries > 0) {
-    try {
-      const executablePath = await chromium.executablePath();
-      
-      // Ensure libraries are found
-      if (executablePath.includes('/tmp/')) {
-        process.env.LD_LIBRARY_PATH = `${path.dirname(executablePath)}:${process.env.LD_LIBRARY_PATH || ''}`;
+  _browserLock = (async () => {
+    // Check if browser exists and is still responsive
+    if (_browser) {
+      try {
+        if (_browser.isConnected()) {
+          const contexts = _browser.browserContexts();
+          // Even with 0 contexts (idle), a connected browser is valid
+          return _browser;
+        }
+      } catch (e) {
+        _browser = null;
       }
-      
-      _browser = await puppeteer.launch({
-        args: [
-          ...chromium.args,
-          '--no-sandbox',
-          '--disable-setuid-sandbox',
-          '--disable-dev-shm-usage',
-          '--disable-gpu',
-          '--font-render-hinting=none',
-          '--disable-extensions',
-          '--disable-component-update',
-          '--disable-background-networking',
-          '--disable-background-timer-throttling',
-          '--disable-backgrounding-occluded-windows',
-          '--disable-breakpad',
-          '--disable-client-side-phishing-detection',
-          '--disable-default-apps',
-          '--disable-hang-monitor',
-          '--disable-popup-blocking',
-          '--disable-prompt-on-repost',
-          '--disable-sync',
-          '--metrics-recording-only',
-          '--no-first-run',
-          '--safebrowsing-disable-auto-update',
-        ],
-        defaultViewport: chromium.defaultViewport,
-        executablePath: executablePath,
-        headless: chromium.headless,
-      });
-      return _browser;
-    } catch (error) {
-      retries--;
-      console.error(`Launch fail (${3-retries}/3):`, error.message);
-      if (retries === 0) throw error;
-      // Random delay to break ETXTBSY race conditions
-      await new Promise(r => setTimeout(r, 500 + Math.random() * 1000));
     }
-  }
+
+    // ... (rest of the logic will be handled below by continuing the function)
+    // Actually I'll just rewrite the whole getBrowser for clarity
+    let retries = 3;
+    while (retries > 0) {
+      try {
+        const executablePath = await chromium.executablePath();
+        
+        if (executablePath.includes('/tmp/')) {
+          process.env.LD_LIBRARY_PATH = `${path.dirname(executablePath)}:${process.env.LD_LIBRARY_PATH || ''}`;
+        }
+        
+        _browser = await puppeteer.launch({
+          args: [...chromium.args, '--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu'],
+          defaultViewport: chromium.defaultViewport,
+          executablePath: executablePath,
+          headless: chromium.headless,
+        });
+        return _browser;
+      } catch (error) {
+        retries--;
+        console.error(`Launch fail (${3-retries}/3):`, error.message);
+        if (retries === 0) {
+          _browserLock = null; // Reset lock on fatal failure
+          throw error;
+        }
+        await new Promise(r => setTimeout(r, 500 + Math.random() * 1000));
+      }
+    }
+  })();
+
+  return _browserLock;
 };
 
 module.exports = async (req, res) => {
