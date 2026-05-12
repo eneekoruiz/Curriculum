@@ -94,11 +94,10 @@ module.exports = async (req, res) => {
     res.end(pdf);
 
   } catch (error) {
+    // Log full error server-side, but do not expose internal messages to clients
     console.error('PDF API Error:', error);
     res.status(500).json({
-      error: 'Error generating PDF',
-      message: error.message,
-      code: error.code || 'UNKNOWN'
+      error: 'Error generating PDF'
     });
   } finally {
     if (page) {

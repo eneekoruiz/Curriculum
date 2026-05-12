@@ -7,7 +7,7 @@ const T = {
     btn_print: 'Imprimir CV',
     btn_share: 'Compartir',
     profile_title: 'Perfil',
-    profile_text: 'Estudiante de Ingeniería Informática con una sólida base técnica e experiencia de cara al público. Apasionado por la resolución de problemas mediante código, el diseño de software eficiente y el aprendizaje continuo. Acostumbrado a la adaptabilidad y al trabajo en equipo.',
+    profile_text: 'Estudiante de Ingeniería Informática con una sólida base técnica y experiencia de cara al público. Apasionado por la resolución de problemas mediante código, el diseño de software eficiente y el aprendizaje continuo. Acostumbrado a la adaptabilidad y al trabajo en equipo.',
     edu_title: 'Formación Académica',
     edu_1_date: '2023 – Actualidad',
     edu_1_deg: 'Grado en Ingeniería Informática',
@@ -66,7 +66,7 @@ const T = {
     aria_theme: 'Cambiar tema visual',
     aria_print: 'Imprimir versión PDF',
     aria_share: 'Compartir enlace del CV',
-    aria_lang: 'Seleccionar idioma de la interficie',
+    aria_lang: 'Seleccionar idioma de la interfaz',
     aria_copy_email: 'Copiar dirección de email',
     aria_copy_phone: 'Copiar número de teléfono',
     skip_link: 'Saltar al contenido'
@@ -283,7 +283,7 @@ const T = {
     aria_print: 'Imprimer la version PDF',
     aria_share: 'Partager le lien du CV',
     aria_lang: 'Sélectionner la langue de l\'interface',
-    aria_copy_email: 'Copiar l\'adresse e-mail',
+    aria_copy_email: 'Copier l\'adresse e-mail',
     aria_copy_phone: 'Copier le numéro de téléphone',
     skip_link: 'Aller au contenu'
   },

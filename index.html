@@ -1898,6 +1898,14 @@
     /* ── Animations ─────────────────────────────────────── */
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Copy tip fade animation (restored after refactor) */
+    @keyframes tipFade {
+      0%   { opacity: 0; transform: translateX(-50%) translateY(10px); }
+      15%  { opacity: 1; transform: translateX(-50%) translateY(0); }
+      80%  { opacity: 1; }
+      100% { opacity: 0; transform: translateX(-50%) translateY(-6px); }
+    }
   </style>
   <script>
     (function () {
@@ -2400,7 +2408,7 @@ const setLang = (code) => {
 /* ── CORE ACTIONS ───────────────────────────────────── */
 window.toggleTheme = () => applyTheme(html.getAttribute('data-theme') !== 'dark');
 
-window.handlePrint = () => {
+window.handlePrint = async () => {
   const btn = document.getElementById('print-btn');
   if (!btn || btn.getAttribute('data-loading') === 'true') return;
   
@@ -2415,15 +2423,27 @@ window.handlePrint = () => {
   
   if (isMobile) {
     if (label) label.textContent = currentLang === 'es' ? 'Preparando...' : 'Preparing...';
-    
-    // Use window.location.href for more reliable mobile downloads (fixes "double click" issue)
+    // Prefer to fetch first, check for errors, then trigger download to avoid landing on raw JSON
     const pdfUrl = `/api/pdf?lang=${currentLang}&theme=light&t=${Date.now()}`;
-    window.location.href = pdfUrl;
-    
-    setTimeout(() => {
+    try {
+      const res = await fetch(pdfUrl, { credentials: 'same-origin' });
+      if (!res.ok) throw new Error('Network response was not ok');
+      const blob = await res.blob();
+      const objectUrl = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = objectUrl;
+      a.download = `CV-${currentLang}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(objectUrl), 30_000);
+    } catch (err) {
+      console.error('PDF generation error', err);
+      showCopyTip(btn, currentLang === 'es' ? 'Error generando PDF' : 'Error generating PDF');
+    } finally {
       if (label) label.textContent = originalText;
       btn.removeAttribute('data-loading');
-    }, 3000);
+    }
   } else {
     if (label) label.textContent = currentLang === 'es' ? 'Abriendo...' : 'Opening...';
     
@@ -2619,7 +2639,7 @@ window.addEventListener('keydown', (e) => {
 
   window.addEventListener('message', (e) => {
     // Bug 2: Allow messages from trusted portfolio domains
-    const trustedOrigins = [window.location.origin, 'https://portfolio-eneekoruiz.vercel.app', 'https://eneko.dev'];
+    const trustedOrigins = [window.location.origin];
     if (!trustedOrigins.some(origin => e.origin.startsWith(origin))) return;
     if (e.data.type === 'set-theme') applyTheme(e.data.theme === 'dark');
     if (e.data.type === 'print-cv') handlePrint();
@@ -2637,9 +2657,7 @@ window.addEventListener('keydown', (e) => {
     }
   });
 
-  if ('serviceWorker' in navigator && window.location.protocol !== 'file:') {
-    window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(()=>{}); });
-  }
+  // Service worker registration removed: PWAs provide limited value for this static CV
 
   let _timer = null;
   const updateTime = () => {
@@ -2683,6 +2701,17 @@ window.addEventListener('keydown', (e) => {
     }
   });
 
+  // Cleanup resources on unload: close AudioContext and clear timers
+  window.addEventListener('beforeunload', () => {
+    try {
+      if (_timer) { clearTimeout(_timer); _timer = null; }
+      if (_audioCtx && typeof _audioCtx.close === 'function') {
+        _audioCtx.close().catch(() => {});
+        _audioCtx = null;
+      }
+    } catch (e) { /* swallow */ }
+  });
+
   window.addEventListener('scroll', () => {
     const p = document.getElementById('scroll-progress');
     const fill = document.querySelector('.timeline-fill');
@@ -2716,9 +2745,10 @@ window.addEventListener('keydown', (e) => {
     
     // Robust Fallback: Force reveal after 1.5s if observer hasn't triggered (crucial for mobile bugs)
     setTimeout(() => {
-      document.querySelectorAll('.reveal:not(.visible)').forEach(el => {
-        el.classList.add('visible');
-      });
+      const remaining = document.querySelectorAll('.reveal:not(.visible)');
+      if (remaining.length) {
+        remaining.forEach(el => el.classList.add('visible'));
+      }
     }, 1500);
   }
   

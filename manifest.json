@@ -4,6 +4,7 @@
   "description": "Interactive Software Engineer Resume of Eneko Ruiz Mollón",
   "start_url": "/",
   "display": "standalone",
+  "scope": "/",
   "background_color": "#f7f4ef",
   "theme_color": "#f7f4ef",
   "orientation": "portrait-primary",
