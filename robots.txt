@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /api/
 
-Sitemap: https://eneko-ruiz.vercel.app/sitemap.xml
+Sitemap: https://eneko-ruiz-curriculum.vercel.app/sitemap.xml

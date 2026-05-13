@@ -1,31 +1,31 @@
-# Eneko Ruiz - CV Web
+# Eneko Ruiz — Curriculum Vitae
 
 ![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white)
 ![CSS3](https://img.shields.io/badge/css3-%231572B6.svg?style=for-the-badge&logo=css3&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
 
-Este es el código fuente de mi currículum web interactivo. Decidí hacerlo completamente desde cero (Vanilla HTML, CSS y JS) en lugar de usar un framework, buscando el máximo rendimiento y control sobre cada detalle del diseño.
+Este es el código fuente de mi currículum web interactivo. Desarrollado completamente desde cero (Vanilla HTML, CSS y JS) para garantizar el máximo rendimiento, accesibilidad y control sobre el diseño.
 
-Puedes ver el resultado en directo aquí: [eneko-ruiz.vercel.app](https://eneko-ruiz.vercel.app)
+Puedes ver la versión en vivo aquí: [eneko-ruiz-curriculum.vercel.app](https://eneko-ruiz-curriculum.vercel.app)
 
 ## Características principales
 
-* **Cero dependencias en cliente:** No hay React, ni Tailwind. El peso total es mínimo (menos de 100KB) y saca 100/100 en Lighthouse. El único `package.json` existe para la API serverless de generación de PDF.
-* **Internacionalización (i18n) a medida:** Soporta 20 idiomas modificando el DOM en tiempo real. Guarda el estado en la URL (`?lang=en`) y adapta la lectura de derecha a izquierda (RTL) automáticamente para idiomas como el árabe o el hebreo.
-* **Motor de impresión A4:** Al intentar imprimir la web (Ctrl+P), un `@media print` reestructura todo el layout para que encaje exactamente en un solo folio A4 a sangre (sin bordes blancos), e inyecta un código QR dinámico.
-* **Dark Mode nativo:** Respeta las preferencias del sistema (`prefers-color-scheme`) desde el `<head>` para evitar parpadeos blancos al cargar, y guarda la elección del usuario en `localStorage`.
-* **Accesible:** Soporte para navegación por teclado, semántica cuidada y adaptado para `prefers-reduced-motion`.
-* **Easter Egg en consola:** Si abres las DevTools (F12) te encontrarás una pequeña interfaz de terminal programada con JS asíncrono.
+- **Cero dependencias:** Sin frameworks ni librerías externas. Peso total inferior a 100KB, optimizado para una carga instantánea.
+- **Internacionalización (i18n):** Soporte completo para 20 idiomas con detección automática, persistencia en URL y soporte para lectura de derecha a izquierda (RTL).
+- **Diseño Responsive & Dark Mode:** Interfaz adaptativa que respeta las preferencias del sistema y permite el cambio manual de tema.
+- **Motor de Impresión Optimizado:** Configuración específica mediante `@media print` para generar un PDF en formato A4 perfecto, incluyendo un código QR dinámico.
+- **Accesibilidad:** Cumplimiento de estándares de accesibilidad, navegación por teclado y soporte para reducción de movimiento.
+- **API de Generación de PDF:** Incluye una función serverless (Vercel Functions) que utiliza Puppeteer para exportar el CV a PDF bajo demanda.
 
 ## Cómo usarlo
 
-Como no hay dependencias ni proceso de build, probar este código es tan simple como:
+Al no requerir un proceso de compilación, puedes probarlo localmente de forma inmediata:
 
 1. Clonar el repositorio.
-2. Abrir `index.html` en cualquier navegador.
+2. Abrir `index.html` en tu navegador favorito.
 
-Si quieres usarlo como plantilla para tu propio currículum, solo tienes que editar el diccionario de traducciones (`const T`) que está en el archivo `translations.js` y modificar los enlaces de la cabecera en `index.html`.
+Para personalizarlo, edita el diccionario de traducciones en `translations.js` y actualiza la información básica en `index.html`.
 
 ## Licencia
 
-Código abierto. Siéntete libre de hacer un fork, echarle un ojo a cómo están hechas las cosas o usarlo como base para tu propio CV.
+Código abierto bajo licencia MIT. Siéntete libre de usarlo como base para tu propio currículum o explorar la implementación.
