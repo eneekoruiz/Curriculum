@@ -18,7 +18,7 @@ const calculateAge = (birthday) => {
 };
 
 const updateFavicon = (dark) => {
-  const color = dark ? '#c4965a' : '#7a6240', bg = dark ? '#161410' : '#f7f4ef';
+  const color = dark ? '#38bdf8' : '#2563eb', bg = dark ? '#0f172a' : '#ffffff';
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="20" fill="${bg}"/><text x="50" y="66" font-family="sans-serif" font-size="52" font-weight="bold" fill="${color}" text-anchor="middle">ER</text></svg>`;
   let link = document.querySelector("link[rel~='icon']");
   if (!link) { link = document.createElement('link'); link.rel = 'icon'; document.head.appendChild(link); }
@@ -31,7 +31,7 @@ const applyTheme = (dark) => {
     html.setAttribute('data-theme', theme);
     html.style.colorScheme = theme;
     const metaTheme = document.getElementById('meta-theme-color');
-    if (metaTheme) metaTheme.content = dark ? '#0e0d0b' : '#f7f4ef';
+    if (metaTheme) metaTheme.content = dark ? '#020617' : '#ffffff';
     localStorage.setItem('cv-theme', theme);
     updateFavicon(dark);
   } catch(e){}
@@ -190,15 +190,15 @@ const _runCLI = () => {
   const nameStyle = `
     font-size: 48px;
     font-weight: 900;
-    color: #c4965a;
+    color: #2563eb;
     text-shadow: 
-      3px 3px 0px #7a6240, 
-      6px 6px 0px rgba(122, 98, 64, 0.15);
+      3px 3px 0px #1e40af, 
+      6px 6px 0px rgba(37, 99, 235, 0.15);
     padding: 10px 0;
     ${mo}
   `;
-  const subStyle = `color: #998f85; font-size: 14px; font-weight: 500; ${mo}`;
-  const promptStyle = `color: #7a6240; font-size: 13px; font-weight: bold; ${mo}`;
+  const subStyle = `color: #64748b; font-size: 14px; font-weight: 500; ${mo}`;
+  const promptStyle = `color: #1e40af; font-size: 13px; font-weight: bold; ${mo}`;
 
   console.log("%cENEKO RUIZ", nameStyle);
   console.log("%cINTERACTIVE CURRICULUM %c// %cVERSION 3.0.4", subStyle, "color:#c4965a", subStyle);
@@ -208,7 +208,7 @@ const _runCLI = () => {
 };
 
 window.hire = function() {
-  const colors = ['#7a6240', '#c4965a', '#ede8df', '#161210', '#998f85'];
+  const colors = ['#2563eb', '#38bdf8', '#f8fafc', '#0f172a', '#64748b'];
   for (let i = 0; i < 80; i++) {
     const el = document.createElement('div');
     Object.assign(el.style, {
@@ -224,7 +224,7 @@ window.hire = function() {
     ], { duration: dur * 1000, easing: 'cubic-bezier(0,0,0.2,1)', fill: 'forwards' });
     setTimeout(() => el.remove(), dur * 1000);
   }
-  console.log("%c🚀 Iniciando conexión... Abriendo cliente de correo.", "color: #c4965a; font-size: 14px; font-weight: bold;");
+  console.log("%c🚀 Iniciando conexión... Abriendo cliente de correo.", "color: #2563eb; font-size: 14px; font-weight: bold;");
   setTimeout(() => {
     window.location.href = "mailto:eneekoruiz@gmail.com?subject=Propuesta%20Laboral%20%E2%80%94%20Eneko%20Ruiz&body=Hola%20Eneko%2C%0A%0AHe%20visto%20tu%20curr%C3%ADculum%20interactivo%20y%20me%20gustar%C3%ADa%20contactar%20contigo...";
   }, 1200);

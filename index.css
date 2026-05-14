@@ -33,7 +33,7 @@
   left: 0;
   width: 0%;
   height: 3px;
-  background: linear-gradient(to right, #c4965a, #7a6240);
+  background: linear-gradient(to right, var(--c-accent), #6366f1);
   z-index: 10000;
   transition: width 0.1s ease-out;
 }
@@ -126,19 +126,19 @@
 
 /* ── TOKENS ────────────────────────────────────────── */
 :root {
-  --c-bg: #f7f4ef;
-  --c-surface: #ffffff;
-  --c-rule: #e0dbd4;
-  --c-rule-2: #c8c0b6;
-  --c-ink: #161210;
-  --c-ink-2: #46403a;
-  --c-ink-3: #443d38;
-  --c-accent: #3a2d21;
-  --c-accent-s: rgba(74, 58, 42, .07);
-  --c-accent-b: rgba(74, 58, 42, .16);
-  --c-key-bg: rgba(74, 58, 42, .09);
-  --c-key-bdr: rgba(74, 58, 42, .35);
-  --c-key-ink: #2a2018;
+  --c-bg: #ffffff;
+  --c-surface: #f8fafc;
+  --c-rule: #e2e8f0;
+  --c-rule-2: #cbd5e1;
+  --c-ink: #0f172a;
+  --c-ink-2: #334155;
+  --c-ink-3: #475569;
+  --c-accent: #2563eb;
+  --c-accent-s: rgba(37, 99, 235, .07);
+  --c-accent-b: rgba(37, 99, 235, .16);
+  --c-key-bg: rgba(37, 99, 235, .09);
+  --c-key-bdr: rgba(37, 99, 235, .35);
+  --c-key-ink: #1e40af;
 
   --f-serif: 'Cormorant Garamond', 'Iowan Old Style', 'Apple Garamond', Baskerville, 'Times New Roman', 'Droid Serif', Times, 'Source Serif Pro', serif;
   --f-sans: 'DM Sans', 'Geist Sans', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
@@ -162,19 +162,19 @@
 
 /* ── DARK THEME ────────────────────────────────────── */
 [data-theme="dark"] {
-  --c-bg: #0e0d0b;
-  --c-surface: #161410;
-  --c-rule: #252219;
-  --c-rule-2: #332e24;
-  --c-ink: #ede8df;
-  --c-ink-2: #b8b0a4;
-  --c-ink-3: #8c8279;
-  --c-accent: #d4a66a;
-  --c-accent-s: rgba(212, 166, 106, .07);
-  --c-accent-b: rgba(212, 166, 106, .16);
-  --c-key-bg: rgba(212, 166, 106, .10);
-  --c-key-bdr: rgba(212, 166, 106, .32);
-  --c-key-ink: #e5bf8a;
+  --c-bg: #020617;
+  --c-surface: #0f172a;
+  --c-rule: #1e293b;
+  --c-rule-2: #334155;
+  --c-ink: #f8fafc;
+  --c-ink-2: #cbd5e1;
+  --c-ink-3: #94a3b8;
+  --c-accent: #38bdf8;
+  --c-accent-s: rgba(56, 189, 248, .07);
+  --c-accent-b: rgba(56, 189, 248, .16);
+  --c-key-bg: rgba(56, 189, 248, .10);
+  --c-key-bdr: rgba(56, 189, 248, .32);
+  --c-key-ink: #7dd3fc;
 }
 
 /* ── RESET ─────────────────────────────────────────── */
@@ -396,7 +396,7 @@ ul {
   flex-direction: column;
   margin: 0 auto;
   padding: clamp(90px, 12vw, 140px) clamp(var(--s4), 6vw, var(--s6)) clamp(var(--s5), 8vw, 80px);
-  background: #fff;
+  background: var(--c-bg);
 }
 
 @page {
@@ -1511,23 +1511,21 @@ h1 strong {
 @media print {
   @page {
     size: A4 portrait;
-    margin: 4mm;
+    margin: 0;
   }
 
   html, body {
-    width: auto !important;
-    min-height: auto !important;
+    width: 210mm !important;
+    height: 297mm !important;
     margin: 0 !important;
     padding: 0 !important;
     background: var(--c-bg) !important;
     color: var(--c-ink) !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
-    font-size: 8.8px !important;
-    line-height: 1.05 !important;
-    font-family: var(--f-sans) !important;
-    overflow: visible !important;
-    display: block !important;
+    font-size: 10px !important;
+    line-height: 1.3 !important;
+    overflow: hidden !important;
   }
   #topbar,
   #scroll-progress,
@@ -1588,13 +1586,15 @@ h1 strong {
 
   /* ── Wrapper: strictly single-page A4 ── */
   .wrapper {
-    display: block !important;
-    width: auto !important;
-    max-width: 100% !important;
-    padding: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    width: 210mm !important;
+    height: 297mm !important;
+    padding: 12mm !important; /* Elegant internal margins */
     margin: 0 !important;
     box-sizing: border-box !important;
     background: transparent !important;
+    overflow: hidden !important;
   }
 
   #root-container {
@@ -1612,16 +1612,19 @@ h1 strong {
 
   /* Compact vertical rhythm for print */
   :root {
-    --s1: 0px;
-    --s2: 1px;
-    --s3: 2px;
-    --s4: 3px;
-    --s5: 4px;
-    --s6: 8px;
+    --s1: 2px;
+    --s2: 4px;
+    --s3: 8px;
+    --s4: 12px;
+    --s5: 16px;
+    --s6: 24px;
   }
 
   .dashboard {
-    gap: 4px !important;
+    display: grid !important;
+    grid-template-columns: 1.1fr 0.9fr !important;
+    gap: 12px !important;
+    flex: 1 !important;
   }
 
   .col-main, .col-side {
@@ -1630,7 +1633,7 @@ h1 strong {
 
   section {
     page-break-inside: avoid;
-    margin-bottom: 2px !important;
+    margin-bottom: 8px !important;
   }
 
   .tl-item {
@@ -1656,15 +1659,14 @@ h1 strong {
   }
 
   h1 {
-    font-size: 16pt !important;
-    line-height: 0.95 !important;
-    margin-bottom: 0px !important;
-    font-family: var(--f-serif) !important;
+    font-size: 24pt !important;
+    line-height: 0.9 !important;
+    margin-bottom: 2px !important;
   }
 
   .eyebrow {
-    font-size: 7.5pt !important;
-    margin-bottom: 0 !important;
+    font-size: 9pt !important;
+    margin-bottom: 4px !important;
   }
 
   .tagline {
@@ -1681,13 +1683,13 @@ h1 strong {
   }
 
   .contact-row {
-    font-size: 7pt !important;
-    background: none !important;
+    font-size: 8.5pt !important;
     border: none !important;
     padding: 0 !important;
-    pointer-events: none !important;
-    line-height: 0.95 !important;
+    background: none !important;
   }
+
+  .contact-row svg { width: 10px !important; height: 10px !important; }
   .tl-title {
     margin-bottom: 0 !important;
     font-size: 11px !important;
@@ -1706,13 +1708,9 @@ h1 strong {
     display: flex !important;
     flex-direction: column;
     align-items: center;
-    gap: 2px;
+    gap: 4px;
+    margin-left: 8px;
   }
-  .qr-img {
-    width: 48px !important;
-    height: 48px !important;
-  }
-  .qr-title, .qr-caption {
-    font-size: 6px !important;
-  }
+  .qr-img { width: 42px !important; height: 42px !important; }
+  .qr-title, .qr-caption { font-size: 6.5px !important; line-height: 1 !important; }
 }
