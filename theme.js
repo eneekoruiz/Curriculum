@@ -12,7 +12,7 @@
     htmlEl.style.colorScheme = isDark ? 'dark' : 'light';
 
     // Bug 27: Initial favicon update to match theme immediately
-    const color = isDark ? '#38bdf8' : '#2563eb', bg = isDark ? '#0f172a' : '#ffffff';
+    const color = isDark ? '#94a3b8' : '#334155', bg = isDark ? '#0f172a' : '#ffffff';
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="20" fill="${bg}"/><text x="50" y="66" font-family="sans-serif" font-size="52" font-weight='bold' fill="${color}" text-anchor="middle">ER</text></svg>`;
     const link = document.querySelector("link[rel~='icon']");
     if (link) link.href = `data:image/svg+xml,${encodeURIComponent(svg)}`;

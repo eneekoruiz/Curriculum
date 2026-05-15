@@ -78,7 +78,7 @@ module.exports = async (req, res) => {
 
     // Ensure fonts are ready and layout is stable before printing
     await page.evaluate(() => document.fonts ? document.fonts.ready : Promise.resolve());
-    await page.waitForTimeout(250);
+    await new Promise(r => setTimeout(r, 250));
 
     await page.emulateMediaType('print');
 

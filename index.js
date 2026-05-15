@@ -18,7 +18,7 @@ const calculateAge = (birthday) => {
 };
 
 const updateFavicon = (dark) => {
-  const color = dark ? '#38bdf8' : '#2563eb', bg = dark ? '#0f172a' : '#ffffff';
+  const color = dark ? '#94a3b8' : '#334155', bg = dark ? '#0f172a' : '#ffffff';
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="20" fill="${bg}"/><text x="50" y="66" font-family="sans-serif" font-size="52" font-weight="bold" fill="${color}" text-anchor="middle">ER</text></svg>`;
   let link = document.querySelector("link[rel~='icon']");
   if (!link) { link = document.createElement('link'); link.rel = 'icon'; document.head.appendChild(link); }
@@ -190,15 +190,15 @@ const _runCLI = () => {
   const nameStyle = `
     font-size: 48px;
     font-weight: 900;
-    color: #2563eb;
+    color: #334155;
     text-shadow: 
-      3px 3px 0px #1e40af, 
-      6px 6px 0px rgba(37, 99, 235, 0.15);
+      3px 3px 0px #1e293b, 
+      6px 6px 0px rgba(51, 65, 85, 0.15);
     padding: 10px 0;
     ${mo}
   `;
   const subStyle = `color: #64748b; font-size: 14px; font-weight: 500; ${mo}`;
-  const promptStyle = `color: #1e40af; font-size: 13px; font-weight: bold; ${mo}`;
+  const promptStyle = `color: #334155; font-size: 13px; font-weight: bold; ${mo}`;
 
   console.log("%cENEKO RUIZ", nameStyle);
   console.log("%cINTERACTIVE CURRICULUM %c// %cVERSION 3.0.4", subStyle, "color:#c4965a", subStyle);
@@ -208,7 +208,7 @@ const _runCLI = () => {
 };
 
 window.hire = function() {
-  const colors = ['#2563eb', '#38bdf8', '#f8fafc', '#0f172a', '#64748b'];
+  const colors = ['#334155', '#94a3b8', '#f8fafc', '#0f172a', '#475569'];
   for (let i = 0; i < 80; i++) {
     const el = document.createElement('div');
     Object.assign(el.style, {

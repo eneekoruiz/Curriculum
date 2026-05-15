@@ -33,7 +33,7 @@
   left: 0;
   width: 0%;
   height: 3px;
-  background: linear-gradient(to right, var(--c-accent), #6366f1);
+  background: linear-gradient(to right, var(--c-accent), #475569);
   z-index: 10000;
   transition: width 0.1s ease-out;
 }
@@ -133,12 +133,12 @@
   --c-ink: #0f172a;
   --c-ink-2: #334155;
   --c-ink-3: #475569;
-  --c-accent: #2563eb;
-  --c-accent-s: rgba(37, 99, 235, .07);
-  --c-accent-b: rgba(37, 99, 235, .16);
-  --c-key-bg: rgba(37, 99, 235, .09);
-  --c-key-bdr: rgba(37, 99, 235, .35);
-  --c-key-ink: #1e40af;
+  --c-accent: #334155;
+  --c-accent-s: rgba(51, 65, 85, .07);
+  --c-accent-b: rgba(51, 65, 85, .16);
+  --c-key-bg: rgba(51, 65, 85, .09);
+  --c-key-bdr: rgba(51, 65, 85, .35);
+  --c-key-ink: #1e293b;
 
   --f-serif: 'Cormorant Garamond', 'Iowan Old Style', 'Apple Garamond', Baskerville, 'Times New Roman', 'Droid Serif', Times, 'Source Serif Pro', serif;
   --f-sans: 'DM Sans', 'Geist Sans', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
@@ -169,12 +169,12 @@
   --c-ink: #f8fafc;
   --c-ink-2: #cbd5e1;
   --c-ink-3: #94a3b8;
-  --c-accent: #38bdf8;
-  --c-accent-s: rgba(56, 189, 248, .07);
-  --c-accent-b: rgba(56, 189, 248, .16);
-  --c-key-bg: rgba(56, 189, 248, .10);
-  --c-key-bdr: rgba(56, 189, 248, .32);
-  --c-key-ink: #7dd3fc;
+  --c-accent: #94a3b8;
+  --c-accent-s: rgba(148, 163, 184, .07);
+  --c-accent-b: rgba(148, 163, 184, .16);
+  --c-key-bg: rgba(148, 163, 184, .10);
+  --c-key-bdr: rgba(148, 163, 184, .32);
+  --c-key-ink: #f1f5f9;
 }
 
 /* ── RESET ─────────────────────────────────────────── */
