@@ -310,6 +310,11 @@ window.addEventListener('keydown', (e) => {
     if (e.data.type === 'set-theme') applyTheme(e.data.theme === 'dark');
     if (e.data.type === 'print-cv') handlePrint();
     if (e.data.type === 'share-cv') handleShare();
+    if (e.data.type === 'leaving') {
+      document.body.style.opacity = '0';
+      document.body.style.transform = 'scale(0.98)';
+      document.body.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+    }
   });
 
   let lastMouseMsg = 0;
@@ -317,11 +322,24 @@ window.addEventListener('keydown', (e) => {
     if (window.parent !== window) {
       const now = Date.now();
       if (now - lastMouseMsg > 16) {
-        window.parent.postMessage({ type: 'portfolio-cursor-move', x: e.clientX, y: e.clientY }, '*');
+        const target = e.target.closest('a, button, [data-h], .lm-item');
+        const mode = target ? 'default' : 'none'; // Basic detection for now
+        window.parent.postMessage({ type: 'portfolio-cursor-move', x: e.clientX, y: e.clientY, mode }, '*');
         lastMouseMsg = now;
       }
     }
   });
+
+  // ── RESIZE OBSERVER (Seamless Height Sync) ──
+  if (window.parent !== window) {
+    const ro = new ResizeObserver(() => {
+      const h = document.documentElement.scrollHeight;
+      window.parent.postMessage({ type: 'set-cv-height', height: h }, '*');
+    });
+    ro.observe(document.body);
+    // Initial sync
+    window.parent.postMessage({ type: 'set-cv-height', height: document.documentElement.scrollHeight }, '*');
+  }
 
   let _timer = null;
   const updateTime = () => {

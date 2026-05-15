@@ -1756,3 +1756,12 @@ h1 strong {
   .qr-img { width: 48px !important; height: 48px !important; }
   .qr-title, .qr-caption { font-size: 7.5px !important; line-height: 1.1 !important; }
 }
+
+/* ── PLATFORM OVERLAYS — Clean Mode ── */
+#vercel-toolbar,
+.vercel-toolbar,
+[id^="vercel-toolbar"] {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
