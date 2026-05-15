@@ -240,6 +240,11 @@ window.addEventListener('keydown', (e) => {
 
 /* ── INITIALIZATION ─────────────────────────────────── */
 (function init() {
+  // Bug 28: Force scroll to top on initial load
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  window.scrollTo(0, 0);
+  requestAnimationFrame(() => window.scrollTo(0, 0));
+
   const arrival = document.createElement('div');
   arrival.className = 'portal-arrival';
   document.body.appendChild(arrival);
