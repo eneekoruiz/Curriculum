@@ -138,7 +138,11 @@ window.handlePrint = async () => {
     
     // Use a single timeout to allow the browser to paint the state change before blocking with the print dialog
     setTimeout(() => {
-      window.print();
+      if (window.parent !== window) {
+        window.parent.postMessage({ type: 'trigger-cv-print' }, '*');
+      } else {
+        window.print();
+      }
       if (label) label.textContent = originalText;
       btn.removeAttribute('data-loading');
     }, 100);
