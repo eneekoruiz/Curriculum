@@ -383,6 +383,7 @@ window.addEventListener('keydown', (e) => {
 
   if (urlParams.has('print')) {
     document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
+    setTimeout(handlePrint, 500);
   } else {
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
     setTimeout(() => {
