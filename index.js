@@ -1,6 +1,7 @@
 /*
- * CURRICULUM VITAE — ENGINE v3.0 (Production Gold Master)
- * Audit: 10/10 | Performance: Ultra | Stability: High
+ * CURRICULUM VITAE — CORE ENGINE v3.1
+ * Refactored for ultimate visual code craftsmanship, legibility, and maintainability.
+ * Zero external dependencies. High efficiency pure Vanilla JS.
  */
 
 const BIRTH_DATE = '2005-07-28';
@@ -8,210 +9,375 @@ const html = document.documentElement;
 const root = document.getElementById('main-content');
 let currentLang = 'es';
 
-/* ── HELPERS ────────────────────────────────────────── */
+/* ── HELPERS & UTILITIES ────────────────────────────────────────── */
+
+/**
+ * Calculates current age based on a birth date string (YYYY-MM-DD).
+ * @param {string} birthday 
+ * @returns {number}
+ */
 const calculateAge = (birthday) => {
-  const birth = new Date(birthday), today = new Date();
-  let age = today.getFullYear() - birth.getFullYear();
-  const m = today.getMonth() - birth.getMonth();
-  if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) age--;
-  return age;
+  const birthDate = new Date(birthday);
+  const today = new Date();
+  
+  let calculatedAge = today.getFullYear() - birthDate.getFullYear();
+  const monthDifference = today.getMonth() - birthDate.getMonth();
+  
+  if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
+    calculatedAge--;
+  }
+  
+  return calculatedAge;
 };
 
+/**
+ * Safely accesses localStorage, catching any errors in security-restricted iframe environments.
+ */
 const safeStorage = {
-  get: (k) => { try { return localStorage.getItem(k); } catch(e) { return null; } },
-  set: (k, v) => { try { localStorage.setItem(k, v); } catch(e) {} }
+  get: (key) => {
+    try {
+      return localStorage.getItem(key);
+    } catch (error) {
+      return null;
+    }
+  },
+  set: (key, value) => {
+    try {
+      localStorage.setItem(key, value);
+    } catch (error) {
+      // Fail silently if localStorage is restricted
+    }
+  }
 };
 
-const updateFavicon = (dark) => {
-  const color = dark ? '#94a3b8' : '#334155', bg = dark ? '#0f172a' : '#ffffff';
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="20" fill="${bg}"/><text x="50" y="66" font-family="sans-serif" font-size="52" font-weight="bold" fill="${color}" text-anchor="middle">ER</text></svg>`;
-  let link = document.querySelector("link[rel~='icon']");
-  if (!link) { link = document.createElement('link'); link.rel = 'icon'; document.head.appendChild(link); }
-  link.href = `data:image/svg+xml,${encodeURIComponent(svg)}`;
+/**
+ * Dynamic favicon update to match the current visual theme immediately.
+ * @param {boolean} isDarkTheme 
+ */
+const updateFavicon = (isDarkTheme) => {
+  const textColor = isDarkTheme ? '#94a3b8' : '#334155';
+  const backgroundColor = isDarkTheme ? '#0f172a' : '#ffffff';
+  
+  const svgContent = `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+      <rect width="100" height="100" rx="20" fill="${backgroundColor}"/>
+      <text x="50" y="66" font-family="sans-serif" font-size="52" font-weight="bold" fill="${textColor}" text-anchor="middle">ER</text>
+    </svg>
+  `.trim().replace(/\s+/g, ' ');
+  
+  let faviconLink = document.querySelector("link[rel~='icon']");
+  if (!faviconLink) {
+    faviconLink = document.createElement('link');
+    faviconLink.rel = 'icon';
+    document.head.appendChild(faviconLink);
+  }
+  
+  faviconLink.href = `data:image/svg+xml,${encodeURIComponent(svgContent)}`;
 };
 
-const applyTheme = (dark) => {
+/**
+ * Applies the visual theme (light/dark) to the document and updates relevant meta tags and favicon.
+ * @param {boolean} isDarkTheme 
+ */
+const applyTheme = (isDarkTheme) => {
   try {
-    const theme = dark ? 'dark' : 'light';
-    html.setAttribute('data-theme', theme);
-    html.style.colorScheme = theme;
-    const metaTheme = document.getElementById('meta-theme-color');
-    if (metaTheme) metaTheme.content = dark ? '#020617' : '#ffffff';
-    safeStorage.set('cv-theme', theme);
-    updateFavicon(dark);
-  } catch(e){}
+    const themeValue = isDarkTheme ? 'dark' : 'light';
+    
+    html.setAttribute('data-theme', themeValue);
+    html.style.colorScheme = themeValue;
+    
+    const metaThemeColor = document.getElementById('meta-theme-color');
+    if (metaThemeColor) {
+      metaThemeColor.content = isDarkTheme ? '#020617' : '#ffffff';
+    }
+    
+    safeStorage.set('cv-theme', themeValue);
+    updateFavicon(isDarkTheme);
+  } catch (error) {
+    // Fail silently in case of paint issues during initial DOM setup
+  }
 };
 
-/* ── i18n ENGINE ────────────────────────────────────── */
-const applyTranslations = (code) => {
-  const t = T[code], meta = M[code];
-  if (!t || !meta) return;
-  currentLang = code;
-  const age = calculateAge(BIRTH_DATE);
+/* ── INTERNATIONALIZATION (i18n) ENGINE ───────────────────────── */
 
-  document.querySelectorAll('[data-i18n]').forEach(el => {
-    const key = el.getAttribute('data-i18n');
-    let v = t[key];
-    if (v !== undefined) {
-      if (typeof v === 'string') v = v.replace('{{age}}', age);
-      if (key.startsWith('aria_')) {
-        el.setAttribute('aria-label', v);
+/**
+ * Dynamically applies translations to elements with data-i18n attributes.
+ * Updates dynamic placeholders (like {{age}}), HTML attributes, search engine tags, and footer copyright year.
+ * @param {string} langCode 
+ */
+const applyTranslations = (langCode) => {
+  const translations = T[langCode];
+  const metadata = M[langCode];
+  
+  if (!translations || !metadata) {
+    return;
+  }
+  
+  currentLang = langCode;
+  const currentAge = calculateAge(BIRTH_DATE);
+
+  // Translate all text elements and accessibility tags
+  document.querySelectorAll('[data-i18n]').forEach(element => {
+    const translationKey = element.getAttribute('data-i18n');
+    let translatedValue = translations[translationKey];
+    
+    if (translatedValue !== undefined) {
+      if (typeof translatedValue === 'string') {
+        translatedValue = translatedValue.replace('{{age}}', currentAge);
+      }
+      
+      if (translationKey.startsWith('aria_')) {
+        element.setAttribute('aria-label', translatedValue);
       } else {
-        el.textContent = v;
+        element.textContent = translatedValue;
       }
     }
   });
 
-  html.setAttribute('lang', code);
-  html.setAttribute('dir', meta.dir);
-  document.title = "Eneko Ruiz Mollón — " + t.eyebrow;
+  // Global layout language configuration
+  html.setAttribute('lang', langCode);
+  html.setAttribute('dir', metadata.dir);
+  document.title = `Eneko Ruiz Mollón — ${translations.eyebrow}`;
+  
   const langLabel = document.getElementById('lang-label');
-  if (langLabel) langLabel.textContent = meta.name;
+  if (langLabel) {
+    langLabel.textContent = metadata.name;
+  }
   
-  const desc = t.meta_desc || '';
-  document.querySelector('meta[name="description"]')?.setAttribute('content', desc);
-  document.querySelector('meta[property="og:description"]')?.setAttribute('content', desc);
+  // Search Engine & Metadata synchronization
+  const metaDescription = translations.meta_desc || '';
+  document.querySelector('meta[name="description"]')?.setAttribute('content', metaDescription);
+  document.querySelector('meta[property="og:description"]')?.setAttribute('content', metaDescription);
 
-  document.querySelector('meta[property="og:locale"]')?.setAttribute('content', meta.iso.toLowerCase() + '_' + meta.iso);
+  const localizedLocale = `${metadata.iso.toLowerCase()}_${metadata.iso}`;
+  document.querySelector('meta[property="og:locale"]')?.setAttribute('content', localizedLocale);
   
-  const footer = document.querySelector('.site-footer');
-  if (footer) {
-    const year = new Date().getFullYear();
-    footer.innerHTML = `${t.footer_text} &copy; ${year}`;
+  // Dynamic footer copyright year update
+  const footerElement = document.querySelector('.site-footer');
+  if (footerElement) {
+    const currentYear = new Date().getFullYear();
+    footerElement.innerHTML = `${translations.footer_text} &copy; ${currentYear}`;
   }
 
-  // Update language menu visual state
-  document.querySelectorAll('.lm-item').forEach(item => {
-    const isActive = item.getAttribute('data-code') === code;
-    item.classList.toggle('active', isActive);
-    item.setAttribute('aria-selected', isActive ? 'true' : 'false');
+  // Synchronize language dropdown menu visual states
+  document.querySelectorAll('.lm-item').forEach(menuItem => {
+    const menuItemCode = menuItem.getAttribute('data-code');
+    const isActive = menuItemCode === langCode;
+    
+    menuItem.classList.toggle('active', isActive);
+    menuItem.setAttribute('aria-selected', isActive ? 'true' : 'false');
   });
 };
 
-const setLang = (code) => {
+/**
+ * Triggers a smooth opacity transition when switching languages.
+ * @param {string} langCode 
+ */
+const setLang = (langCode) => {
   root.classList.add('fading');
+  
   setTimeout(() => {
-    applyTranslations(code);
-    safeStorage.set('cv-lang', code);
+    applyTranslations(langCode);
+    safeStorage.set('cv-lang', langCode);
     root.classList.remove('fading');
   }, 150);
 };
 
-/* ── CORE ACTIONS ───────────────────────────────────── */
-window.toggleTheme = () => applyTheme(html.getAttribute('data-theme') !== 'dark');
+/* ── CORE ACTIONS ─────────────────────────────────────────────── */
 
+/**
+ * Toggles current theme between light and dark modes.
+ */
+window.toggleTheme = () => {
+  const isCurrentlyDark = html.getAttribute('data-theme') === 'dark';
+  applyTheme(!isCurrentlyDark);
+};
+
+/**
+ * Triggers the PDF export/print action.
+ * Automatically switches between dynamic serverless Puppeteer API (for mobile and iframe sandbox environments)
+ * and standard browser printing (for desktop browsers).
+ */
 window.handlePrint = async () => {
-  const btn = document.getElementById('print-btn');
-  if (!btn || btn.getAttribute('data-loading') === 'true') return;
+  const printButton = document.getElementById('print-btn');
+  if (!printButton || printButton.getAttribute('data-loading') === 'true') {
+    return;
+  }
   
-  if (navigator.vibrate) navigator.vibrate(5);
+  if (navigator.vibrate) {
+    navigator.vibrate(5);
+  }
   
-  const isLocal = window.location.protocol === 'file:';
-  const isMobile = !isLocal && (window.matchMedia('(max-width: 768px)').matches && (navigator.maxTouchPoints > 0 || 'ontouchstart' in window));
-  const isEmbedded = window.parent !== window;
+  const isLocalProtocol = window.location.protocol === 'file:';
+  const isMobileDevice = !isLocalProtocol && (window.matchMedia('(max-width: 768px)').matches && (navigator.maxTouchPoints > 0 || 'ontouchstart' in window));
+  const isEmbeddedInIframe = window.parent !== window;
   
-  btn.setAttribute('data-loading', 'true');
-  const label = btn.querySelector('span');
-  const originalText = label ? label.textContent : '';
+  printButton.setAttribute('data-loading', 'true');
+  const statusLabel = printButton.querySelector('span');
+  const originalButtonText = statusLabel ? statusLabel.textContent : '';
   
-  // Use API for mobile or embedded versions (to ensure download works reliably)
-  if (isMobile || (isEmbedded && !isLocal)) {
-    if (label) label.textContent = currentLang === 'es' ? 'Preparando...' : 'Preparing...';
+  // Use Vercel Serverless API for mobile or embedded contexts to bypass sandbox iframe printing restrictions
+  if (isMobileDevice || (isEmbeddedInIframe && !isLocalProtocol)) {
+    if (statusLabel) {
+      statusLabel.textContent = currentLang === 'es' ? 'Preparando...' : 'Preparing...';
+    }
+    
     const pdfUrl = `/api/pdf?lang=${currentLang}&theme=light&t=${Date.now()}`;
     
-    if (isEmbedded) {
-      // 1. Notify parent so it can handle the download at top level if it wants to
+    if (isEmbeddedInIframe) {
+      // 1. Notify parent frame so the host website can handle it or trigger overlays
       window.parent.postMessage({ type: 'download-pdf', url: pdfUrl, lang: currentLang }, '*');
       
-      // 2. Direct navigation is the most reliable way to trigger a download from an iframe
-      // Since the API returns Content-Disposition: attachment, it won't leave the page
+      // 2. Fallback to direct navigation which is highly reliable inside sandboxed frames
       window.location.href = pdfUrl;
       
-      // Clear loading state after a reasonable delay as we can't detect download start
+      // Reset button state after a reasonable latency
       setTimeout(() => {
-        if (label) label.textContent = originalText;
-        btn.removeAttribute('data-loading');
+        if (statusLabel) {
+          statusLabel.textContent = originalButtonText;
+        }
+        printButton.removeAttribute('data-loading');
       }, 2000);
+      
       return;
     }
 
     try {
-      const res = await fetch(pdfUrl, { credentials: 'same-origin' });
-      if (!res.ok) throw new Error('Network response was not ok');
-      const blob = await res.blob();
-      const objectUrl = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = objectUrl;
-      a.download = `Eneko_Ruiz_CV_${currentLang.toUpperCase()}.pdf`;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
+      const response = await fetch(pdfUrl, { credentials: 'same-origin' });
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      
+      const pdfBlob = await response.blob();
+      const objectUrl = URL.createObjectURL(pdfBlob);
+      
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.href = objectUrl;
+      downloadAnchor.download = `Eneko_Ruiz_CV_${currentLang.toUpperCase()}.pdf`;
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+      
       setTimeout(() => URL.revokeObjectURL(objectUrl), 30000);
-    } catch (err) {
-      console.error('PDF generation error', err);
-      showCopyTip(btn, currentLang === 'es' ? 'Error generando PDF' : 'Error generating PDF');
+    } catch (error) {
+      console.error('PDF generation error:', error);
+      showCopyTip(printButton, currentLang === 'es' ? 'Error generando PDF' : 'Error generating PDF');
     } finally {
-      if (label) label.textContent = originalText;
-      btn.removeAttribute('data-loading');
+      if (statusLabel) {
+        statusLabel.textContent = originalButtonText;
+      }
+      printButton.removeAttribute('data-loading');
     }
   } else {
-    if (label) label.textContent = currentLang === 'es' ? 'Abriendo...' : 'Opening...';
+    // Standard desktop browser print
+    if (statusLabel) {
+      statusLabel.textContent = currentLang === 'es' ? 'Abriendo...' : 'Opening...';
+    }
     
-    // Reveal all content for print immediately
-    document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
+    // Temporarily force reveal all lazy-loaded animated content for print rendering
+    document.querySelectorAll('.reveal').forEach(element => element.classList.add('visible'));
     
-    // Use a single timeout to allow the browser to paint the state change before blocking with the print dialog
+    // Slight paint delay before opening browser print view
     setTimeout(() => {
       window.print();
-      if (label) label.textContent = originalText;
-      btn.removeAttribute('data-loading');
+      if (statusLabel) {
+        statusLabel.textContent = originalButtonText;
+      }
+      printButton.removeAttribute('data-loading');
     }, 100);
   }
 };
 
+/**
+ * Shares the curriculum URL.
+ * Automatically tries to invoke the native Web Share API on mobile,
+ * falling back to copy-to-clipboard on desktop browsers.
+ */
 window.handleShare = async () => {
-  if (navigator.vibrate) navigator.vibrate(5);
+  if (navigator.vibrate) {
+    navigator.vibrate(5);
+  }
+  
   if (navigator.share) {
-    try { await navigator.share({ title: document.title, url: window.location.href }); } catch(e){}
+    try {
+      await navigator.share({
+        title: document.title,
+        url: window.location.href
+      });
+    } catch (shareError) {
+      // Silent catch (handles user canceling share drawer)
+    }
   } else {
     try {
       await navigator.clipboard.writeText(window.location.href);
-      showCopyTip(document.getElementById('share-btn'), T[currentLang]?.copy_ok || 'Link Copied!');
-    } catch(e){}
+      const shareButton = document.getElementById('share-btn');
+      const successMessage = T[currentLang]?.copy_ok || 'Link Copied!';
+      showCopyTip(shareButton, successMessage);
+    } catch (clipboardError) {
+      // Silent catch
+    }
   }
 };
 
-const showCopyTip = (el, msg) => {
-  const old = document.querySelector('.copy-tip');
-  if (old) old.remove();
+/**
+ * Displays a clean, floating accessibility tip/toast.
+ * @param {HTMLElement} anchorElement
+ * @param {string} message
+ */
+const showCopyTip = (anchorElement, message) => {
+  const existingTip = document.querySelector('.copy-tip');
+  if (existingTip) {
+    existingTip.remove();
+  }
   
-  const tip = document.createElement('div');
-  tip.className = 'copy-tip';
-  tip.innerHTML = `
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+  const tipElement = document.createElement('div');
+  tipElement.className = 'copy-tip';
+  tipElement.innerHTML = `
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
     </svg>
-    <span>${msg}</span>
+    <span>${message}</span>
   `;
-  document.body.appendChild(tip);
-  setTimeout(() => tip.remove(), 2500);
+  
+  document.body.appendChild(tipElement);
+  
+  setTimeout(() => {
+    tipElement.remove();
+  }, 2500);
 };
 
-const handleCopy = async (e) => {
-  const btn = e.currentTarget;
-  const text = btn.getAttribute('data-copy');
-  if (!text) return;
+/**
+ * Copy click handler for phone, email, and copyable links.
+ * @param {MouseEvent} event 
+ */
+const handleCopy = async (event) => {
+  const copyButton = event.currentTarget;
+  const textToCopy = copyButton.getAttribute('data-copy');
+  
+  if (!textToCopy) {
+    return;
+  }
+  
   try {
-    await navigator.clipboard.writeText(text);
-    if (navigator.vibrate) navigator.vibrate(5);
-    showCopyTip(btn, T[currentLang]?.copy_ok || 'Copied!');
-  } catch (err) {}
+    await navigator.clipboard.writeText(textToCopy);
+    if (navigator.vibrate) {
+      navigator.vibrate(5);
+    }
+    const copyOkMessage = T[currentLang]?.copy_ok || 'Copied!';
+    showCopyTip(copyButton, copyOkMessage);
+  } catch (error) {
+    // Fail silently if clipboard write permissions are denied
+  }
 };
 
-/* ── EASTER EGG — CONFETTI & CLI ────────────────────── */
+/* ── EASTER EGG — CONFETTI & DEVELOPER CONSOLE CLI ── */
+
+/**
+ * Renders a clean terminal message in the developer tools.
+ */
 const _runCLI = () => {
-  const mo = 'font-family:"JetBrains Mono",monospace;';
-  const nameStyle = `
+  const monoFont = 'font-family:"JetBrains Mono",monospace;';
+  const headerStyle = `
     font-size: 48px;
     font-weight: 900;
     color: #334155;
@@ -219,219 +385,342 @@ const _runCLI = () => {
       3px 3px 0px #1e293b, 
       6px 6px 0px rgba(51, 65, 85, 0.15);
     padding: 10px 0;
-    ${mo}
+    ${monoFont}
   `;
-  const subStyle = `color: #64748b; font-size: 14px; font-weight: 500; ${mo}`;
-  const promptStyle = `color: #334155; font-size: 13px; font-weight: bold; ${mo}`;
+  
+  const subtitleStyle = `color: #64748b; font-size: 14px; font-weight: 500; ${monoFont}`;
+  const systemStyle = `color: #334155; font-size: 13px; font-weight: bold; ${monoFont}`;
 
-  console.log("%cENEKO RUIZ", nameStyle);
-  console.log("%cINTERACTIVE CURRICULUM %c// %cVERSION 3.0.4", subStyle, "color:#c4965a", subStyle);
-  console.log("%c " , "font-size: 5px;"); // spacer
-  console.log("%c> [SYSTEM]: Kernel initialized. Memory stable.", promptStyle);
-  console.log("%c> [ACCESS]: Terminal granted. Type %chire()%c to connect.", promptStyle, "color:#c4965a; background:rgba(196,150,90,0.1); padding: 1px 4px; border-radius:3px;", promptStyle);
+  console.log("%cENEKO RUIZ", headerStyle);
+  console.log("%cINTERACTIVE CURRICULUM %c// %cVERSION 3.0.4", subtitleStyle, "color:#c4965a", subtitleStyle);
+  console.log("%c ", "font-size: 5px;"); // Spacer
+  console.log("%c> [SYSTEM]: Kernel initialized. Memory stable.", systemStyle);
+  console.log(
+    "%c> [ACCESS]: Terminal granted. Type %chire()%c to connect.",
+    systemStyle,
+    "color:#c4965a; background:rgba(196,150,90,0.1); padding: 1px 4px; border-radius:3px;",
+    systemStyle
+  );
 };
 
+/**
+ * Triggers full-screen interactive confetti fall and launches email client with direct message template.
+ * @returns {string} success message
+ */
 window.hire = function() {
-  const colors = ['#334155', '#94a3b8', '#f8fafc', '#0f172a', '#475569'];
+  const confettiColors = ['#334155', '#94a3b8', '#f8fafc', '#0f172a', '#475569'];
+  
   for (let i = 0; i < 80; i++) {
-    const el = document.createElement('div');
-    Object.assign(el.style, {
-      position: 'fixed', width: '8px', height: '8px', zIndex: '9999',
-      backgroundColor: colors[Math.floor(Math.random() * colors.length)],
-      left: Math.random() * 100 + 'vw', top: '-10px', borderRadius: '50%', pointerEvents: 'none'
+    const confettiElement = document.createElement('div');
+    
+    Object.assign(confettiElement.style, {
+      position: 'fixed',
+      width: '8px',
+      height: '8px',
+      zIndex: '9999',
+      backgroundColor: confettiColors[Math.floor(Math.random() * confettiColors.length)],
+      left: `${Math.random() * 100}vw`,
+      top: '-10px',
+      borderRadius: '50%',
+      pointerEvents: 'none'
     });
-    document.body.appendChild(el);
-    const dur = 2 + Math.random() * 2;
-    el.animate([
+    
+    document.body.appendChild(confettiElement);
+    const animationDuration = 2 + Math.random() * 2;
+    
+    confettiElement.animate([
       { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
-      { transform: `translateY(110vh) translateX(${(Math.random()-0.5)*200}px) rotate(${Math.random()*360}deg)`, opacity: 0 }
-    ], { duration: dur * 1000, easing: 'cubic-bezier(0,0,0.2,1)', fill: 'forwards' });
-    setTimeout(() => el.remove(), dur * 1000);
+      { 
+        transform: `translateY(110vh) translateX(${(Math.random() - 0.5) * 200}px) rotate(${Math.random() * 360}deg)`, 
+        opacity: 0 
+      }
+    ], { 
+      duration: animationDuration * 1000, 
+      easing: 'cubic-bezier(0,0,0.2,1)', 
+      fill: 'forwards' 
+    });
+    
+    setTimeout(() => {
+      confettiElement.remove();
+    }, animationDuration * 1000);
   }
+  
   console.log("%c🚀 Iniciando conexión... Abriendo cliente de correo.", "color: #2563eb; font-size: 14px; font-weight: bold;");
+  
   setTimeout(() => {
     window.location.href = "mailto:eneekoruiz@gmail.com?subject=Propuesta%20Laboral%20%E2%80%94%20Eneko%20Ruiz&body=Hola%20Eneko%2C%0A%0AHe%20visto%20tu%20curr%C3%ADculum%20interactivo%20y%20me%20gustar%C3%ADa%20contactar%20contigo...";
   }, 1200);
+  
   return "🚀 Conexión establecida. ¡Suerte!";
 };
 
-let _devOpen = false;
-window.addEventListener('keydown', (e) => {
-  if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I', 'J', 'C'].includes(e.key.toUpperCase()))) {
-    if (!_devOpen) { _devOpen = true; setTimeout(_runCLI, 500); }
+let _devToolsOpened = false;
+window.addEventListener('keydown', (event) => {
+  const isShortcutKey = ['I', 'J', 'C'].includes(event.key.toUpperCase());
+  if (event.key === 'F12' || (event.ctrlKey && event.shiftKey && isShortcutKey)) {
+    if (!_devToolsOpened) {
+      _devToolsOpened = true;
+      setTimeout(_runCLI, 500);
+    }
   }
 });
 
-/* ── INITIALIZATION ─────────────────────────────────── */
+/* ── INITIALIZATION ───────────────────────────────────────────── */
 (function init() {
-  // Bug 28: Force scroll to top on initial load
-  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  // Force manual scroll position behavior on page load to prevent erratic scroll jumps
+  if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual';
+  }
   window.scrollTo(0, 0);
   requestAnimationFrame(() => window.scrollTo(0, 0));
 
-  const arrival = document.createElement('div');
-  arrival.className = 'portal-arrival';
-  document.body.appendChild(arrival);
-  setTimeout(() => arrival.remove(), 2000);
+  // Portal overlay intro animation sweep
+  const arrivalOverlay = document.createElement('div');
+  arrivalOverlay.className = 'portal-arrival';
+  document.body.appendChild(arrivalOverlay);
+  setTimeout(() => arrivalOverlay.remove(), 2000);
 
-  const menu = document.getElementById('lang-menu');
-  if (menu && M) {
-    menu.innerHTML = '';
-    Object.entries(M).forEach(([code, meta]) => {
-      const btn = document.createElement('button');
-      btn.className = 'lm-item';
-      btn.setAttribute('role', 'option');
-      btn.setAttribute('data-code', code);
-      btn.innerHTML = `<span>${meta.name}</span><span class="lm-iso">${meta.iso}</span>`;
-      btn.addEventListener('click', () => setLang(code));
-      menu.appendChild(btn);
+  // Setup language dropdown menu list
+  const languageMenu = document.getElementById('lang-menu');
+  if (languageMenu && M) {
+    languageMenu.innerHTML = '';
+    Object.entries(M).forEach(([langCode, langMetadata]) => {
+      const optionButton = document.createElement('button');
+      optionButton.className = 'lm-item';
+      optionButton.setAttribute('role', 'option');
+      optionButton.setAttribute('data-code', langCode);
+      optionButton.innerHTML = `<span>${langMetadata.name}</span><span class="lm-iso">${langMetadata.iso}</span>`;
+      optionButton.addEventListener('click', () => setLang(langCode));
+      languageMenu.appendChild(optionButton);
     });
   }
 
-  const printBtn = document.getElementById('print-btn');
-  if (printBtn) { printBtn.addEventListener('click', handlePrint); }
-
-  const shareBtn = document.getElementById('share-btn');
-  if (shareBtn) { 
-    if (navigator.share || navigator.clipboard) shareBtn.style.display = 'flex';
-    shareBtn.addEventListener('click', handleShare);
+  // Setup action triggers
+  const printButton = document.getElementById('print-btn');
+  if (printButton) {
+    printButton.addEventListener('click', handlePrint);
   }
 
-  const themeBtn = document.getElementById('theme-btn');
-  if (themeBtn) { themeBtn.addEventListener('click', toggleTheme); }
+  const shareButton = document.getElementById('share-btn');
+  if (shareButton) { 
+    if (navigator.share || navigator.clipboard) {
+      shareButton.style.display = 'flex';
+    }
+    shareButton.addEventListener('click', handleShare);
+  }
 
-  document.querySelectorAll('[data-copy]').forEach(el => el.addEventListener('click', handleCopy));
-  document.getElementById('lang-trigger')?.addEventListener('click', (e) => {
-    e.stopPropagation();
-    const trigger = e.currentTarget;
-    const menu = document.getElementById('lang-menu');
-    const isOpen = menu?.classList.toggle('open');
-    trigger.classList.toggle('open', isOpen);
-    trigger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  const themeButton = document.getElementById('theme-btn');
+  if (themeButton) {
+    themeButton.addEventListener('click', toggleTheme);
+  }
+
+  // Copyable contact fields setup
+  document.querySelectorAll('[data-copy]').forEach(element => {
+    element.addEventListener('click', handleCopy);
   });
+
+  // Language selector expanded logic
+  const langTrigger = document.getElementById('lang-trigger');
+  langTrigger?.addEventListener('click', (event) => {
+    event.stopPropagation();
+    const trigger = event.currentTarget;
+    const menu = document.getElementById('lang-menu');
+    const isMenuOpen = menu?.classList.toggle('open');
+    trigger.classList.toggle('open', isMenuOpen);
+    trigger.setAttribute('aria-expanded', isMenuOpen ? 'true' : 'false');
+  });
+
+  // Click outside to collapse language menu
   document.addEventListener('click', () => {
     const menu = document.getElementById('lang-menu');
     if (menu?.classList.contains('open')) {
       menu.classList.remove('open');
       const trigger = document.getElementById('lang-trigger');
-      if (trigger) { trigger.setAttribute('aria-expanded', 'false'); trigger.classList.remove('open'); }
+      if (trigger) {
+        trigger.setAttribute('aria-expanded', 'false');
+        trigger.classList.remove('open');
+      }
     }
   });
   
-  window.addEventListener('keydown', (e) => {
-    if (['input', 'textarea'].includes(e.target.tagName.toLowerCase()) || e.target.isContentEditable) return;
-    if (e.key.toLowerCase() === 'p' && !e.ctrlKey && !e.metaKey) { e.preventDefault(); handlePrint(); }
-    if (e.key.toLowerCase() === 's' && !e.ctrlKey && !e.metaKey) { e.preventDefault(); handleShare(); }
+  // Custom global shortcut listener (p = print, s = share)
+  window.addEventListener('keydown', (event) => {
+    const targetTag = event.target.tagName.toLowerCase();
+    if (['input', 'textarea'].includes(targetTag) || event.target.isContentEditable) {
+      return;
+    }
+    if (event.key.toLowerCase() === 'p' && !event.ctrlKey && !event.metaKey) {
+      event.preventDefault();
+      handlePrint();
+    }
+    if (event.key.toLowerCase() === 's' && !event.ctrlKey && !event.metaKey) {
+      event.preventDefault();
+      handleShare();
+    }
   });
 
-  window.addEventListener('message', (e) => {
+  // Handle messages received from parent frame (if embedded inside portfolio context)
+  window.addEventListener('message', (event) => {
     const trustedOrigins = [window.location.origin, 'https://eneko-ruiz.vercel.app'];
-    if (!trustedOrigins.some(origin => e.origin.startsWith(origin))) return;
-    if (e.data.type === 'set-theme') applyTheme(e.data.theme === 'dark');
-    if (e.data.type === 'print-cv') handlePrint();
-    if (e.data.type === 'share-cv') handleShare();
-    if (e.data.type === 'leaving') {
+    if (!trustedOrigins.some(origin => event.origin.startsWith(origin))) {
+      return;
+    }
+    if (event.data.type === 'set-theme') {
+      applyTheme(event.data.theme === 'dark');
+    }
+    if (event.data.type === 'print-cv') {
+      handlePrint();
+    }
+    if (event.data.type === 'share-cv') {
+      handleShare();
+    }
+    if (event.data.type === 'leaving') {
       document.body.style.opacity = '0';
       document.body.style.transform = 'scale(0.98)';
       document.body.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
     }
   });
 
-  let lastMouseMsg = 0;
-  window.addEventListener('mousemove', (e) => {
+  // Throttle portfolio hover synchronization inside iframes
+  let lastMouseMoveTime = 0;
+  window.addEventListener('mousemove', (event) => {
     if (window.parent !== window) {
       const now = Date.now();
-      if (now - lastMouseMsg > 16) {
-        const target = e.target.closest('a, button, [data-h], .lm-item');
-        const mode = target ? 'default' : 'none'; // Basic detection for now
-        window.parent.postMessage({ type: 'portfolio-cursor-move', x: e.clientX, y: e.clientY, mode }, '*');
-        lastMouseMsg = now;
+      if (now - lastMouseMoveTime > 16) {
+        const hoverTarget = event.target.closest('a, button, [data-h], .lm-item');
+        const cursorMode = hoverTarget ? 'default' : 'none';
+        window.parent.postMessage({ 
+          type: 'portfolio-cursor-move', 
+          x: event.clientX, 
+          y: event.clientY, 
+          mode: cursorMode 
+        }, '*');
+        lastMouseMoveTime = now;
       }
     }
   });
 
-  // ── RESIZE OBSERVER (Seamless Height Sync) ──
+  // Height dynamic synchronization inside iframes
   if (window.parent !== window) {
-    const ro = new ResizeObserver(() => {
-      const h = document.documentElement.scrollHeight;
-      window.parent.postMessage({ type: 'set-cv-height', height: h }, '*');
+    const heightSyncObserver = new ResizeObserver(() => {
+      const scrollHeight = document.documentElement.scrollHeight;
+      window.parent.postMessage({ type: 'set-cv-height', height: scrollHeight }, '*');
     });
-    ro.observe(document.body);
-    // Initial sync
-    window.parent.postMessage({ type: 'set-cv-height', height: document.documentElement.scrollHeight }, '*');
+    heightSyncObserver.observe(document.body);
+    
+    // Initial height post
+    window.parent.postMessage({ 
+      type: 'set-cv-height', 
+      height: document.documentElement.scrollHeight 
+    }, '*');
   }
 
-  let _timer = null;
+  // Active status live time counter
+  let timeUpdaterTimer = null;
   const updateTime = () => {
-    const el = document.getElementById('live-time');
-    if (!el) return;
+    const liveTimeElement = document.getElementById('live-time');
+    if (!liveTimeElement) return;
+    
     const now = new Date();
-    el.textContent = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
-    const delay = (60 - now.getSeconds()) * 1000 - now.getMilliseconds();
-    _timer = setTimeout(updateTime, delay + 100);
+    const hoursString = now.getHours().toString().padStart(2, '0');
+    const minutesString = now.getMinutes().toString().padStart(2, '0');
+    liveTimeElement.textContent = `${hoursString}:${minutesString}`;
+    
+    const nextTickDelay = (60 - now.getSeconds()) * 1000 - now.getMilliseconds();
+    timeUpdaterTimer = setTimeout(updateTime, nextTickDelay + 100);
   };
   updateTime();
 
-  let _audioCtx = null;
-  const playClick = () => {
+  // Premium interface Audio Feedback System (Click ticks)
+  let clickAudioContext = null;
+  const playClickTick = () => {
     try {
-      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-      if (!AudioContextClass) return;
-      if (!_audioCtx) _audioCtx = new AudioContextClass();
-      if (_audioCtx.state === 'suspended') _audioCtx.resume();
-      const osc = _audioCtx.createOscillator();
-      const gain = _audioCtx.createGain();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(1000, _audioCtx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(100, _audioCtx.currentTime + 0.1);
-      gain.gain.setValueAtTime(0.02, _audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, _audioCtx.currentTime + 0.1);
-      osc.connect(gain);
-      gain.connect(_audioCtx.destination);
-      osc.start();
-      osc.stop(_audioCtx.currentTime + 0.1);
-    } catch(e) {}
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      if (!clickAudioContext) {
+        clickAudioContext = new AudioCtx();
+      }
+      if (clickAudioContext.state === 'suspended') {
+        clickAudioContext.resume();
+      }
+      const oscillator = clickAudioContext.createOscillator();
+      const gainNode = clickAudioContext.createGain();
+      
+      oscillator.type = 'sine';
+      oscillator.frequency.setValueAtTime(1000, clickAudioContext.currentTime);
+      oscillator.frequency.exponentialRampToValueAtTime(100, clickAudioContext.currentTime + 0.1);
+      
+      gainNode.gain.setValueAtTime(0.02, clickAudioContext.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.001, clickAudioContext.currentTime + 0.1);
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(clickAudioContext.destination);
+      
+      oscillator.start();
+      oscillator.stop(clickAudioContext.currentTime + 0.1);
+    } catch (audioError) {
+      // Audio errors are safely suppressed (e.g. user interaction gestures restrictions)
+    }
   };
 
-  document.addEventListener('click', (e) => {
-    if (e.target.closest('.ctrl, .contact-row, .lm-item, .proj-link')) { playClick(); }
+  document.addEventListener('click', (event) => {
+    if (event.target.closest('.ctrl, .contact-row, .lm-item, .proj-link')) { 
+      playClickTick(); 
+    }
   });
 
   window.addEventListener('beforeunload', () => {
     try {
-      if (_timer) { clearTimeout(_timer); _timer = null; }
-      if (_audioCtx && typeof _audioCtx.close === 'function') { _audioCtx.close().catch(() => {}); _audioCtx = null; }
+      if (timeUpdaterTimer) { 
+        clearTimeout(timeUpdaterTimer); 
+        timeUpdaterTimer = null; 
+      }
+      if (clickAudioContext && typeof clickAudioContext.close === 'function') { 
+        clickAudioContext.close().catch(() => {}); 
+        clickAudioContext = null; 
+      }
     } catch (e) {}
   });
 
+  // Top header screen scroll progress indicator
   window.addEventListener('scroll', () => {
-    const p = document.getElementById('scroll-progress');
-    const total = document.documentElement.scrollHeight - window.innerHeight;
-    if (p) p.style.width = total <= 0 ? '0%' : (window.scrollY / total * 100) + '%';
+    const progressBar = document.getElementById('scroll-progress');
+    const scrollableRange = document.documentElement.scrollHeight - window.innerHeight;
+    if (progressBar) {
+      progressBar.style.width = scrollableRange <= 0 ? '0%' : ((window.scrollY / scrollableRange) * 100) + '%';
+    }
   });
 
-  const urlParams = new URLSearchParams(window.location.search);
-  const lang = urlParams.get('lang') || safeStorage.get('cv-lang') || 'es';
-  applyTranslations(lang);
+  // i18n & initial URL query initialization
+  const urlParameters = new URLSearchParams(window.location.search);
+  const initialLang = urlParameters.get('lang') || safeStorage.get('cv-lang') || 'es';
+  applyTranslations(initialLang);
 
-  const observer = new IntersectionObserver((entries) => {
+  // Lazy reveal entrance transition observers
+  const entranceObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting || entry.intersectionRatio > 0) {
         entry.target.classList.add('visible');
-        observer.unobserve(entry.target);
+        entranceObserver.unobserve(entry.target);
       }
     });
   }, { threshold: 0, rootMargin: '0px 0px -50px 0px' });
 
-  if (urlParams.has('print')) {
-    document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
+  // Handle direct headless print query
+  if (urlParameters.has('print')) {
+    document.querySelectorAll('.reveal').forEach(element => element.classList.add('visible'));
     setTimeout(handlePrint, 500);
   } else {
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    document.querySelectorAll('.reveal').forEach(element => entranceObserver.observe(element));
     setTimeout(() => {
-      const remaining = document.querySelectorAll('.reveal:not(.visible)');
-      if (remaining.length) { remaining.forEach(el => el.classList.add('visible')); }
+      const remainingHidden = document.querySelectorAll('.reveal:not(.visible)');
+      if (remainingHidden.length) { 
+        remainingHidden.forEach(element => element.classList.add('visible')); 
+      }
     }, 1500);
   }
-  setTimeout(() => document.documentElement.classList.add('theme-loaded'), 100);
+  
+  setTimeout(() => {
+    document.documentElement.classList.add('theme-loaded');
+  }, 100);
 })();
