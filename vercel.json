@@ -18,7 +18,7 @@
       "headers": [
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; script-src 'self' https://vercel.live; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://vercel.com https://vercel.live; connect-src 'self' https://fonts.googleapis.com https://vercel.live; frame-ancestors 'self' http://localhost:3000 https://*.vercel.app https://eneko-ruiz.vercel.app; upgrade-insecure-requests;"
+          "value": "default-src 'self'; script-src 'self' https://vercel.live; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://vercel.com https://vercel.live; connect-src 'self' https://fonts.googleapis.com https://vercel.live; frame-ancestors 'self' http://localhost:3000 https://eneko-ruiz.vercel.app https://eneko-ruiz-curriculum.vercel.app; upgrade-insecure-requests;"
         },
         {
           "key": "Strict-Transport-Security",

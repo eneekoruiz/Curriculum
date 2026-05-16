@@ -9,38 +9,50 @@ Este repositorio contiene el código fuente de mi currículum web interactivo, d
 
 🚀 **Ver versión en vivo:** [https://eneko-ruiz-curriculum.vercel.app/](https://eneko-ruiz-curriculum.vercel.app/)
 
+
 ---
+
 
 ## 💎 Filosofía del Proyecto
 
 A diferencia de los currículums convencionales basados en plantillas o frameworks pesados, este proyecto apuesta por la **pureza técnica**:
+
 - **Vanilla Stack:** Cero dependencias externas (sin librerías ni frameworks).
 - **Rendimiento Extremo:** Carga instantánea con un peso total de assets inferior a 100KB.
 - **Control Total:** Cada línea de CSS y JS ha sido escrita para maximizar la accesibilidad y el diseño premium.
 
+
 ---
+
 
 ## 🌟 Características Destacadas
 
 ### 🌎 Internacionalización (i18n) Nativa
+
 Soporte completo para **20 idiomas** con:
+
 - Detección automática del idioma del navegador.
 - Persistencia de selección mediante parámetros en la URL.
 - Soporte para lectura de derecha a izquierda (RTL) en idiomas como árabe o hebreo.
 
 ### 📄 Motor de Exportación a PDF
+
 Incluye una API serverless desarrollada para Vercel que utiliza **Puppeteer** para renderizar el CV y generar un PDF en formato A4 perfecto, respetando estilos de impresión específicos (`@media print`) y eliminando elementos innecesarios para la lectura en papel.
 
 ### 🌓 Diseño Adaptativo y Modo Oscuro
+
 - Interfaz fluida (Responsive Design) que se adapta desde relojes inteligentes hasta pantallas 4K.
 - Soporte para `prefers-color-scheme` con opción de cambio manual persistente.
 - Estética minimalista con tipografías premium (Cormorant Garamond y DM Sans).
 
 ### ♿ Accesibilidad y SEO
+
 - Cumplimiento de estándares WCAG para navegación por teclado y lectores de pantalla.
 - Optimización SEO completa con metadatos dinámicos, Open Graph, Twitter Cards y Sitemap XML.
 
+
 ---
+
 
 ## 🛠️ Tecnologías
 
@@ -48,7 +60,9 @@ Incluye una API serverless desarrollada para Vercel que utiliza **Puppeteer** pa
 - **Backend (API):** Node.js, Puppeteer Core, Sparticuz Chromium.
 - **Despliegue:** Vercel (Edge Functions & Functions).
 
+
 ---
+
 
 ## 📦 Uso Local
 
@@ -58,11 +72,17 @@ Al ser un proyecto Vanilla, no requiere un proceso de construcción (`build`):
 2. Abre `index.html` en cualquier navegador moderno.
 3. Para probar la generación de PDF localmente, necesitarás instalar las dependencias con `npm install`.
 
+
 ---
+
 
 ## 📜 Licencia
 
 Este proyecto está bajo la licencia **MIT**. Puedes usarlo como base para tu propio CV, siempre y cuando se respete la autoría original.
 
+
 ---
+
+
 *Desarrollado con ❤️ por Eneko Ruiz Mollón.*
+
