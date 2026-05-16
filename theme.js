@@ -3,7 +3,8 @@
     const htmlEl = document.documentElement;
     const urlParams = new URLSearchParams(window.location.search);
     const urlTheme = urlParams.get('theme');
-    const savedTheme = localStorage.getItem('cv-theme');
+    let savedTheme = null;
+    try { savedTheme = localStorage.getItem('cv-theme'); } catch(e) {}
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     let isDark = urlTheme ? urlTheme === 'dark' : (savedTheme ? savedTheme === 'dark' : prefersDark);
     
@@ -27,7 +28,7 @@
     try {
       const htmlEl = document.documentElement;
       htmlEl.setAttribute('data-theme', 'light');
-      htmlEl.style.backgroundColor = '#f7f4ef';
+      htmlEl.style.backgroundColor = '#ffffff';
       htmlEl.style.colorScheme = 'light';
     } catch (err) { /* silent fallback */ }
   }

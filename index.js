@@ -17,6 +17,11 @@ const calculateAge = (birthday) => {
   return age;
 };
 
+const safeStorage = {
+  get: (k) => { try { return localStorage.getItem(k); } catch(e) { return null; } },
+  set: (k, v) => { try { localStorage.setItem(k, v); } catch(e) {} }
+};
+
 const updateFavicon = (dark) => {
   const color = dark ? '#94a3b8' : '#334155', bg = dark ? '#0f172a' : '#ffffff';
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="20" fill="${bg}"/><text x="50" y="66" font-family="sans-serif" font-size="52" font-weight="bold" fill="${color}" text-anchor="middle">ER</text></svg>`;
@@ -32,7 +37,7 @@ const applyTheme = (dark) => {
     html.style.colorScheme = theme;
     const metaTheme = document.getElementById('meta-theme-color');
     if (metaTheme) metaTheme.content = dark ? '#020617' : '#ffffff';
-    localStorage.setItem('cv-theme', theme);
+    safeStorage.set('cv-theme', theme);
     updateFavicon(dark);
   } catch(e){}
 };
@@ -87,7 +92,7 @@ const setLang = (code) => {
   root.classList.add('fading');
   setTimeout(() => {
     applyTranslations(code);
-    localStorage.setItem('cv-lang', code);
+    safeStorage.set('cv-lang', code);
     root.classList.remove('fading');
   }, 150);
 };
@@ -103,14 +108,33 @@ window.handlePrint = async () => {
   
   const isLocal = window.location.protocol === 'file:';
   const isMobile = !isLocal && (window.matchMedia('(max-width: 768px)').matches && (navigator.maxTouchPoints > 0 || 'ontouchstart' in window));
+  const isEmbedded = window.parent !== window;
   
   btn.setAttribute('data-loading', 'true');
   const label = btn.querySelector('span');
   const originalText = label ? label.textContent : '';
   
-  if (isMobile) {
+  // Use API for mobile or embedded versions (to ensure download works reliably)
+  if (isMobile || (isEmbedded && !isLocal)) {
     if (label) label.textContent = currentLang === 'es' ? 'Preparando...' : 'Preparing...';
     const pdfUrl = `/api/pdf?lang=${currentLang}&theme=light&t=${Date.now()}`;
+    
+    if (isEmbedded) {
+      // 1. Notify parent so it can handle the download at top level if it wants to
+      window.parent.postMessage({ type: 'download-pdf', url: pdfUrl, lang: currentLang }, '*');
+      
+      // 2. Direct navigation is the most reliable way to trigger a download from an iframe
+      // Since the API returns Content-Disposition: attachment, it won't leave the page
+      window.location.href = pdfUrl;
+      
+      // Clear loading state after a reasonable delay as we can't detect download start
+      setTimeout(() => {
+        if (label) label.textContent = originalText;
+        btn.removeAttribute('data-loading');
+      }, 2000);
+      return;
+    }
+
     try {
       const res = await fetch(pdfUrl, { credentials: 'same-origin' });
       if (!res.ok) throw new Error('Network response was not ok');
@@ -118,7 +142,7 @@ window.handlePrint = async () => {
       const objectUrl = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = objectUrl;
-      a.download = `CV-${currentLang}.pdf`;
+      a.download = `Eneko_Ruiz_CV_${currentLang.toUpperCase()}.pdf`;
       document.body.appendChild(a);
       a.click();
       a.remove();
@@ -138,11 +162,7 @@ window.handlePrint = async () => {
     
     // Use a single timeout to allow the browser to paint the state change before blocking with the print dialog
     setTimeout(() => {
-      if (window.parent !== window) {
-        window.parent.postMessage({ type: 'trigger-cv-print' }, '*');
-      } else {
-        window.print();
-      }
+      window.print();
       if (label) label.textContent = originalText;
       btn.removeAttribute('data-loading');
     }, 100);
@@ -391,7 +411,7 @@ window.addEventListener('keydown', (e) => {
   });
 
   const urlParams = new URLSearchParams(window.location.search);
-  const lang = urlParams.get('lang') || localStorage.getItem('cv-lang') || 'es';
+  const lang = urlParams.get('lang') || safeStorage.get('cv-lang') || 'es';
   applyTranslations(lang);
 
   const observer = new IntersectionObserver((entries) => {
