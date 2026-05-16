@@ -417,8 +417,8 @@ ul {
   }
 
   * {
+    print-color-adjust: exact !important;
     -webkit-print-color-adjust: exact !important;
-    color-adjust: exact !important;
   }
 }
 
@@ -538,7 +538,7 @@ ul {
 .pv-line.text { height: 2px; width: 100%; opacity: 0.6; }
 .pv-line.text.last { width: 70%; }
 
-.pv-dashboard { flex: 1; display: grid; grid-template-columns: 1.2fr 1fr; gap: 8px; padding-top: 4px; }
+.pv-dashboard { flex: 1; display: grid; grid-template-columns: 1fr 1.2fr; gap: 8px; padding-top: 4px; }
 .pv-col { display: flex; flex-direction: column; gap: 6px; }
 .pv-sec { display: flex; flex-direction: column; gap: 3px; }
 .pv-sec-title { height: 4px; background: var(--c-accent-s); width: 80%; border-radius: 1px; margin-bottom: 2px; }
@@ -695,7 +695,10 @@ html[data-theme="dark"] #icon-moon {
 
 .lm-item.active {
   color: var(--c-accent);
-  font-weight: 500;
+  font-weight: 600;
+  border-left: 3px solid var(--c-accent);
+  padding-left: 11px; /* reduced from 14px to compensate for border */
+  background: var(--c-accent-s);
 }
 
 .lm-iso {
@@ -869,7 +872,7 @@ h1 strong {
 .dashboard {
   flex: 1;
   display: grid;
-  grid-template-columns: 1fr 292px;
+  grid-template-columns: 292px 1fr;
   gap: var(--s6);
   align-items: start;
   margin-bottom: clamp(var(--s4), 4vw, 48px);
@@ -1370,9 +1373,8 @@ h1 strong {
     gap: var(--s5);
   }
 
-  /* col-side goes first (cards, skills, langs) */
+  /* col-side is now first in source order, no need for order: -1 */
   .col-side {
-    order: -1;
   }
 
   /*
