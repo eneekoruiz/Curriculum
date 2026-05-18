@@ -175,13 +175,24 @@ const applyTranslations = (langCode) => {
  * @param {string} langCode 
  */
 const setLang = (langCode) => {
-  root.classList.add('fading');
-  
-  setTimeout(() => {
-    applyTranslations(langCode);
-    safeStorage.set('cv-lang', langCode);
-    root.classList.remove('fading');
-  }, 150);
+  gsap.to(root, {
+    opacity: 0,
+    y: 8,
+    duration: 0.15,
+    ease: 'power2.in',
+    onComplete: () => {
+      applyTranslations(langCode);
+      safeStorage.set('cv-lang', langCode);
+      
+      gsap.to(root, {
+        opacity: 1,
+        y: 0,
+        duration: 0.25,
+        ease: 'power2.out',
+        clearProps: 'opacity,transform'
+      });
+    }
+  });
 };
 
 /* ── CORE ACTIONS ─────────────────────────────────────────────── */
@@ -409,44 +420,67 @@ const _runCLI = () => {
  * @returns {string} success message
  */
 window.hire = function() {
-  const confettiColors = ['#334155', '#94a3b8', '#f8fafc', '#0f172a', '#475569'];
+  const confettiColors = ['#c4965a', '#334155', '#94a3b8', '#0f172a', '#475569'];
+  const confettiContainer = document.createElement('div');
+  Object.assign(confettiContainer.style, {
+    position: 'fixed',
+    inset: 0,
+    pointerEvents: 'none',
+    zIndex: 99999
+  });
+  document.body.appendChild(confettiContainer);
   
-  for (let i = 0; i < 80; i++) {
+  for (let i = 0; i < 100; i++) {
     const confettiElement = document.createElement('div');
+    const size = 5 + Math.random() * 8;
+    const isRound = Math.random() > 0.5;
     
     Object.assign(confettiElement.style, {
-      position: 'fixed',
-      width: '8px',
-      height: '8px',
-      zIndex: '9999',
+      position: 'absolute',
+      width: `${size}px`,
+      height: `${size}px`,
       backgroundColor: confettiColors[Math.floor(Math.random() * confettiColors.length)],
-      left: `${Math.random() * 100}vw`,
-      top: '-10px',
-      borderRadius: '50%',
-      pointerEvents: 'none'
+      left: '50vw',
+      top: '60vh',
+      borderRadius: isRound ? '50%' : '2px',
+      opacity: 0
     });
     
-    document.body.appendChild(confettiElement);
-    const animationDuration = 2 + Math.random() * 2;
+    confettiContainer.appendChild(confettiElement);
     
-    confettiElement.animate([
-      { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
-      { 
-        transform: `translateY(110vh) translateX(${(Math.random() - 0.5) * 200}px) rotate(${Math.random() * 360}deg)`, 
-        opacity: 0 
+    const angle = Math.random() * Math.PI * 2;
+    const velocity = 200 + Math.random() * 300;
+    const targetX = Math.cos(angle) * velocity + (Math.random() - 0.5) * 100;
+    const targetY = Math.sin(angle) * velocity + (Math.random() - 0.5) * 100;
+    
+    gsap.set(confettiElement, { x: 0, y: 0, opacity: 1, scale: 0.5 });
+    
+    gsap.to(confettiElement, {
+      x: targetX,
+      y: targetY - 150, // blast up
+      scale: 1,
+      rotation: Math.random() * 720 - 360,
+      duration: 0.6 + Math.random() * 0.4,
+      ease: 'power2.out',
+      onComplete: () => {
+        // Gravity fall
+        gsap.to(confettiElement, {
+          y: '+=500',
+          x: `+=${(Math.random() - 0.5) * 150}`,
+          opacity: 0,
+          scale: 0.4,
+          rotation: `+=${Math.random() * 360}`,
+          duration: 1.5 + Math.random() * 1.5,
+          ease: 'power1.in',
+          onComplete: () => confettiElement.remove()
+        });
       }
-    ], { 
-      duration: animationDuration * 1000, 
-      easing: 'cubic-bezier(0,0,0.2,1)', 
-      fill: 'forwards' 
     });
-    
-    setTimeout(() => {
-      confettiElement.remove();
-    }, animationDuration * 1000);
   }
   
-  console.log("%c🚀 Iniciando conexión... Abriendo cliente de correo.", "color: #2563eb; font-size: 14px; font-weight: bold;");
+  setTimeout(() => confettiContainer.remove(), 4000);
+  
+  console.log("%c🚀 Iniciando conexión... Abriendo cliente de correo.", "color: #c4965a; font-size: 14px; font-weight: bold;");
   
   setTimeout(() => {
     window.location.href = "mailto:eneekoruiz@gmail.com?subject=Propuesta%20Laboral%20%E2%80%94%20Eneko%20Ruiz&body=Hola%20Eneko%2C%0A%0AHe%20visto%20tu%20curr%C3%ADculum%20interactivo%20y%20me%20gustar%C3%ADa%20contactar%20contigo...";
@@ -466,6 +500,41 @@ window.addEventListener('keydown', (event) => {
   }
 });
 
+// Dynamic Magnetic Controls (Topbar controls follow cursor on close hover)
+const setupMagneticControls = () => {
+  const controls = document.querySelectorAll('#topbar .ctrl');
+  if (!controls.length || !window.gsap) return;
+  
+  controls.forEach(btn => {
+    btn.addEventListener('mousemove', (e) => {
+      const rect = btn.getBoundingClientRect();
+      const btnX = rect.left + rect.width / 2;
+      const btnY = rect.top + rect.height / 2;
+      
+      const distX = e.clientX - btnX;
+      const distY = e.clientY - btnY;
+      
+      gsap.to(btn, {
+        x: distX * 0.4,
+        y: distY * 0.4,
+        duration: 0.35,
+        ease: 'power2.out',
+        overwrite: 'auto'
+      });
+    });
+    
+    btn.addEventListener('mouseleave', () => {
+      gsap.to(btn, {
+        x: 0,
+        y: 0,
+        duration: 0.8,
+        ease: 'elastic.out(1, 0.4)',
+        overwrite: 'auto'
+      });
+    });
+  });
+};
+
 /* ── INITIALIZATION ───────────────────────────────────────────── */
 (function init() {
   // Force manual scroll position behavior on page load to prevent erratic scroll jumps
@@ -474,6 +543,9 @@ window.addEventListener('keydown', (event) => {
   }
   window.scrollTo(0, 0);
   requestAnimationFrame(() => window.scrollTo(0, 0));
+
+  // Initialize magnetic controls
+  setupMagneticControls();
 
   // Portal overlay intro animation sweep
   const arrivalOverlay = document.createElement('div');
@@ -576,9 +648,12 @@ window.addEventListener('keydown', (event) => {
       handleShare();
     }
     if (event.data.type === 'leaving') {
-      document.body.style.opacity = '0';
-      document.body.style.transform = 'scale(0.98)';
-      document.body.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+      gsap.to(document.body, {
+        opacity: 0,
+        scale: 0.98,
+        duration: 0.5,
+        ease: 'power2.inOut'
+      });
     }
   });
 
@@ -697,26 +772,93 @@ window.addEventListener('keydown', (event) => {
   const initialLang = urlParameters.get('lang') || safeStorage.get('cv-lang') || 'es';
   applyTranslations(initialLang);
 
-  // Lazy reveal entrance transition observers
+  // Lazy reveal entrance transition observers powered by GSAP
   const entranceObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting || entry.intersectionRatio > 0) {
-        entry.target.classList.add('visible');
-        entranceObserver.unobserve(entry.target);
+        const target = entry.target;
+        entranceObserver.unobserve(target);
+        
+        target.style.transition = 'none';
+        
+        gsap.fromTo(target, 
+          { opacity: 0, y: 35, scale: 0.98 },
+          { 
+            opacity: 1, 
+            y: 0, 
+            scale: 1, 
+            duration: 0.85, 
+            ease: 'power3.out',
+            clearProps: 'transform,scale,opacity,transition'
+          }
+        );
+        
+        const staggeredTimelineItems = target.querySelectorAll('.tl-item');
+        if (staggeredTimelineItems.length) {
+          gsap.fromTo(staggeredTimelineItems,
+            { opacity: 0, y: 15 },
+            { 
+              opacity: 1, 
+              y: 0, 
+              duration: 0.65, 
+              stagger: 0.08, 
+              ease: 'power2.out',
+              delay: 0.15
+            }
+          );
+        }
+        
+        const staggeredPills = target.querySelectorAll('.pill');
+        if (staggeredPills.length) {
+          gsap.fromTo(staggeredPills,
+            { opacity: 0, y: 8, scale: 0.95 },
+            { 
+              opacity: 1, 
+              y: 0, 
+              scale: 1, 
+              duration: 0.55, 
+              stagger: 0.04, 
+              ease: 'back.out(1.5)',
+              delay: 0.1
+            }
+          );
+        }
+
+        const staggeredProjLinks = target.querySelectorAll('.proj-link');
+        if (staggeredProjLinks.length) {
+          gsap.fromTo(staggeredProjLinks,
+            { opacity: 0, y: 8, scale: 0.96 },
+            {
+              opacity: 1,
+              y: 0,
+              scale: 1,
+              duration: 0.6,
+              stagger: 0.06,
+              ease: 'power2.out',
+              delay: 0.12
+            }
+          );
+        }
       }
     });
   }, { threshold: 0, rootMargin: '0px 0px -50px 0px' });
 
   // Handle direct headless print query
   if (urlParameters.has('print')) {
-    document.querySelectorAll('.reveal').forEach(element => element.classList.add('visible'));
+    document.querySelectorAll('.reveal').forEach(element => {
+      gsap.set(element, { opacity: 1, scale: 1, y: 0 });
+      element.classList.add('visible');
+    });
     setTimeout(handlePrint, 500);
   } else {
     document.querySelectorAll('.reveal').forEach(element => entranceObserver.observe(element));
     setTimeout(() => {
       const remainingHidden = document.querySelectorAll('.reveal:not(.visible)');
       if (remainingHidden.length) { 
-        remainingHidden.forEach(element => element.classList.add('visible')); 
+        remainingHidden.forEach(element => {
+          gsap.set(element, { opacity: 1, scale: 1, y: 0 });
+          element.classList.add('visible');
+        });
       }
     }, 1500);
   }
