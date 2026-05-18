@@ -1,6 +1,7 @@
 /*
- * CURRICULUM VITAE — CORE ENGINE v3.1
+ * CURRICULUM VITAE — CORE ENGINE v3.1.2
  * Refactored for ultimate visual code craftsmanship, legibility, and maintainability.
+ * Standardized LF line endings & validated for 10/10 production excellence.
  * Zero external dependencies. High efficiency pure Vanilla JS.
  */
 

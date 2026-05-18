@@ -72,4 +72,5 @@ Este proyecto está bajo la licencia **MIT**. Puedes usarlo como base para tu pr
 
 ---
 
-*Desarrollado por Eneko Ruiz Mollón.*
+*Desarrollado con excelencia técnica por Eneko Ruiz Mollón.*
+

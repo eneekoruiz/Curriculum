@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+  Eneko Ruiz Mollón - XML Sitemap
+  Standard XML protocol with alternate multilanguage configurations.
+-->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://eneko-ruiz-curriculum.vercel.app/</loc>

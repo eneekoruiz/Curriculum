@@ -1,5 +1,9 @@
+# ── ROBOTS.TXT ──────────────────────────────────────────
+# Optimized SEO & Sitemap path declarations
+# ────────────────────────────────────────────────────────
 User-agent: *
 Allow: /
 Disallow: /api/
 
 Sitemap: https://eneko-ruiz-curriculum.vercel.app/sitemap.xml
+
