@@ -520,8 +520,8 @@ const setupMagneticControls = () => {
       const distY = e.clientY - btnY;
       
       gsap.to(btn, {
-        x: distX * 0.4,
-        y: distY * 0.4,
+        x: distX * 0.15,
+        y: distY * 0.15,
         duration: 0.35,
         ease: 'power2.out',
         overwrite: 'auto'
@@ -552,11 +552,11 @@ const setupMagneticControls = () => {
   // Initialize magnetic controls
   setupMagneticControls();
 
-  // Portal overlay intro animation sweep
+  // Page load cover fade-out
   const arrivalOverlay = document.createElement('div');
   arrivalOverlay.className = 'portal-arrival';
   document.body.appendChild(arrivalOverlay);
-  setTimeout(() => arrivalOverlay.remove(), 2000);
+  setTimeout(() => arrivalOverlay.remove(), 800);
 
   // Setup language dropdown menu list
   const languageMenu = document.getElementById('lang-menu');
@@ -860,7 +860,7 @@ const setupMagneticControls = () => {
       });
 
       // Coordinated timeline for elements in initial viewport
-      const tl = gsap.timeline({ delay: 0.95 }); // Starts exactly as the portal overlay starts to fade out
+      const tl = gsap.timeline({ delay: 0.35 }); // Starts as page cover begins to fade out
 
       initialReveals.forEach((section, index) => {
         tl.fromTo(section,
