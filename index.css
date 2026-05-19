@@ -348,6 +348,32 @@ ul {
   top: 0;
 }
 
+/* ── REVEAL ANIMATIONS ─────────────────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(35px) scale(0.98);
+  transition: opacity 0.85s var(--ease), transform 0.85s var(--ease);
+  will-change: transform, opacity;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: none;
+}
+
+.reveal .tl-item,
+.reveal .pill,
+.reveal .proj-link {
+  opacity: 0;
+}
+
+.reveal.visible .tl-item,
+.reveal.visible .pill,
+.reveal.visible .proj-link {
+  opacity: 1;
+  transition: opacity 0.5s var(--ease);
+}
+
 /* ── PAGE FADE ─────────────────────────────────────── */
 #main-content {
   opacity: 1;
@@ -433,6 +459,15 @@ ul {
   * {
     print-color-adjust: exact !important;
     -webkit-print-color-adjust: exact !important;
+  }
+
+  .reveal,
+  .reveal .tl-item,
+  .reveal .pill,
+  .reveal .proj-link {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
   }
 }
 

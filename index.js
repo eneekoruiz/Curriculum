@@ -799,7 +799,10 @@ const setupMagneticControls = () => {
               scale: 1, 
               duration: 0.85, 
               ease: 'power3.out',
-              clearProps: 'transform,scale,opacity,transition'
+              clearProps: 'transform,scale,opacity,transition',
+              onComplete: () => {
+                target.classList.add('visible');
+              }
             }
           );
           
@@ -871,7 +874,12 @@ const setupMagneticControls = () => {
     });
     setTimeout(handlePrint, 500);
   } else {
-    document.querySelectorAll('.reveal').forEach(element => entranceObserver.observe(element));
+    // Delay observing to align with the portal overlay fade-out (at 60% of 1.8s, ~1080ms)
+    setTimeout(() => {
+      document.querySelectorAll('.reveal').forEach(element => entranceObserver.observe(element));
+    }, 1000);
+
+    // Safety fallback delayed to 3500ms to allow all normal entrance animations to complete smoothly
     setTimeout(() => {
       const remainingHidden = document.querySelectorAll('.reveal:not(.visible)');
       if (remainingHidden.length) { 
@@ -885,7 +893,7 @@ const setupMagneticControls = () => {
           element.classList.add('visible');
         });
       }
-    }, 1500);
+    }, 3500);
   }
   
   setTimeout(() => {
