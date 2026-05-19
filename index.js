@@ -175,24 +175,29 @@ const applyTranslations = (langCode) => {
  * @param {string} langCode 
  */
 const setLang = (langCode) => {
-  gsap.to(root, {
-    opacity: 0,
-    y: 8,
-    duration: 0.15,
-    ease: 'power2.in',
-    onComplete: () => {
-      applyTranslations(langCode);
-      safeStorage.set('cv-lang', langCode);
-      
-      gsap.to(root, {
-        opacity: 1,
-        y: 0,
-        duration: 0.25,
-        ease: 'power2.out',
-        clearProps: 'opacity,transform'
-      });
-    }
-  });
+  if (window.gsap) {
+    gsap.to(root, {
+      opacity: 0,
+      y: 8,
+      duration: 0.15,
+      ease: 'power2.in',
+      onComplete: () => {
+        applyTranslations(langCode);
+        safeStorage.set('cv-lang', langCode);
+        
+        gsap.to(root, {
+          opacity: 1,
+          y: 0,
+          duration: 0.25,
+          ease: 'power2.out',
+          clearProps: 'opacity,transform'
+        });
+      }
+    });
+  } else {
+    applyTranslations(langCode);
+    safeStorage.set('cv-lang', langCode);
+  }
 };
 
 /* ── CORE ACTIONS ─────────────────────────────────────────────── */
@@ -648,12 +653,16 @@ const setupMagneticControls = () => {
       handleShare();
     }
     if (event.data.type === 'leaving') {
-      gsap.to(document.body, {
-        opacity: 0,
-        scale: 0.98,
-        duration: 0.5,
-        ease: 'power2.inOut'
-      });
+      if (window.gsap) {
+        gsap.to(document.body, {
+          opacity: 0,
+          scale: 0.98,
+          duration: 0.5,
+          ease: 'power2.inOut'
+        });
+      } else {
+        document.body.style.opacity = '0';
+      }
     }
   });
 
@@ -781,63 +790,69 @@ const setupMagneticControls = () => {
         
         target.style.transition = 'none';
         
-        gsap.fromTo(target, 
-          { opacity: 0, y: 35, scale: 0.98 },
-          { 
-            opacity: 1, 
-            y: 0, 
-            scale: 1, 
-            duration: 0.85, 
-            ease: 'power3.out',
-            clearProps: 'transform,scale,opacity,transition'
-          }
-        );
-        
-        const staggeredTimelineItems = target.querySelectorAll('.tl-item');
-        if (staggeredTimelineItems.length) {
-          gsap.fromTo(staggeredTimelineItems,
-            { opacity: 0, y: 15 },
-            { 
-              opacity: 1, 
-              y: 0, 
-              duration: 0.65, 
-              stagger: 0.08, 
-              ease: 'power2.out',
-              delay: 0.15
-            }
-          );
-        }
-        
-        const staggeredPills = target.querySelectorAll('.pill');
-        if (staggeredPills.length) {
-          gsap.fromTo(staggeredPills,
-            { opacity: 0, y: 8, scale: 0.95 },
+        if (window.gsap) {
+          gsap.fromTo(target, 
+            { opacity: 0, y: 35, scale: 0.98 },
             { 
               opacity: 1, 
               y: 0, 
               scale: 1, 
-              duration: 0.55, 
-              stagger: 0.04, 
-              ease: 'back.out(1.5)',
-              delay: 0.1
+              duration: 0.85, 
+              ease: 'power3.out',
+              clearProps: 'transform,scale,opacity,transition'
             }
           );
-        }
+          
+          const staggeredTimelineItems = target.querySelectorAll('.tl-item');
+          if (staggeredTimelineItems.length) {
+            gsap.fromTo(staggeredTimelineItems,
+              { opacity: 0, y: 15 },
+              { 
+                opacity: 1, 
+                y: 0, 
+                duration: 0.65, 
+                stagger: 0.08, 
+                ease: 'power2.out',
+                delay: 0.15
+              }
+            );
+          }
+          
+          const staggeredPills = target.querySelectorAll('.pill');
+          if (staggeredPills.length) {
+            gsap.fromTo(staggeredPills,
+              { opacity: 0, y: 8, scale: 0.95 },
+              { 
+                opacity: 1, 
+                y: 0, 
+                scale: 1, 
+                duration: 0.55, 
+                stagger: 0.04, 
+                ease: 'back.out(1.5)',
+                delay: 0.1
+              }
+            );
+          }
 
-        const staggeredProjLinks = target.querySelectorAll('.proj-link');
-        if (staggeredProjLinks.length) {
-          gsap.fromTo(staggeredProjLinks,
-            { opacity: 0, y: 8, scale: 0.96 },
-            {
-              opacity: 1,
-              y: 0,
-              scale: 1,
-              duration: 0.6,
-              stagger: 0.06,
-              ease: 'power2.out',
-              delay: 0.12
-            }
-          );
+          const staggeredProjLinks = target.querySelectorAll('.proj-link');
+          if (staggeredProjLinks.length) {
+            gsap.fromTo(staggeredProjLinks,
+              { opacity: 0, y: 8, scale: 0.96 },
+              {
+                opacity: 1,
+                y: 0,
+                scale: 1,
+                duration: 0.6,
+                stagger: 0.06,
+                ease: 'power2.out',
+                delay: 0.12
+              }
+            );
+          }
+        } else {
+          target.style.opacity = '1';
+          target.style.transform = 'none';
+          target.classList.add('visible');
         }
       }
     });
@@ -846,7 +861,12 @@ const setupMagneticControls = () => {
   // Handle direct headless print query
   if (urlParameters.has('print')) {
     document.querySelectorAll('.reveal').forEach(element => {
-      gsap.set(element, { opacity: 1, scale: 1, y: 0 });
+      if (window.gsap) {
+        gsap.set(element, { opacity: 1, scale: 1, y: 0 });
+      } else {
+        element.style.opacity = '1';
+        element.style.transform = 'none';
+      }
       element.classList.add('visible');
     });
     setTimeout(handlePrint, 500);
@@ -856,7 +876,12 @@ const setupMagneticControls = () => {
       const remainingHidden = document.querySelectorAll('.reveal:not(.visible)');
       if (remainingHidden.length) { 
         remainingHidden.forEach(element => {
-          gsap.set(element, { opacity: 1, scale: 1, y: 0 });
+          if (window.gsap) {
+            gsap.set(element, { opacity: 1, scale: 1, y: 0 });
+          } else {
+            element.style.opacity = '1';
+            element.style.transform = 'none';
+          }
           element.classList.add('visible');
         });
       }
