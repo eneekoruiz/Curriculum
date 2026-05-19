@@ -791,14 +791,15 @@ const setupMagneticControls = () => {
         target.style.transition = 'none';
         
         if (window.gsap) {
-          gsap.fromTo(target, 
-            { opacity: 0, y: 35, scale: 0.98 },
+          const tl = gsap.timeline();
+          tl.fromTo(target, 
+            { opacity: 0, y: 15, scale: 0.99 },
             { 
               opacity: 1, 
               y: 0, 
               scale: 1, 
-              duration: 0.85, 
-              ease: 'power3.out',
+              duration: 1.1, 
+              ease: 'power4.out',
               clearProps: 'transform,scale,opacity,transition',
               onComplete: () => {
                 target.classList.add('visible');
@@ -806,50 +807,18 @@ const setupMagneticControls = () => {
             }
           );
           
-          const staggeredTimelineItems = target.querySelectorAll('.tl-item');
-          if (staggeredTimelineItems.length) {
-            gsap.fromTo(staggeredTimelineItems,
-              { opacity: 0, y: 15 },
+          const childItems = target.querySelectorAll('.tl-item, .pill, .proj-link');
+          if (childItems.length) {
+            tl.fromTo(childItems,
+              { opacity: 0, y: 8 },
               { 
                 opacity: 1, 
                 y: 0, 
-                duration: 0.65, 
-                stagger: 0.08, 
-                ease: 'power2.out',
-                delay: 0.15
-              }
-            );
-          }
-          
-          const staggeredPills = target.querySelectorAll('.pill');
-          if (staggeredPills.length) {
-            gsap.fromTo(staggeredPills,
-              { opacity: 0, y: 8, scale: 0.95 },
-              { 
-                opacity: 1, 
-                y: 0, 
-                scale: 1, 
-                duration: 0.55, 
+                duration: 0.85, 
                 stagger: 0.04, 
-                ease: 'back.out(1.5)',
-                delay: 0.1
-              }
-            );
-          }
-
-          const staggeredProjLinks = target.querySelectorAll('.proj-link');
-          if (staggeredProjLinks.length) {
-            gsap.fromTo(staggeredProjLinks,
-              { opacity: 0, y: 8, scale: 0.96 },
-              {
-                opacity: 1,
-                y: 0,
-                scale: 1,
-                duration: 0.6,
-                stagger: 0.06,
-                ease: 'power2.out',
-                delay: 0.12
-              }
+                ease: 'power3.out' 
+              },
+              0.18
             );
           }
         } else {
@@ -874,18 +843,77 @@ const setupMagneticControls = () => {
     });
     setTimeout(handlePrint, 500);
   } else {
-    // Delay observing to align with the portal overlay fade-out (at 60% of 1.8s, ~1080ms)
-    setTimeout(() => {
-      document.querySelectorAll('.reveal').forEach(element => entranceObserver.observe(element));
-    }, 1000);
+    // Orchestrate the initial entrance sequence for elements visible on load
+    if (window.gsap) {
+      const allReveals = Array.from(document.querySelectorAll('.reveal'));
+      const initialReveals = [];
+      const scrollReveals = [];
 
-    // Safety fallback delayed to 3500ms to allow all normal entrance animations to complete smoothly
+      allReveals.forEach(element => {
+        const rect = element.getBoundingClientRect();
+        // Check if element is in/near the viewport on load
+        if (rect.top < window.innerHeight - 50) {
+          initialReveals.push(element);
+        } else {
+          scrollReveals.push(element);
+        }
+      });
+
+      // Coordinated timeline for elements in initial viewport
+      const tl = gsap.timeline({ delay: 0.95 }); // Starts exactly as the portal overlay starts to fade out
+
+      initialReveals.forEach((section, index) => {
+        tl.fromTo(section,
+          { opacity: 0, y: 15, scale: 0.99 },
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 1.1,
+            ease: 'power4.out',
+            clearProps: 'transform,scale,opacity,transition',
+            onComplete: () => {
+              section.classList.add('visible');
+            }
+          },
+          index * 0.12 // Staggered section delays
+        );
+
+        // Stagger internal elements within this section
+        const childItems = section.querySelectorAll('.tl-item, .pill, .proj-link');
+        if (childItems.length) {
+          tl.fromTo(childItems,
+            { opacity: 0, y: 8 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.85,
+              stagger: 0.04,
+              ease: 'power3.out'
+            },
+            index * 0.12 + 0.18 // Offset stagger start relative to parent section
+          );
+        }
+      });
+
+      // Observe the remaining scroll reveals
+      scrollReveals.forEach(element => entranceObserver.observe(element));
+    } else {
+      // Fallback: observe everything immediately
+      document.querySelectorAll('.reveal').forEach(element => entranceObserver.observe(element));
+    }
+
+    // Safety fallback delayed to 4000ms to allow all normal entrance animations to complete smoothly
     setTimeout(() => {
       const remainingHidden = document.querySelectorAll('.reveal:not(.visible)');
       if (remainingHidden.length) { 
         remainingHidden.forEach(element => {
           if (window.gsap) {
             gsap.set(element, { opacity: 1, scale: 1, y: 0 });
+            const childItems = element.querySelectorAll('.tl-item, .pill, .proj-link');
+            if (childItems.length) {
+              gsap.set(childItems, { opacity: 1, y: 0 });
+            }
           } else {
             element.style.opacity = '1';
             element.style.transform = 'none';
@@ -893,7 +921,7 @@ const setupMagneticControls = () => {
           element.classList.add('visible');
         });
       }
-    }, 3500);
+    }, 4000);
   }
   
   setTimeout(() => {
