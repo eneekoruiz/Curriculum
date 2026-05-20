@@ -828,7 +828,7 @@ const setupMagneticControls = () => {
         }
       }
     });
-  }, { threshold: 0, rootMargin: '0px 0px -50px 0px' });
+  }, { threshold: 0, rootMargin: '0px 0px 100px 0px' });
 
   // Handle direct headless print query
   if (urlParameters.has('print')) {
