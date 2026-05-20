@@ -915,7 +915,7 @@ h1 strong {
 .col-side {
   display: flex;
   flex-direction: column;
-  gap: calc(var(--s5) * 1.2); /* 20% more spacing to occupy sidebar space elegantly */
+  gap: var(--s5);
 }
 
 /* ── SECTION TITLE ──────────────────────────────────── */
