@@ -98,8 +98,8 @@ module.exports = async (req, res) => {
     // Force light theme and print layout rendering parameters
     const targetUrl = new URL(`/?print=true&lang=${lang}&theme=light`, `${protocol}://${host}`);
     
-    // Set viewport to A4 dimensions at 96 DPI to ensure consistent layout rendering
-    await page.setViewport({ width: 794, height: 1123, deviceScaleFactor: 2 });
+    // Set viewport to desktop dimensions for exact design parity and scale rendering
+    await page.setViewport({ width: 1080, height: 1528, deviceScaleFactor: 2 });
     await page.setCacheEnabled(true);
     
     page.setDefaultNavigationTimeout(12000);

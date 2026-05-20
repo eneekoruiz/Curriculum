@@ -9,6 +9,7 @@ const BIRTH_DATE = '2005-07-28';
 const html = document.documentElement;
 const root = document.getElementById('main-content');
 let currentLang = 'es';
+let themeTransitionTimeout = null;
 
 /* ── HELPERS & UTILITIES ────────────────────────────────────────── */
 
@@ -79,10 +80,18 @@ const updateFavicon = (isDarkTheme) => {
 /**
  * Applies the visual theme (light/dark) to the document and updates relevant meta tags and favicon.
  * @param {boolean} isDarkTheme 
+ * @param {boolean} animate 
  */
-const applyTheme = (isDarkTheme) => {
+const applyTheme = (isDarkTheme, animate = true) => {
   try {
     const themeValue = isDarkTheme ? 'dark' : 'light';
+    
+    if (animate) {
+      if (themeTransitionTimeout) {
+        clearTimeout(themeTransitionTimeout);
+      }
+      html.classList.add('theme-transitioning');
+    }
     
     html.setAttribute('data-theme', themeValue);
     html.style.colorScheme = themeValue;
@@ -94,6 +103,13 @@ const applyTheme = (isDarkTheme) => {
     
     safeStorage.set('cv-theme', themeValue);
     updateFavicon(isDarkTheme);
+    
+    if (animate) {
+      themeTransitionTimeout = setTimeout(() => {
+        html.classList.remove('theme-transitioning');
+        themeTransitionTimeout = null;
+      }, 250);
+    }
   } catch (error) {
     // Fail silently in case of paint issues during initial DOM setup
   }
