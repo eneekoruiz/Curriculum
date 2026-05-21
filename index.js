@@ -25,34 +25,32 @@ const playRevealTimeline = (timeline, section, offset = 0) => {
       : section.querySelectorAll('.sec-title, .course-item, .lang-chip, .skill-group, .tl-item, .proj-link');
 
   timeline.fromTo(section,
-    { opacity: 0, y: 22, scale: 0.988, filter: 'blur(8px)' },
+    { opacity: 0, y: 20, scale: 0.992, filter: 'blur(6px)' },
     {
       opacity: 1,
       y: 0,
       scale: 1,
       filter: 'blur(0px)',
-      duration: isHeader ? 0.95 : 0.9,
+      duration: isHeader ? 1.05 : 0.95,
       ease: 'power3.out',
       clearProps: 'transform,scale,opacity,transition,filter',
-      onComplete: () => {
-        section.classList.add('visible');
-      }
+      onComplete: () => section.classList.add('visible')
     },
     offset
   );
 
   if (childTargets.length) {
     timeline.fromTo(childTargets,
-      { opacity: 0, y: 12, filter: 'blur(4px)' },
+      { opacity: 0, y: 10, filter: 'blur(3px)' },
       {
         opacity: 1,
         y: 0,
         filter: 'blur(0px)',
-        duration: 0.72,
-        stagger: 0.055,
+        duration: 0.78,
+        stagger: 0.06,
         ease: 'power2.out'
       },
-      offset + (isHeader ? 0.12 : 0.14)
+      offset + (isHeader ? 0.14 : 0.16)
     );
   }
 };

@@ -151,9 +151,10 @@
   --f-mono: 'JetBrains Mono', 'Geist Mono', 'SF Mono', 'Fira Code', 'Roboto Mono', monospace;
 
   --ease: cubic-bezier(0.16, 1, 0.3, 1); /* Custom easeOutExpo: fast initial acceleration, beautiful slow deceleration */
-  --dur: 350ms; /* Highly elegant and responsive duration combined with expo easing */
-  --dur-fast: 180ms; /* Snappy transition for menus and quick icons */
-  --dur-smooth: 350ms; /* Smooth easing for spatial movement and glows */
+  --dur: 420ms; /* Slightly more deliberate, premium pacing */
+  --dur-fast: 220ms; /* Snappy but elegant */
+  --dur-smooth: 420ms; /* Smooth easing for spatial movement and glows */
+  --stagger: 0.07; /* default stagger for micro-interactions */
   --s1: 4px;
   --s2: 8px;
   --s3: 16px;
@@ -802,8 +803,8 @@ html[data-theme="dark"] #icon-moon {
 
 h1 {
   font-family: var(--f-serif);
-  font-size: clamp(2.5rem, 5.8vw, 4.4rem);
-  font-weight: 300;
+  font-size: clamp(2.2rem, 4.8vw, 3.8rem);
+  font-weight: 400;
   color: var(--c-ink);
   line-height: 1.08;
   letter-spacing: -0.03em;
