@@ -425,6 +425,27 @@ ul {
     transform: none !important;
     transition: none !important;
   }
+
+  /* Hide interactive controls and overlays that must not appear in PDF */
+  #topbar,
+  .ctrl,
+  .pdf-preview,
+  #lang-menu,
+  .copy-tip,
+  .grain,
+  .portal-arrival,
+  #scroll-progress,
+  .hide-print {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  /* Ensure the print-only QR stub is visible in the exported PDF */
+  .qr-print {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+  }
 }
 
 /* ── TOPBAR ─────────────────────────────────────────── */
