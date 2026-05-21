@@ -1359,15 +1359,20 @@ h1 strong {
 /* ── SCROLL REVEAL (Premium Entrance) ───────────────── */
 .reveal {
   opacity: 0;
-  transform: translateY(32px) scale(0.975);
-  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: opacity, transform;
+  transform: translateY(34px) scale(0.972);
+  transform-origin: center top;
+  filter: blur(10px);
+  transition: opacity 0.95s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.95s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.95s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform, filter;
+  backface-visibility: hidden;
 }
 
 .reveal.visible {
   opacity: 1;
-  transform: none;
+  transform: translateY(0) scale(1);
+  filter: blur(0);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1419,11 +1424,13 @@ h1 strong {
 .reveal .tl-item {
   opacity: 0;
   transform: translateY(16px);
-  transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
+  filter: blur(6px);
+  transition: opacity 0.8s var(--ease), transform 0.8s var(--ease), filter 0.8s var(--ease);
 }
 .reveal.visible .tl-item {
   opacity: 1;
   transform: translateY(0);
+  filter: blur(0);
 }
 .reveal.visible .tl-item:nth-child(1) { transition-delay: 0.06s; }
 .reveal.visible .tl-item:nth-child(2) { transition-delay: 0.14s; }
@@ -1434,11 +1441,13 @@ h1 strong {
 .reveal .skill-group {
   opacity: 0;
   transform: translateY(10px);
-  transition: opacity 0.75s var(--ease), transform 0.75s var(--ease);
+  filter: blur(5px);
+  transition: opacity 0.75s var(--ease), transform 0.75s var(--ease), filter 0.75s var(--ease);
 }
 .reveal.visible .skill-group {
   opacity: 1;
   transform: translateY(0);
+  filter: blur(0);
 }
 .reveal.visible .skill-group:nth-child(2) { transition-delay: 0.08s; }
 .reveal.visible .skill-group:nth-child(3) { transition-delay: 0.16s; }
@@ -1448,11 +1457,13 @@ h1 strong {
 .reveal .proj-link {
   opacity: 0;
   transform: translateY(8px) scale(0.96);
-  transition: opacity 0.65s var(--ease), transform 0.65s var(--ease), border-color var(--dur) var(--ease), color var(--dur) var(--ease), background var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+  filter: blur(4px);
+  transition: opacity 0.65s var(--ease), transform 0.65s var(--ease), filter 0.65s var(--ease), border-color var(--dur) var(--ease), color var(--dur) var(--ease), background var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
 }
 .reveal.visible .proj-link {
   opacity: 1;
   transform: translateY(0) scale(1);
+  filter: blur(0);
 }
 .reveal.visible .proj-link:nth-child(1) { transition-delay: 0.05s; }
 .reveal.visible .proj-link:nth-child(2) { transition-delay: 0.12s; }

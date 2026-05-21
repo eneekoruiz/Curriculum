@@ -809,29 +809,32 @@ const setupMagneticControls = () => {
         if (window.gsap) {
           const tl = gsap.timeline();
           tl.fromTo(target, 
-            { opacity: 0, y: 15, scale: 0.99 },
+            { opacity: 0, y: 28, scale: 0.975, rotationX: 7, filter: 'blur(10px)', transformPerspective: 1200 },
             { 
               opacity: 1, 
               y: 0, 
               scale: 1, 
-              duration: 1.1, 
+              rotationX: 0,
+              filter: 'blur(0px)',
+              duration: 1.15, 
               ease: 'power4.out',
-              clearProps: 'transform,scale,opacity,transition',
+              clearProps: 'transform,scale,opacity,transition,filter,rotationX,transformPerspective',
               onComplete: () => {
                 target.classList.add('visible');
               }
             }
           );
           
-          const childItems = target.querySelectorAll('.tl-item, .pill, .proj-link');
+          const childItems = target.querySelectorAll('.tl-item, .pill, .proj-link, .skill-group');
           if (childItems.length) {
             tl.fromTo(childItems,
-              { opacity: 0, y: 8 },
+              { opacity: 0, y: 14, filter: 'blur(6px)' },
               { 
                 opacity: 1, 
                 y: 0, 
+                filter: 'blur(0px)',
                 duration: 0.85, 
-                stagger: 0.04, 
+                stagger: 0.05, 
                 ease: 'power3.out' 
               },
               0.18
@@ -850,7 +853,7 @@ const setupMagneticControls = () => {
   if (urlParameters.has('print')) {
     document.querySelectorAll('.reveal').forEach(element => {
       if (window.gsap) {
-        gsap.set(element, { opacity: 1, scale: 1, y: 0 });
+        gsap.set(element, { opacity: 1, scale: 1, y: 0, filter: 'blur(0px)', rotationX: 0 });
       } else {
         element.style.opacity = '1';
         element.style.transform = 'none';
@@ -880,14 +883,16 @@ const setupMagneticControls = () => {
 
       initialReveals.forEach((section, index) => {
         tl.fromTo(section,
-          { opacity: 0, y: 15, scale: 0.99 },
+          { opacity: 0, y: 28, scale: 0.975, rotationX: 7, filter: 'blur(10px)', transformPerspective: 1200 },
           {
             opacity: 1,
             y: 0,
             scale: 1,
-            duration: 1.1,
+            rotationX: 0,
+            filter: 'blur(0px)',
+            duration: 1.15,
             ease: 'power4.out',
-            clearProps: 'transform,scale,opacity,transition',
+            clearProps: 'transform,scale,opacity,transition,filter,rotationX,transformPerspective',
             onComplete: () => {
               section.classList.add('visible');
             }
@@ -896,15 +901,16 @@ const setupMagneticControls = () => {
         );
 
         // Stagger internal elements within this section
-        const childItems = section.querySelectorAll('.tl-item, .pill, .proj-link');
+        const childItems = section.querySelectorAll('.tl-item, .pill, .proj-link, .skill-group');
         if (childItems.length) {
           tl.fromTo(childItems,
-            { opacity: 0, y: 8 },
+            { opacity: 0, y: 14, filter: 'blur(6px)' },
             {
               opacity: 1,
               y: 0,
+              filter: 'blur(0px)',
               duration: 0.85,
-              stagger: 0.04,
+              stagger: 0.05,
               ease: 'power3.out'
             },
             index * 0.12 + 0.18 // Offset stagger start relative to parent section
