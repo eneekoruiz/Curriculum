@@ -602,6 +602,46 @@ const setupMagneticControls = () => {
   });
 };
 
+const setupSurfacePolish = () => {
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    return;
+  }
+
+  const surfaces = document.querySelectorAll('.ctrl, .contact-row, .proj-link, .lm-item, .pill, .course-item, .lang-chip');
+  if (!surfaces.length) {
+    return;
+  }
+
+  surfaces.forEach(surface => {
+    surface.addEventListener('pointerenter', () => {
+      surface.style.setProperty('--mx', '50%');
+      surface.style.setProperty('--my', '50%');
+    });
+
+    surface.addEventListener('pointermove', (event) => {
+      if (event.pointerType !== 'mouse' && event.pointerType !== 'pen') {
+        return;
+      }
+
+      const rect = surface.getBoundingClientRect();
+      if (!rect.width || !rect.height) {
+        return;
+      }
+
+      const nextX = ((event.clientX - rect.left) / rect.width) * 100;
+      const nextY = ((event.clientY - rect.top) / rect.height) * 100;
+
+      surface.style.setProperty('--mx', `${Math.max(0, Math.min(100, nextX))}%`);
+      surface.style.setProperty('--my', `${Math.max(0, Math.min(100, nextY))}%`);
+    });
+
+    surface.addEventListener('pointerleave', () => {
+      surface.style.setProperty('--mx', '50%');
+      surface.style.setProperty('--my', '50%');
+    });
+  });
+};
+
 /* ── INITIALIZATION ───────────────────────────────────────────── */
 (function init() {
   // Force manual scroll position behavior on page load to prevent erratic scroll jumps
@@ -613,6 +653,7 @@ const setupMagneticControls = () => {
 
   // Initialize magnetic controls
   setupMagneticControls();
+  setupSurfacePolish();
 
   // Page load cover fade-out
   const arrivalOverlay = document.createElement('div');

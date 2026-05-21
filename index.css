@@ -451,6 +451,44 @@ ul {
   pointer-events: auto;
 }
 
+:root {
+  --mx: 50%;
+  --my: 50%;
+  --surface-elevate: translateY(-2px);
+}
+
+.ctrl,
+.contact-row,
+.proj-link,
+.lm-item,
+.pill,
+.course-item,
+.lang-chip,
+.tl-item {
+  position: relative;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+:is(.ctrl, .contact-row, .proj-link, .lm-item, .pill, .course-item, .lang-chip)::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  background: radial-gradient(120px circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, 0.22), transparent 58%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-fast) var(--ease);
+}
+
+[data-theme="dark"] :is(.ctrl, .contact-row, .proj-link, .lm-item, .pill, .course-item, .lang-chip)::before {
+  background: radial-gradient(120px circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, 0.08), transparent 58%);
+}
+
+:is(.ctrl, .contact-row, .proj-link, .lm-item, .pill, .course-item, .lang-chip):hover::before,
+:is(.ctrl, .contact-row, .proj-link, .lm-item, .pill, .course-item, .lang-chip):focus-visible::before {
+  opacity: 1;
+}
+
 .ctrl {
   display: flex;
   align-items: center;
@@ -480,7 +518,7 @@ ul {
   border-color: var(--c-brand);
   color: var(--c-ink);
   background: var(--c-accent-s);
-  transform: translateY(-1.5px);
+  transform: translateY(-1.5px) scale(1.01);
   box-shadow: 0 6px 15px var(--c-accent-s);
 }
 
@@ -713,6 +751,7 @@ html[data-theme="dark"] #icon-moon {
 .lm-item:hover {
   background: var(--c-accent-s);
   color: var(--c-ink);
+  transform: translateX(2px);
 }
 
 .lm-item.active {
@@ -863,7 +902,7 @@ h1 strong {
 .contact-row:hover {
   color: var(--c-ink);
   background: var(--c-surface);
-  transform: translateX(-4px);
+  transform: translateX(-4px) scale(1.01);
 }
 
 [dir="rtl"] .contact-row:hover {
@@ -996,6 +1035,10 @@ h1 strong {
   border-color: var(--c-brand);
 }
 
+.tl-item:hover {
+  transform: translateX(2px);
+}
+
 .tl-item:hover .tl-body::before {
   border-color: var(--c-brand);
   background: var(--c-brand);
@@ -1077,7 +1120,7 @@ h1 strong {
   border-color: var(--c-brand);
   color: var(--c-ink);
   background: var(--c-accent-s);
-  transform: translateY(-2px);
+  transform: translateY(-2px) scale(1.02);
   box-shadow: 0 6px 12px var(--c-accent-s);
 }
 
@@ -1098,7 +1141,7 @@ h1 strong {
   color: var(--c-ink);
   border-color: var(--c-brand);
   background: var(--c-accent-b);
-  transform: translateY(-2px);
+  transform: translateY(-2px) scale(1.02);
   box-shadow: 0 6px 12px var(--c-accent-s);
 }
 
@@ -1177,6 +1220,12 @@ h1 strong {
   grid-template-columns: minmax(98px, 1fr) auto;
   align-items: baseline;
   gap: 10px;
+  padding: 6px 0;
+  transition: transform var(--dur) var(--ease), opacity var(--dur) var(--ease);
+}
+
+.lang-chip:hover {
+  transform: translateX(3px);
 }
 
 .lang-chip strong {
@@ -1209,11 +1258,14 @@ h1 strong {
 .course-item {
   padding-left: var(--s3);
   border-left: 1px solid var(--c-rule);
-  transition: border-color var(--dur) var(--ease);
+  transition: border-color var(--dur) var(--ease), transform var(--dur) var(--ease), background var(--dur) var(--ease);
+  padding-top: 2px;
+  padding-bottom: 2px;
 }
 
 .course-item:hover {
   border-color: var(--c-accent);
+  transform: translateX(3px);
 }
 
 .course-name {
@@ -1260,7 +1312,7 @@ h1 strong {
   border-color: var(--c-brand);
   color: var(--c-ink);
   background: var(--c-accent-s);
-  transform: translateY(-2px);
+  transform: translateY(-2px) scale(1.01);
   box-shadow: 0 6px 14px var(--c-accent-s);
 }
 
