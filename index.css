@@ -304,32 +304,6 @@ ul {
   top: 0;
 }
 
-/* ── REVEAL ANIMATIONS ─────────────────────────────── */
-.reveal {
-  opacity: 0;
-  transform: translateY(15px) scale(0.99);
-  transition: opacity 1.1s var(--ease), transform 1.1s var(--ease);
-  will-change: transform, opacity;
-}
-
-.reveal.visible {
-  opacity: 1;
-  transform: none;
-}
-
-.reveal .tl-item,
-.reveal .pill,
-.reveal .proj-link {
-  opacity: 0;
-}
-
-.reveal.visible .tl-item,
-.reveal.visible .pill,
-.reveal.visible .proj-link {
-  opacity: 1;
-  transition: opacity 0.85s var(--ease);
-}
-
 /* ── PAGE FADE ─────────────────────────────────────── */
 #main-content {
   opacity: 1;
@@ -1359,12 +1333,12 @@ h1 strong {
 /* ── SCROLL REVEAL (Premium Entrance) ───────────────── */
 .reveal {
   opacity: 0;
-  transform: translateY(34px) scale(0.972);
+  transform: translateY(24px) scale(0.988);
   transform-origin: center top;
-  filter: blur(10px);
-  transition: opacity 0.95s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.95s cubic-bezier(0.16, 1, 0.3, 1),
-    filter 0.95s cubic-bezier(0.16, 1, 0.3, 1);
+  filter: blur(8px);
+  transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.9s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: opacity, transform, filter;
   backface-visibility: hidden;
 }
@@ -1421,44 +1395,65 @@ h1 strong {
 }
 
 /* ── Waterfall Stagger Reveal for Children ── */
+.site-header .eyebrow,
+.site-header h1,
+.site-header .tagline,
+.site-header .live-wrap,
+.site-header .contacts .contact-row,
+.profile .profile-label,
+.profile .profile-text,
+.reveal .sec-title,
+.reveal .course-item,
+.reveal .lang-chip,
 .reveal .tl-item {
   opacity: 0;
-  transform: translateY(16px);
-  filter: blur(6px);
+  transform: translateY(14px);
+  filter: blur(5px);
   transition: opacity 0.8s var(--ease), transform 0.8s var(--ease), filter 0.8s var(--ease);
 }
+.site-header.visible .eyebrow,
+.site-header.visible h1,
+.site-header.visible .tagline,
+.site-header.visible .live-wrap,
+.site-header.visible .contacts .contact-row,
+.profile.visible .profile-label,
+.profile.visible .profile-text,
+.reveal.visible .sec-title,
+.reveal.visible .course-item,
+.reveal.visible .lang-chip,
 .reveal.visible .tl-item {
   opacity: 1;
   transform: translateY(0);
   filter: blur(0);
 }
-.reveal.visible .tl-item:nth-child(1) { transition-delay: 0.06s; }
-.reveal.visible .tl-item:nth-child(2) { transition-delay: 0.14s; }
-.reveal.visible .tl-item:nth-child(3) { transition-delay: 0.22s; }
-.reveal.visible .tl-item:nth-child(4) { transition-delay: 0.30s; }
-.reveal.visible .tl-item:nth-child(5) { transition-delay: 0.38s; }
 
-.reveal .skill-group {
-  opacity: 0;
-  transform: translateY(10px);
-  filter: blur(5px);
-  transition: opacity 0.75s var(--ease), transform 0.75s var(--ease), filter 0.75s var(--ease);
-}
-.reveal.visible .skill-group {
-  opacity: 1;
-  transform: translateY(0);
-  filter: blur(0);
-}
-.reveal.visible .skill-group:nth-child(2) { transition-delay: 0.08s; }
-.reveal.visible .skill-group:nth-child(3) { transition-delay: 0.16s; }
-.reveal.visible .skill-group:nth-child(4) { transition-delay: 0.24s; }
-.reveal.visible .skill-group:nth-child(5) { transition-delay: 0.32s; }
+.site-header.visible .eyebrow { transition-delay: 0.04s; }
+.site-header.visible h1 { transition-delay: 0.1s; }
+.site-header.visible .tagline { transition-delay: 0.16s; }
+.site-header.visible .live-wrap { transition-delay: 0.22s; }
+.site-header.visible .contacts .contact-row:nth-child(1) { transition-delay: 0.28s; }
+.site-header.visible .contacts .contact-row:nth-child(2) { transition-delay: 0.34s; }
+
+.profile.visible .profile-label { transition-delay: 0.04s; }
+.profile.visible .profile-text { transition-delay: 0.12s; }
+
+.reveal.visible .sec-title { transition-delay: 0.05s; }
+.reveal.visible .course-item:nth-child(1) { transition-delay: 0.06s; }
+.reveal.visible .course-item:nth-child(2) { transition-delay: 0.12s; }
+.reveal.visible .lang-chip:nth-child(1) { transition-delay: 0.06s; }
+.reveal.visible .lang-chip:nth-child(2) { transition-delay: 0.12s; }
+.reveal.visible .lang-chip:nth-child(3) { transition-delay: 0.18s; }
+.reveal.visible .tl-item:nth-child(1) { transition-delay: 0.07s; }
+.reveal.visible .tl-item:nth-child(2) { transition-delay: 0.14s; }
+.reveal.visible .tl-item:nth-child(3) { transition-delay: 0.21s; }
+.reveal.visible .tl-item:nth-child(4) { transition-delay: 0.28s; }
+.reveal.visible .tl-item:nth-child(5) { transition-delay: 0.35s; }
 
 .reveal .proj-link {
   opacity: 0;
-  transform: translateY(8px) scale(0.96);
+  transform: translateY(10px) scale(0.985);
   filter: blur(4px);
-  transition: opacity 0.65s var(--ease), transform 0.65s var(--ease), filter 0.65s var(--ease), border-color var(--dur) var(--ease), color var(--dur) var(--ease), background var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease), filter 0.7s var(--ease), border-color var(--dur) var(--ease), color var(--dur) var(--ease), background var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
 }
 .reveal.visible .proj-link {
   opacity: 1;

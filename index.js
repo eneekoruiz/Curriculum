@@ -11,6 +11,52 @@ const root = document.getElementById('main-content');
 let currentLang = 'es';
 let themeTransitionTimeout = null;
 
+const playRevealTimeline = (timeline, section, offset = 0) => {
+  if (!section || !timeline) {
+    return;
+  }
+
+  const isHeader = section.classList.contains('site-header');
+  const isProfile = section.classList.contains('profile');
+  const childTargets = isHeader
+    ? section.querySelectorAll('.eyebrow, h1, .tagline, .live-wrap, .contact-row')
+    : isProfile
+      ? section.querySelectorAll('.profile-label, .profile-text')
+      : section.querySelectorAll('.sec-title, .course-item, .lang-chip, .skill-group, .tl-item, .proj-link');
+
+  timeline.fromTo(section,
+    { opacity: 0, y: 22, scale: 0.988, filter: 'blur(8px)' },
+    {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      filter: 'blur(0px)',
+      duration: isHeader ? 0.95 : 0.9,
+      ease: 'power3.out',
+      clearProps: 'transform,scale,opacity,transition,filter',
+      onComplete: () => {
+        section.classList.add('visible');
+      }
+    },
+    offset
+  );
+
+  if (childTargets.length) {
+    timeline.fromTo(childTargets,
+      { opacity: 0, y: 12, filter: 'blur(4px)' },
+      {
+        opacity: 1,
+        y: 0,
+        filter: 'blur(0px)',
+        duration: 0.72,
+        stagger: 0.055,
+        ease: 'power2.out'
+      },
+      offset + (isHeader ? 0.12 : 0.14)
+    );
+  }
+};
+
 /* ── HELPERS & UTILITIES ────────────────────────────────────────── */
 
 /**
@@ -808,38 +854,7 @@ const setupMagneticControls = () => {
         
         if (window.gsap) {
           const tl = gsap.timeline();
-          tl.fromTo(target, 
-            { opacity: 0, y: 28, scale: 0.975, rotationX: 7, filter: 'blur(10px)', transformPerspective: 1200 },
-            { 
-              opacity: 1, 
-              y: 0, 
-              scale: 1, 
-              rotationX: 0,
-              filter: 'blur(0px)',
-              duration: 1.15, 
-              ease: 'power4.out',
-              clearProps: 'transform,scale,opacity,transition,filter,rotationX,transformPerspective',
-              onComplete: () => {
-                target.classList.add('visible');
-              }
-            }
-          );
-          
-          const childItems = target.querySelectorAll('.tl-item, .pill, .proj-link, .skill-group');
-          if (childItems.length) {
-            tl.fromTo(childItems,
-              { opacity: 0, y: 14, filter: 'blur(6px)' },
-              { 
-                opacity: 1, 
-                y: 0, 
-                filter: 'blur(0px)',
-                duration: 0.85, 
-                stagger: 0.05, 
-                ease: 'power3.out' 
-              },
-              0.18
-            );
-          }
+          playRevealTimeline(tl, target, 0);
         } else {
           target.style.opacity = '1';
           target.style.transform = 'none';
@@ -853,7 +868,7 @@ const setupMagneticControls = () => {
   if (urlParameters.has('print')) {
     document.querySelectorAll('.reveal').forEach(element => {
       if (window.gsap) {
-        gsap.set(element, { opacity: 1, scale: 1, y: 0, filter: 'blur(0px)', rotationX: 0 });
+        gsap.set(element, { opacity: 1, scale: 1, y: 0, filter: 'blur(0px)' });
       } else {
         element.style.opacity = '1';
         element.style.transform = 'none';
@@ -882,40 +897,7 @@ const setupMagneticControls = () => {
       const tl = gsap.timeline({ delay: 0.35 }); // Starts as page cover begins to fade out
 
       initialReveals.forEach((section, index) => {
-        tl.fromTo(section,
-          { opacity: 0, y: 28, scale: 0.975, rotationX: 7, filter: 'blur(10px)', transformPerspective: 1200 },
-          {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            rotationX: 0,
-            filter: 'blur(0px)',
-            duration: 1.15,
-            ease: 'power4.out',
-            clearProps: 'transform,scale,opacity,transition,filter,rotationX,transformPerspective',
-            onComplete: () => {
-              section.classList.add('visible');
-            }
-          },
-          index * 0.12 // Staggered section delays
-        );
-
-        // Stagger internal elements within this section
-        const childItems = section.querySelectorAll('.tl-item, .pill, .proj-link, .skill-group');
-        if (childItems.length) {
-          tl.fromTo(childItems,
-            { opacity: 0, y: 14, filter: 'blur(6px)' },
-            {
-              opacity: 1,
-              y: 0,
-              filter: 'blur(0px)',
-              duration: 0.85,
-              stagger: 0.05,
-              ease: 'power3.out'
-            },
-            index * 0.12 + 0.18 // Offset stagger start relative to parent section
-          );
-        }
+        playRevealTimeline(tl, section, index * 0.12);
       });
 
       // Observe the remaining scroll reveals
