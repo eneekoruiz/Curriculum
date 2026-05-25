@@ -24,6 +24,12 @@ const playRevealTimeline = (timeline, section, offset = 0) => {
       ? section.querySelectorAll('.profile-label, .profile-text')
       : section.querySelectorAll('.sec-title, .course-item, .lang-chip, .skill-group, .tl-item, .proj-link');
 
+  // Disable CSS transitions during GSAP animation to avoid rendering conflicts
+  section.style.transition = 'none';
+  childTargets.forEach(el => {
+    el.style.transition = 'none';
+  });
+
   timeline.fromTo(section,
     { opacity: 0, y: 20, scale: 0.992, filter: 'blur(6px)' },
     {
@@ -48,7 +54,8 @@ const playRevealTimeline = (timeline, section, offset = 0) => {
         filter: 'blur(0px)',
         duration: 0.78,
         stagger: 0.06,
-        ease: 'power2.out'
+        ease: 'power2.out',
+        clearProps: 'transform,opacity,transition,filter'
       },
       offset + (isHeader ? 0.14 : 0.16)
     );
@@ -876,6 +883,12 @@ const setupSurfacePolish = () => {
       progressBar.style.width = scrollableRange <= 0 ? '0%' : ((window.scrollY / scrollableRange) * 100) + '%';
     }
   });
+
+  // Disable automatic scroll restoration on refresh and force page to top to trigger animations cleanly
+  if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual';
+  }
+  window.scrollTo(0, 0);
 
   // i18n & initial URL query initialization
   const urlParameters = new URLSearchParams(window.location.search);
