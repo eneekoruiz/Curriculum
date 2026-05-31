@@ -931,6 +931,7 @@ const setupSurfacePolish = () => {
   } else {
     // Orchestrate the initial entrance sequence for elements visible on load
     if (window.gsap) {
+      document.documentElement.classList.add('gsap-active');
       const allReveals = Array.from(document.querySelectorAll('.reveal'));
       const initialReveals = [];
       const scrollReveals = [];

@@ -1438,6 +1438,12 @@ h1 strong {
   filter: blur(0);
 }
 
+/* Disable CSS transitions when GSAP handles the animations to prevent double-triggering on clearProps */
+html.gsap-active .reveal,
+html.gsap-active .reveal * {
+  transition: none !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .reveal {
     opacity: 1;
@@ -1811,7 +1817,7 @@ h1 strong {
     flex-direction: column !important;
     width: 1080px !important;
     height: auto !important;
-    padding: 50px 60px 30px 60px !important;
+    padding: 35px 50px 25px 50px !important;
     margin: 0 !important;
     box-sizing: border-box !important;
     background: transparent !important;
@@ -1839,7 +1845,7 @@ h1 strong {
     padding: 0 !important;
     margin: 0 auto !important;
     min-height: auto !important;
-    zoom: 0.72;
+    zoom: 0.84;
   }
 
   #main-content {
