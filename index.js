@@ -31,14 +31,14 @@ const playRevealTimeline = (timeline, section, offset = 0) => {
   });
 
   timeline.fromTo(section,
-    { opacity: 0, y: 20, scale: 0.992, filter: 'blur(6px)' },
+    { opacity: 0, y: 15, scale: 0.995, filter: 'blur(3px)' },
     {
       opacity: 1,
       y: 0,
       scale: 1,
       filter: 'blur(0px)',
-      duration: isHeader ? 1.05 : 0.95,
-      ease: 'power3.out',
+      duration: isHeader ? 0.65 : 0.55,
+      ease: 'power2.out',
       clearProps: 'transform,scale,opacity,transition,filter',
       onComplete: () => section.classList.add('visible')
     },
@@ -47,17 +47,17 @@ const playRevealTimeline = (timeline, section, offset = 0) => {
 
   if (childTargets.length) {
     timeline.fromTo(childTargets,
-      { opacity: 0, y: 10, filter: 'blur(3px)' },
+      { opacity: 0, y: 8, filter: 'blur(2px)' },
       {
         opacity: 1,
         y: 0,
         filter: 'blur(0px)',
-        duration: 0.78,
-        stagger: 0.06,
+        duration: 0.45,
+        stagger: 0.04,
         ease: 'power2.out',
         clearProps: 'transform,opacity,transition,filter'
       },
-      offset + (isHeader ? 0.14 : 0.16)
+      offset + (isHeader ? 0.08 : 0.1)
     );
   }
 };
@@ -664,7 +664,7 @@ const setupSurfacePolish = () => {
   const arrivalOverlay = document.createElement('div');
   arrivalOverlay.className = 'portal-arrival';
   document.body.appendChild(arrivalOverlay);
-  setTimeout(() => arrivalOverlay.remove(), 800);
+  setTimeout(() => arrivalOverlay.remove(), 1000);
 
   // Setup language dropdown menu list
   const languageMenu = document.getElementById('lang-menu');
