@@ -40,6 +40,7 @@ const playRevealTimeline = (timeline, section, offset = 0) => {
       duration: isHeader ? 0.65 : 0.55,
       ease: 'power2.out',
       clearProps: 'transform,scale,opacity,transition,filter',
+      onStart: () => section.classList.add('visible'),
       onComplete: () => section.classList.add('visible')
     },
     offset
