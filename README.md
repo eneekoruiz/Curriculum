@@ -20,6 +20,10 @@ npm install
 
 PDF generation uses the Node dependencies required by the Vercel function.
 
+## Architecture
+
+The CV is a dependency-free static site. HTML provides the document structure, CSS includes the responsive and A4 print layouts, and a small JavaScript translation dictionary updates the selected language entirely in the browser.
+
 ## Links
 
 - DeepWiki: https://deepwiki.com/eneekoruiz/Curriculum
