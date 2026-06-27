@@ -31,15 +31,14 @@ const playRevealTimeline = (timeline, section, offset = 0) => {
   });
 
   timeline.fromTo(section,
-    { opacity: 0, y: 15, scale: 0.995, filter: 'blur(3px)' },
+    { opacity: 0, y: 15, scale: 0.995 },
     {
       opacity: 1,
       y: 0,
       scale: 1,
-      filter: 'blur(0px)',
       duration: isHeader ? 0.65 : 0.55,
       ease: 'power2.out',
-      clearProps: 'transform,scale,opacity,transition,filter',
+      clearProps: 'transform,scale,opacity,transition',
       onStart: () => section.classList.add('visible'),
       onComplete: () => section.classList.add('visible')
     },
@@ -48,15 +47,14 @@ const playRevealTimeline = (timeline, section, offset = 0) => {
 
   if (childTargets.length) {
     timeline.fromTo(childTargets,
-      { opacity: 0, y: 8, filter: 'blur(2px)' },
+      { opacity: 0, y: 8 },
       {
         opacity: 1,
         y: 0,
-        filter: 'blur(0px)',
         duration: 0.45,
         stagger: 0.04,
         ease: 'power2.out',
-        clearProps: 'transform,opacity,transition,filter'
+        clearProps: 'transform,opacity,transition'
       },
       offset + (isHeader ? 0.08 : 0.1)
     );
@@ -897,7 +895,7 @@ const setupSurfacePolish = () => {
   if (urlParameters.has('print')) {
     document.querySelectorAll('.reveal').forEach(element => {
       if (window.gsap) {
-        gsap.set(element, { opacity: 1, scale: 1, y: 0, filter: 'blur(0px)' });
+        gsap.set(element, { opacity: 1, scale: 1, y: 0 });
       } else {
         element.style.opacity = '1';
         element.style.transform = 'none';
