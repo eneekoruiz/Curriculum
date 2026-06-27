@@ -456,17 +456,6 @@
   </div>
 
   <div class="grain" aria-hidden="true"></div>
-  
-  <script>
-    // PWA Service Worker Registration
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js').catch(error => {
-          console.error('ServiceWorker registration failed:', error);
-        });
-      });
-    }
-  </script>
 </body>
 
 </html>

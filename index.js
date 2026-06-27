@@ -916,7 +916,7 @@ const setupSurfacePolish = () => {
       });
 
       // Coordinated timeline for elements in initial viewport
-      const tl = gsap.timeline(); // Starts immediately
+      const tl = gsap.timeline({ delay: 0.15 }); // Small delay to allow browser paint and ensure transition is visible
 
       initialReveals.forEach((section, index) => {
         playRevealTimeline(tl, section, index * 0.12);
@@ -1025,5 +1025,14 @@ const setupSurfacePolish = () => {
   };
   
   initPremiumUI();
+
+  // PWA Service Worker Registration
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js').catch(error => {
+        console.error('ServiceWorker registration failed:', error);
+      });
+    });
+  }
 
 })();
