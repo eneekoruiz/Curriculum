@@ -1907,3 +1907,113 @@ html.gsap-active .reveal * {
   visibility: hidden !important;
   pointer-events: none !important;
 }
+
+/* ── PREMIUM UI: Custom Cursor ── */
+@media (pointer: fine) {
+  body {
+    cursor: none;
+  }
+  
+  .cursor-dot {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 8px;
+    height: 8px;
+    background-color: var(--c-brand);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 10001;
+    transition: width 0.2s, height 0.2s, background-color 0.2s;
+  }
+
+  .cursor-outline {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 40px;
+    height: 40px;
+    border: 1.5px solid var(--c-brand);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 10000;
+    transition: width 0.2s, height 0.2s, border-color 0.2s;
+  }
+
+  /* When hovering over interactive elements */
+  .magnetic:hover ~ .cursor-dot,
+  a:hover ~ .cursor-dot,
+  button:hover ~ .cursor-dot,
+  .pill:hover ~ .cursor-dot {
+    width: 0px;
+    height: 0px;
+  }
+
+  .magnetic:hover ~ .cursor-outline,
+  a:hover ~ .cursor-outline,
+  button:hover ~ .cursor-outline,
+  .pill:hover ~ .cursor-outline {
+    width: 60px;
+    height: 60px;
+    border-color: var(--c-accent);
+    background-color: var(--c-accent-b);
+  }
+}
+
+/* ── PREMIUM UI: 3D Hover & Glassmorphism ── */
+.magnetic {
+  display: inline-block;
+  transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.glass-card {
+  background: var(--c-bg);
+  border: 1px solid var(--c-rule);
+  border-radius: 12px;
+  padding: var(--s4);
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s ease, border-color 0.4s ease;
+  transform-style: preserve-3d;
+  will-change: transform;
+  position: relative;
+  overflow: hidden;
+}
+
+[data-theme="dark"] .glass-card {
+  background: rgba(30, 41, 59, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.glass-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), var(--c-accent-s) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.glass-card:hover {
+  border-color: var(--c-accent);
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="dark"] .glass-card:hover {
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5);
+}
+
+.glass-card:hover::before {
+  opacity: 1;
+}
+
+.glass-card > * {
+  position: relative;
+  z-index: 1;
+  transform: translateZ(20px);
+}
+

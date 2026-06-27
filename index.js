@@ -961,4 +961,77 @@ const setupSurfacePolish = () => {
   setTimeout(() => {
     document.documentElement.classList.add('theme-loaded');
   }, 100);
+
+  // --- PREMIUM UI INITIALIZATION ---
+  const initPremiumUI = () => {
+    if (!window.matchMedia('(pointer: fine)').matches) return;
+
+    const cursorDot = document.querySelector('.cursor-dot');
+    const cursorOutline = document.querySelector('.cursor-outline');
+    
+    if (cursorDot && cursorOutline && window.gsap) {
+      let mouseX = window.innerWidth / 2;
+      let mouseY = window.innerHeight / 2;
+      
+      window.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        
+        gsap.to(cursorDot, { x: mouseX, y: mouseY, duration: 0.1, ease: 'power2.out' });
+        gsap.to(cursorOutline, { x: mouseX, y: mouseY, duration: 0.5, ease: 'power2.out' });
+      });
+      
+      const magnetics = document.querySelectorAll('.magnetic');
+      magnetics.forEach(el => {
+        el.addEventListener('mousemove', (e) => {
+          const rect = el.getBoundingClientRect();
+          const cx = rect.left + rect.width / 2;
+          const cy = rect.top + rect.height / 2;
+          const dx = (e.clientX - cx) * 0.3;
+          const dy = (e.clientY - cy) * 0.3;
+          gsap.to(el, { x: dx, y: dy, duration: 0.4, ease: 'power2.out' });
+        });
+        el.addEventListener('mouseleave', () => {
+          gsap.to(el, { x: 0, y: 0, duration: 0.6, ease: 'elastic.out(1, 0.3)' });
+        });
+      });
+
+      const cards = document.querySelectorAll('.glass-card');
+      cards.forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          
+          card.style.setProperty('--mx', `${x}px`);
+          card.style.setProperty('--my', `${y}px`);
+          
+          const centerX = rect.width / 2;
+          const centerY = rect.height / 2;
+          const rotateX = ((y - centerY) / centerY) * -5;
+          const rotateY = ((x - centerX) / centerX) * 5;
+          
+          gsap.to(card, {
+            rotationX: rotateX,
+            rotationY: rotateY,
+            duration: 0.4,
+            ease: 'power2.out',
+            transformPerspective: 1000
+          });
+        });
+        
+        card.addEventListener('mouseleave', () => {
+          gsap.to(card, {
+            rotationX: 0,
+            rotationY: 0,
+            duration: 0.6,
+            ease: 'power2.out'
+          });
+        });
+      });
+    }
+  };
+  
+  initPremiumUI();
+
 })();
