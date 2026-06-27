@@ -69,7 +69,9 @@ const T = {
     aria_lang: 'Seleccionar idioma de la interfaz',
     aria_copy_email: 'Copiar dirección de email',
     aria_copy_phone: 'Copiar número de teléfono',
-    skip_link: 'Saltar al contenido'
+    skip_link: 'Saltar al contenido',
+    btn_vcard: 'Guardar Contacto',
+    aria_download_vcard: 'Download vCard'
   },
 
   en: {
@@ -141,7 +143,9 @@ const T = {
     aria_lang: 'Select interface language',
     aria_copy_email: 'Copy email address',
     aria_copy_phone: 'Copy phone number',
-    skip_link: 'Skip to content'
+    skip_link: 'Skip to content',
+    btn_vcard: 'Save Contact',
+    aria_download_vcard: 'Download vCard'
   },
 
   eu: {
@@ -213,7 +217,9 @@ const T = {
     aria_lang: 'Hautatu interfazearen hizkuntza',
     aria_copy_email: 'Kopiatu posta elektronikoa',
     aria_copy_phone: 'Kopiatu telefono zenbakia',
-    skip_link: 'Edukira joan'
+    skip_link: 'Edukira joan',
+    btn_vcard: 'Save Contact',
+    aria_download_vcard: 'Download vCard'
   },
 
   fr: {
@@ -285,7 +291,9 @@ const T = {
     aria_lang: 'Sélectionner la langue de l\'interface',
     aria_copy_email: 'Copier l\'adresse e-mail',
     aria_copy_phone: 'Copier le numéro de téléphone',
-    skip_link: 'Aller au contenu'
+    skip_link: 'Aller au contenu',
+    btn_vcard: 'Save Contact',
+    aria_download_vcard: 'Download vCard'
   },
 
   de: {
@@ -357,7 +365,9 @@ const T = {
     aria_lang: 'Sprache der Benutzeroberfläche wählen',
     aria_copy_email: 'E-Mail-Adresse kopieren',
     aria_copy_phone: 'Telefonnummer kopieren',
-    skip_link: 'Zum Inhalt springen'
+    skip_link: 'Zum Inhalt springen',
+    btn_vcard: 'Save Contact',
+    aria_download_vcard: 'Download vCard'
   },
 
   it: {
@@ -429,7 +439,9 @@ const T = {
     aria_lang: 'Seleziona la lingua dell\'interfaccia',
     aria_copy_email: 'Copia l\'indirizzo e-mail',
     aria_copy_phone: 'Copia il numero di telefono',
-    skip_link: 'Vai al contenuto'
+    skip_link: 'Vai al contenuto',
+    btn_vcard: 'Save Contact',
+    aria_download_vcard: 'Download vCard'
   },
 
   pt: {
@@ -501,7 +513,9 @@ const T = {
     aria_lang: 'Selecionar idioma da interface',
     aria_copy_email: 'Copiar endereço de e-mail',
     aria_copy_phone: 'Copiar número de telefone',
-    skip_link: 'Ir para o conteúdo'
+    skip_link: 'Ir para o conteúdo',
+    btn_vcard: 'Save Contact',
+    aria_download_vcard: 'Download vCard'
   },
 
   ca: {
@@ -573,7 +587,9 @@ const T = {
     aria_lang: 'Seleccionar idioma de la interfaz',
     aria_copy_email: 'Copiar adreça de correu',
     aria_copy_phone: 'Copiar número de telèfon',
-    skip_link: 'Anar al contingut'
+    skip_link: 'Anar al contingut',
+    btn_vcard: 'Save Contact',
+    aria_download_vcard: 'Download vCard'
   },
 
   gl: {
@@ -645,7 +661,9 @@ const T = {
     aria_lang: 'Seleccionar idioma da interface',
     aria_copy_email: 'Copiar enderezo de correo',
     aria_copy_phone: 'Copiar número de teléfono',
-    skip_link: 'Ir ao contido'
+    skip_link: 'Ir ao contido',
+    btn_vcard: 'Save Contact',
+    aria_download_vcard: 'Download vCard'
   },
 
   nl: {
@@ -717,7 +735,9 @@ const T = {
     aria_lang: 'Interfacetaal selecteren',
     aria_copy_email: 'E-mailadres kopiëren',
     aria_copy_phone: 'Telefoonnummer kopiëren',
-    skip_link: 'Ga naar inhoud'
+    skip_link: 'Ga naar inhoud',
+    btn_vcard: 'Save Contact',
+    aria_download_vcard: 'Download vCard'
   },
 
   ru: {
@@ -789,7 +809,9 @@ const T = {
     aria_lang: 'Выбрать язык интерфейса',
     aria_copy_email: 'Копировать адрес эл. почты',
     aria_copy_phone: 'Копировать номер телефона',
-    skip_link: 'Перейти к содержимому'
+    skip_link: 'Перейти к содержимому',
+    btn_vcard: 'Save Contact',
+    aria_download_vcard: 'Download vCard'
   },
 
   zh: {
@@ -861,7 +883,9 @@ const T = {
     aria_lang: '选择界面语言',
     aria_copy_email: '复制电子邮件地址',
     aria_copy_phone: '复制电话号码',
-    skip_link: '跳至内容'
+    skip_link: '跳至内容',
+    btn_vcard: 'Save Contact',
+    aria_download_vcard: 'Download vCard'
   },
 
   ja: {
@@ -933,7 +957,9 @@ const T = {
     aria_lang: 'インターフェース言語を選択',
     aria_copy_email: 'メールアドレスをコピー',
     aria_copy_phone: '電話番号をコピー',
-    skip_link: 'コンテンツにスキップ'
+    skip_link: 'コンテンツにスキップ',
+    btn_vcard: 'Save Contact',
+    aria_download_vcard: 'Download vCard'
   },
 
   ko: {
@@ -1005,7 +1031,9 @@ const T = {
     aria_lang: '인터페이스 언어 선택',
     aria_copy_email: '이메일 주소 복사',
     aria_copy_phone: '전화번호 복사',
-    skip_link: '콘텐츠로 건너뛰기'
+    skip_link: '콘텐츠로 건너뛰기',
+    btn_vcard: 'Save Contact',
+    aria_download_vcard: 'Download vCard'
   },
 
   ar: {
@@ -1077,7 +1105,9 @@ const T = {
     aria_lang: 'اختر لغة الواجهة',
     aria_copy_email: 'نسخ عنوان البريد الإلكتروني',
     aria_copy_phone: 'نسخ رقم الهاتف',
-    skip_link: 'انتقل إلى المحتوى'
+    skip_link: 'انتقل إلى المحتوى',
+    btn_vcard: 'Save Contact',
+    aria_download_vcard: 'Download vCard'
   },
 
   he: {
@@ -1149,7 +1179,9 @@ const T = {
     aria_lang: 'בחר שפת ממשק',
     aria_copy_email: 'העתק כתובת אימייל',
     aria_copy_phone: 'העתק מספר טלפון',
-    skip_link: 'דלג לתוכן'
+    skip_link: 'דלג לתוכן',
+    btn_vcard: 'Save Contact',
+    aria_download_vcard: 'Download vCard'
   },
 
   sv: {
@@ -1221,7 +1253,9 @@ const T = {
     aria_lang: 'Välj gränssnittsspråk',
     aria_copy_email: 'Kopiera e-postadress',
     aria_copy_phone: 'Kopiera telefonnummer',
-    skip_link: 'Hoppa till innehåll'
+    skip_link: 'Hoppa till innehåll',
+    btn_vcard: 'Save Contact',
+    aria_download_vcard: 'Download vCard'
   },
 
   pl: {
@@ -1293,7 +1327,9 @@ const T = {
     aria_lang: 'Wybierz język interfejsu',
     aria_copy_email: 'Kopiuj adres e-mail',
     aria_copy_phone: 'Kopiuj numer telefonu',
-    skip_link: 'Przejdź do treści'
+    skip_link: 'Przejdź do treści',
+    btn_vcard: 'Save Contact',
+    aria_download_vcard: 'Download vCard'
   },
 
   no: {
@@ -1365,7 +1401,9 @@ const T = {
     aria_lang: 'Velg grensesnittspråk',
     aria_copy_email: 'Kopier e-postadresse',
     aria_copy_phone: 'Kopier telefonnummer',
-    skip_link: 'Gå til innhold'
+    skip_link: 'Gå til innhold',
+    btn_vcard: 'Save Contact',
+    aria_download_vcard: 'Download vCard'
   },
 
   da: {
@@ -1437,7 +1475,9 @@ const T = {
     aria_lang: 'Vælg grænsefladesprog',
     aria_copy_email: 'Kopiér e-postadresse',
     aria_copy_phone: 'Kopiér telefonnummer',
-    skip_link: 'Gå til indhold'
+    skip_link: 'Gå til indhold',
+    btn_vcard: 'Save Contact',
+    aria_download_vcard: 'Download vCard'
   }
 };
 

@@ -396,6 +396,34 @@ const handleCopy = async (event) => {
   }
 };
 
+/**
+ * Generates and downloads a vCard file.
+ */
+const handleVCardDownload = () => {
+  const vcardData = `BEGIN:VCARD
+VERSION:3.0
+N:Ruiz Mollón;Eneko;;;
+FN:Eneko Ruiz Mollón
+ORG:Software Engineer
+EMAIL;TYPE=INTERNET:eneekoruiz@gmail.com
+TEL;TYPE=CELL:+34600025161
+URL:https://eneko-ruiz.vercel.app
+END:VCARD`;
+
+  const blob = new Blob([vcardData], { type: 'text/vcard;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'Eneko_Ruiz.vcf';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  
+  const copyOkMessage = T[currentLang]?.copy_ok || 'Guardado!';
+  showCopyTip(document.getElementById('vcard-btn'), copyOkMessage);
+};
+
 /* ── EASTER EGG — CONFETTI & DEVELOPER CONSOLE CLI ── */
 
 /**
@@ -637,6 +665,11 @@ const setupSurfacePolish = () => {
       shareButton.style.display = 'flex';
     }
     shareButton.addEventListener('click', handleShare);
+  }
+
+  const vcardBtn = document.getElementById('vcard-btn');
+  if (vcardBtn) {
+    vcardBtn.addEventListener('click', handleVCardDownload);
   }
 
   const themeButton = document.getElementById('theme-btn');
