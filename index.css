@@ -135,10 +135,10 @@
   --c-surface: #f8fafc;
   --c-rule: #f1f5f9;
   --c-rule-2: #e2e8f0;
-  --c-ink: #0f172a;
-  --c-ink-2: #334155;
-  --c-ink-3: #64748b;
-  --c-accent: #334155;
+  --c-ink: #020617;
+  --c-ink-2: #1e293b;
+  --c-ink-3: #475569;
+  --c-accent: #1e293b;
   --c-brand: #c4965a;
   --c-accent-s: rgba(196, 150, 90, 0.04);
   --c-accent-b: rgba(196, 150, 90, 0.12);
@@ -175,10 +175,10 @@
   --c-surface: #0f172a;
   --c-rule: #1e293b;
   --c-rule-2: #334155;
-  --c-ink: #f8fafc;
-  --c-ink-2: #cbd5e1;
-  --c-ink-3: #94a3b8;
-  --c-accent: #94a3b8;
+  --c-ink: #ffffff;
+  --c-ink-2: #f1f5f9;
+  --c-ink-3: #cbd5e1;
+  --c-accent: #cbd5e1;
   --c-brand: #d4a66a;
   --c-accent-s: rgba(212, 166, 106, 0.06);
   --c-accent-b: rgba(212, 166, 106, 0.14);
@@ -1793,6 +1793,17 @@ html.gsap-active .reveal * {
   .tl-body,
   .course-item {
     border-color: var(--c-rule) !important;
+  }
+  
+  .profile {
+    padding-bottom: 20px !important;
+    margin-bottom: 20px !important;
+    gap: 20px !important;
+  }
+  
+  .site-header {
+    padding-bottom: 20px !important;
+    margin-bottom: 20px !important;
   }
 
   /* ── Wrapper: strictly single-page A4 ── */
