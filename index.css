@@ -804,9 +804,9 @@ html[data-theme="dark"] #icon-moon {
   grid-template-columns: 1fr auto;
   gap: var(--s4) var(--s6);
   align-items: center;
-  padding-bottom: var(--s6);
+  padding-bottom: var(--s5);
   border-bottom: 1px solid var(--c-rule);
-  margin-bottom: var(--s6);
+  margin-bottom: var(--s5);
 }
 
 .eyebrow {
@@ -942,9 +942,9 @@ h1 strong {
   grid-template-columns: 72px 1fr;
   gap: var(--s4);
   align-items: baseline;
-  padding-bottom: var(--s6);
+  padding-bottom: var(--s5);
   border-bottom: 1px solid var(--c-rule);
-  margin-bottom: var(--s6);
+  margin-bottom: var(--s5);
 }
 
 .profile-label {

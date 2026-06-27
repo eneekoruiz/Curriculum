@@ -628,12 +628,6 @@ const setupSurfacePolish = () => {
   setupMagneticControls();
   setupSurfacePolish();
 
-  // Page load cover fade-out
-  const arrivalOverlay = document.createElement('div');
-  arrivalOverlay.className = 'portal-arrival';
-  document.body.appendChild(arrivalOverlay);
-  setTimeout(() => arrivalOverlay.remove(), 1500);
-
   // Setup language dropdown menu list
   const languageMenu = document.getElementById('lang-menu');
   if (languageMenu && M) {
@@ -922,7 +916,7 @@ const setupSurfacePolish = () => {
       });
 
       // Coordinated timeline for elements in initial viewport
-      const tl = gsap.timeline({ delay: 0.35 }); // Starts as page cover begins to fade out
+      const tl = gsap.timeline(); // Starts immediately
 
       initialReveals.forEach((section, index) => {
         playRevealTimeline(tl, section, index * 0.12);
