@@ -158,12 +158,12 @@
   --s1: 4px;
   --s2: 8px;
   --s3: 16px;
-  --s4: 24px;
-  --s5: 48px;
-  --s6: 64px;
+  --s4: 32px;
+  --s5: 64px;
+  --s6: 96px;
 
-  --tl-left: 88px;
-  --tl-gap: 24px;
+  --tl-left: 110px;
+  --tl-gap: 32px;
 
   --page: var(--c-bg);
   --brand: var(--c-brand);
@@ -820,30 +820,30 @@ html[data-theme="dark"] #icon-moon {
 .site-header {
   display: grid;
   grid-template-columns: 1fr auto;
-  gap: var(--s4) var(--s5);
+  gap: var(--s4) var(--s6);
   align-items: center;
-  padding-bottom: var(--s5);
+  padding-bottom: var(--s6);
   border-bottom: 1px solid var(--c-rule);
-  margin-bottom: var(--s5);
+  margin-bottom: var(--s6);
 }
 
 .eyebrow {
   font-family: var(--f-mono);
-  font-size: 9.5px;
-  letter-spacing: .22em;
+  font-size: 9px;
+  letter-spacing: .3em;
   text-transform: uppercase;
   color: var(--c-brand);
-  margin-bottom: var(--s2);
+  margin-bottom: var(--s3);
   font-weight: 600;
 }
 
 h1 {
   font-family: var(--f-serif);
-  font-size: clamp(2.2rem, 4.8vw, 3.8rem);
+  font-size: clamp(3rem, 7vw, 5rem);
   font-weight: 400;
   color: var(--c-ink);
-  line-height: 1.08;
-  letter-spacing: -0.03em;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
   text-wrap: balance;
 }
 
@@ -958,11 +958,11 @@ h1 strong {
 .profile {
   display: grid;
   grid-template-columns: 72px 1fr;
-  gap: var(--s3);
+  gap: var(--s4);
   align-items: baseline;
-  padding-bottom: var(--s5);
+  padding-bottom: var(--s6);
   border-bottom: 1px solid var(--c-rule);
-  margin-bottom: var(--s5);
+  margin-bottom: var(--s6);
 }
 
 .profile-label {
@@ -975,9 +975,10 @@ h1 strong {
 }
 
 .profile-text {
-  font-size: 14.5px;
-  line-height: 1.7;
-  color: var(--c-ink-2);
+  font-size: 16px;
+  line-height: 1.8;
+  color: var(--c-ink);
+  font-weight: 400;
 }
 
 /* ── DASHBOARD ──────────────────────────────────────── */
@@ -1006,14 +1007,14 @@ h1 strong {
 /* ── SECTION TITLE ──────────────────────────────────── */
 .sec-title {
   font-family: var(--f-mono);
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 600;
-  letter-spacing: .2em;
+  letter-spacing: .3em;
   text-transform: uppercase;
-  color: var(--c-accent);
-  padding-bottom: var(--s2);
+  color: var(--c-ink-3);
+  padding-bottom: var(--s3);
   border-bottom: 1px solid var(--c-rule);
-  margin-bottom: var(--s3);
+  margin-bottom: var(--s4);
 }
 
 /* ── TIMELINE ───────────────────────────────────────── */
@@ -1021,7 +1022,7 @@ h1 strong {
   display: grid;
   grid-template-columns: var(--tl-left) 1fr;
   gap: 0 var(--tl-gap);
-  padding-bottom: var(--s4);
+  padding-bottom: 32px;
 }
 
 .tl-item:last-child {
@@ -1084,11 +1085,11 @@ h1 strong {
 }
 
 .tl-title {
-  font-size: 13.5px;
-  font-weight: 500;
+  font-size: 14.5px;
+  font-weight: 600;
   color: var(--c-ink);
-  line-height: 1.25;
-  margin-bottom: 2px;
+  line-height: 1.3;
+  margin-bottom: 4px;
 }
 
 .tl-org {
@@ -1102,6 +1103,7 @@ h1 strong {
   font-size: 13px;
   color: var(--c-ink-3);
   line-height: 1.6;
+  white-space: pre-line;
 }
 
 .tl-mention {
@@ -1138,11 +1140,11 @@ h1 strong {
 }
 
 .pill {
-  font-size: 11px;
+  font-size: 11.5px;
   color: var(--c-ink-2);
   border: 1px solid var(--c-rule);
-  padding: 4px 10px;
-  border-radius: 6px;
+  padding: 5px 12px;
+  border-radius: 20px;
   background: var(--c-surface);
   transition: border-color var(--dur) var(--ease),
     color var(--dur) var(--ease),
