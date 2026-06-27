@@ -264,58 +264,39 @@ ul {
   border-radius: 3px;
 }
 
-/* Portal Transition with Premium Circle Iris Reveal */
+/* Premium Sweep-up Entry Animation */
 .portal-arrival {
   position: fixed;
   inset: 0;
   background: var(--page);
   z-index: 10000;
   pointer-events: none;
-  animation: portal-iris-reveal 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: portal-sweep 1.2s cubic-bezier(0.77, 0, 0.175, 1) forwards;
 }
 
-/* Beautiful central expanding ring */
 .portal-arrival::after {
   content: "";
   position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 100px;
-  height: 100px;
-  margin-top: -50px;
-  margin-left: -50px;
-  border: 2px solid var(--c-brand);
-  border-radius: 50%;
-  opacity: 0;
-  transform: scale(0.5);
-  box-shadow: 0 0 40px rgba(196, 150, 90, 0.4), inset 0 0 20px rgba(196, 150, 90, 0.2);
-  animation: portal-ring-expand 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--c-brand);
+  box-shadow: 0 0 15px var(--c-brand);
 }
 
-@keyframes portal-iris-reveal {
+@keyframes portal-sweep {
   0% {
-    opacity: 1;
+    transform: translateY(0);
   }
-  60% {
-    opacity: 1;
+  20% {
+    transform: translateY(0);
   }
   100% {
-    opacity: 0;
-    visibility: hidden;
-  }
-}
-
-@keyframes portal-ring-expand {
-  0% {
-    opacity: 0;
-    transform: scale(0.5);
-  }
-  30% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-    transform: scale(15);
+    transform: translateY(-100%);
   }
 }
 

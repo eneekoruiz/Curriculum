@@ -606,7 +606,7 @@ const setupSurfacePolish = () => {
   const arrivalOverlay = document.createElement('div');
   arrivalOverlay.className = 'portal-arrival';
   document.body.appendChild(arrivalOverlay);
-  setTimeout(() => arrivalOverlay.remove(), 1000);
+  setTimeout(() => arrivalOverlay.remove(), 1500);
 
   // Setup language dropdown menu list
   const languageMenu = document.getElementById('lang-menu');
