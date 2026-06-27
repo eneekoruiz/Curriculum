@@ -1406,12 +1406,12 @@ h1 strong {
 /* ── SCROLL REVEAL (Premium Entrance) ───────────────── */
 .reveal {
   opacity: 0;
-  transform: translateY(16px) scale(0.992);
+  transform: translateY(30px);
   transform-origin: center top;
-  filter: blur(4px);
-  transition: opacity 0.55s cubic-bezier(0.25, 1, 0.5, 1),
-    transform 0.55s cubic-bezier(0.25, 1, 0.5, 1),
-    filter 0.45s cubic-bezier(0.25, 1, 0.5, 1);
+  filter: blur(12px);
+  transition: opacity 0.8s var(--ease),
+    transform 0.8s var(--ease),
+    filter 0.8s var(--ease);
   will-change: opacity, transform, filter;
   backface-visibility: hidden;
 }
@@ -1486,9 +1486,9 @@ html.gsap-active .reveal * {
 .reveal .lang-chip,
 .reveal .tl-item {
   opacity: 0;
-  transform: translateY(10px);
-  filter: blur(3px);
-  transition: opacity 0.5s var(--ease), transform 0.5s var(--ease), filter 0.4s var(--ease);
+  transform: translateY(20px);
+  filter: blur(8px);
+  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease), filter 0.7s var(--ease);
 }
 .site-header.visible .eyebrow,
 .site-header.visible h1,
