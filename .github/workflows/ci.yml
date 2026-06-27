@@ -16,10 +16,8 @@ jobs:
         with:
           node-version: 22
       - run: npm install --ignore-scripts
-      - run: node --check api/pdf.js
       - name: Validate JSON and required web assets
         shell: bash
         run: |
           node -e "for (const f of ['package.json','vercel.json','manifest.json']) JSON.parse(require('fs').readFileSync(f, 'utf8'))"
           test -s index.html
-          test -s api/pdf.js

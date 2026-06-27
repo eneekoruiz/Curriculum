@@ -293,84 +293,25 @@ window.handlePrint = async () => {
     navigator.vibrate(5);
   }
   
-  const isLocalProtocol = window.location.protocol === 'file:';
-  const isMobileDevice = !isLocalProtocol && (window.matchMedia('(max-width: 768px)').matches && (navigator.maxTouchPoints > 0 || 'ontouchstart' in window));
-  const isEmbeddedInIframe = window.parent !== window;
-  
   printButton.setAttribute('data-loading', 'true');
   const statusLabel = printButton.querySelector('span');
   const originalButtonText = statusLabel ? statusLabel.textContent : '';
   
-  // Use Vercel Serverless API for mobile or embedded contexts to bypass sandbox iframe printing restrictions
-  if (isMobileDevice || (isEmbeddedInIframe && !isLocalProtocol)) {
-    if (statusLabel) {
-      statusLabel.textContent = currentLang === 'es' ? 'Preparando...' : 'Preparing...';
-    }
-    
-    const pdfUrl = `/api/pdf?lang=${currentLang}&theme=light&t=${Date.now()}`;
-    
-    if (isEmbeddedInIframe) {
-      // 1. Notify parent frame so the host website can handle it or trigger overlays
-      window.parent.postMessage({ type: 'download-pdf', url: pdfUrl, lang: currentLang }, '*');
-      
-      // 2. Fallback to direct navigation which is highly reliable inside sandboxed frames
-      window.location.href = pdfUrl;
-      
-      // Reset button state after a reasonable latency
-      setTimeout(() => {
-        if (statusLabel) {
-          statusLabel.textContent = originalButtonText;
-        }
-        printButton.removeAttribute('data-loading');
-      }, 2000);
-      
-      return;
-    }
-
-    try {
-      const response = await fetch(pdfUrl, { credentials: 'same-origin' });
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      
-      const pdfBlob = await response.blob();
-      const objectUrl = URL.createObjectURL(pdfBlob);
-      
-      const downloadAnchor = document.createElement('a');
-      downloadAnchor.href = objectUrl;
-      downloadAnchor.download = `Eneko_Ruiz_CV_${currentLang.toUpperCase()}.pdf`;
-      document.body.appendChild(downloadAnchor);
-      downloadAnchor.click();
-      downloadAnchor.remove();
-      
-      setTimeout(() => URL.revokeObjectURL(objectUrl), 30000);
-    } catch (error) {
-      console.error('PDF generation error:', error);
-      showCopyTip(printButton, currentLang === 'es' ? 'Error generando PDF' : 'Error generating PDF');
-    } finally {
-      if (statusLabel) {
-        statusLabel.textContent = originalButtonText;
-      }
-      printButton.removeAttribute('data-loading');
-    }
-  } else {
-    // Standard desktop browser print
-    if (statusLabel) {
-      statusLabel.textContent = currentLang === 'es' ? 'Abriendo...' : 'Opening...';
-    }
-    
-    // Temporarily force reveal all lazy-loaded animated content for print rendering
-    document.querySelectorAll('.reveal').forEach(element => element.classList.add('visible'));
-    
-    // Slight paint delay before opening browser print view
-    setTimeout(() => {
-      window.print();
-      if (statusLabel) {
-        statusLabel.textContent = originalButtonText;
-      }
-      printButton.removeAttribute('data-loading');
-    }, 100);
+  if (statusLabel) {
+    statusLabel.textContent = currentLang === 'es' ? 'Abriendo...' : 'Opening...';
   }
+  
+  // Temporarily force reveal all lazy-loaded animated content for print rendering
+  document.querySelectorAll('.reveal').forEach(element => element.classList.add('visible'));
+  
+  // Slight paint delay before opening browser print view
+  setTimeout(() => {
+    window.print();
+    if (statusLabel) {
+      statusLabel.textContent = originalButtonText;
+    }
+    printButton.removeAttribute('data-loading');
+  }, 100);
 };
 
 /**
@@ -671,7 +612,9 @@ const setupSurfacePolish = () => {
   const languageMenu = document.getElementById('lang-menu');
   if (languageMenu && M) {
     languageMenu.innerHTML = '';
-    Object.entries(M).forEach(([langCode, langMetadata]) => {
+    Object.entries(M)
+      .sort((a, b) => a[1].name.localeCompare(b[1].name))
+      .forEach(([langCode, langMetadata]) => {
       const optionButton = document.createElement('button');
       optionButton.className = 'lm-item';
       optionButton.setAttribute('role', 'option');

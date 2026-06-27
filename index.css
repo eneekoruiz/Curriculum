@@ -294,13 +294,14 @@ ul {
 
 @keyframes portal-iris-reveal {
   0% {
-    clip-path: circle(120% at 50% 50%);
+    opacity: 1;
   }
-  30% {
-    clip-path: circle(120% at 50% 50%);
+  60% {
+    opacity: 1;
   }
   100% {
-    clip-path: circle(0% at 50% 50%);
+    opacity: 0;
+    visibility: hidden;
   }
 }
 
