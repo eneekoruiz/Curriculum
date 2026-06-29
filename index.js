@@ -11,6 +11,39 @@ const root = document.getElementById('main-content');
 let currentLang = 'es';
 let themeTransitionTimeout = null;
 
+const PRECISION_MOTION = {
+  duration: 1.2,
+  revealDuration: 0.62,
+  childDuration: 0.48,
+  stagger: 0.045,
+  initialDelay: 1.05,
+  ease: cubicBezier(0.42, 0, 0.16, 1)
+};
+
+function cubicBezier(x1, y1, x2, y2) {
+  const sampleCurveX = (t) => ((1 - 3 * x2 + 3 * x1) * t + (3 * x2 - 6 * x1)) * t * t + (3 * x1) * t;
+  const sampleCurveY = (t) => ((1 - 3 * y2 + 3 * y1) * t + (3 * y2 - 6 * y1)) * t * t + (3 * y1) * t;
+  const sampleDerivativeX = (t) => (3 * (1 - 3 * x2 + 3 * x1) * t + 2 * (3 * x2 - 6 * x1)) * t + (3 * x1);
+
+  return (x) => {
+    if (x <= 0 || x >= 1) {
+      return x;
+    }
+
+    let t = x;
+    for (let i = 0; i < 4; i += 1) {
+      const currentX = sampleCurveX(t) - x;
+      const derivative = sampleDerivativeX(t);
+      if (Math.abs(currentX) < 0.001 || Math.abs(derivative) < 0.001) {
+        break;
+      }
+      t -= currentX / derivative;
+    }
+
+    return sampleCurveY(Math.max(0, Math.min(1, t)));
+  };
+}
+
 const playRevealTimeline = (timeline, section, offset = 0) => {
   if (!section || !timeline) {
     return;
@@ -31,14 +64,15 @@ const playRevealTimeline = (timeline, section, offset = 0) => {
   });
 
   timeline.fromTo(section,
-    { opacity: 0, y: 15, scale: 0.995 },
+    { opacity: 0, y: 18, scale: 0.985, clipPath: 'circle(0% at 8% 18%)' },
     {
       opacity: 1,
       y: 0,
       scale: 1,
-      duration: isHeader ? 0.65 : 0.55,
-      ease: 'power2.out',
-      clearProps: 'transform,scale,opacity,transition',
+      clipPath: 'circle(145% at 8% 18%)',
+      duration: isHeader ? PRECISION_MOTION.revealDuration + 0.12 : PRECISION_MOTION.revealDuration,
+      ease: PRECISION_MOTION.ease,
+      clearProps: 'transform,scale,opacity,transition,clipPath',
       onStart: () => section.classList.add('visible'),
       onComplete: () => section.classList.add('visible')
     },
@@ -47,13 +81,14 @@ const playRevealTimeline = (timeline, section, offset = 0) => {
 
   if (childTargets.length) {
     timeline.fromTo(childTargets,
-      { opacity: 0, y: 8 },
+      { opacity: 0, x: -10, y: 6 },
       {
         opacity: 1,
+        x: 0,
         y: 0,
-        duration: 0.45,
-        stagger: 0.04,
-        ease: 'power2.out',
+        duration: PRECISION_MOTION.childDuration,
+        stagger: PRECISION_MOTION.stagger,
+        ease: PRECISION_MOTION.ease,
         clearProps: 'transform,opacity,transition'
       },
       offset + (isHeader ? 0.08 : 0.1)
@@ -624,6 +659,12 @@ const setupSurfacePolish = () => {
   window.scrollTo(0, 0);
   requestAnimationFrame(() => window.scrollTo(0, 0));
 
+  const shouldAnimateMotion = Boolean(window.gsap) &&
+    !(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  if (shouldAnimateMotion) {
+    document.documentElement.classList.add('motion-ready');
+  }
+
   // Initialize magnetic controls
   setupMagneticControls();
   setupSurfacePolish();
@@ -730,7 +771,7 @@ const setupSurfacePolish = () => {
       handleShare();
     }
     if (event.data.type === 'leaving') {
-      if (window.gsap) {
+      if (shouldAnimateMotion) {
         gsap.to(document.body, {
           opacity: 0,
           scale: 0.98,
@@ -873,7 +914,7 @@ const setupSurfacePolish = () => {
         
         target.style.transition = 'none';
         
-        if (window.gsap) {
+        if (shouldAnimateMotion) {
           const tl = gsap.timeline();
           playRevealTimeline(tl, target, 0);
         } else {
@@ -888,7 +929,7 @@ const setupSurfacePolish = () => {
   // Handle direct headless print query
   if (urlParameters.has('print')) {
     document.querySelectorAll('.reveal').forEach(element => {
-      if (window.gsap) {
+      if (shouldAnimateMotion) {
         gsap.set(element, { opacity: 1, scale: 1, y: 0 });
       } else {
         element.style.opacity = '1';
@@ -899,7 +940,7 @@ const setupSurfacePolish = () => {
     setTimeout(handlePrint, 500);
   } else {
     // Orchestrate the initial entrance sequence for elements visible on load
-    if (window.gsap) {
+    if (shouldAnimateMotion) {
       document.documentElement.classList.add('gsap-active');
       const allReveals = Array.from(document.querySelectorAll('.reveal'));
       const initialReveals = [];
@@ -916,11 +957,22 @@ const setupSurfacePolish = () => {
       });
 
       // Coordinated timeline for elements in initial viewport
-      const tl = gsap.timeline({ delay: 0.15 }); // Small delay to allow browser paint and ensure transition is visible
+      const tl = gsap.timeline({ delay: PRECISION_MOTION.initialDelay });
 
       initialReveals.forEach((section, index) => {
         playRevealTimeline(tl, section, index * 0.12);
       });
+
+      setTimeout(() => {
+        if (!document.querySelector('.reveal.visible')) {
+          initialReveals.forEach(element => {
+            gsap.set(element, { opacity: 1, scale: 1, y: 0, clearProps: 'transform,opacity,clipPath,filter' });
+            element.querySelectorAll('.eyebrow, h1, .tagline, .live-wrap, .contact-row, .profile-label, .profile-text, .sec-title, .course-item, .lang-chip, .skill-group, .tl-item, .proj-link')
+              .forEach(child => gsap.set(child, { opacity: 1, x: 0, y: 0, clearProps: 'transform,opacity,filter' }));
+            element.classList.add('visible');
+          });
+        }
+      }, 2600);
 
       // Observe the remaining scroll reveals
       scrollReveals.forEach(element => entranceObserver.observe(element));
@@ -934,7 +986,7 @@ const setupSurfacePolish = () => {
       const remainingHidden = document.querySelectorAll('.reveal:not(.visible)');
       if (remainingHidden.length) { 
         remainingHidden.forEach(element => {
-          if (window.gsap) {
+          if (shouldAnimateMotion) {
             gsap.set(element, { opacity: 1, scale: 1, y: 0 });
             const childItems = element.querySelectorAll('.tl-item, .pill, .proj-link');
             if (childItems.length) {
@@ -947,6 +999,7 @@ const setupSurfacePolish = () => {
           element.classList.add('visible');
         });
       }
+      document.documentElement.classList.remove('motion-ready');
     }, 4000);
   }
   
