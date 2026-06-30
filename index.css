@@ -140,6 +140,7 @@
   --c-ink-3: #475569;
   --c-accent: #1e293b;
   --c-brand: #c4965a;
+    --c-brand-rgb: 196, 150, 90;
   --c-accent-s: rgba(196, 150, 90, 0.04);
   --c-accent-b: rgba(196, 150, 90, 0.12);
   --c-key-bg: rgba(196, 150, 90, 0.05);
@@ -180,6 +181,7 @@
   --c-ink-3: #cbd5e1;
   --c-accent: #cbd5e1;
   --c-brand: #d4a66a;
+    --c-brand-rgb: 212, 166, 106;
   --c-accent-s: rgba(212, 166, 106, 0.06);
   --c-accent-b: rgba(212, 166, 106, 0.14);
   --c-key-bg: rgba(212, 166, 106, 0.08);
@@ -303,32 +305,27 @@ ul {
 
 
 
-/* Precision Motion: concentric formation -> deliberate transition -> linear extension */
+/* Precision Motion: low-cost concentric formation -> particles -> linear extension */
 .precision-motion {
   --motion-color: var(--c-brand);
-  --motion-soft: color-mix(in srgb, var(--c-brand) 18%, transparent);
   position: fixed;
   inset: 0;
   z-index: 9998;
   pointer-events: none;
   display: grid;
   place-items: center;
-  background:
-    linear-gradient(color-mix(in srgb, var(--c-brand) 5%, transparent) 1px, transparent 1px),
-    linear-gradient(90deg, color-mix(in srgb, var(--c-brand) 5%, transparent) 1px, transparent 1px),
-    radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--c-brand) 10%, transparent), transparent 38vw),
-    var(--c-bg);
-  background-size: 28px 28px, 28px 28px, auto, auto;
-  animation: precision-overlay-exit 1.2s cubic-bezier(0.42, 0, 0.16, 1) forwards;
+  background: rgba(var(--c-brand-rgb), 0.026);
+  animation: precision-overlay-exit 920ms cubic-bezier(0.42, 0, 0.16, 1) forwards;
   will-change: opacity;
-  contain: layout paint;
+  contain: strict;
+  isolation: isolate;
 }
 
 .precision-motion__stage {
   position: relative;
-  width: min(62vw, 620px);
-  height: 132px;
-  transform: translateZ(0);
+  width: min(54vw, 520px);
+  height: 104px;
+  transform: translate3d(0, 0, 0);
 }
 
 .precision-motion__ring,
@@ -338,92 +335,87 @@ ul {
   position: absolute;
   top: 50%;
   left: 18%;
-  transform: translate3d(-50%, -50%, 0);
   border-radius: 999px;
   color: var(--motion-color);
+  transform: translate3d(-50%, -50%, 0);
   will-change: transform, opacity;
   backface-visibility: hidden;
-  transform-style: preserve-3d;
 }
 
 .precision-motion__ring {
-  width: 92px;
-  height: 92px;
+  width: 88px;
+  height: 88px;
   border: 1px solid currentColor;
   opacity: 0;
-  box-shadow: 0 0 18px color-mix(in srgb, var(--c-brand) 34%, transparent), inset 0 0 16px var(--motion-soft);
-  animation: precision-ring 1.2s cubic-bezier(0.42, 0, 0.16, 1) forwards;
+  animation: precision-ring 920ms cubic-bezier(0.42, 0, 0.16, 1) forwards;
 }
 
 .precision-motion__ring.ring-1 { --ring-scale: 1; }
-.precision-motion__ring.ring-2 { --ring-scale: 1.43; animation-delay: 50ms; }
-.precision-motion__ring.ring-3 { --ring-scale: 1.87; animation-delay: 150ms; }
+.precision-motion__ring.ring-2 { --ring-scale: 1.34; animation-delay: 40ms; }
+.precision-motion__ring.ring-3 { --ring-scale: 1.68; animation-delay: 90ms; }
 
 .precision-motion__core {
   width: 8px;
   height: 8px;
   background: currentColor;
-  box-shadow: 0 0 22px currentColor;
-  animation: precision-core 1.2s cubic-bezier(0.42, 0, 0.16, 1) forwards;
+  animation: precision-core 920ms cubic-bezier(0.42, 0, 0.16, 1) forwards;
 }
 
 .precision-motion__particle {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
   background: currentColor;
   opacity: 0;
-  box-shadow: 0 0 18px currentColor;
-  animation: precision-particle 1.2s cubic-bezier(0.42, 0, 0.16, 1) forwards;
+  animation: precision-particle 920ms cubic-bezier(0.42, 0, 0.16, 1) forwards;
 }
 
-.precision-motion__particle.p1 { --py: -22px; animation-delay: 300ms; }
-.precision-motion__particle.p2 { --py: -10px; animation-delay: 360ms; }
-.precision-motion__particle.p3 { --py: 0px; animation-delay: 420ms; }
-.precision-motion__particle.p4 { --py: 10px; animation-delay: 480ms; }
-.precision-motion__particle.p5 { --py: 22px; animation-delay: 540ms; }
+.precision-motion__particle.p1 { --py: -16px; animation-delay: 210ms; }
+.precision-motion__particle.p2 { --py: 0px; animation-delay: 260ms; }
+.precision-motion__particle.p3 { --py: 16px; animation-delay: 310ms; }
+.precision-motion__particle.p4,
+.precision-motion__particle.p5 { display: none; }
 
 .precision-motion__beam {
   left: 50%;
-  width: min(54vw, 540px);
+  width: min(46vw, 430px);
   height: 2px;
-  background: linear-gradient(90deg, transparent, currentColor 16%, currentColor 84%, transparent);
+  background: currentColor;
   opacity: 0;
   transform: translate3d(-50%, -50%, 0) scaleX(0);
   transform-origin: left center;
-  box-shadow: 0 0 16px currentColor, 0 0 34px color-mix(in srgb, var(--c-brand) 40%, transparent);
-  animation: precision-beam 1.2s cubic-bezier(0.42, 0, 0.16, 1) forwards;
+  animation: precision-beam 920ms cubic-bezier(0.42, 0, 0.16, 1) forwards;
 }
 
 @keyframes precision-ring {
-  0% { opacity: 0; transform: translate3d(-50%, -50%, 0) scale(0.08) rotate(0deg); }
-  16% { opacity: 0.95; transform: translate3d(-50%, -50%, 0) scale(var(--ring-scale)) rotate(90deg); }
-  34% { opacity: 0.8; transform: translate3d(-50%, -50%, 0) scale(var(--ring-scale)) rotate(180deg); }
-  62%, 100% { opacity: 0; transform: translate3d(170%, -50%, 0) scale(0.08) rotate(270deg); }
+  0% { opacity: 0; transform: translate3d(-50%, -50%, 0) scale(0.08); }
+  22% { opacity: 0.72; transform: translate3d(-50%, -50%, 0) scale(var(--ring-scale)); }
+  42% { opacity: 0.46; transform: translate3d(-50%, -50%, 0) scale(var(--ring-scale)); }
+  70%, 100% { opacity: 0; transform: translate3d(145%, -50%, 0) scale(0.12); }
 }
 
 @keyframes precision-core {
-  0% { opacity: 0; transform: translate3d(-50%, -50%, 0) scale(0.2); }
-  12% { opacity: 1; transform: translate3d(-50%, -50%, 0) scale(1); }
-  50% { opacity: 1; transform: translate3d(520%, -50%, 0) scale(0.85); }
-  76%, 100% { opacity: 0; transform: translate3d(520%, -50%, 0) scale(0.4); }
+  0% { opacity: 0; transform: translate3d(-50%, -50%, 0) scale(0.35); }
+  14% { opacity: 1; transform: translate3d(-50%, -50%, 0) scale(1); }
+  52% { opacity: 0.82; transform: translate3d(455%, -50%, 0) scale(0.86); }
+  78%, 100% { opacity: 0; transform: translate3d(455%, -50%, 0) scale(0.5); }
 }
 
 @keyframes precision-particle {
-  0%, 22% { opacity: 0; transform: translate3d(-50%, -50%, 0) translate3d(0, 0, 0) scale(0.6); }
-  45% { opacity: 1; transform: translate3d(-50%, -50%, 0) translate3d(185px, var(--py), 0) scale(1); }
-  76% { opacity: 0.75; transform: translate3d(-50%, -50%, 0) translate3d(370px, 0, 0) scale(0.7); }
-  100% { opacity: 0; transform: translate3d(-50%, -50%, 0) translate3d(430px, 0, 0) scale(0.4); }
+  0%, 24% { opacity: 0; transform: translate3d(-50%, -50%, 0) translate3d(0, 0, 0) scale(0.7); }
+  48% { opacity: 0.9; transform: translate3d(-50%, -50%, 0) translate3d(155px, var(--py), 0) scale(1); }
+  78% { opacity: 0.45; transform: translate3d(-50%, -50%, 0) translate3d(315px, 0, 0) scale(0.72); }
+  100% { opacity: 0; transform: translate3d(-50%, -50%, 0) translate3d(360px, 0, 0) scale(0.5); }
 }
 
 @keyframes precision-beam {
-  0%, 58% { opacity: 0; transform: translate3d(-50%, -50%, 0) scaleX(0); }
-  76% { opacity: 1; transform: translate3d(-50%, -50%, 0) scaleX(0.72); }
-  90% { opacity: 1; transform: translate3d(-50%, -50%, 0) scaleX(1); }
+  0%, 56% { opacity: 0; transform: translate3d(-50%, -50%, 0) scaleX(0); }
+  76% { opacity: 0.86; transform: translate3d(-50%, -50%, 0) scaleX(0.74); }
+  90% { opacity: 0.86; transform: translate3d(-50%, -50%, 0) scaleX(1); }
   100% { opacity: 0; transform: translate3d(-50%, -50%, 0) scaleX(1); }
 }
 
 @keyframes precision-overlay-exit {
-  0%, 82% { opacity: 1; visibility: visible; }
+  0%, 78% { opacity: 1; visibility: visible; }
   100% { opacity: 0; visibility: hidden; }
 }
 /* Skip-to-content link for keyboard users */
@@ -1750,16 +1742,15 @@ html.motion-ready .reveal:not(.visible) .proj-link {
   left: 0;
   width: min(180px, 42%);
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(34, 211, 238, 0.85), transparent);
+  background: linear-gradient(90deg, transparent, rgba(var(--c-brand-rgb), 0.72), transparent);
   opacity: 0;
   transform: scaleX(0);
   transform-origin: left center;
-  box-shadow: 0 0 12px rgba(34, 211, 238, 0.5);
   pointer-events: none;
 }
 
 .reveal.visible::after {
-  animation: precision-reveal-trace 1.2s cubic-bezier(0.42, 0, 0.16, 1) both;
+  animation: precision-reveal-trace 720ms cubic-bezier(0.42, 0, 0.16, 1) both;
 }
 
 @keyframes precision-reveal-trace {
