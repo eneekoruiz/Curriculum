@@ -5,7 +5,7 @@
       "headers": [
         {
           "key": "Cache-Control",
-          "value": "public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400"
+          "value": "no-store, max-age=0"
         },
         {
           "key": "Access-Control-Allow-Origin",
@@ -37,6 +37,18 @@
           "value": "camera=(), microphone=(), geolocation=(), interest-cohort=(), web-share=(*)"
         }
       ]
+    }
+  ],
+  "functions": {
+    "api/pdf.js": {
+      "maxDuration": 30,
+      "memory": 2048
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/CV_Eneko_Ruiz.pdf",
+      "destination": "/api/pdf"
     }
   ]
 }

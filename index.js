@@ -12,11 +12,11 @@ let currentLang = 'es';
 let themeTransitionTimeout = null;
 
 const PRECISION_MOTION = {
-  duration: 1.2,
-  revealDuration: 0.62,
-  childDuration: 0.48,
-  stagger: 0.045,
-  initialDelay: 1.05,
+  duration: 1.4,
+  revealDuration: 0.56,
+  childDuration: 0.42,
+  stagger: 0.035,
+  initialDelay: 1.32,
   ease: cubicBezier(0.42, 0, 0.16, 1)
 };
 
@@ -301,6 +301,98 @@ const setLang = (langCode) => {
   }
 };
 
+
+const getRuntimeContext = () => {
+  const userAgent = navigator.userAgent || '';
+  let isEmbedded = false;
+
+  try {
+    isEmbedded = window.self !== window.top;
+  } catch (error) {
+    isEmbedded = true;
+  }
+
+  const isIOS = /iPad|iPhone|iPod/.test(userAgent) ||
+    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const isSafari = /^((?!chrome|android).)*safari/i.test(userAgent);
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent) ||
+    (navigator.maxTouchPoints > 1 && window.matchMedia && window.matchMedia('(max-width: 900px)').matches);
+
+  return { isEmbedded, isMobile, isIOS, isSafari };
+};
+
+const forcePrintReadyState = () => {
+  document.documentElement.classList.add('print-ready');
+  document.querySelectorAll('.reveal').forEach(element => element.classList.add('visible'));
+};
+
+const getPdfDownloadUrl = () => {
+  const pdfUrl = new URL('/api/pdf', window.location.origin);
+  pdfUrl.searchParams.set('lang', currentLang || 'es');
+  pdfUrl.searchParams.set('v', Date.now().toString(36));
+  return pdfUrl.toString();
+};
+
+const openPdfDirectly = (pdfUrl) => {
+  try {
+    if (getRuntimeContext().isEmbedded && window.top) {
+      window.top.location.href = pdfUrl;
+      return;
+    }
+  } catch (error) {
+    // Cross-origin or sandboxed iframes may block top navigation.
+  }
+
+  window.location.href = pdfUrl;
+};
+
+const downloadGeneratedPdf = async (printButton, options = {}) => {
+  const pdfUrl = getPdfDownloadUrl();
+  const runtime = getRuntimeContext();
+
+  if (runtime.isEmbedded && window.parent) {
+    window.parent.postMessage({ type: 'cv-download-pdf', url: pdfUrl }, '*');
+  }
+
+  if (options.preferDirect || runtime.isIOS) {
+    showCopyTip(printButton, currentLang === 'es' ? 'Abriendo PDF...' : 'Opening PDF...');
+    openPdfDirectly(pdfUrl);
+    return;
+  }
+
+  try {
+    const response = await fetch(pdfUrl, {
+      method: 'GET',
+      cache: 'no-store',
+      headers: { Accept: 'application/pdf' }
+    });
+
+    if (!response.ok) {
+      throw new Error(`PDF request failed: ${response.status}`);
+    }
+
+    const pdfBlob = await response.blob();
+    if (!pdfBlob.size) {
+      throw new Error('PDF response was empty');
+    }
+
+    const objectUrl = URL.createObjectURL(pdfBlob);
+    const link = document.createElement('a');
+    link.href = objectUrl;
+    link.download = 'Eneko_Ruiz_CV.pdf';
+    link.rel = 'noopener';
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+
+    setTimeout(() => URL.revokeObjectURL(objectUrl), 15000);
+    showCopyTip(printButton, currentLang === 'es' ? 'PDF preparado' : 'PDF ready');
+  } catch (error) {
+    console.error('Blob PDF download failed; falling back to direct PDF navigation:', error);
+    showCopyTip(printButton, currentLang === 'es' ? 'Abriendo PDF...' : 'Opening PDF...');
+    openPdfDirectly(pdfUrl);
+  }
+};
 /* ── CORE ACTIONS ─────────────────────────────────────────────── */
 
 /**
@@ -312,39 +404,59 @@ window.toggleTheme = () => {
 };
 
 /**
- * Triggers the PDF export/print action.
- * Automatically switches between dynamic serverless Puppeteer API (for mobile and iframe sandbox environments)
- * and standard browser printing (for desktop browsers).
+ * Triggers CV export with a reliable path per runtime.
+ * Desktop top-level windows use native print; iframes and mobile use the PDF endpoint.
  */
 window.handlePrint = async () => {
   const printButton = document.getElementById('print-btn');
   if (!printButton || printButton.getAttribute('data-loading') === 'true') {
     return;
   }
-  
+
   if (navigator.vibrate) {
     navigator.vibrate(5);
   }
-  
-  printButton.setAttribute('data-loading', 'true');
+
   const statusLabel = printButton.querySelector('span');
   const originalButtonText = statusLabel ? statusLabel.textContent : '';
-  
-  if (statusLabel) {
-    statusLabel.textContent = currentLang === 'es' ? 'Abriendo...' : 'Opening...';
-  }
-  
-  // Temporarily force reveal all lazy-loaded animated content for print rendering
-  document.querySelectorAll('.reveal').forEach(element => element.classList.add('visible'));
-  
-  // Slight paint delay before opening browser print view
-  setTimeout(() => {
-    window.print();
+  const { isEmbedded, isMobile, isIOS, isSafari } = getRuntimeContext();
+  const shouldUsePdfDownload = isEmbedded || isMobile || typeof window.print !== 'function';
+
+  const resetPrintButton = () => {
     if (statusLabel) {
       statusLabel.textContent = originalButtonText;
     }
     printButton.removeAttribute('data-loading');
-  }, 100);
+  };
+
+  printButton.setAttribute('data-loading', 'true');
+  if (statusLabel) {
+    statusLabel.textContent = shouldUsePdfDownload
+      ? (currentLang === 'es' ? 'Preparando PDF...' : 'Preparing PDF...')
+      : (currentLang === 'es' ? 'Abriendo impresión...' : 'Opening print...');
+  }
+
+  forcePrintReadyState();
+
+  try {
+    if (shouldUsePdfDownload) {
+      await downloadGeneratedPdf(printButton, { preferDirect: isMobile || isIOS || isSafari });
+      resetPrintButton();
+      return;
+    }
+
+    const cleanupAfterPrint = () => resetPrintButton();
+    window.addEventListener('afterprint', cleanupAfterPrint, { once: true });
+
+    setTimeout(() => {
+      window.print();
+      setTimeout(cleanupAfterPrint, 1800);
+    }, 80);
+  } catch (error) {
+    console.error('CV export failed:', error);
+    resetPrintButton();
+    showCopyTip(printButton, currentLang === 'es' ? 'No se pudo generar el PDF' : 'PDF export failed');
+  }
 };
 
 /**
@@ -659,7 +771,9 @@ const setupSurfacePolish = () => {
   window.scrollTo(0, 0);
   requestAnimationFrame(() => window.scrollTo(0, 0));
 
-  const shouldAnimateMotion = Boolean(window.gsap) &&
+  const bootParameters = new URLSearchParams(window.location.search);
+  const isPdfRender = bootParameters.has('pdf');
+  const shouldAnimateMotion = !isPdfRender && Boolean(window.gsap) &&
     !(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   if (shouldAnimateMotion) {
     document.documentElement.classList.add('motion-ready');
@@ -904,6 +1018,12 @@ const setupSurfacePolish = () => {
   const urlParameters = new URLSearchParams(window.location.search);
   const initialLang = urlParameters.get('lang') || safeStorage.get('cv-lang') || 'es';
   applyTranslations(initialLang);
+
+  if (urlParameters.has('pdf')) {
+    forcePrintReadyState();
+    document.documentElement.classList.add('pdf-render');
+    return;
+  }
 
   // Lazy reveal entrance transition observers powered by GSAP
   const entranceObserver = new IntersectionObserver((entries) => {
