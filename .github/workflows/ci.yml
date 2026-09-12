@@ -24,6 +24,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
       - run: npm install --ignore-scripts
       - name: Validate JSON and required web assets
         shell: bash
