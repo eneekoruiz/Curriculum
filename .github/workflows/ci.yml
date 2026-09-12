@@ -12,6 +12,8 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v7
+        with:
+          lfs: false
       - uses: actions/setup-node@v4
         with:
           node-version: 22
