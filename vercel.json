@@ -1,5 +1,7 @@
 {
+  "ignoreCommand": "bash -c '[[ \"$VERCEL_GIT_COMMIT_REF\" =~ ^dependabot/ ]] && exit 0 || exit 1'",
   "headers": [
+
     {
       "source": "/Eneko_Ruiz_CV_ES.pdf",
       "headers": [
