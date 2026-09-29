@@ -355,8 +355,13 @@ window.toggleTheme = (event) => {
       Math.max(y, window.innerHeight - y)
     );
 
+    html.classList.add('is-view-transitioning');
     const transition = document.startViewTransition(() => {
       applyTheme(!isCurrentlyDark, false);
+    });
+
+    transition.finished.finally(() => {
+      html.classList.remove('is-view-transitioning');
     });
 
     transition.ready.then(() => {

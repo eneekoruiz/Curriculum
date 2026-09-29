@@ -226,6 +226,11 @@ html.theme-transitioning body {
               color 250ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Disable native transitions during View Transitions API to avoid snapshot lag */
+html.is-view-transitioning * {
+  transition: none !important;
+}
+
 ::view-transition-old(root),
 ::view-transition-new(root) {
   animation: none;
