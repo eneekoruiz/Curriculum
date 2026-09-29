@@ -136,6 +136,13 @@ h1 strong {
   border: 0;
   padding: 0;
   margin: 0;
+  /* A link split across lines ("eneko-" / "ruiz-…") is read as two words by ATS parsers */
+  white-space: nowrap;
+}
+
+.header-id {
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 /* ── Profile ── */

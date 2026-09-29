@@ -50,7 +50,7 @@ function atsProblems(lang, { pages, text }) {
   order.push(at('C1', order[0]), at('SST PRO DYNAMICS'), at('AG Beauty Salon'), at('Aura Health'));
   if (order.some(i => i < 0) || order.some((i, n) => n && i <= order[n - 1])) problems.push(`reading order broken ${JSON.stringify(order)}`);
   if (/[ﬀ-ﬆ]/.test(text)) problems.push('contains ligature glyphs (ﬁ/ﬂ…) that break keyword search');
-  for (const needle of ['eneekoruiz@gmail.com', '+34 600 02 51 61', 'linkedin.com/in/eneekoruiz', 'github.com/eneekoruiz']) {
+  for (const needle of ['eneekoruiz@gmail.com', '+34 600 02 51 61', 'linkedin.com/in/eneko-ruiz-421254410', 'github.com/eneekoruiz']) {
     if (!text.includes(needle)) problems.push(`missing "${needle}"`);
   }
   return problems;
