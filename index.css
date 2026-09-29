@@ -228,13 +228,13 @@ html.theme-transitioning body {
 
 ::view-transition-old(root),
 ::view-transition-new(root) {
-  animation-duration: 400ms;
-  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-}
-::view-transition-new(root) {
+  animation: none;
   mix-blend-mode: normal;
 }
-
+::view-transition-old(root) { z-index: 1; }
+::view-transition-new(root) { z-index: 9999; }
+[data-theme="light"]::view-transition-old(root) { z-index: 9999; }
+[data-theme="light"]::view-transition-new(root) { z-index: 1; }
 body {
   display: flex;
   flex-direction: column;
@@ -1825,23 +1825,25 @@ a.contact-row {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 4px 12px;
-  border: 1px solid var(--c-brand);
+  padding: 5px 14px;
+  border: 1px solid var(--c-ink);
   border-radius: 999px;
   font-family: var(--f-sans);
   font-size: 12px;
   font-weight: 600;
-  color: var(--c-ink);
+  color: var(--c-bg);
   text-decoration: none;
-  background: var(--c-key-bg);
-  transition: border-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease);
+  background: var(--c-ink);
+  transition: transform var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease);
 }
 
 .proj-links .pill-link:hover,
 .proj-links .pill-link:focus-visible {
   border-color: var(--c-brand);
-  color: var(--c-ink);
-  background: var(--c-accent-s);
+  color: #ffffff;
+  background: var(--c-brand);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px var(--c-key-bdr);
 }
 
 .pl-icon {
@@ -2296,5 +2298,8 @@ html.scroll-reveal .dashboard > section:not(.is-revealed) {
   visibility: hidden !important;
   pointer-events: none;
 }
+
+
+
 
 
