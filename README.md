@@ -1,34 +1,48 @@
 # Eneko Ruiz Mollón - Curriculum Vitae Interactivo
 
-Interactive CV built with HTML, CSS, and JavaScript.
-
-It includes:
-
-- a multilingual layout
-- an ATS-friendly, single-column A4 print/PDF layout (`print.css`)
-- dark mode support
-- basic accessibility and SEO metadata
+Interactive CV built with HTML, CSS, and JavaScript, with a pre-rendered, ATS-friendly one-page PDF in 24 languages.
 
 Live version: https://eneko-ruiz-curriculum.vercel.app/
 
-## Local use
+## What's in the repo
+
+| Path | What it is |
+| --- | --- |
+| `index.html`, `index.css`, `index.js`, `theme.js` | The site: no build step, no runtime dependencies |
+| `translations.js` | Full CV copy in 24 languages (`T`) and language metadata (`M`) |
+| `print.css` | ATS-friendly single-column A4 layout used for printing and PDFs |
+| `pdf/Eneko_Ruiz_CV_XX.pdf` | Pre-rendered PDF per language (generated, see below) |
+| `print-zoom.js` | Generated: per-language one-page scale (also used by Ctrl+P) and the PDF cache version |
+| `og.png` | Social preview card shown when the link is shared (generated) |
+| `qr/cv-qr.svg`, `qr/cv-qr.png` | QR codes to the online CV, ready to print (generated) |
+| `api/pdf.js` | Vercel function that renders a PDF on demand; fallback if a pre-rendered one is missing |
+| `scripts/` | Build and quality tools (Playwright), not deployed |
+
+## After editing the CV
+
+Any change to the content or to `print.css` needs the PDFs rebuilt; CI fails otherwise.
 
 ```bash
+cd scripts
 npm install
-# open index.html in a browser
+npx playwright install chromium   # first time only
+npm run build    # pdf/*.pdf + print-zoom.js
+npm run check    # everything CI checks (see below)
+npm run og       # og.png, only if the header content changes
+npm run qr       # qr/*, only if the URL changes
 ```
 
-PDF generation uses the Node dependencies required by the Vercel function.
+## Quality checks (CI: `.github/workflows/cv-quality.yml`)
 
-## Architecture
+- **PDFs**: exactly one A4 page in every language; the committed PDFs match the site; ATS rules hold (name first, reading order education → languages → experience → projects, no ligature glyphs, contact details present).
+- **Web**: 24 languages with identical keys; the first screen shows the complete profile at 12 viewports (360×640 → 1920×1080); no horizontal overflow; no JavaScript errors; browser-language detection; Ctrl+P prints on one page.
+- **Accessibility**: WCAG 2.1 AA audit with axe-core, light and dark themes, desktop and phone, LTR and RTL.
 
-The CV is a static site with no build step. HTML provides the document structure, `index.css` holds the screen layout, `print.css` the ATS-friendly A4 layout (single column, real text in reading order, no letter-spaced headings), and a JavaScript translation dictionary updates the selected language in the browser. GSAP is loaded only for optional entrance motion.
+## Design notes
 
-All 24 languages carry the full CV content. The page opens in the visitor's browser language when it is supported (English otherwise); `?lang=xx` forces one.
+ATS rules the print layout follows: single column, text painted in DOM order (no `position`/`float` in `print.css`, which would scramble the extracted text), no ligatures (so "offline-first" is not stored as "ofﬂine-ﬁrst"), numeric dates (MM/YYYY) and real `mailto:`/`tel:`/`https:` links. `window.fitPrintToOnePage()` scales the layout to fill exactly one A4 page (up to +12% when there is room, smaller when a language runs long).
 
-ATS rules the print layout follows: single column, text painted in DOM order (no `position`/`float` in `print.css`, which would scramble the extracted text), no ligatures (so "offline-first" is not stored as "ofﬂine-ﬁrst"), numeric dates (MM/YYYY), real `mailto:`/`tel:`/`https:` links, and a one-page guarantee: `window.fitPrintToOnePage()` scales the layout to fill exactly one A4 page (up to +12% when there is room, smaller when a language runs long).
-
-`Eneko_Ruiz_CV_ES.pdf` is the pre-rendered Spanish PDF; other languages are rendered on demand by `api/pdf.js` (Puppeteer, print media).
+The page opens in the visitor's browser language when it is supported (English otherwise); `?lang=xx` forces one. Web Analytics (Vercel) counts visits once it is enabled in the Vercel dashboard.
 
 ## Links
 

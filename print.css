@@ -458,13 +458,6 @@ h1,
   color: var(--ink-2);
 }
 
-.pill.key {
-  border-color: #c9a878;
-  background: #f5ede0;
-  color: var(--ink);
-  font-weight: 600;
-}
-
 .skills {
   gap: 1.2mm;
 }

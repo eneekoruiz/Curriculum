@@ -1,0 +1,3 @@
+# Build/check tooling and CI config are not part of the published site
+scripts/
+.github/

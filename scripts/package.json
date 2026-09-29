@@ -1,0 +1,19 @@
+{
+  "name": "eneko-cv-tools",
+  "private": true,
+  "description": "Build and quality checks for the CV: pre-rendered PDFs (all languages), ATS checks, first-screen checks, social card.",
+  "type": "module",
+  "scripts": {
+    "build": "node build-pdfs.mjs",
+    "check": "node build-pdfs.mjs --check && node check-web.mjs && node check-a11y.mjs",
+    "qr": "node build-qr.mjs",
+    "og": "node build-og.mjs"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
+    "pdf-lib": "^1.17.1",
+    "pdfjs-dist": "^4.10.38",
+    "playwright": "^1.56.1",
+    "qrcode": "^1.5.4"
+  }
+}

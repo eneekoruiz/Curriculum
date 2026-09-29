@@ -105,7 +105,6 @@ module.exports = async function handler(request, response) {
       const url = route.url();
       const resourceType = route.resourceType();
       const skipResource =
-        url.endsWith('/gsap.min.js') ||
         url.endsWith('/manifest.json') ||
         url.endsWith('/sw.js');
 
@@ -155,13 +154,25 @@ module.exports = async function handler(request, response) {
     });
     await new Promise(resolve => setTimeout(resolve, 40));
 
-    const pdfBuffer = await page.pdf({
+    // Guarantee one page: if this Chromium lays it out slightly longer, shrink 1% and re-render
+    const renderPdf = () => page.pdf({
       format: 'A4',
       printBackground: true,
       margin: { top: '0px', right: '0px', bottom: '0px', left: '0px' },
       displayHeaderFooter: false,
       preferCSSPageSize: true
     });
+    // Raw Chromium output has a single "/Type /Page" dictionary only when the PDF is one page
+    const isMultiPage = (buffer) => (buffer.toString('latin1').match(/\/Type\s*\/Page(?!s)/g) || []).length > 1;
+    let pdfBuffer = await renderPdf();
+    for (let attempt = 0; attempt < 10 && isMultiPage(pdfBuffer); attempt++) {
+      await page.evaluate(() => {
+        const wrapper = document.querySelector('.wrapper');
+        const zoom = parseFloat(wrapper.style.zoom || '1') - 0.01;
+        wrapper.style.zoom = String(Math.round(zoom * 100) / 100);
+      });
+      pdfBuffer = await renderPdf();
+    }
 
     response.setHeader('Access-Control-Allow-Origin', '*');
     response.setHeader('Content-Type', 'application/pdf');
