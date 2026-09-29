@@ -6,7 +6,7 @@
 const T = {
   es: {
     eyebrow: "Ingeniero de Software",
-    tagline: "Desarrollador Full Stack · React · TypeScript · Node.js · PostgreSQL",
+    tagline: "Desarrollador Full Stack",
     location: "Rentería (Gipuzkoa), España",
     status_available: "Disponible para incorporarme a un equipo de desarrollo",
     local_time: "Hora local:",
@@ -52,6 +52,9 @@ const T = {
     meta_desc: "CV de Eneko Ruiz Mollón, ingeniero de software Full Stack (React, TypeScript, Node.js, PostgreSQL). Ingeniería Informática en la UPV/EHU. Español, euskera C1 e inglés C1.",
     copy_ok: "¡Copiado!",
     btn_vcard: "Guardar contacto",
+    ct_email: "Email",
+    ct_phone: "Teléfono",
+    ct_web: "Portfolio",
     btn_share: "Compartir",
     aria_theme: "Cambiar entre tema claro y oscuro",
     aria_share: "Compartir el enlace del CV",
@@ -68,7 +71,7 @@ const T = {
 
   en: {
     eyebrow: "Software Engineer",
-    tagline: "Full Stack Developer · React · TypeScript · Node.js · PostgreSQL",
+    tagline: "Full Stack Developer",
     location: "Rentería (Gipuzkoa), Spain",
     status_available: "Available to join a development team",
     local_time: "Local time:",
@@ -114,6 +117,9 @@ const T = {
     meta_desc: "CV of Eneko Ruiz Mollón, Full Stack software engineer (React, TypeScript, Node.js, PostgreSQL). Computer Engineering at UPV/EHU. Spanish, Basque C1 and English C1.",
     copy_ok: "Copied!",
     btn_vcard: "Save contact",
+    ct_email: "Email",
+    ct_phone: "Phone",
+    ct_web: "Portfolio",
     btn_share: "Share",
     aria_theme: "Toggle light and dark theme",
     aria_share: "Share the CV link",
@@ -130,7 +136,7 @@ const T = {
 
   eu: {
     eyebrow: "Software Ingeniaria",
-    tagline: "Full Stack Garatzailea · React · TypeScript · Node.js · PostgreSQL",
+    tagline: "Full Stack Garatzailea",
     location: "Errenteria (Gipuzkoa), Espainia",
     status_available: "Garapen talde batean sartzeko prest",
     local_time: "Bertako ordua:",
@@ -176,6 +182,9 @@ const T = {
     meta_desc: "Eneko Ruiz Mollónen CVa, Full Stack software ingeniaria (React, TypeScript, Node.js, PostgreSQL). Informatika Ingeniaritza UPV/EHUn. Gaztelania, euskara C1 eta ingelesa C1.",
     copy_ok: "Kopiatuta!",
     btn_vcard: "Kontaktua gorde",
+    ct_email: "Emaila",
+    ct_phone: "Telefonoa",
+    ct_web: "Portfolioa",
     btn_share: "Partekatu",
     aria_theme: "Gai argia eta iluna aldatu",
     aria_share: "CVaren esteka partekatu",
@@ -192,7 +201,7 @@ const T = {
 
   ca: {
     eyebrow: "Enginyer de Programari",
-    tagline: "Desenvolupador Full Stack · React · TypeScript · Node.js · PostgreSQL",
+    tagline: "Desenvolupador Full Stack",
     location: "Errenteria (Guipúscoa), Espanya",
     status_available: "Disponible per incorporar-me a un equip de desenvolupament",
     local_time: "Hora local:",
@@ -238,6 +247,9 @@ const T = {
     meta_desc: "CV d'Eneko Ruiz Mollón, enginyer de programari Full Stack (React, TypeScript, Node.js, PostgreSQL). Enginyeria Informàtica a la UPV/EHU. Castellà, basc C1 i anglès C1.",
     copy_ok: "Copiat!",
     btn_vcard: "Desar contacte",
+    ct_email: "Correu",
+    ct_phone: "Telèfon",
+    ct_web: "Portafoli",
     btn_share: "Compartir",
     aria_theme: "Canviar entre tema clar i fosc",
     aria_share: "Compartir l'enllaç del CV",
@@ -254,7 +266,7 @@ const T = {
 
   gl: {
     eyebrow: "Enxeñeiro de Software",
-    tagline: "Desenvolvedor Full Stack · React · TypeScript · Node.js · PostgreSQL",
+    tagline: "Desenvolvedor Full Stack",
     location: "Errenteria (Guipúscoa), España",
     status_available: "Dispoñible para incorporarme a un equipo de desenvolvemento",
     local_time: "Hora local:",
@@ -300,6 +312,9 @@ const T = {
     meta_desc: "CV de Eneko Ruiz Mollón, enxeñeiro de software Full Stack (React, TypeScript, Node.js, PostgreSQL). Enxeñaría Informática na UPV/EHU. Castelán, éuscaro C1 e inglés C1.",
     copy_ok: "Copiado!",
     btn_vcard: "Gardar contacto",
+    ct_email: "Correo",
+    ct_phone: "Teléfono",
+    ct_web: "Portfolio",
     btn_share: "Compartir",
     aria_theme: "Cambiar entre tema claro e escuro",
     aria_share: "Compartir a ligazón do CV",
@@ -316,7 +331,7 @@ const T = {
 
   fr: {
     eyebrow: "Ingénieur Logiciel",
-    tagline: "Développeur Full Stack · React · TypeScript · Node.js · PostgreSQL",
+    tagline: "Développeur Full Stack",
     location: "Errenteria (Guipuscoa), Espagne",
     status_available: "Disponible pour rejoindre une équipe de développement",
     local_time: "Heure locale :",
@@ -362,6 +377,9 @@ const T = {
     meta_desc: "CV d'Eneko Ruiz Mollón, ingénieur logiciel Full Stack (React, TypeScript, Node.js, PostgreSQL). Ingénierie informatique à l'UPV/EHU. Espagnol, basque C1 et anglais C1.",
     copy_ok: "Copié !",
     btn_vcard: "Enregistrer le contact",
+    ct_email: "E-mail",
+    ct_phone: "Téléphone",
+    ct_web: "Portfolio",
     btn_share: "Partager",
     aria_theme: "Basculer entre thème clair et sombre",
     aria_share: "Partager le lien du CV",
@@ -378,7 +396,7 @@ const T = {
 
   de: {
     eyebrow: "Softwareentwickler",
-    tagline: "Full-Stack-Entwickler · React · TypeScript · Node.js · PostgreSQL",
+    tagline: "Full-Stack-Entwickler",
     location: "Errenteria (Gipuzkoa), Spanien",
     status_available: "Verfügbar für ein Entwicklungsteam",
     local_time: "Ortszeit:",
@@ -424,6 +442,9 @@ const T = {
     meta_desc: "Lebenslauf von Eneko Ruiz Mollón, Full-Stack-Softwareentwickler (React, TypeScript, Node.js, PostgreSQL). Informatik an der UPV/EHU. Spanisch, Baskisch C1 und Englisch C1.",
     copy_ok: "Kopiert!",
     btn_vcard: "Kontakt speichern",
+    ct_email: "E-Mail",
+    ct_phone: "Telefon",
+    ct_web: "Portfolio",
     btn_share: "Teilen",
     aria_theme: "Zwischen hellem und dunklem Design wechseln",
     aria_share: "Link zum Lebenslauf teilen",
@@ -440,7 +461,7 @@ const T = {
 
   it: {
     eyebrow: "Ingegnere del Software",
-    tagline: "Sviluppatore Full Stack · React · TypeScript · Node.js · PostgreSQL",
+    tagline: "Sviluppatore Full Stack",
     location: "Errenteria (Gipuzkoa), Spagna",
     status_available: "Disponibile a entrare in un team di sviluppo",
     local_time: "Ora locale:",
@@ -486,6 +507,9 @@ const T = {
     meta_desc: "CV di Eneko Ruiz Mollón, ingegnere del software Full Stack (React, TypeScript, Node.js, PostgreSQL). Ingegneria Informatica alla UPV/EHU. Spagnolo, basco C1 e inglese C1.",
     copy_ok: "Copiato!",
     btn_vcard: "Salva contatto",
+    ct_email: "Email",
+    ct_phone: "Telefono",
+    ct_web: "Portfolio",
     btn_share: "Condividi",
     aria_theme: "Passa tra tema chiaro e scuro",
     aria_share: "Condividi il link del CV",
@@ -502,7 +526,7 @@ const T = {
 
   pt: {
     eyebrow: "Engenheiro de Software",
-    tagline: "Desenvolvedor Full Stack · React · TypeScript · Node.js · PostgreSQL",
+    tagline: "Desenvolvedor Full Stack",
     location: "Errenteria (Guipúscoa), Espanha",
     status_available: "Disponível para integrar uma equipa de desenvolvimento",
     local_time: "Hora local:",
@@ -548,6 +572,9 @@ const T = {
     meta_desc: "CV de Eneko Ruiz Mollón, engenheiro de software Full Stack (React, TypeScript, Node.js, PostgreSQL). Engenharia Informática na UPV/EHU. Espanhol, basco C1 e inglês C1.",
     copy_ok: "Copiado!",
     btn_vcard: "Guardar contacto",
+    ct_email: "E-mail",
+    ct_phone: "Telefone",
+    ct_web: "Portefólio",
     btn_share: "Partilhar",
     aria_theme: "Alternar entre tema claro e escuro",
     aria_share: "Partilhar a ligação do CV",
@@ -564,7 +591,7 @@ const T = {
 
   nl: {
     eyebrow: "Software Engineer",
-    tagline: "Full-stackontwikkelaar · React · TypeScript · Node.js · PostgreSQL",
+    tagline: "Full-stackontwikkelaar",
     location: "Errenteria (Gipuzkoa), Spanje",
     status_available: "Beschikbaar voor een ontwikkelteam",
     local_time: "Lokale tijd:",
@@ -610,6 +637,9 @@ const T = {
     meta_desc: "Cv van Eneko Ruiz Mollón, full-stack software engineer (React, TypeScript, Node.js, PostgreSQL). Computer Engineering aan de UPV/EHU. Spaans, Baskisch C1 en Engels C1.",
     copy_ok: "Gekopieerd!",
     btn_vcard: "Contact opslaan",
+    ct_email: "E-mail",
+    ct_phone: "Telefoon",
+    ct_web: "Portfolio",
     btn_share: "Delen",
     aria_theme: "Wisselen tussen licht en donker thema",
     aria_share: "Link naar het cv delen",
@@ -626,7 +656,7 @@ const T = {
 
   sv: {
     eyebrow: "Mjukvaruingenjör",
-    tagline: "Fullstackutvecklare · React · TypeScript · Node.js · PostgreSQL",
+    tagline: "Fullstackutvecklare",
     location: "Errenteria (Gipuzkoa), Spanien",
     status_available: "Tillgänglig för ett utvecklingsteam",
     local_time: "Lokal tid:",
@@ -672,6 +702,9 @@ const T = {
     meta_desc: "CV för Eneko Ruiz Mollón, fullstack-mjukvaruingenjör (React, TypeScript, Node.js, PostgreSQL). Datateknik vid UPV/EHU. Spanska, baskiska C1 och engelska C1.",
     copy_ok: "Kopierat!",
     btn_vcard: "Spara kontakt",
+    ct_email: "E-post",
+    ct_phone: "Telefon",
+    ct_web: "Portfolio",
     btn_share: "Dela",
     aria_theme: "Växla mellan ljust och mörkt tema",
     aria_share: "Dela länken till CV:t",
@@ -688,7 +721,7 @@ const T = {
 
   no: {
     eyebrow: "Programvareingeniør",
-    tagline: "Fullstack-utvikler · React · TypeScript · Node.js · PostgreSQL",
+    tagline: "Fullstack-utvikler",
     location: "Errenteria (Gipuzkoa), Spania",
     status_available: "Tilgjengelig for et utviklingsteam",
     local_time: "Lokal tid:",
@@ -734,6 +767,9 @@ const T = {
     meta_desc: "CV for Eneko Ruiz Mollón, fullstack-programvareingeniør (React, TypeScript, Node.js, PostgreSQL). Datateknikk ved UPV/EHU. Spansk, baskisk C1 og engelsk C1.",
     copy_ok: "Kopiert!",
     btn_vcard: "Lagre kontakt",
+    ct_email: "E-post",
+    ct_phone: "Telefon",
+    ct_web: "Portefølje",
     btn_share: "Del",
     aria_theme: "Bytt mellom lyst og mørkt tema",
     aria_share: "Del lenken til CV-en",
@@ -750,7 +786,7 @@ const T = {
 
   da: {
     eyebrow: "Softwareingeniør",
-    tagline: "Fullstack-udvikler · React · TypeScript · Node.js · PostgreSQL",
+    tagline: "Fullstack-udvikler",
     location: "Errenteria (Gipuzkoa), Spanien",
     status_available: "Klar til at indgå i et udviklingsteam",
     local_time: "Lokal tid:",
@@ -796,6 +832,9 @@ const T = {
     meta_desc: "CV for Eneko Ruiz Mollón, fullstack-softwareingeniør (React, TypeScript, Node.js, PostgreSQL). Datateknik ved UPV/EHU. Spansk, baskisk C1 og engelsk C1.",
     copy_ok: "Kopieret!",
     btn_vcard: "Gem kontakt",
+    ct_email: "E-mail",
+    ct_phone: "Telefon",
+    ct_web: "Portfolio",
     btn_share: "Del",
     aria_theme: "Skift mellem lyst og mørkt tema",
     aria_share: "Del linket til CV'et",
@@ -812,7 +851,7 @@ const T = {
 
   pl: {
     eyebrow: "Inżynier Oprogramowania",
-    tagline: "Full Stack Developer · React · TypeScript · Node.js · PostgreSQL",
+    tagline: "Full Stack Developer",
     location: "Errenteria (Gipuzkoa), Hiszpania",
     status_available: "Gotowy do dołączenia do zespołu programistów",
     local_time: "Czas lokalny:",
@@ -858,6 +897,9 @@ const T = {
     meta_desc: "CV Eneko Ruiza Mollóna, inżyniera oprogramowania Full Stack (React, TypeScript, Node.js, PostgreSQL). Informatyka na UPV/EHU. Hiszpański, baskijski C1 i angielski C1.",
     copy_ok: "Skopiowano!",
     btn_vcard: "Zapisz kontakt",
+    ct_email: "E-mail",
+    ct_phone: "Telefon",
+    ct_web: "Portfolio",
     btn_share: "Udostępnij",
     aria_theme: "Przełącz jasny i ciemny motyw",
     aria_share: "Udostępnij link do CV",
@@ -874,7 +916,7 @@ const T = {
 
   cs: {
     eyebrow: "Softwarový inženýr",
-    tagline: "Full Stack vývojář · React · TypeScript · Node.js · PostgreSQL",
+    tagline: "Full Stack vývojář",
     location: "Errenteria (Gipuzkoa), Španělsko",
     status_available: "K dispozici pro vývojářský tým",
     local_time: "Místní čas:",
@@ -920,6 +962,9 @@ const T = {
     meta_desc: "Životopis Eneka Ruize Mollóna, Full Stack softwarového inženýra (React, TypeScript, Node.js, PostgreSQL). Informatika na UPV/EHU. Španělština, baskičtina C1 a angličtina C1.",
     copy_ok: "Zkopírováno!",
     btn_vcard: "Uložit kontakt",
+    ct_email: "E-mail",
+    ct_phone: "Telefon",
+    ct_web: "Portfolio",
     btn_share: "Sdílet",
     aria_theme: "Přepnout světlý a tmavý motiv",
     aria_share: "Sdílet odkaz na životopis",
@@ -936,7 +981,7 @@ const T = {
 
   ro: {
     eyebrow: "Inginer Software",
-    tagline: "Dezvoltator Full Stack · React · TypeScript · Node.js · PostgreSQL",
+    tagline: "Dezvoltator Full Stack",
     location: "Errenteria (Gipuzkoa), Spania",
     status_available: "Disponibil să mă alătur unei echipe de dezvoltare",
     local_time: "Ora locală:",
@@ -982,6 +1027,9 @@ const T = {
     meta_desc: "CV-ul lui Eneko Ruiz Mollón, inginer software Full Stack (React, TypeScript, Node.js, PostgreSQL). Inginerie Informatică la UPV/EHU. Spaniolă, bască C1 și engleză C1.",
     copy_ok: "Copiat!",
     btn_vcard: "Salvează contactul",
+    ct_email: "E-mail",
+    ct_phone: "Telefon",
+    ct_web: "Portofoliu",
     btn_share: "Distribuie",
     aria_theme: "Comută între tema deschisă și închisă",
     aria_share: "Distribuie linkul CV-ului",
@@ -998,7 +1046,7 @@ const T = {
 
   tr: {
     eyebrow: "Yazılım Mühendisi",
-    tagline: "Full Stack Geliştirici · React · TypeScript · Node.js · PostgreSQL",
+    tagline: "Full Stack Geliştirici",
     location: "Errenteria (Gipuzkoa), İspanya",
     status_available: "Bir geliştirme ekibine katılmaya hazır",
     local_time: "Yerel saat:",
@@ -1044,6 +1092,9 @@ const T = {
     meta_desc: "Full Stack yazılım mühendisi Eneko Ruiz Mollón'un özgeçmişi (React, TypeScript, Node.js, PostgreSQL). UPV/EHU Bilgisayar Mühendisliği. İspanyolca, Baskça C1 ve İngilizce C1.",
     copy_ok: "Kopyalandı!",
     btn_vcard: "Kişiyi kaydet",
+    ct_email: "E-posta",
+    ct_phone: "Telefon",
+    ct_web: "Portfolyo",
     btn_share: "Paylaş",
     aria_theme: "Açık ve koyu tema arasında geçiş yap",
     aria_share: "Özgeçmiş bağlantısını paylaş",
@@ -1060,7 +1111,7 @@ const T = {
 
   ru: {
     eyebrow: "Инженер-программист",
-    tagline: "Full Stack разработчик · React · TypeScript · Node.js · PostgreSQL",
+    tagline: "Full Stack разработчик",
     location: "Эррентерия (Гипускоа), Испания",
     status_available: "Готов присоединиться к команде разработки",
     local_time: "Местное время:",
@@ -1106,6 +1157,9 @@ const T = {
     meta_desc: "Резюме Энеко Руиса Мольона, Full Stack инженера-программиста (React, TypeScript, Node.js, PostgreSQL). Компьютерная инженерия в UPV/EHU. Испанский, баскский C1 и английский C1.",
     copy_ok: "Скопировано!",
     btn_vcard: "Сохранить контакт",
+    ct_email: "Email",
+    ct_phone: "Телефон",
+    ct_web: "Портфолио",
     btn_share: "Поделиться",
     aria_theme: "Переключить светлую и тёмную тему",
     aria_share: "Поделиться ссылкой на резюме",
@@ -1122,7 +1176,7 @@ const T = {
 
   uk: {
     eyebrow: "Інженер-програміст",
-    tagline: "Full Stack розробник · React · TypeScript · Node.js · PostgreSQL",
+    tagline: "Full Stack розробник",
     location: "Еррентерія (Гіпускоа), Іспанія",
     status_available: "Готовий приєднатися до команди розробки",
     local_time: "Місцевий час:",
@@ -1168,6 +1222,9 @@ const T = {
     meta_desc: "Резюме Енеко Руїса Мольйона, Full Stack інженера-програміста (React, TypeScript, Node.js, PostgreSQL). Комп'ютерна інженерія в UPV/EHU. Іспанська, баскська C1 та англійська C1.",
     copy_ok: "Скопійовано!",
     btn_vcard: "Зберегти контакт",
+    ct_email: "Email",
+    ct_phone: "Телефон",
+    ct_web: "Портфоліо",
     btn_share: "Поділитися",
     aria_theme: "Перемкнути світлу й темну тему",
     aria_share: "Поділитися посиланням на резюме",
@@ -1184,7 +1241,7 @@ const T = {
 
   zh: {
     eyebrow: "软件工程师",
-    tagline: "全栈开发工程师 · React · TypeScript · Node.js · PostgreSQL",
+    tagline: "全栈开发工程师",
     location: "西班牙 吉普斯夸省 埃伦特里亚",
     status_available: "可随时加入开发团队",
     local_time: "当地时间：",
@@ -1230,6 +1287,9 @@ const T = {
     meta_desc: "Eneko Ruiz Mollón 的简历：全栈软件工程师（React、TypeScript、Node.js、PostgreSQL），巴斯克大学计算机工程专业。西班牙语、巴斯克语 C1、英语 C1。",
     copy_ok: "已复制！",
     btn_vcard: "保存联系人",
+    ct_email: "邮箱",
+    ct_phone: "电话",
+    ct_web: "作品集",
     btn_share: "分享",
     aria_theme: "切换浅色/深色主题",
     aria_share: "分享简历链接",
@@ -1246,7 +1306,7 @@ const T = {
 
   ja: {
     eyebrow: "ソフトウェアエンジニア",
-    tagline: "フルスタック開発者 · React · TypeScript · Node.js · PostgreSQL",
+    tagline: "フルスタック開発者",
     location: "スペイン ギプスコア県 エレンテリア",
     status_available: "開発チームへの参加が可能です",
     local_time: "現地時間：",
@@ -1292,6 +1352,9 @@ const T = {
     meta_desc: "フルスタックソフトウェアエンジニア Eneko Ruiz Mollón の履歴書（React、TypeScript、Node.js、PostgreSQL）。UPV/EHU コンピュータ工学科。スペイン語、バスク語 C1、英語 C1。",
     copy_ok: "コピーしました！",
     btn_vcard: "連絡先を保存",
+    ct_email: "メール",
+    ct_phone: "電話",
+    ct_web: "ポートフォリオ",
     btn_share: "共有",
     aria_theme: "ライト／ダークテーマを切り替え",
     aria_share: "履歴書のリンクを共有",
@@ -1308,7 +1371,7 @@ const T = {
 
   ko: {
     eyebrow: "소프트웨어 엔지니어",
-    tagline: "풀스택 개발자 · React · TypeScript · Node.js · PostgreSQL",
+    tagline: "풀스택 개발자",
     location: "스페인 기푸스코아 에렌테리아",
     status_available: "개발팀 합류 가능",
     local_time: "현지 시간:",
@@ -1354,6 +1417,9 @@ const T = {
     meta_desc: "풀스택 소프트웨어 엔지니어 Eneko Ruiz Mollón의 이력서 (React, TypeScript, Node.js, PostgreSQL). UPV/EHU 컴퓨터공학. 스페인어, 바스크어 C1, 영어 C1.",
     copy_ok: "복사했습니다!",
     btn_vcard: "연락처 저장",
+    ct_email: "이메일",
+    ct_phone: "전화",
+    ct_web: "포트폴리오",
     btn_share: "공유",
     aria_theme: "라이트/다크 테마 전환",
     aria_share: "이력서 링크 공유",
@@ -1370,7 +1436,7 @@ const T = {
 
   ar: {
     eyebrow: "مهندس برمجيات",
-    tagline: "مطوّر Full Stack · React · TypeScript · Node.js · PostgreSQL",
+    tagline: "مطوّر Full Stack",
     location: "إرينتيريا (غيبوثكوا)، إسبانيا",
     status_available: "متاح للانضمام إلى فريق تطوير",
     local_time: "التوقيت المحلي:",
@@ -1416,6 +1482,9 @@ const T = {
     meta_desc: "السيرة الذاتية لإينيكو رويث مويون، مهندس برمجيات Full Stack (React وTypeScript وNode.js وPostgreSQL). هندسة الحاسوب في جامعة UPV/EHU. الإسبانية والباسكية C1 والإنجليزية C1.",
     copy_ok: "تم النسخ!",
     btn_vcard: "حفظ جهة الاتصال",
+    ct_email: "البريد",
+    ct_phone: "الهاتف",
+    ct_web: "معرض الأعمال",
     btn_share: "مشاركة",
     aria_theme: "التبديل بين المظهر الفاتح والداكن",
     aria_share: "مشاركة رابط السيرة الذاتية",
@@ -1432,7 +1501,7 @@ const T = {
 
   he: {
     eyebrow: "מהנדס תוכנה",
-    tagline: "מפתח Full Stack · React · TypeScript · Node.js · PostgreSQL",
+    tagline: "מפתח Full Stack",
     location: "ארנטריה (גיפוסקואה), ספרד",
     status_available: "זמין להצטרף לצוות פיתוח",
     local_time: "שעה מקומית:",
@@ -1478,6 +1547,9 @@ const T = {
     meta_desc: "קורות החיים של אנקו רואיס מויון, מהנדס תוכנה Full Stack (React, TypeScript, Node.js, PostgreSQL). הנדסת מחשבים ב-UPV/EHU. ספרדית, באסקית C1 ואנגלית C1.",
     copy_ok: "הועתק!",
     btn_vcard: "שמירת איש קשר",
+    ct_email: "דוא״ל",
+    ct_phone: "טלפון",
+    ct_web: "תיק עבודות",
     btn_share: "שיתוף",
     aria_theme: "מעבר בין ערכת נושא בהירה לכהה",
     aria_share: "שיתוף הקישור לקורות החיים",

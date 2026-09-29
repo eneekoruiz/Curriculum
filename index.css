@@ -147,7 +147,6 @@
   --c-accent-b: rgba(196, 150, 90, 0.12);
   --c-key-bg: rgba(196, 150, 90, 0.05);
   --c-key-bdr: rgba(196, 150, 90, 0.2);
-  --c-key-ink: #334155;
 
   --f-serif: 'Cormorant Garamond', 'Iowan Old Style', 'Apple Garamond', Baskerville, 'Times New Roman', 'Droid Serif', Times, 'Source Serif Pro', serif;
   --f-sans: 'DM Sans', 'Geist Sans', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
@@ -189,7 +188,6 @@
   --c-accent-b: rgba(212, 166, 106, 0.14);
   --c-key-bg: rgba(212, 166, 106, 0.08);
   --c-key-bdr: rgba(212, 166, 106, 0.28);
-  --c-key-ink: #f1f5f9;
 }
 
 /* ── RESET ─────────────────────────────────────────── */
@@ -748,6 +746,11 @@ h1 strong {
   font-style: normal;
 }
 
+/* Short names shown instead of the full addresses on phones (see max-width: 700px) */
+.contact-row .ct-label {
+  display: none;
+}
+
 /* copyable contact rows */
 .contact-row {
   display: flex;
@@ -982,57 +985,6 @@ h1 strong {
   background: var(--c-accent-s);
   transform: translateY(-2px) scale(1.02);
   box-shadow: 0 6px 12px var(--c-accent-s);
-}
-
-.pill.key {
-  font-family: var(--f-mono);
-  font-size: 10.5px;
-  font-weight: 500;
-  color: var(--c-key-ink);
-  background: var(--c-key-bg);
-  border-color: var(--c-key-bdr);
-  letter-spacing: .02em;
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.02);
-}
-
-.pill.key:hover {
-  color: var(--c-ink);
-  border-color: var(--c-brand);
-  background: var(--c-accent-b);
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 6px 12px var(--c-accent-s);
-}
-
-.pill.key::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -150%;
-  width: 50%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
-  transform: skewX(-20deg);
-  animation: pillShimmer 5s infinite;
-}
-
-[data-theme="dark"] .pill.key::after {
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-}
-
-@keyframes pillShimmer {
-  0% {
-    left: -150%;
-  }
-
-  20% {
-    left: 150%;
-  }
-
-  100% {
-    left: 150%;
-  }
 }
 
 /* ── LANGUAGES — editorial, no borders ──────────────── */
@@ -2123,23 +2075,27 @@ html.cv-loading #root-container {
     --wrap-top: 76px;
   }
 
+  /* Contacts as labelled tiles: icon + a one-word name, so each one says what it does */
   .hero .contacts {
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 10px;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
     margin-top: 4px;
   }
 
   .hero .contact-row {
-    width: 42px;
-    height: 42px;
-    margin: 0;
-    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
+    gap: 4px;
+    min-height: 54px;
+    margin: 0;
+    padding: 8px 4px;
     border: 1px solid var(--c-rule-2);
-    border-radius: 50%;
+    border-radius: 12px;
     background: var(--c-bg);
+    text-align: center;
   }
 
   .hero .contact-row:hover {
@@ -2150,16 +2106,29 @@ html.cv-loading #root-container {
     width: 17px;
     height: 17px;
     opacity: 1;
+    color: var(--c-brand-ink);
   }
 
-  .hero .contact-row .ct,
-  .hero #vcard-btn span {
+  .hero .contact-row .ct {
     position: absolute;
     width: 1px;
     height: 1px;
     overflow: hidden;
     clip: rect(0 0 0 0);
     white-space: nowrap;
+  }
+
+  .hero .contact-row .ct-label,
+  .hero #vcard-btn span {
+    display: block;
+    max-width: 100%;
+    font-family: var(--f-sans);
+    font-size: 11.5px;
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--c-ink-2);
   }
 
   .hero h1 {
@@ -2216,4 +2185,66 @@ html.scroll-reveal .dashboard > section:not(.is-revealed) {
 
 .live-wrap > span {
   white-space: nowrap;
+}
+
+/* ── Typography shared with the PDF (print.css): Cormorant titles, DM Sans text, gold accents ── */
+.eyebrow,
+.hero .eyebrow {
+  font-family: var(--f-sans);
+  font-size: clamp(15px, 1.3vw, 18px);
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--c-brand-ink);
+}
+
+.sec-title,
+.profile-label {
+  font-family: var(--f-serif);
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--c-ink);
+  font-variant-numeric: lining-nums;
+}
+
+.sec-title {
+  padding-bottom: 8px;
+  margin-bottom: var(--s3);
+}
+
+.profile-label {
+  padding-top: 0;
+}
+
+.tl-date,
+.tl-item .tl-date,
+.proj-stack,
+.sg-label,
+.skills .sg-label,
+.lang-chip em,
+.proj-links a {
+  font-family: var(--f-sans);
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.tl-item .tl-date {
+  font-size: 13px;
+}
+
+.proj-stack {
+  font-size: 13px;
+}
+
+.skills .sg-label {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--c-ink);
+}
+
+.lang-chip em {
+  font-size: 11.5px;
 }
