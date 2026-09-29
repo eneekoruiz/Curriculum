@@ -443,7 +443,8 @@ const showCopyTip = (anchorElement, message) => {
     <span>${message}</span>
   `;
   
-  document.body.appendChild(tipElement);
+  anchorElement.style.position = 'relative';
+    anchorElement.appendChild(tipElement);
   
   setTimeout(() => {
     tipElement.remove();
