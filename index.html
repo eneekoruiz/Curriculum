@@ -6,7 +6,7 @@
 ║  ─────────────────────────────────────────────────────────────────  ║
 ║  github.com/eneekoruiz · linkedin.com/in/eneekoruiz                 ║
 ║  ─────────────────────────────────────────────────────────────────  ║
-║  Coded from scratch · Vanilla HTML / CSS / JS · Zero dependencies   ║
+║  Coded from scratch · Vanilla HTML / CSS / JS · No build step       ║
 ╚══════════════════════════════════════════════════════════════════════╝
 -->
 <!DOCTYPE html>
@@ -21,9 +21,9 @@
   <meta name="color-scheme" content="light dark" />
   <meta name="theme-color" content="#ffffff" id="meta-theme-color" />
 
-  <title>Eneko Ruiz Mollón — Ingeniería Informática</title>
+  <title>Eneko Ruiz Mollón — Ingeniero de Software · Full Stack</title>
   <meta name="description"
-    content="Currículum web interactivo de Eneko Ruiz Mollón. Soporte para 20 idiomas, exportación a PDF y diseño minimalista. Ingeniería del Software." />
+    content="Currículum de Eneko Ruiz Mollón: Ingeniería Informática (UPV/EHU, mención en Ingeniería del Software) y desarrollo Full Stack con React, TypeScript, Next.js y Supabase. Trilingüe: español, euskera C1 e inglés C1." />
   <meta name="author" content="Eneko Ruiz Mollón" />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://eneko-ruiz-curriculum.vercel.app/" />
@@ -36,9 +36,9 @@
     href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23ffffff'/%3E%3Ctext x='50' y='66' font-family='sans-serif' font-size='52' font-weight='bold' fill='%232563eb' text-anchor='middle'%3EER%3C/text%3E%3C/svg%3E" />
   
   <meta property="og:type" content="profile" />
-  <meta property="og:title" content="Eneko Ruiz Mollón — Ingeniería Informática · UPV/EHU" />
+  <meta property="og:title" content="Eneko Ruiz Mollón — Ingeniero de Software · Full Stack" />
   <meta property="og:description"
-    content="Currículum web interactivo de Eneko Ruiz Mollón. Soporte para 20 idiomas, exportación a PDF y diseño premium. Ingeniería del Software." />
+    content="Currículum de Eneko Ruiz Mollón: Ingeniería Informática (UPV/EHU, mención en Ingeniería del Software) y desarrollo Full Stack con React, TypeScript, Next.js y Supabase. Trilingüe: español, euskera C1 e inglés C1." />
   <meta property="og:url" content="https://eneko-ruiz-curriculum.vercel.app/" />
   <meta property="og:image" content="https://eneko-ruiz-curriculum.vercel.app/og.png" />
   <meta property="og:image:width" content="1200" />
@@ -46,8 +46,8 @@
   <meta property="og:locale" content="es_ES" />
   <meta property="og:site_name" content="Eneko Ruiz Mollón" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Eneko Ruiz Mollón — Ingeniería Informática" />
-  <meta name="twitter:description" content="Currículum web interactivo de Eneko Ruiz Mollón. Soporte para 20 idiomas, exportación a PDF y diseño premium." />
+  <meta name="twitter:title" content="Eneko Ruiz Mollón — Ingeniero de Software · Full Stack" />
+  <meta name="twitter:description" content="Currículum de Eneko Ruiz Mollón: Ingeniería Informática (UPV/EHU, mención en Ingeniería del Software) y desarrollo Full Stack con React, TypeScript, Next.js y Supabase. Trilingüe: español, euskera C1 e inglés C1." />
   <meta name="twitter:image" content="https://eneko-ruiz-curriculum.vercel.app/og.png" />
 
   <script type="application/ld+json">
@@ -55,15 +55,15 @@
     "@context": "https://schema.org",
     "@type": "Person",
     "name": "Eneko Ruiz Mollón",
-    "jobTitle": "Estudiante de Ingeniería Informática - 4.º curso · Mención en Ingeniería del Software",
+    "jobTitle": "Desarrollador Full Stack · Ingeniería Informática (Ingeniería del Software)",
     "url": "https://eneko-ruiz-curriculum.vercel.app/",
     "email": "eneekoruiz@gmail.com",
     "telephone": "+34600025161",
     "address": { "@type":"PostalAddress","addressLocality":"Rentería","addressRegion":"Gipuzkoa","addressCountry":"ES" },
     "sameAs": ["https://github.com/eneekoruiz","https://linkedin.com/in/eneekoruiz"],
     "alumniOf": { "@type":"CollegeOrUniversity","name":"Universidad del País Vasco","url":"https://www.ehu.eus" },
-    "knowsAbout": ["Python","Java","C++","Git","Software Engineering","Algorithms"],
-    "knowsLanguage": ["es","en","eu","fr","de","it","pt","ca","gl","nl","ru","zh","ja","ko","ar","he","sv","pl","no","da"]
+    "knowsAbout": ["TypeScript","JavaScript","React","Next.js","Supabase","Firebase","PostgreSQL","Java","Python","Git"],
+    "knowsLanguage": ["es","eu","en"]
   }
   </script>
 
@@ -74,7 +74,8 @@
     href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap"
     rel="stylesheet" />
 
-  <link rel="stylesheet" href="index.css">
+  <link rel="stylesheet" href="index.css" media="screen">
+  <link rel="stylesheet" href="print.css" media="print">
 </head>
 
 <body>
@@ -178,46 +179,66 @@
   <main id="main-content">
     <div class="wrapper">
 
+      <div class="hero">
       <header class="site-header reveal">
-        <div>
-          <p class="eyebrow" data-i18n="eyebrow">Ingeniero de Software</p>
+        <div class="header-id">
           <h1><strong>Eneko</strong> Ruiz Mollón</h1>
+          <p class="eyebrow" data-i18n="eyebrow">Ingeniero de Software</p>
           <p class="tagline">
-            <span data-i18n="tagline">Estudiante de Ingeniería Informática</span>
-            <span class="tagline-sep" aria-hidden="true">—</span>
-            <span data-i18n="location">Rentería, Guipúzcoa</span>
-            <span class="tagline-sep" aria-hidden="true">·</span>
-            <span data-i18n="age">20 años</span>
+            <span data-i18n="tagline">Desarrollador Full Stack · React · TypeScript · Node.js · PostgreSQL</span>
           </p>
-          <div class="live-wrap">
+          <p class="tagline tagline-loc">
+            <span data-i18n="location">Rentería (Gipuzkoa), España</span>
+          </p>
+          <div class="live-wrap hide-print">
             <span class="live-dot"></span>
             <span data-i18n="status_available">Disponible</span>
             <span class="tagline-sep">—</span>
-            <span data-i18n="local_time">Local Time:</span> <span class="time-now" id="live-time">00:00</span>
+            <span data-i18n="local_time">Hora local:</span> <span class="time-now" id="live-time">00:00</span>
           </div>
         </div>
 
         <address class="contacts">
 
-          <button class="contact-row" data-copy="eneekoruiz@gmail.com" data-i18n="aria_copy_email">
+          <a class="contact-row" dir="ltr" href="mailto:eneekoruiz@gmail.com" data-copy="eneekoruiz@gmail.com" data-i18n="aria_copy_email">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
               stroke="currentColor" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round"
                 d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
-            </svg>
-            eneekoruiz@gmail.com
-          </button>
+            </svg><span class="ct">eneekoruiz@gmail.com</span>
+          </a>
 
-          <button class="contact-row" data-copy="+34600025161" data-i18n="aria_copy_phone">
+          <a class="contact-row" dir="ltr" href="tel:+34600025161" data-copy="+34600025161" data-i18n="aria_copy_phone">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
               stroke="currentColor" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round"
                 d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 6.75Z" />
-            </svg>
-            +34 600 02 51 61
-          </button>
-          
-          <button class="contact-row" id="vcard-btn" data-i18n="aria_download_vcard">
+            </svg><span class="ct">+34 600 02 51 61</span>
+          </a>
+
+          <a class="contact-row" dir="ltr" href="https://linkedin.com/in/eneekoruiz" target="_blank" rel="noopener noreferrer me">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+            </svg><span class="ct">linkedin.com/in/eneekoruiz</span>
+          </a>
+
+          <a class="contact-row" dir="ltr" href="https://github.com/eneekoruiz" target="_blank" rel="noopener noreferrer me">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
+            </svg><span class="ct">github.com/eneekoruiz</span>
+          </a>
+
+          <a class="contact-row" dir="ltr" href="https://eneko-ruiz.vercel.app" target="_blank" rel="noopener noreferrer me">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8"
+              stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" />
+            </svg><span class="ct">eneko-ruiz.vercel.app</span>
+          </a>
+
+          <button class="contact-row hide-print" id="vcard-btn" data-i18n="aria_download_vcard">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
             </svg>
@@ -225,217 +246,152 @@
           </button>
         </address>
 
+        <a class="qr-block print-only" href="https://eneko-ruiz.vercel.app" target="_blank" rel="noopener noreferrer">
+          <svg class="qr-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 29 29" shape-rendering="crispEdges" aria-hidden="true"><path fill="currentColor" d="M0 0h7v1h-7zM8 0h3v1h-3zM12 0h4v1h-4zM17 0h2v1h-2zM22 0h7v1h-7zM0 1h1v1h-1zM6 1h1v1h-1zM9 1h1v1h-1zM12 1h1v1h-1zM15 1h1v1h-1zM17 1h1v1h-1zM22 1h1v1h-1zM28 1h1v1h-1zM0 2h1v1h-1zM2 2h3v1h-3zM6 2h1v1h-1zM8 2h2v1h-2zM13 2h1v1h-1zM17 2h1v1h-1zM20 2h1v1h-1zM22 2h1v1h-1zM24 2h3v1h-3zM28 2h1v1h-1zM0 3h1v1h-1zM2 3h3v1h-3zM6 3h1v1h-1zM9 3h4v1h-4zM15 3h4v1h-4zM20 3h1v1h-1zM22 3h1v1h-1zM24 3h3v1h-3zM28 3h1v1h-1zM0 4h1v1h-1zM2 4h3v1h-3zM6 4h1v1h-1zM9 4h1v1h-1zM12 4h1v1h-1zM15 4h4v1h-4zM22 4h1v1h-1zM24 4h3v1h-3zM28 4h1v1h-1zM0 5h1v1h-1zM6 5h1v1h-1zM8 5h2v1h-2zM11 5h4v1h-4zM16 5h1v1h-1zM18 5h1v1h-1zM20 5h1v1h-1zM22 5h1v1h-1zM28 5h1v1h-1zM0 6h7v1h-7zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h1v1h-1zM14 6h1v1h-1zM16 6h1v1h-1zM18 6h1v1h-1zM20 6h1v1h-1zM22 6h7v1h-7zM10 7h1v1h-1zM13 7h1v1h-1zM18 7h1v1h-1zM20 7h1v1h-1zM0 8h1v1h-1zM2 8h1v1h-1zM6 8h2v1h-2zM9 8h3v1h-3zM13 8h1v1h-1zM15 8h2v1h-2zM19 8h2v1h-2zM23 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM1 9h2v1h-2zM5 9h1v1h-1zM8 9h1v1h-1zM12 9h1v1h-1zM16 9h2v1h-2zM19 9h2v1h-2zM22 9h2v1h-2zM27 9h2v1h-2zM4 10h3v1h-3zM8 10h2v1h-2zM12 10h3v1h-3zM16 10h2v1h-2zM19 10h2v1h-2zM25 10h2v1h-2zM28 10h1v1h-1zM7 11h6v1h-6zM14 11h3v1h-3zM19 11h4v1h-4zM24 11h2v1h-2zM1 12h2v1h-2zM5 12h5v1h-5zM12 12h3v1h-3zM18 12h2v1h-2zM21 12h3v1h-3zM28 12h1v1h-1zM4 13h2v1h-2zM7 13h2v1h-2zM10 13h1v1h-1zM12 13h3v1h-3zM17 13h1v1h-1zM19 13h2v1h-2zM22 13h2v1h-2zM27 13h2v1h-2zM3 14h1v1h-1zM5 14h2v1h-2zM8 14h1v1h-1zM12 14h1v1h-1zM15 14h1v1h-1zM19 14h2v1h-2zM24 14h1v1h-1zM28 14h1v1h-1zM1 15h2v1h-2zM4 15h2v1h-2zM8 15h1v1h-1zM12 15h2v1h-2zM19 15h3v1h-3zM23 15h1v1h-1zM1 16h4v1h-4zM6 16h1v1h-1zM8 16h2v1h-2zM11 16h1v1h-1zM13 16h1v1h-1zM15 16h2v1h-2zM20 16h1v1h-1zM22 16h2v1h-2zM28 16h1v1h-1zM2 17h2v1h-2zM5 17h1v1h-1zM8 17h1v1h-1zM11 17h2v1h-2zM16 17h1v1h-1zM19 17h1v1h-1zM21 17h3v1h-3zM26 17h3v1h-3zM0 18h2v1h-2zM6 18h2v1h-2zM10 18h5v1h-5zM16 18h8v1h-8zM25 18h1v1h-1zM28 18h1v1h-1zM7 19h1v1h-1zM14 19h3v1h-3zM18 19h2v1h-2zM22 19h3v1h-3zM0 20h4v1h-4zM5 20h2v1h-2zM9 20h1v1h-1zM12 20h3v1h-3zM20 20h6v1h-6zM27 20h1v1h-1zM8 21h4v1h-4zM13 21h2v1h-2zM18 21h3v1h-3zM24 21h3v1h-3zM28 21h1v1h-1zM0 22h7v1h-7zM8 22h5v1h-5zM15 22h1v1h-1zM17 22h2v1h-2zM20 22h1v1h-1zM22 22h1v1h-1zM24 22h1v1h-1zM28 22h1v1h-1zM0 23h1v1h-1zM6 23h1v1h-1zM9 23h2v1h-2zM12 23h2v1h-2zM19 23h2v1h-2zM24 23h1v1h-1zM27 23h1v1h-1zM0 24h1v1h-1zM2 24h3v1h-3zM6 24h1v1h-1zM10 24h2v1h-2zM13 24h1v1h-1zM15 24h2v1h-2zM19 24h7v1h-7zM0 25h1v1h-1zM2 25h3v1h-3zM6 25h1v1h-1zM9 25h1v1h-1zM13 25h1v1h-1zM16 25h1v1h-1zM18 25h2v1h-2zM21 25h1v1h-1zM24 25h4v1h-4zM0 26h1v1h-1zM2 26h3v1h-3zM6 26h1v1h-1zM8 26h1v1h-1zM10 26h2v1h-2zM14 26h1v1h-1zM16 26h4v1h-4zM24 26h1v1h-1zM27 26h2v1h-2zM0 27h1v1h-1zM6 27h1v1h-1zM14 27h3v1h-3zM20 27h2v1h-2zM23 27h1v1h-1zM25 27h1v1h-1zM0 28h7v1h-7zM8 28h1v1h-1zM10 28h3v1h-3zM14 28h1v1h-1zM16 28h3v1h-3zM20 28h1v1h-1zM22 28h1v1h-1zM24 28h2v1h-2zM28 28h1v1h-1z"/></svg>
+          <span class="qr-caption" data-i18n="qr_caption">Portfolio interactivo</span>
+        </a>
 
       </header>
 
-      <!-- PROFILE -->
-      <section class="profile reveal">
-        <p class="profile-label" data-i18n="profile_title">Perfil</p>
-        <p class="profile-text" data-i18n="profile_text">Estudiante de Ingeniería Informática con una sólida base técnica y
-          experiencia de cara al público. Apasionado por la resolución de problemas mediante código, el diseño de
-          software eficiente y el aprendizaje continuo. Acostumbrado a la adaptabilidad y al trabajo en equipo.</p>
+      <!-- PERFIL -->
+      <section class="profile reveal" aria-labelledby="h-profile">
+        <h2 class="profile-label" id="h-profile" data-i18n="profile_title">Perfil profesional</h2>
+        <p class="profile-text" data-i18n="profile_text">Ingeniero de software Full Stack: diseño y desarrollo aplicaciones web completas con React, TypeScript, Node.js y PostgreSQL (Supabase, Firebase), con tests automatizados y CI desde el primer commit. Busco incorporarme a un equipo de desarrollo y aportar desde el primer día.</p>
       </section>
+      </div><!-- /hero -->
 
-      <!-- DASHBOARD -->
       <div class="dashboard">
-        <!-- LEFT: Projects → Stack → Soft Skills → Languages -->
-        <div class="col-side">
 
-          <!-- ① PROYECTOS Y CÓDIGO (top of sidebar) -->
-          <section class="reveal" aria-labelledby="h-projects">
-            <h2 class="sec-title" id="h-projects" data-i18n="projects_title">Proyectos y Código</h2>
-            <div class="project-links">
-              <a class="proj-link hide-print" href="https://eneko-ruiz.vercel.app" target="_blank" rel="noopener noreferrer me">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8"
-                  stroke="currentColor" aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" />
-                </svg>
-                <span data-i18n="proj_portfolio">Portfolio Interactivo</span>
-              </a>
-              <a class="proj-link" href="https://github.com/eneekoruiz" target="_blank" rel="noopener noreferrer me">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path
-                    d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
-                </svg>
-                <span data-i18n="proj_github">GitHub: eneekoruiz</span>
-              </a>
-              <a class="proj-link" href="https://linkedin.com/in/eneekoruiz" target="_blank"
-                rel="noopener noreferrer me">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path
-                    d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-                </svg>
-                <span data-i18n="proj_linkedin">LinkedIn: eneekoruiz</span>
-              </a>
-              <a class="proj-link qr-print" href="https://eneko-ruiz.vercel.app" target="_blank"
-                rel="noopener noreferrer me" aria-label="Abrir portfolio interactivo desde QR">
-                <img
-                  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKQAAACkCAAAAAA83tqdAAAB80lEQVR42u2c22oDMQxErZL//+XpUyEYWxp5HWjpyVuz2eUQTXQZ2w2N3//6GkACCSSQQAIJJJBAAgkkkEAC+SchX7sLkdykt8/o7bOa7tX0HJnPJdxosqORWFxXotnsuvsbINxostLgSkOr3Dm/5zyXcKPJJzcr0ea7FrXRJeEG8rYmw8ybhBvIm5rUwawz58hR5FPCDaSrSSfHzf3jrM+qlyTcQLqa1OjV7t18owf5kXD/S8iQkf+qmr3SqRo5krkbSFeTqxm78h47tXk1oxNuNCmjNivJg6f1nhkHyNPavcphK10qmXmyXOt4l4QbTTrz9TD88pFot5MzCTeaHIn2ZPrjMvpK+kkgT/vJUdTqjufO3A3krbnb2fNT1ffdvfSTQHb7ySj2QqrwJ6PwjMiTQA5zT+9KTyq88Z+/d577Ttf0k0B29wWttKNEl+66j9NTEm40ma3fVL7ifK1a/8GfBLI746hYu6n8SRXzUnAeB8hDz7yzR8PxxoMzYkBePrdYrelkM47wJ4H8wLnFrG90ZxkRbiAvnlvcaSyS9cloeE6EG00+bkw3/uQwPHO8ICA/oUmZ641R7Pcg3Gjy9NxitRcyklrf3T9EuNGkM3tnfrm7D839XwSEe+BP8k0CCSSQQAIJJJBAAgkkkEACCeSN1zdNZb1FqGozVAAAAABJRU5ErkJggg=="
-                  alt="QR eneko-ruiz.vercel.app" width="34" height="34" class="qr-img"
-                  loading="eager" onerror="this.style.display='none'" />
-                <span class="qr-text">
-                  <span class="qr-title" data-i18n="proj_portfolio">Portfolio Interactivo</span>
-                  <span class="qr-caption" data-i18n="qr_caption">Escanea para ver la versión interactiva</span>
-                </span>
-              </a>
+        <!-- IDIOMAS -->
+        <section class="reveal" aria-labelledby="h-langs">
+          <h2 class="sec-title" id="h-langs" data-i18n="lang_title">Idiomas</h2>
+          <div class="lang-inline">
+            <p class="lang-chip">
+              <strong class="lang-name" data-i18n="lang_en">Inglés</strong>
+              <span class="lang-level">C1</span>
+              <em class="lang-cert" data-i18n="lang_en_cert">Certificado oficial Cambridge</em>
+            </p>
+            <p class="lang-chip">
+              <strong class="lang-name" data-i18n="lang_eu">Euskera</strong>
+              <span class="lang-level">C1</span>
+              <em class="lang-cert" data-i18n="lang_eu_cert">Certificado oficial HABE</em>
+            </p>
+            <p class="lang-chip">
+              <strong class="lang-name" data-i18n="lang_es">Español</strong>
+              <span class="lang-level lang-level-native" data-i18n="lang_native">Nativo</span>
+            </p>
+        </section>
+
+        <!-- EXPERIENCIA -->
+        <section class="reveal" aria-labelledby="h-exp">
+          <h2 class="sec-title" id="h-exp" data-i18n="exp_title">Experiencia profesional</h2>
+          <div class="tl-item">
+            <div class="tl-body">
+              <h3 class="tl-title" data-i18n="exp_intern_role">Desarrollador Full Stack (Prácticas)</h3>
+              <p class="tl-org">SST PRO DYNAMICS SLL</p>
+              <ul class="tl-list">
+                <li data-i18n="exp_intern_b1">Desarrollo de funcionalidades de extremo a extremo en una plataforma web con React y Supabase (PostgreSQL).</li>
+                <li data-i18n="exp_intern_b2">Diseño del modelo de datos, las tablas y las consultas en PostgreSQL.</li>
+                <li data-i18n="exp_intern_b3">Integración del frontend en React con los servicios de backend de Supabase.</li>
+              </ul>
             </div>
-          </section>
+            <p class="tl-date" dir="ltr"><time datetime="2026-05">05/2026</time> – <time datetime="2026-08">08/2026</time></p>
+          </div>
+        </section>
 
-          <section class="reveal" aria-labelledby="h-skills">
-            <h2 class="sec-title" id="h-skills" data-i18n="skills_tech">Habilidades Técnicas</h2>
+        <!-- PROYECTOS -->
+        <section class="reveal" aria-labelledby="h-projects">
+          <h2 class="sec-title" id="h-projects" data-i18n="projects_title">Proyectos</h2>
+
+          <article class="proj-item">
+            <h3 class="proj-name"><a class="proj-title-link" href="https://agpeluqueria.vercel.app" target="_blank" rel="noopener noreferrer">AG Beauty Salon</a></h3>
+            <p class="proj-stack">React · TypeScript · Next.js · Firebase · Google Calendar API · Resend</p>
+            <p class="proj-desc" data-i18n="proj_1_desc">Plataforma de reservas y CMS para un salón de belleza: agenda con Google Calendar y emails automáticos.</p>
+            <p class="proj-links"><a class="pill-link" href="https://agpeluqueria.vercel.app" target="_blank" rel="noopener noreferrer"><svg class="pl-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg><span data-i18n="proj_demo">Demo</span></a><a class="pill-link" href="https://github.com/eneekoruiz/ana-peluquera" target="_blank" rel="noopener noreferrer"><svg class="pl-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg><span data-i18n="proj_code">Código</span></a></p>
+          </article>
+
+          <article class="proj-item">
+            <h3 class="proj-name"><a class="proj-title-link" href="https://recordatorios-delta.vercel.app" target="_blank" rel="noopener noreferrer">Recordatorios Élite</a></h3>
+            <p class="proj-stack">React · TypeScript · Zustand · IndexedDB · Node.js · Express · Prisma · PostgreSQL</p>
+            <p class="proj-desc" data-i18n="proj_2_desc">PWA offline-first: sincronización entre dispositivos, tareas en lenguaje natural, push y servidor MCP para IA.</p>
+            <p class="proj-links"><a class="pill-link" href="https://recordatorios-delta.vercel.app" target="_blank" rel="noopener noreferrer"><svg class="pl-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg><span data-i18n="proj_demo">Demo</span></a><a class="pill-link" href="https://github.com/eneekoruiz/recordatorios" target="_blank" rel="noopener noreferrer"><svg class="pl-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg><span data-i18n="proj_code">Código</span></a></p>
+          </article>
+
+          <article class="proj-item">
+            <h3 class="proj-name"><a class="proj-title-link" href="https://passwordmanager-alpha.vercel.app" target="_blank" rel="noopener noreferrer">Password Vault</a></h3>
+            <p class="proj-stack">React · TypeScript · Web Crypto API · IndexedDB · WebAuthn · Firebase</p>
+            <p class="proj-desc" data-i18n="proj_3_desc">Gestor de contraseñas: cifrado AES-GCM y PBKDF2, códigos 2FA (TOTP), desbloqueo biométrico y sync cifrada.</p>
+            <p class="proj-links"><a class="pill-link" href="https://passwordmanager-alpha.vercel.app" target="_blank" rel="noopener noreferrer"><svg class="pl-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg><span data-i18n="proj_demo">Demo</span></a><a class="pill-link" href="https://github.com/eneekoruiz/passwordmanager" target="_blank" rel="noopener noreferrer"><svg class="pl-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg><span data-i18n="proj_code">Código</span></a></p>
+          </article>
+
+          <article class="proj-item">
+            <h3 class="proj-name"><a class="proj-title-link" href="https://ayudandonos.vercel.app" target="_blank" rel="noopener noreferrer">Aura Health</a></h3>
+            <p class="proj-stack">React · TypeScript · Tailwind CSS · Node.js · PostgreSQL · JWT · Capacitor</p>
+            <p class="proj-desc" data-i18n="proj_4_desc">App de salud femenina: ciclo y bienestar con datos locales, API sincronizada y apps iOS/Android (Capacitor).</p>
+            <p class="proj-links"><a class="pill-link" href="https://ayudandonos.vercel.app" target="_blank" rel="noopener noreferrer"><svg class="pl-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg><span data-i18n="proj_demo">Demo</span></a><a class="pill-link" href="https://github.com/eneekoruiz/regla" target="_blank" rel="noopener noreferrer"><svg class="pl-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg><span data-i18n="proj_code">Código</span></a></p>
+          </article>
+        </section>
+
+        <!-- FORMACIÓN -->
+        <section class="reveal" aria-labelledby="h-edu">
+          <h2 class="sec-title" id="h-edu" data-i18n="edu_title">Formación académica</h2>
+          <div class="tl-item">
+            <div class="tl-body">
+              <h3 class="tl-title" data-i18n="edu_1_deg">Grado en Ingeniería Informática</h3>
+              <p class="tl-org" data-i18n="edu_1_uni">Universidad del País Vasco (UPV/EHU)</p>
+              <p class="tl-mention" data-i18n="edu_1_mention">Mención en Ingeniería del Software</p>
+              <p class="tl-desc hide-print" data-i18n="edu_1_desc">Algoritmos y estructuras de datos, bases de datos, sistemas operativos, redes, ingeniería del software y desarrollo en Java.</p>
+              <p class="tl-desc" data-i18n="edu_1_tfg">Trabajo Fin de Grado: ampliación de la plataforma StudiOS para el sector de la fotografía.</p>
+            </div>
+            <p class="tl-date" dir="ltr" data-i18n="edu_1_date">09/2023 – 03/2027 (prevista)</p>
+          </div>
+          <div class="tl-item compact hide-print">
+            <div class="tl-body">
+              <h3 class="tl-title" data-i18n="edu_2_deg">Bachillerato Científico</h3>
+              <p class="tl-org">Koldo Mitxelena Herri Ikastetxea</p>
+            </div>
+            <p class="tl-date" dir="ltr"><time datetime="2021-09">09/2021</time> – <time datetime="2023-06">06/2023</time></p>
+          </div>
+        </section>
+
+        <!-- HABILIDADES TÉCNICAS -->
+        <section class="reveal" aria-labelledby="h-skills">
+          <h2 class="sec-title" id="h-skills" data-i18n="skills_tech">Habilidades técnicas</h2>
+          <dl class="skills">
             <div class="skill-group">
-              <p class="sg-label" data-i18n="sg_langs">Lenguajes de Programación</p>
-              <div class="pills">
-                <span class="pill key">Java</span>
-                <span class="pill">Python</span>
-                <span class="pill">C</span>
-              </div>
+              <dt class="sg-label" data-i18n="sg_langs">Lenguajes</dt>
+              <dd class="sg-list pills"><span class="pill key">TypeScript</span><span class="pill key">JavaScript</span><span class="pill">Java</span><span class="pill">Python</span><span class="pill">SQL</span><span class="pill">HTML</span><span class="pill">CSS</span><span class="pill">C</span></dd>
             </div>
             <div class="skill-group">
-              <p class="sg-label" data-i18n="sg_vcs">Control de Versiones</p>
-              <div class="pills">
-                <span class="pill key">GitHub</span>
-                <span class="pill">Git</span>
-              </div>
+              <dt class="sg-label">Frontend</dt>
+              <dd class="sg-list pills"><span class="pill key">React</span><span class="pill key">Next.js</span><span class="pill">Vite</span><span class="pill">Tailwind CSS</span><span class="pill">Zustand</span><span class="pill">PWA</span></dd>
             </div>
             <div class="skill-group">
-              <p class="sg-label" data-i18n="sg_tools">Herramientas</p>
-              <div class="pills">
-                <span class="pill">VS Code</span>
-                <span class="pill">IntelliJ IDEA</span>
-                <span class="pill">Linux</span>
-              </div>
+              <dt class="sg-label" data-i18n="sg_back">Backend y datos</dt>
+              <dd class="sg-list pills"><span class="pill key">Node.js</span><span class="pill">Express</span><span class="pill">REST APIs</span><span class="pill key">PostgreSQL</span><span class="pill">Prisma</span><span class="pill key">Supabase</span><span class="pill">Firebase</span><span class="pill">IndexedDB</span><span class="pill">Oracle</span></dd>
             </div>
             <div class="skill-group">
-              <p class="sg-label" data-i18n="sg_db">Bases de Datos</p>
-              <div class="pills">
-                <span class="pill">SQL</span>
-                <span class="pill">Firebase</span>
-                <span class="pill">Supabase</span>
-                <span class="pill">Oracle</span>
-              </div>
+              <dt class="sg-label" data-i18n="sg_tools">Testing y DevOps</dt>
+              <dd class="sg-list pills"><span class="pill">Vitest</span><span class="pill">Playwright</span><span class="pill key">Git</span><span class="pill">GitHub</span><span class="pill">GitHub Actions</span><span class="pill">Vercel</span><span class="pill">Linux</span></dd>
             </div>
-          </section>
+          </dl>
+        </section>
 
-          <section class="reveal" aria-labelledby="h-langs">
-            <h2 class="sec-title" id="h-langs" data-i18n="lang_title">Idiomas</h2>
-            <div class="lang-inline">
-              <span class="lang-chip" lang="es">
-                <strong data-i18n="lang_es">Español</strong>
-                <em data-i18n="lang_native">Nativo</em>
-              </span>
-              <span class="lang-chip" lang="eu">
-                <strong data-i18n="lang_eu">Euskera</strong>
-                <em data-i18n="lang_eu_cert">C1 Oficial · HABE</em>
-              </span>
-              <span class="lang-chip" lang="en">
-                <strong data-i18n="lang_en">Inglés</strong>
-                <em data-i18n="lang_en_cert">C1 Oficial · Cambridge</em>
-              </span>
+        <!-- FORMACIÓN COMPLEMENTARIA -->
+        <section class="reveal" aria-labelledby="h-courses">
+          <h2 class="sec-title" id="h-courses" data-i18n="courses_title">Formación complementaria</h2>
+          <div class="course-list">
+            <div class="course-item">
+              <p class="course-name" data-i18n="course_1">Aplicaciones avanzadas de IA generativa</p>
+              <p class="course-inst" data-i18n="course_1_inst">Universidad de Burgos</p>
             </div>
-          </section>
-
-          <section class="reveal" aria-labelledby="h-soft">
-            <h2 class="sec-title" id="h-soft" data-i18n="skills_soft">Habilidades Personales</h2>
-            <div class="pills">
-              <span class="pill" data-i18n="soft_1">Resolución de Problemas</span>
-              <span class="pill" data-i18n="soft_2">Comunicación Activa</span>
-              <span class="pill" data-i18n="soft_3">Trabajo en Equipo</span>
-              <span class="pill" data-i18n="soft_4">Adaptabilidad</span>
+            <div class="course-item">
+              <p class="course-name" data-i18n="course_2">Microsoft Word avanzado</p>
+              <p class="course-inst" data-i18n="course_2_inst">Gobierno Vasco</p>
             </div>
-          </section>
+          </div>
+        </section>
 
-
-        </div><!-- /col-side -->
-
-        <!-- RIGHT: Education → Courses → Experience -->
-        <div class="col-main">
-          <!-- Timeline elements removed for stability -->
-
-          <!-- ② FORMACIÓN ACADÉMICA -->
-          <section class="reveal" aria-labelledby="h-edu">
-            <h2 class="sec-title" id="h-edu" data-i18n="edu_title">Formación Académica</h2>
-            <div class="tl-item">
-              <p class="tl-date" data-i18n="edu_1_date"><time datetime="2023">2023 – Actualidad</time></p>
-              <div class="tl-body">
-                <p class="tl-title" data-i18n="edu_1_deg">Grado en Ingeniería Informática</p>
-                <p class="tl-org" data-i18n="edu_1_uni">Universidad del País Vasco (UPV/EHU)</p>
-                <p class="tl-desc" data-i18n="edu_1_desc">Algoritmos, estructuras de datos, sistemas operativos, redes y desarrollo de
-                  software.</p>
-                <p class="tl-mention" data-i18n="edu_1_mention">4.º curso · Mención en Ingeniería del Software</p>
-              </div>
-            </div>
-            <div class="tl-item compact">
-              <p class="tl-date" data-i18n="edu_2_date"><time datetime="2021">2021 – 2023</time></p>
-              <div class="tl-body">
-                <p class="tl-title" data-i18n="edu_2_deg">Bachillerato Científico</p>
-                <p class="tl-org">Koldo Mitxelena Herri Ikastetxea</p>
-              </div>
-            </div>
-          </section>
-
-          <!-- ③ FORMACIÓN COMPLEMENTARIA — 2 cursos verídicos -->
-          <section class="reveal" aria-labelledby="h-courses">
-            <h2 class="sec-title" id="h-courses" data-i18n="courses_title">Formación Complementaria</h2>
-            <div class="course-list">
-              <div class="course-item">
-                <p class="course-name" data-i18n="course_1">Aplicaciones avanzadas de IA generativa</p>
-                <p class="course-inst" data-i18n="course_1_inst">Universidad de Burgos</p>
-              </div>
-              <div class="course-item">
-                <p class="course-name" data-i18n="course_2">Microsoft Word Avanzado</p>
-                <p class="course-inst" data-i18n="course_2_inst">Gobierno Vasco</p>
-              </div>
-            </div>
-          </section>
-
-          <!-- ④ EXPERIENCIA — dividida en dos subsecciones -->
-          <section class="reveal" aria-labelledby="h-exp">
-            <h2 class="sec-title" id="h-exp" data-i18n="exp_title">Experiencia</h2>
-
-            <p class="exp-sub" data-i18n="exp_tech_label">Experiencia Técnica</p>
-            <div class="tl-item compact">
-              <p class="tl-date" data-i18n="exp_intern_date"><time datetime="2026-05">Mayo–Julio 2026</time></p>
-              <div class="tl-body">
-                <p class="tl-title" data-i18n="exp_intern_role">Desarrollador Full Stack (Prácticas)</p>
-                <p class="tl-org" data-i18n="exp_intern_org">SST PRO DYNAMICS SLL</p>
-                <p class="tl-desc" data-i18n="exp_intern_desc">Desarrollo integral de una plataforma web full stack, participando en la implementación de funcionalidades, estructura de datos e integración frontend/backend.</p>
-              </div>
-            </div>
-
-            <p class="exp-sub" data-i18n="exp_other_label">Otras Experiencias</p>
-            <div class="tl-item micro">
-              <p class="tl-date" data-i18n="exp_1_date"><time datetime="2025-06">Jun–Sep 2025</time></p>
-              <div class="tl-body">
-                <p class="tl-title" data-i18n="exp_1_role">Ayudante de Dependiente</p>
-                <p class="tl-org">EROSKI</p>
-              </div>
-            </div>
-            <div class="tl-item micro">
-              <p class="tl-date" data-i18n="exp_2_date"><time datetime="2023-12">Dic 2023–Ene 2025</time></p>
-              <div class="tl-body">
-                <p class="tl-title" data-i18n="exp_2_role">Promotor de Marca</p>
-                <p class="tl-org">STAFF GLOBAL GROUP</p>
-              </div>
-            </div>
-            <div class="tl-item micro">
-              <p class="tl-date" data-i18n="exp_3_date"><time datetime="2023-07">Jul–Sep 2023</time></p>
-              <div class="tl-body">
-                <p class="tl-title" data-i18n="exp_3_role">Ayudante de Conductor</p>
-                <p class="tl-org">Tren "Txu-Txu" · Zarautz</p>
-              </div>
-            </div>
-            <div class="tl-item micro">
-              <p class="tl-date" data-i18n="exp_4_date"><time datetime="2022-07">Jul–Ago 2022</time></p>
-              <div class="tl-body">
-                <p class="tl-title" data-i18n="exp_4_role">Vendedor de Calzado</p>
-                <p class="tl-org">CARAVANAS OIARTZUN</p>
-              </div>
-            </div>
-          </section>
-
-        </div><!-- /col-main -->
       </div><!-- /dashboard -->
 
     </div><!-- /wrapper -->

@@ -1,7 +1,6 @@
 {
   "ignoreCommand": "bash -c '[[ \"$VERCEL_GIT_COMMIT_REF\" =~ ^dependabot/ ]] && exit 0 || exit 1'",
   "headers": [
-
     {
       "source": "/Eneko_Ruiz_CV_ES.pdf",
       "headers": [
@@ -12,6 +11,19 @@
         {
           "key": "Content-Disposition",
           "value": "attachment; filename=Eneko_Ruiz_CV_ES.pdf"
+        }
+      ]
+    },
+    {
+      "source": "/Eneko_Ruiz_CV_EN.pdf",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        },
+        {
+          "key": "Content-Disposition",
+          "value": "attachment; filename=Eneko_Ruiz_CV_EN.pdf"
         }
       ]
     },

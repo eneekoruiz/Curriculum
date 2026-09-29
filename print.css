@@ -1,0 +1,495 @@
+/*
+ * PRINT / PDF — ATS-friendly A4 layout.
+ * Single column, real selectable text in reading order, no icons or decoration
+ * that parsers could misread. Loaded only for print (and by the PDF function,
+ * which emulates print media), so it does not depend on index.css.
+ */
+
+@page {
+  size: A4 portrait;
+  margin: 10mm 13mm 9mm;
+}
+
+:root {
+  --ink: #0f172a;
+  --ink-2: #1e293b;
+  --ink-3: #475569;
+  --rule: #cbd5e1;
+  --brand: #8a6532;
+  --f-serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --f-sans: 'DM Sans', Arial, Helvetica, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  animation: none !important;
+  transition: none !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+  filter: none !important;
+  /* Ligatures turn "fi"/"fl" into single glyphs (ﬁ, ﬂ) that ATS keyword search misses */
+  font-variant-ligatures: none !important;
+  font-feature-settings: "liga" 0, "clig" 0, "dlig" 0 !important;
+}
+
+html,
+body {
+  background: #fff !important;
+  color: var(--ink-2);
+  font-family: var(--f-sans);
+  font-size: 9.2pt;
+  line-height: 1.32;
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Screen-only chrome */
+#topbar,
+#scroll-progress,
+#lang-menu,
+.grain,
+.copy-tip,
+.cursor-dot,
+.cursor-outline,
+.portal-arrival,
+.precision-motion,
+.site-footer,
+.hide-print,
+.contact-row svg {
+  display: none !important;
+}
+
+.reveal,
+.reveal * {
+  opacity: 1 !important;
+  transform: none !important;
+  visibility: visible !important;
+}
+
+/* ── Header ── */
+.site-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 8mm;
+  padding-bottom: 2.6mm;
+  border-bottom: 1.2pt solid var(--ink);
+  margin-bottom: 3mm;
+}
+
+.eyebrow {
+  margin-top: 1.2mm;
+  font-size: 11.5pt;
+  font-weight: 700;
+  color: var(--brand);
+}
+
+h1 {
+  font-family: var(--f-serif);
+  font-size: 25pt;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--ink);
+}
+
+h1 strong {
+  font-weight: 700;
+}
+
+.tagline {
+  margin-top: 1.6mm;
+  font-size: 8.9pt;
+  color: var(--ink-2);
+}
+
+.tagline-loc {
+  margin-top: .4mm;
+  font-size: 8.8pt;
+  color: var(--ink-3);
+}
+
+.contacts {
+  display: grid;
+  grid-template-columns: auto;
+  justify-items: end;
+  gap: .4mm 5mm;
+  font-style: normal;
+  font-size: 8.6pt;
+  color: var(--ink-2);
+  text-align: right;
+}
+
+.contact-row {
+  display: block;
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+
+/* ── Profile ── */
+.profile {
+  margin-bottom: 3mm;
+}
+
+.profile-text {
+  font-size: 9pt;
+  line-height: 1.42;
+  color: var(--ink-2);
+}
+
+/* ── Sections (single column: safest reading order for ATS parsers) ── */
+.dashboard {
+  display: block;
+}
+
+.dashboard > section {
+  margin-bottom: 2.7mm;
+}
+
+.dashboard > section:last-child {
+  margin-bottom: 0;
+}
+
+.sec-title,
+.profile-label {
+  font-family: var(--f-serif);
+  font-size: 13pt;
+  font-weight: 600;
+  line-height: 1.1;
+  color: var(--ink);
+  padding-bottom: .7mm;
+  border-bottom: .5pt solid var(--rule);
+  margin-bottom: 1.8mm;
+}
+
+/* Title / org on the left, dates on the right; DOM order stays title → org → date */
+/*
+ * No position/float here: positioned and floated boxes are painted out of document
+ * order, which scrambles the text order ATS parsers extract from the PDF.
+ * Instead the date overlaps the body's first row in a grid (painted in DOM order).
+ */
+.tl-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  margin-bottom: 2mm;
+  break-inside: avoid;
+}
+
+.tl-item:last-child {
+  margin-bottom: 0;
+}
+
+/* The body spans both columns, so descriptions use the full width */
+.tl-body {
+  grid-column: 1 / -1;
+  grid-row: 1;
+}
+
+.tl-date {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: start;
+  padding-top: .4mm;
+  font-size: 9pt;
+  color: var(--ink-3);
+  white-space: nowrap;
+  text-align: right;
+}
+
+.tl-title {
+  padding-right: 42mm;
+  font-size: 10.4pt;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.3;
+}
+
+.tl-org {
+  font-size: 9.4pt;
+  color: var(--ink-2);
+  font-style: italic;
+}
+
+.tl-mention {
+  font-size: 9.2pt;
+  color: var(--brand);
+}
+
+.tl-desc {
+  margin-top: .5mm;
+  font-size: 9.1pt;
+  color: var(--ink-2);
+}
+
+.tl-list {
+  margin: .8mm 0 0 4.2mm;
+  padding: 0;
+  font-size: 9.1pt;
+  color: var(--ink-2);
+}
+
+.tl-list li {
+  padding-left: .6mm;
+  margin-bottom: .2mm;
+}
+
+/* ── Projects: name — type / stack · links / description ── */
+.proj-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  margin-bottom: 1.8mm;
+  break-inside: avoid;
+}
+
+.proj-item:last-child {
+  margin-bottom: 0;
+}
+
+.proj-name {
+  flex-basis: 100%;
+  font-size: 10pt;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+
+
+.proj-stack {
+  font-size: 8.8pt;
+  color: var(--brand);
+}
+
+.proj-links {
+  margin-left: auto;
+  padding-left: 4mm;
+  font-size: 8.6pt;
+  color: var(--ink-3);
+  text-align: right;
+}
+
+/* One link per project on paper: the live demo when there is one, else the repo */
+.proj-links a.demo ~ a.repo {
+  display: none;
+}
+
+.proj-desc {
+  order: 2;
+  flex-basis: 100%;
+  font-size: 9.1pt;
+  color: var(--ink-2);
+}
+
+/* ── Skills ── */
+.skills {
+  display: grid;
+  gap: .6mm;
+}
+
+.skill-group {
+  display: grid;
+  grid-template-columns: 36mm minmax(0, 1fr);
+  gap: 3mm;
+}
+
+.sg-label {
+  font-size: 9.1pt;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.sg-label::after {
+  content: ':';
+}
+
+.sg-list {
+  font-size: 9.1pt;
+  color: var(--ink-2);
+}
+
+/* ── Languages: typographic columns; the certified level is the eye-catcher ── */
+.lang-inline {
+  display: flex;
+  margin: .6mm 0 0;
+}
+
+.lang-chip {
+  flex: 1 1 0;
+  margin: 0;
+  padding: 0 4mm;
+  border-left: .5pt solid var(--rule);
+}
+
+.lang-chip:first-child {
+  padding-left: 0;
+  border-left: 0;
+}
+
+.lang-name {
+  display: block;
+  font-size: 9.4pt;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.lang-level {
+  display: block;
+  margin: .2mm 0 .3mm;
+  font-family: var(--f-serif);
+  font-size: 19pt;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--brand);
+  font-variant-numeric: lining-nums;
+  font-feature-settings: "lnum" 1, "liga" 0 !important;
+}
+
+.lang-level-native {
+  font-size: 13pt;
+  line-height: 1.45;
+  color: var(--ink-2);
+}
+
+.lang-cert {
+  display: block;
+  font-size: 8.6pt;
+  font-style: normal;
+  color: var(--ink-2);
+}
+
+/* ── Courses ── */
+.course-list {
+  display: grid;
+  gap: .4mm;
+}
+
+.course-item {
+  display: block;
+  font-size: 9.1pt;
+}
+
+.course-name {
+  display: inline;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.course-inst {
+  display: inline;
+  color: var(--ink-3);
+}
+
+.course-inst::before {
+  content: '\00a0— ';
+}
+
+/* ── Project links: on paper the name itself is the link; no URL clutter ── */
+.proj-links {
+  display: none !important;
+}
+
+.proj-title-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ── QR to the interactive portfolio (paper → phone) ── */
+.site-header {
+  align-items: center;
+}
+
+.qr-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .8mm;
+  flex: 0 0 auto;
+  color: var(--ink);
+}
+
+.qr-svg {
+  width: 17mm;
+  height: 17mm;
+  display: block;
+}
+
+.qr-caption {
+  font-size: 6.8pt;
+  line-height: 1.1;
+  color: var(--ink-3);
+  text-align: center;
+  max-width: 22mm;
+}
+
+/* Cormorant defaults to old-style figures ("C1" reads as "Cı"): use lining numerals */
+h1,
+.sec-title,
+.profile-label {
+  font-variant-numeric: lining-nums;
+  font-feature-settings: "lnum" 1, "liga" 0, "clig" 0 !important;
+}
+
+/* ── Skill pills (plain text spans, read in order by ATS parsers) ── */
+.sg-list.pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .9mm 1mm;
+}
+
+.pill {
+  display: inline-block;
+  padding: .15mm 1.7mm;
+  border: .5pt solid #dccbb2;
+  border-radius: 3mm;
+  font-size: 8.7pt;
+  line-height: 1.35;
+  color: var(--ink-2);
+}
+
+.pill.key {
+  border-color: #c9a878;
+  background: #f5ede0;
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.skills {
+  gap: 1.2mm;
+}
+
+.skill-group {
+  align-items: center;
+}
+
+/* ── Denser, larger layout: project name and stack share a line; degree and
+      track share a line. Frees vertical space so the text can be bigger. ── */
+.proj-name {
+  flex-basis: auto;
+  margin-right: 2.2mm;
+}
+
+.proj-stack {
+  flex: 1 1 auto;
+}
+
+.tl-org,
+.tl-mention {
+  display: inline;
+}
+
+.tl-mention::before {
+  content: '\00a0·\00a0';
+  color: var(--ink-3);
+}

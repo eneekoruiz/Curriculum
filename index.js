@@ -2,7 +2,7 @@
  * CURRICULUM VITAE — CORE ENGINE v3.1.2
  * Refactored for ultimate visual code craftsmanship, legibility, and maintainability.
  * Standardized LF line endings & validated for 10/10 production excellence.
- * Zero external dependencies. High efficiency pure Vanilla JS.
+ * Vanilla JS; GSAP is loaded optionally for entrance motion.
  */
 
 const BIRTH_DATE = '2005-07-28';
@@ -55,7 +55,7 @@ const playRevealTimeline = (timeline, section, offset = 0) => {
     ? section.querySelectorAll('.eyebrow, h1, .tagline, .live-wrap, .contact-row')
     : isProfile
       ? section.querySelectorAll('.profile-label, .profile-text')
-      : section.querySelectorAll('.sec-title, .course-item, .lang-chip, .skill-group, .tl-item, .proj-link');
+      : section.querySelectorAll('.sec-title, .course-item, .lang-chip, .skill-group, .tl-item, .proj-item');
 
   // Disable CSS transitions during GSAP animation to avoid rendering conflicts
   section.style.transition = 'none';
@@ -221,7 +221,7 @@ const applyTranslations = (langCode) => {
   // Translate all text elements and accessibility tags
   document.querySelectorAll('[data-i18n]').forEach(element => {
     const translationKey = element.getAttribute('data-i18n');
-    let translatedValue = translations[translationKey];
+    let translatedValue = translations[translationKey] ?? T.en[translationKey];
     
     if (translatedValue !== undefined) {
       if (typeof translatedValue === 'string') {
@@ -239,7 +239,7 @@ const applyTranslations = (langCode) => {
   // Global layout language configuration
   html.setAttribute('lang', langCode);
   html.setAttribute('dir', metadata.dir);
-  document.title = `Eneko Ruiz Mollón — ${translations.eyebrow}`;
+  document.title = `Eneko Ruiz Mollón — ${translations.eyebrow || T.en.eyebrow}`;
   
   const langLabel = document.getElementById('lang-label');
   if (langLabel) {
@@ -247,7 +247,7 @@ const applyTranslations = (langCode) => {
   }
   
   // Search Engine & Metadata synchronization
-  const metaDescription = translations.meta_desc || '';
+  const metaDescription = translations.meta_desc || T.en.meta_desc || '';
   document.querySelector('meta[name="description"]')?.setAttribute('content', metaDescription);
   document.querySelector('meta[property="og:description"]')?.setAttribute('content', metaDescription);
 
@@ -348,7 +348,19 @@ const EXPORT_COPY = {
   }
 };
 
-const getExportCopy = () => EXPORT_COPY[currentLang] || EXPORT_COPY.default;
+const getExportCopy = () => {
+  const base = EXPORT_COPY[currentLang] || EXPORT_COPY.default;
+  const t = T[currentLang] || T.en;
+  return {
+    ...base,
+    download: t.pdf_download || base.download,
+    preparing: t.pdf_preparing || base.preparing,
+    opening: t.pdf_opening || base.opening,
+    ready: t.pdf_ready || base.ready,
+    failed: t.pdf_failed || base.failed,
+    ariaDownload: t.pdf_download || base.ariaDownload
+  };
+};
 const shouldUsePdfDownload = () => true;
 
 const getPrintButtonLabel = (printButton = document.getElementById('print-btn')) => {
@@ -378,11 +390,15 @@ const forcePrintReadyState = () => {
   document.querySelectorAll('.reveal').forEach(element => element.classList.add('visible'));
 };
 
-const STATIC_PDF_VERSION = '20260704-html-faithful';
+const STATIC_PDF_VERSION = '20260929-ats-v7';
+
+// Pre-rendered PDFs (instant and reliable); every other language is rendered on demand.
+const STATIC_PDFS = { es: '/Eneko_Ruiz_CV_ES.pdf', en: '/Eneko_Ruiz_CV_EN.pdf' };
 
 const getPdfDownloadUrl = () => {
-  if ((currentLang || 'es') === 'es') {
-    const staticPdfUrl = new URL('/Eneko_Ruiz_CV_ES.pdf', window.location.origin);
+  const staticPdfPath = STATIC_PDFS[currentLang || 'es'];
+  if (staticPdfPath) {
+    const staticPdfUrl = new URL(staticPdfPath, window.location.origin);
     staticPdfUrl.searchParams.set('v', STATIC_PDF_VERSION);
     return staticPdfUrl.toString();
   }
@@ -598,7 +614,10 @@ const handleCopy = async (event) => {
   if (!textToCopy) {
     return;
   }
-  
+
+  // Email/phone are real mailto:/tel: links (clickable in the PDF); on the web a click copies instead.
+  event.preventDefault();
+
   try {
     await navigator.clipboard.writeText(textToCopy);
     if (navigator.vibrate) {
@@ -837,6 +856,39 @@ const setupSurfacePolish = () => {
       surface.style.setProperty('--my', '50%');
     });
   });
+};
+
+/**
+ * Safety net for PDF export: with print media active and an A4-wide viewport,
+ * sizes the CV to fill a single page: grows it (up to +12%) when there is room,
+ * shrinks it when a language runs long.
+ * Printable area = A4 minus the @page margins in print.css (13mm sides, 10mm + 9mm).
+ * @returns {number} the zoom factor applied
+ */
+window.fitPrintToOnePage = () => {
+  const wrapper = document.querySelector('.wrapper');
+  if (!wrapper) {
+    return 1;
+  }
+  wrapper.style.zoom = '';
+  // 1.5% headroom for line-box rounding between screen layout and the PDF renderer
+  const availableHeight = (((297 - 19) * 96) / 25.4) * 0.985;
+  let zoom = 1;
+  // Grow while there is room (bigger text reads better), up to +12%...
+  while (zoom < 1.12) {
+    wrapper.style.zoom = String(Math.round((zoom + 0.01) * 100) / 100);
+    if (wrapper.getBoundingClientRect().height > availableHeight) {
+      wrapper.style.zoom = String(zoom);
+      break;
+    }
+    zoom = Math.round((zoom + 0.01) * 100) / 100;
+  }
+  // ...or shrink until it fits. Re-measure each step: zoom re-wraps the lines.
+  while (wrapper.getBoundingClientRect().height > availableHeight && zoom > 0.8) {
+    zoom = Math.round((zoom - 0.01) * 100) / 100;
+    wrapper.style.zoom = String(zoom);
+  }
+  return zoom;
 };
 
 /* ── INITIALIZATION ───────────────────────────────────────────── */
@@ -1093,12 +1145,23 @@ const setupSurfacePolish = () => {
   }
   window.scrollTo(0, 0);
 
+  // Calm first paint: reveal once fonts are ready (max 800ms), with a single fade
+  const revealPage = () => requestAnimationFrame(() => html.classList.remove('cv-loading'));
+  Promise.race([
+    document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve(),
+    new Promise(resolve => setTimeout(resolve, 800))
+  ]).then(revealPage, revealPage);
+
   // i18n & initial URL query initialization
   const urlParameters = new URLSearchParams(window.location.search);
-  const initialLang = urlParameters.get('lang') || safeStorage.get('cv-lang') || 'es';
+  // URL → saved choice → visitor's browser language → English (international default)
+  const browserLang = (navigator.languages || [navigator.language || ''])
+    .map(code => String(code).slice(0, 2).toLowerCase())
+    .find(code => T[code]);
+  const initialLang = urlParameters.get('lang') || safeStorage.get('cv-lang') || browserLang || 'en';
   applyTranslations(initialLang);
   updateExportButtonLabel();
-  window.addEventListener('resize', updateExportButtonLabel, { passive: true });
+  window.addEventListener('resize', () => updateExportButtonLabel(), { passive: true });
 
   if (urlParameters.has('pdf')) {
     forcePrintReadyState();
@@ -1168,7 +1231,7 @@ const setupSurfacePolish = () => {
         if (!document.querySelector('.reveal.visible')) {
           initialReveals.forEach(element => {
             gsap.set(element, { opacity: 1, scale: 1, y: 0, clearProps: 'transform,opacity,clipPath,filter' });
-            element.querySelectorAll('.eyebrow, h1, .tagline, .live-wrap, .contact-row, .profile-label, .profile-text, .sec-title, .course-item, .lang-chip, .skill-group, .tl-item, .proj-link')
+            element.querySelectorAll('.eyebrow, h1, .tagline, .live-wrap, .contact-row, .profile-label, .profile-text, .sec-title, .course-item, .lang-chip, .skill-group, .tl-item, .proj-item')
               .forEach(child => gsap.set(child, { opacity: 1, x: 0, y: 0, clearProps: 'transform,opacity,filter' }));
             element.classList.add('visible');
           });
@@ -1189,7 +1252,7 @@ const setupSurfacePolish = () => {
         remainingHidden.forEach(element => {
           if (shouldAnimateMotion) {
             gsap.set(element, { opacity: 1, scale: 1, y: 0 });
-            const childItems = element.querySelectorAll('.tl-item, .pill, .proj-link');
+            const childItems = element.querySelectorAll('.tl-item, .proj-item');
             if (childItems.length) {
               gsap.set(childItems, { opacity: 1, y: 0 });
             }

@@ -10,7 +10,8 @@ const puppeteer = require('puppeteer-core');
 
 const VALID_LANGS = [
   'es', 'en', 'eu', 'fr', 'de', 'it', 'pt', 'ca', 'gl', 'nl',
-  'ru', 'zh', 'ja', 'ko', 'ar', 'he', 'sv', 'pl', 'no', 'da'
+  'ru', 'zh', 'ja', 'ko', 'ar', 'he', 'sv', 'pl', 'no', 'da',
+  'cs', 'ro', 'tr', 'uk'
 ];
 
 let browserInstance = null;
@@ -123,6 +124,8 @@ module.exports = async function handler(request, response) {
       timeout: 10000
     });
 
+    // Lay out at the printable A4 width (210mm - 2 × 13mm) so the one-page check measures the real page.
+    await page.setViewport({ width: 695, height: 1051, deviceScaleFactor: 1 });
     await page.emulateMediaType('print');
     await page.evaluate(async () => {
       document.documentElement.classList.add('pdf-render', 'print-ready');
@@ -145,6 +148,10 @@ module.exports = async function handler(request, response) {
         Promise.all([fontReady, imageReady]),
         new Promise((resolve) => setTimeout(resolve, 1200))
       ]);
+
+      if (typeof window.fitPrintToOnePage === 'function') {
+        window.fitPrintToOnePage();
+      }
     });
     await new Promise(resolve => setTimeout(resolve, 40));
 
