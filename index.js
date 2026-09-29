@@ -1,121 +1,14 @@
 /*
- * CURRICULUM VITAE — CORE ENGINE v3.1.2
- * Refactored for ultimate visual code craftsmanship, legibility, and maintainability.
- * Standardized LF line endings & validated for 10/10 production excellence.
- * Vanilla JS; GSAP is loaded optionally for entrance motion.
+ * Interactive CV — vanilla JS, no dependencies.
+ * i18n, theme, PDF download (pre-rendered per language, /api/pdf fallback),
+ * contact copy, share, vCard, first paint and scroll reveal.
  */
 
-const BIRTH_DATE = '2005-07-28';
 const html = document.documentElement;
-const root = document.getElementById('main-content');
 let currentLang = 'es';
 let themeTransitionTimeout = null;
 
-const PRECISION_MOTION = {
-  duration: 0.7,
-  revealDuration: 0.32,
-  childDuration: 0.24,
-  stagger: 0.018,
-  initialDelay: 0.08,
-  ease: cubicBezier(0.42, 0, 0.16, 1)
-};
-
-function cubicBezier(x1, y1, x2, y2) {
-  const sampleCurveX = (t) => ((1 - 3 * x2 + 3 * x1) * t + (3 * x2 - 6 * x1)) * t * t + (3 * x1) * t;
-  const sampleCurveY = (t) => ((1 - 3 * y2 + 3 * y1) * t + (3 * y2 - 6 * y1)) * t * t + (3 * y1) * t;
-  const sampleDerivativeX = (t) => (3 * (1 - 3 * x2 + 3 * x1) * t + 2 * (3 * x2 - 6 * x1)) * t + (3 * x1);
-
-  return (x) => {
-    if (x <= 0 || x >= 1) {
-      return x;
-    }
-
-    let t = x;
-    for (let i = 0; i < 4; i += 1) {
-      const currentX = sampleCurveX(t) - x;
-      const derivative = sampleDerivativeX(t);
-      if (Math.abs(currentX) < 0.001 || Math.abs(derivative) < 0.001) {
-        break;
-      }
-      t -= currentX / derivative;
-    }
-
-    return sampleCurveY(Math.max(0, Math.min(1, t)));
-  };
-}
-
-const playRevealTimeline = (timeline, section, offset = 0) => {
-  if (!section || !timeline) {
-    return;
-  }
-
-  const isHeader = section.classList.contains('site-header');
-  const isProfile = section.classList.contains('profile');
-  const childTargets = isHeader
-    ? section.querySelectorAll('.eyebrow, h1, .tagline, .live-wrap, .contact-row')
-    : isProfile
-      ? section.querySelectorAll('.profile-label, .profile-text')
-      : section.querySelectorAll('.sec-title, .course-item, .lang-chip, .skill-group, .tl-item, .proj-item');
-
-  // Disable CSS transitions during GSAP animation to avoid rendering conflicts
-  section.style.transition = 'none';
-  childTargets.forEach(el => {
-    el.style.transition = 'none';
-  });
-
-  timeline.fromTo(section,
-    { opacity: 0, y: 18, scale: 0.985, clipPath: 'circle(0% at 8% 18%)' },
-    {
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      clipPath: 'circle(145% at 8% 18%)',
-      duration: isHeader ? PRECISION_MOTION.revealDuration + 0.12 : PRECISION_MOTION.revealDuration,
-      ease: PRECISION_MOTION.ease,
-      clearProps: 'transform,scale,opacity,transition,clipPath',
-      onStart: () => section.classList.add('visible'),
-      onComplete: () => section.classList.add('visible')
-    },
-    offset
-  );
-
-  if (childTargets.length) {
-    timeline.fromTo(childTargets,
-      { opacity: 0, x: -10, y: 6 },
-      {
-        opacity: 1,
-        x: 0,
-        y: 0,
-        duration: PRECISION_MOTION.childDuration,
-        stagger: PRECISION_MOTION.stagger,
-        ease: PRECISION_MOTION.ease,
-        clearProps: 'transform,opacity,transition'
-      },
-      offset + (isHeader ? 0.08 : 0.1)
-    );
-  }
-};
-
 /* ── HELPERS & UTILITIES ────────────────────────────────────────── */
-
-/**
- * Calculates current age based on a birth date string (YYYY-MM-DD).
- * @param {string} birthday 
- * @returns {number}
- */
-const calculateAge = (birthday) => {
-  const birthDate = new Date(birthday);
-  const today = new Date();
-  
-  let calculatedAge = today.getFullYear() - birthDate.getFullYear();
-  const monthDifference = today.getMonth() - birthDate.getMonth();
-  
-  if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
-    calculatedAge--;
-  }
-  
-  return calculatedAge;
-};
 
 /**
  * Safely accesses localStorage, catching any errors in security-restricted iframe environments.
@@ -204,7 +97,7 @@ const applyTheme = (isDarkTheme, animate = true) => {
 
 /**
  * Dynamically applies translations to elements with data-i18n attributes.
- * Updates dynamic placeholders (like {{age}}), HTML attributes, search engine tags, and footer copyright year.
+ * Updates HTML attributes, search engine tags and the footer copyright year.
  * @param {string} langCode 
  */
 const applyTranslations = (langCode) => {
@@ -216,7 +109,6 @@ const applyTranslations = (langCode) => {
   }
   
   currentLang = langCode;
-  const currentAge = calculateAge(BIRTH_DATE);
 
   // Translate all text elements and accessibility tags
   document.querySelectorAll('[data-i18n]').forEach(element => {
@@ -224,9 +116,6 @@ const applyTranslations = (langCode) => {
     let translatedValue = translations[translationKey] ?? T.en[translationKey];
     
     if (translatedValue !== undefined) {
-      if (typeof translatedValue === 'string') {
-        translatedValue = translatedValue.replace('{{age}}', currentAge);
-      }
       
       if (translationKey.startsWith('aria_')) {
         element.setAttribute('aria-label', translatedValue);
@@ -251,8 +140,7 @@ const applyTranslations = (langCode) => {
   document.querySelector('meta[name="description"]')?.setAttribute('content', metaDescription);
   document.querySelector('meta[property="og:description"]')?.setAttribute('content', metaDescription);
 
-  const localizedLocale = `${metadata.iso.toLowerCase()}_${metadata.iso}`;
-  document.querySelector('meta[property="og:locale"]')?.setAttribute('content', localizedLocale);
+  document.querySelector('meta[property="og:locale"]')?.setAttribute('content', metadata.locale);
   
   // Dynamic footer copyright year update
   const footerElement = document.querySelector('.site-footer');
@@ -278,29 +166,8 @@ const applyTranslations = (langCode) => {
  * @param {string} langCode 
  */
 const setLang = (langCode) => {
-  if (window.gsap) {
-    gsap.to(root, {
-      opacity: 0,
-      y: 8,
-      duration: 0.15,
-      ease: 'power2.in',
-      onComplete: () => {
-        applyTranslations(langCode);
-        safeStorage.set('cv-lang', langCode);
-        
-        gsap.to(root, {
-          opacity: 1,
-          y: 0,
-          duration: 0.25,
-          ease: 'power2.out',
-          clearProps: 'opacity,transform'
-        });
-      }
-    });
-  } else {
-    applyTranslations(langCode);
-    safeStorage.set('cv-lang', langCode);
-  }
+  applyTranslations(langCode);
+  safeStorage.set('cv-lang', langCode);
 };
 
 
@@ -323,45 +190,17 @@ const getRuntimeContext = () => {
   return { isEmbedded, isMobile, isIOS, isSafari };
 };
 
-const EXPORT_COPY = {
-  es: {
-    print: 'Imprimir CV',
-    download: 'Descargar PDF',
-    preparing: 'Generando PDF...',
-    printing: 'Abriendo impresión...',
-    ready: 'PDF descargado',
-    opening: 'Abriendo PDF...',
-    failed: 'No se pudo generar el PDF',
-    ariaPrint: 'Imprimir versión PDF',
-    ariaDownload: 'Descargar versión PDF'
-  },
-  default: {
-    print: 'Print CV',
-    download: 'Download PDF',
-    preparing: 'Building PDF...',
-    printing: 'Opening print...',
-    ready: 'PDF downloaded',
-    opening: 'Opening PDF...',
-    failed: 'PDF export failed',
-    ariaPrint: 'Print PDF version',
-    ariaDownload: 'Download PDF version'
-  }
-};
-
+/** Download button copy for the current language (English fallback). */
 const getExportCopy = () => {
-  const base = EXPORT_COPY[currentLang] || EXPORT_COPY.default;
   const t = T[currentLang] || T.en;
   return {
-    ...base,
-    download: t.pdf_download || base.download,
-    preparing: t.pdf_preparing || base.preparing,
-    opening: t.pdf_opening || base.opening,
-    ready: t.pdf_ready || base.ready,
-    failed: t.pdf_failed || base.failed,
-    ariaDownload: t.pdf_download || base.ariaDownload
+    download: t.pdf_download,
+    preparing: t.pdf_preparing,
+    opening: t.pdf_opening,
+    ready: t.pdf_ready,
+    failed: t.pdf_failed
   };
 };
-const shouldUsePdfDownload = () => true;
 
 const getPrintButtonLabel = (printButton = document.getElementById('print-btn')) => {
   if (!printButton) {
@@ -379,10 +218,8 @@ const updateExportButtonLabel = (forcedText = '') => {
   }
 
   const copy = getExportCopy();
-  const downloadMode = shouldUsePdfDownload();
-  statusLabel.textContent = forcedText || (downloadMode ? copy.download : copy.print);
-  printButton.setAttribute('aria-label', downloadMode ? copy.ariaDownload : copy.ariaPrint);
-  printButton.dataset.exportMode = downloadMode ? 'download' : 'print';
+  statusLabel.textContent = forcedText || copy.download;
+  printButton.setAttribute('aria-label', copy.download);
 };
 
 const forcePrintReadyState = () => {
@@ -390,19 +227,22 @@ const forcePrintReadyState = () => {
   document.querySelectorAll('.reveal').forEach(element => element.classList.add('visible'));
 };
 
-const STATIC_PDF_VERSION = '20260929-ats-v7';
 
-// Pre-rendered PDFs (instant and reliable); every other language is rendered on demand.
-const STATIC_PDFS = { es: '/Eneko_Ruiz_CV_ES.pdf', en: '/Eneko_Ruiz_CV_EN.pdf' };
-
+// Every language ships a pre-rendered PDF (scripts/build-pdfs.mjs): instant and reliable.
+// /api/pdf stays as a fallback for a language without one.
 const getPdfDownloadUrl = () => {
-  const staticPdfPath = STATIC_PDFS[currentLang || 'es'];
-  if (staticPdfPath) {
-    const staticPdfUrl = new URL(staticPdfPath, window.location.origin);
-    staticPdfUrl.searchParams.set('v', STATIC_PDF_VERSION);
+  const lang = currentLang || 'es';
+  if (window.PRINT_ZOOM && lang in window.PRINT_ZOOM) {
+    const staticPdfUrl = new URL(`/pdf/Eneko_Ruiz_CV_${lang.toUpperCase()}.pdf`, window.location.origin);
+    staticPdfUrl.searchParams.set('v', window.PDF_VERSION || '1');
     return staticPdfUrl.toString();
   }
 
+  return getDynamicPdfUrl();
+};
+
+/** On-demand rendering (api/pdf.js): fallback when a pre-rendered PDF is missing or fails. */
+const getDynamicPdfUrl = () => {
   const pdfUrl = new URL('/api/pdf', window.location.origin);
   pdfUrl.searchParams.set('lang', currentLang || 'es');
   return pdfUrl.toString();
@@ -440,13 +280,23 @@ const downloadGeneratedPdf = async (printButton, options = {}) => {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 28000);
 
+  const dynamicPdfUrl = getDynamicPdfUrl();
+  let effectiveUrl = pdfUrl;
+
   try {
-    const response = await fetch(pdfUrl, {
+    const request = (url) => fetch(url, {
       method: 'GET',
       cache: 'no-store',
       headers: { Accept: 'application/pdf' },
       signal: controller.signal
     });
+
+    let response = await request(pdfUrl);
+    if (!response.ok && pdfUrl !== dynamicPdfUrl) {
+      // Pre-rendered file unavailable: render it on demand instead
+      effectiveUrl = dynamicPdfUrl;
+      response = await request(dynamicPdfUrl);
+    }
 
     if (!response.ok) {
       throw new Error(`PDF request failed: ${response.status}`);
@@ -478,7 +328,7 @@ const downloadGeneratedPdf = async (printButton, options = {}) => {
       window.parent.postMessage({ type: 'cv-download-pdf-fallback', url: pdfUrl }, '*');
     }
     showCopyTip(printButton, copy.opening);
-    openPdfDirectly(pdfUrl);
+    openPdfDirectly(effectiveUrl);
   } finally {
     clearTimeout(timeoutId);
   }
@@ -509,7 +359,6 @@ window.handlePrint = async () => {
 
   const statusLabel = getPrintButtonLabel(printButton);
   const { isEmbedded, isIOS, isSafari } = getRuntimeContext();
-  const usePdfDownload = shouldUsePdfDownload();
   const copy = getExportCopy();
 
   const resetPrintButton = () => {
@@ -519,25 +368,14 @@ window.handlePrint = async () => {
 
   printButton.setAttribute('data-loading', 'true');
   if (statusLabel) {
-    statusLabel.textContent = usePdfDownload ? copy.preparing : copy.printing;
+    statusLabel.textContent = copy.preparing;
   }
 
   forcePrintReadyState();
 
   try {
-    if (usePdfDownload) {
-      await downloadGeneratedPdf(printButton, { preferDirect: isIOS || (isSafari && !isEmbedded) });
-      resetPrintButton();
-      return;
-    }
-
-    const cleanupAfterPrint = () => resetPrintButton();
-    window.addEventListener('afterprint', cleanupAfterPrint, { once: true });
-
-    setTimeout(() => {
-      window.print();
-      setTimeout(cleanupAfterPrint, 1200);
-    }, 60);
+    await downloadGeneratedPdf(printButton, { preferDirect: isIOS || (isSafari && !isEmbedded) });
+    resetPrintButton();
   } catch (error) {
     console.error('CV export failed:', error);
     resetPrintButton();
@@ -658,7 +496,7 @@ END:VCARD`;
   showCopyTip(document.getElementById('vcard-btn'), copyOkMessage);
 };
 
-/* ── EASTER EGG — CONFETTI & DEVELOPER CONSOLE CLI ── */
+/* ── EASTER EGG — DEVELOPER CONSOLE CLI ── */
 
 /**
  * Renders a clean terminal message in the developer tools.
@@ -692,83 +530,14 @@ const _runCLI = () => {
 };
 
 /**
- * Triggers full-screen interactive confetti fall and launches email client with direct message template.
+ * Console easter egg: opens the mail client with a ready-made message.
  * @returns {string} success message
  */
 window.hire = function() {
   const mailtoUrl = "mailto:eneekoruiz@gmail.com?subject=Propuesta%20Laboral%20%E2%80%94%20Eneko%20Ruiz&body=Hola%20Eneko%2C%0A%0AHe%20visto%20tu%20curr%C3%ADculum%20interactivo%20y%20me%20gustar%C3%ADa%20contactar%20contigo...";
 
-  if (!window.gsap) {
-    window.location.href = mailtoUrl;
-    return "Conexión establecida. ¡Suerte!";
-  }
-
-  const confettiColors = ['#c4965a', '#334155', '#94a3b8', '#0f172a', '#475569'];
-  const confettiContainer = document.createElement('div');
-  Object.assign(confettiContainer.style, {
-    position: 'fixed',
-    inset: 0,
-    pointerEvents: 'none',
-    zIndex: 99999
-  });
-  document.body.appendChild(confettiContainer);
-  
-  for (let i = 0; i < 100; i++) {
-    const confettiElement = document.createElement('div');
-    const size = 5 + Math.random() * 8;
-    const isRound = Math.random() > 0.5;
-    
-    Object.assign(confettiElement.style, {
-      position: 'absolute',
-      width: `${size}px`,
-      height: `${size}px`,
-      backgroundColor: confettiColors[Math.floor(Math.random() * confettiColors.length)],
-      left: '50vw',
-      top: '60vh',
-      borderRadius: isRound ? '50%' : '2px',
-      opacity: 0
-    });
-    
-    confettiContainer.appendChild(confettiElement);
-    
-    const angle = Math.random() * Math.PI * 2;
-    const velocity = 200 + Math.random() * 300;
-    const targetX = Math.cos(angle) * velocity + (Math.random() - 0.5) * 100;
-    const targetY = Math.sin(angle) * velocity + (Math.random() - 0.5) * 100;
-    
-    gsap.set(confettiElement, { x: 0, y: 0, opacity: 1, scale: 0.5 });
-    
-    gsap.to(confettiElement, {
-      x: targetX,
-      y: targetY - 150, // blast up
-      scale: 1,
-      rotation: Math.random() * 720 - 360,
-      duration: 0.6 + Math.random() * 0.4,
-      ease: 'power2.out',
-      onComplete: () => {
-        // Gravity fall
-        gsap.to(confettiElement, {
-          y: '+=500',
-          x: `+=${(Math.random() - 0.5) * 150}`,
-          opacity: 0,
-          scale: 0.4,
-          rotation: `+=${Math.random() * 360}`,
-          duration: 1.5 + Math.random() * 1.5,
-          ease: 'power1.in',
-          onComplete: () => confettiElement.remove()
-        });
-      }
-    });
-  }
-  
-  setTimeout(() => confettiContainer.remove(), 4000);
-  
   console.log("%c🚀 Iniciando conexión... Abriendo cliente de correo.", "color: #c4965a; font-size: 14px; font-weight: bold;");
-  
-  setTimeout(() => {
-    window.location.href = mailtoUrl;
-  }, 1200);
-  
+  window.location.href = mailtoUrl;
   return "🚀 Conexión establecida. ¡Suerte!";
 };
 
@@ -782,41 +551,6 @@ window.addEventListener('keydown', (event) => {
     }
   }
 });
-
-// Dynamic Magnetic Controls (Topbar controls follow cursor on close hover)
-const setupMagneticControls = () => {
-  const controls = document.querySelectorAll('#topbar .ctrl');
-  if (!controls.length || !window.gsap) return;
-  
-  controls.forEach(btn => {
-    btn.addEventListener('mousemove', (e) => {
-      const rect = btn.getBoundingClientRect();
-      const btnX = rect.left + rect.width / 2;
-      const btnY = rect.top + rect.height / 2;
-      
-      const distX = e.clientX - btnX;
-      const distY = e.clientY - btnY;
-      
-      gsap.to(btn, {
-        x: distX * 0.15,
-        y: distY * 0.15,
-        duration: 0.35,
-        ease: 'power2.out',
-        overwrite: 'auto'
-      });
-    });
-    
-    btn.addEventListener('mouseleave', () => {
-      gsap.to(btn, {
-        x: 0,
-        y: 0,
-        duration: 0.8,
-        ease: 'elastic.out(1, 0.4)',
-        overwrite: 'auto'
-      });
-    });
-  });
-};
 
 const setupSurfacePolish = () => {
   if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -891,6 +625,51 @@ window.fitPrintToOnePage = () => {
   return zoom;
 };
 
+/**
+ * Printing from the browser (Ctrl+P) uses the same one-page scale that
+ * scripts/build-pdfs.mjs measured for each language (print-zoom.js).
+ */
+const setupPrintScale = () => {
+  const wrapper = document.querySelector('.wrapper');
+  if (!wrapper) {
+    return;
+  }
+  window.addEventListener('beforeprint', () => {
+    const zoom = window.PRINT_ZOOM && window.PRINT_ZOOM[currentLang];
+    if (zoom) {
+      wrapper.style.zoom = String(zoom);
+    }
+  });
+  window.addEventListener('afterprint', () => {
+    wrapper.style.zoom = '';
+  });
+};
+
+/**
+ * Calm scroll reveal: each section below the cover fades in (10px rise) the first time
+ * it enters the viewport. Nothing is hidden without JavaScript, with reduced motion,
+ * in print or in the PDF render.
+ */
+const setupScrollReveal = () => {
+  const sections = document.querySelectorAll('.dashboard > section');
+  const reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!sections.length || reducedMotion || !('IntersectionObserver' in window)) {
+    return;
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-revealed');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { rootMargin: '0px 0px -6% 0px', threshold: 0.06 });
+
+  html.classList.add('scroll-reveal');
+  sections.forEach(section => observer.observe(section));
+};
+
 /* ── INITIALIZATION ───────────────────────────────────────────── */
 (function init() {
   // Force manual scroll position behavior on page load to prevent erratic scroll jumps
@@ -900,17 +679,10 @@ window.fitPrintToOnePage = () => {
   window.scrollTo(0, 0);
   requestAnimationFrame(() => window.scrollTo(0, 0));
 
-  const bootParameters = new URLSearchParams(window.location.search);
-  const isPdfRender = bootParameters.has('pdf');
   const runtimeContext = getRuntimeContext();
-  const shouldAnimateMotion = false;
-  if (shouldAnimateMotion) {
-    document.documentElement.classList.add('motion-ready');
-  }
 
   // Initialize lightweight hover polish where it will not fight an iframe or touch viewport.
   if (!runtimeContext.isEmbedded && !runtimeContext.isMobile) {
-    setupMagneticControls();
     setupSurfacePolish();
   }
 
@@ -1016,16 +788,7 @@ window.fitPrintToOnePage = () => {
       handleShare();
     }
     if (event.data.type === 'leaving') {
-      if (shouldAnimateMotion) {
-        gsap.to(document.body, {
-          opacity: 0,
-          scale: 0.98,
-          duration: 0.5,
-          ease: 'power2.inOut'
-        });
-      } else {
-        document.body.style.opacity = '0';
-      }
+      document.body.style.opacity = '0';
     }
   });
 
@@ -1145,6 +908,8 @@ window.fitPrintToOnePage = () => {
   }
   window.scrollTo(0, 0);
 
+  setupPrintScale();
+
   // Calm first paint: reveal once fonts are ready (max 800ms), with a single fade
   const revealPage = () => requestAnimationFrame(() => html.classList.remove('cv-loading'));
   Promise.race([
@@ -1169,179 +934,16 @@ window.fitPrintToOnePage = () => {
     return;
   }
 
-  // Lazy reveal entrance transition observers powered by GSAP
-  const entranceObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting || entry.intersectionRatio > 0) {
-        const target = entry.target;
-        entranceObserver.unobserve(target);
-        
-        target.style.transition = 'none';
-        
-        if (shouldAnimateMotion) {
-          const tl = gsap.timeline();
-          playRevealTimeline(tl, target, 0);
-        } else {
-          target.style.opacity = '1';
-          target.style.transform = 'none';
-          target.classList.add('visible');
-        }
-      }
-    });
-  }, { threshold: 0, rootMargin: '0px 0px 100px 0px' });
-
-  // Handle direct headless print query
+  // Direct headless print query (?print)
   if (urlParameters.has('print')) {
-    document.querySelectorAll('.reveal').forEach(element => {
-      if (shouldAnimateMotion) {
-        gsap.set(element, { opacity: 1, scale: 1, y: 0 });
-      } else {
-        element.style.opacity = '1';
-        element.style.transform = 'none';
-      }
-      element.classList.add('visible');
-    });
     setTimeout(handlePrint, 500);
-  } else {
-    // Orchestrate the initial entrance sequence for elements visible on load
-    if (shouldAnimateMotion) {
-      document.documentElement.classList.add('gsap-active');
-      const allReveals = Array.from(document.querySelectorAll('.reveal'));
-      const initialReveals = [];
-      const scrollReveals = [];
-
-      allReveals.forEach(element => {
-        const rect = element.getBoundingClientRect();
-        // Check if element is in/near the viewport on load
-        if (rect.top < window.innerHeight - 50) {
-          initialReveals.push(element);
-        } else {
-          scrollReveals.push(element);
-        }
-      });
-
-      // Coordinated timeline for elements in initial viewport
-      const tl = gsap.timeline({ delay: PRECISION_MOTION.initialDelay });
-
-      initialReveals.forEach((section, index) => {
-        playRevealTimeline(tl, section, index * 0.12);
-      });
-
-      setTimeout(() => {
-        if (!document.querySelector('.reveal.visible')) {
-          initialReveals.forEach(element => {
-            gsap.set(element, { opacity: 1, scale: 1, y: 0, clearProps: 'transform,opacity,clipPath,filter' });
-            element.querySelectorAll('.eyebrow, h1, .tagline, .live-wrap, .contact-row, .profile-label, .profile-text, .sec-title, .course-item, .lang-chip, .skill-group, .tl-item, .proj-item')
-              .forEach(child => gsap.set(child, { opacity: 1, x: 0, y: 0, clearProps: 'transform,opacity,filter' }));
-            element.classList.add('visible');
-          });
-        }
-      }, 2600);
-
-      // Observe the remaining scroll reveals
-      scrollReveals.forEach(element => entranceObserver.observe(element));
-    } else {
-      // Fallback: observe everything immediately
-      document.querySelectorAll('.reveal').forEach(element => entranceObserver.observe(element));
-    }
-
-    // Safety fallback delayed to 4000ms to allow all normal entrance animations to complete smoothly
-    setTimeout(() => {
-      const remainingHidden = document.querySelectorAll('.reveal:not(.visible)');
-      if (remainingHidden.length) { 
-        remainingHidden.forEach(element => {
-          if (shouldAnimateMotion) {
-            gsap.set(element, { opacity: 1, scale: 1, y: 0 });
-            const childItems = element.querySelectorAll('.tl-item, .proj-item');
-            if (childItems.length) {
-              gsap.set(childItems, { opacity: 1, y: 0 });
-            }
-          } else {
-            element.style.opacity = '1';
-            element.style.transform = 'none';
-          }
-          element.classList.add('visible');
-        });
-      }
-      document.documentElement.classList.remove('motion-ready');
-    }, 4000);
   }
-  
+
+  setupScrollReveal();
+
   setTimeout(() => {
     document.documentElement.classList.add('theme-loaded');
   }, 100);
-
-  // --- PREMIUM UI INITIALIZATION ---
-  const initPremiumUI = () => {
-    if (runtimeContext.isEmbedded || runtimeContext.isMobile || !window.matchMedia('(pointer: fine)').matches) return;
-
-    const cursorDot = document.querySelector('.cursor-dot');
-    const cursorOutline = document.querySelector('.cursor-outline');
-    
-    if (cursorDot && cursorOutline && window.gsap) {
-      let mouseX = window.innerWidth / 2;
-      let mouseY = window.innerHeight / 2;
-      
-      window.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-        
-        gsap.to(cursorDot, { x: mouseX, y: mouseY, duration: 0.1, ease: 'power2.out' });
-        gsap.to(cursorOutline, { x: mouseX, y: mouseY, duration: 0.5, ease: 'power2.out' });
-      });
-      
-      const magnetics = document.querySelectorAll('.magnetic');
-      magnetics.forEach(el => {
-        el.addEventListener('mousemove', (e) => {
-          const rect = el.getBoundingClientRect();
-          const cx = rect.left + rect.width / 2;
-          const cy = rect.top + rect.height / 2;
-          const dx = (e.clientX - cx) * 0.3;
-          const dy = (e.clientY - cy) * 0.3;
-          gsap.to(el, { x: dx, y: dy, duration: 0.4, ease: 'power2.out' });
-        });
-        el.addEventListener('mouseleave', () => {
-          gsap.to(el, { x: 0, y: 0, duration: 0.6, ease: 'elastic.out(1, 0.3)' });
-        });
-      });
-
-      const cards = document.querySelectorAll('.glass-card');
-      cards.forEach(card => {
-        card.addEventListener('mousemove', (e) => {
-          const rect = card.getBoundingClientRect();
-          const x = e.clientX - rect.left;
-          const y = e.clientY - rect.top;
-          
-          card.style.setProperty('--mx', `${x}px`);
-          card.style.setProperty('--my', `${y}px`);
-          
-          const centerX = rect.width / 2;
-          const centerY = rect.height / 2;
-          const rotateX = ((y - centerY) / centerY) * -5;
-          const rotateY = ((x - centerX) / centerX) * 5;
-          
-          gsap.to(card, {
-            rotationX: rotateX,
-            rotationY: rotateY,
-            duration: 0.4,
-            ease: 'power2.out',
-            transformPerspective: 1000
-          });
-        });
-        
-        card.addEventListener('mouseleave', () => {
-          gsap.to(card, {
-            rotationX: 0,
-            rotationY: 0,
-            duration: 0.6,
-            ease: 'power2.out'
-          });
-        });
-      });
-    }
-  };
-  
-  initPremiumUI();
 
   // PWA Service Worker Registration
   if ('serviceWorker' in navigator) {

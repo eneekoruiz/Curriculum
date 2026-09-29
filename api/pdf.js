@@ -105,7 +105,6 @@ module.exports = async function handler(request, response) {
       const url = route.url();
       const resourceType = route.resourceType();
       const skipResource =
-        url.endsWith('/gsap.min.js') ||
         url.endsWith('/manifest.json') ||
         url.endsWith('/sw.js');
 
