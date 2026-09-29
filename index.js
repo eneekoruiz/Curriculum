@@ -628,20 +628,27 @@ window.fitPrintToOnePage = () => {
 /**
  * Printing from the browser (Ctrl+P) uses the same one-page scale that
  * scripts/build-pdfs.mjs measured for each language (print-zoom.js).
+ * A scale already set (fitPrintToOnePage in the PDF renderers, which newer Chromium
+ * also fires beforeprint for) is left untouched.
  */
 const setupPrintScale = () => {
   const wrapper = document.querySelector('.wrapper');
   if (!wrapper) {
     return;
   }
+  let applied = false;
   window.addEventListener('beforeprint', () => {
     const zoom = window.PRINT_ZOOM && window.PRINT_ZOOM[currentLang];
-    if (zoom) {
+    if (zoom && !wrapper.style.zoom) {
       wrapper.style.zoom = String(zoom);
+      applied = true;
     }
   });
   window.addEventListener('afterprint', () => {
-    wrapper.style.zoom = '';
+    if (applied) {
+      wrapper.style.zoom = '';
+      applied = false;
+    }
   });
 };
 

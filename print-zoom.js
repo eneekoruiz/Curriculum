@@ -2,6 +2,6 @@
 // PRINT_ZOOM: per-language scale that keeps the printed CV on one A4 page.
 // PDF_SOURCE: hash of the files the PDFs were built from (CI checks it is current).
 // PDF_VERSION: cache-busting version for the PDF downloads.
-window.PRINT_ZOOM = {"es":1.08,"en":1.09,"eu":1.05,"ca":1.06,"gl":1.06,"fr":1.08,"de":1.08,"it":1.09,"pt":1.06,"nl":1.08,"sv":1.06,"no":1.1,"da":1.08,"pl":1.08,"cs":1.1,"ro":1.08,"tr":1.08,"ru":1.03,"uk":1.08,"zh":1.12,"ja":1.1,"ko":1.11,"ar":1.1,"he":1.12};
-window.PDF_SOURCE = 'beac461585b9';
-window.PDF_VERSION = 'beac461585b9';
+window.PRINT_ZOOM = {"es":1.08,"en":1.08,"eu":1.05,"ca":1.06,"gl":1.06,"fr":1.08,"de":1.08,"it":1.09,"pt":1.06,"nl":1.08,"sv":1.07,"no":1.1,"da":1.08,"pl":1.08,"cs":1.08,"ro":1.08,"tr":1.08,"ru":1.03,"uk":1.08,"zh":1.12,"ja":1.1,"ko":1.12,"ar":1.1,"he":1.11};
+window.PDF_SOURCE = '2c483c126e9f';
+window.PDF_VERSION = '2c483c126e9f';
