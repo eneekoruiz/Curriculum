@@ -35,7 +35,6 @@
   height: 3px;
   background: linear-gradient(to right, var(--c-brand), var(--c-accent), #475569);
   z-index: 10000;
-  transition: width 0.1s ease-out;
 }
 
 /* Timeline static lines (classic) */
@@ -626,22 +625,20 @@ ul {
 .ctrl {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   background: var(--c-surface);
   border: 1px solid var(--c-rule-2);
-  border-radius: 6px;
+  border-radius: 99px;
   cursor: pointer;
   color: var(--c-ink-2);
   font-family: var(--f-mono);
   font-size: 11px;
+  font-weight: 500;
   letter-spacing: .05em;
-  padding: 6px 12px;
+  padding: 8px 16px;
   min-height: 32px;
-  transition: border-color var(--dur) var(--ease),
-              color var(--dur) var(--ease),
-              background var(--dur) var(--ease),
-              transform var(--dur) var(--ease),
-              box-shadow var(--dur) var(--ease);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   white-space: nowrap;
   text-transform: uppercase;
   touch-action: manipulation;
@@ -821,9 +818,7 @@ html[data-theme="dark"] #icon-moon {
   position: relative;
 }
 
-#lang-trigger {
-  text-transform: uppercase;
-}
+#lang-trigger {}
 
 #lang-trigger .chev {
   width: 10px;
@@ -3502,17 +3497,16 @@ html.cv-loading #root-container {
 }
 
 .hero {
-  min-height: calc(100svh - var(--wrap-top));
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  padding-bottom: clamp(20px, 4svh, 48px);
-  margin-bottom: var(--s4);
+  padding-top: clamp(20px, 3svh, 40px);
+  padding-bottom: clamp(16px, 2svh, 24px);
+  margin-bottom: var(--s3);
 }
 
 .hero .site-header {
-  padding-bottom: clamp(20px, 4.5svh, 56px);
-  margin-bottom: clamp(20px, 4.5svh, 56px);
+  padding-bottom: clamp(16px, 2svh, 24px);
+  margin-bottom: clamp(16px, 2svh, 24px);
 }
 
 .hero .profile {
@@ -3626,3 +3620,6 @@ html.cv-loading #root-container {
 .dashboard > section {
   min-width: 0;
 }
+
+.ctrl { text-transform: none !important; font-size: 13px !important; letter-spacing: normal !important; }
+#lang-trigger { text-transform: none !important; }

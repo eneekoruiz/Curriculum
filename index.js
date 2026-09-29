@@ -180,6 +180,7 @@ const applyTheme = (isDarkTheme, animate = true) => {
     
     html.setAttribute('data-theme', themeValue);
     html.style.colorScheme = themeValue;
+    html.style.backgroundColor = isDarkTheme ? '#020617' : '#ffffff';
     
     const metaThemeColor = document.getElementById('meta-theme-color');
     if (metaThemeColor) {
