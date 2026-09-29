@@ -942,15 +942,21 @@ const setupScrollReveal = () => {
   });
 
   // Top header screen scroll progress indicator
+  const cachedProgressBar = document.getElementById('scroll-progress');
+  let cachedScrollableRange = document.documentElement.scrollHeight - window.innerHeight;
   let scrollTicking = false;
+
+  // Recalculate on resize (orientation change, dynamic content)
+  window.addEventListener('resize', () => {
+    cachedScrollableRange = document.documentElement.scrollHeight - window.innerHeight;
+  }, { passive: true });
+
   window.addEventListener('scroll', () => {
     if (!scrollTicking) {
       window.requestAnimationFrame(() => {
-        const progressBar = document.getElementById('scroll-progress');
-        const scrollableRange = document.documentElement.scrollHeight - window.innerHeight;
-        if (progressBar) {
-          const progress = scrollableRange <= 0 ? 0 : (window.scrollY / scrollableRange);
-          progressBar.style.transform = `scaleX(${progress})`;
+        if (cachedProgressBar) {
+          const progress = cachedScrollableRange <= 0 ? 0 : (window.scrollY / cachedScrollableRange);
+          cachedProgressBar.style.transform = `scaleX(${progress})`;
         }
         scrollTicking = false;
       });

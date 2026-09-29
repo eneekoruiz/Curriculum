@@ -319,6 +319,8 @@ ul {
   background: rgba(255, 255, 255, 0.72);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
+  will-change: transform;
+  contain: layout style;
   border-bottom: 1px solid rgba(0, 0, 0, 0.04);
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.01), 0 4px 20px rgba(0, 0, 0, 0.02);
   pointer-events: none;
