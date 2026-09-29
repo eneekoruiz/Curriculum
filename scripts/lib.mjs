@@ -85,4 +85,3 @@ export async function pdfText(buffer) {
   return { pages: doc.numPages, text: pages.join('\n') };
 }
 
-export const normalizeText = (text) => text.replace(/\s+/g, ' ').trim();
