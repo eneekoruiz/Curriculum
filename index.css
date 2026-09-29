@@ -3269,71 +3269,6 @@ a.contact-row {
   order: -1;
 }
 
-/* Key facts: editorial band between hairlines, no boxes or fills */
-.highlights {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1.3fr;
-  list-style: none;
-  margin: 0 0 var(--s5);
-  padding: 18px 0;
-  border-top: 1px solid var(--c-rule-2);
-  border-bottom: 1px solid var(--c-rule-2);
-}
-
-.hl {
-  padding: 2px 20px;
-  border-left: 1px solid var(--c-rule-2);
-}
-
-.hl:first-child {
-  padding-left: 0;
-  border-left: 0;
-}
-
-.hl-title {
-  display: block;
-  font-family: var(--f-serif);
-  font-size: 21px;
-  font-weight: 600;
-  line-height: 1.15;
-  color: var(--c-ink);
-}
-
-.hl-sub {
-  display: block;
-  margin-top: 4px;
-  font-size: 12.5px;
-  line-height: 1.45;
-  color: var(--c-ink-3);
-}
-
-.hl-accent .hl-title {
-  color: var(--c-brand);
-}
-
-@media (max-width: 860px) {
-  .highlights {
-    grid-template-columns: 1fr 1fr;
-    row-gap: 16px;
-  }
-
-  .hl:nth-child(3) {
-    padding-left: 0;
-    border-left: 0;
-  }
-}
-
-@media (max-width: 480px) {
-  .highlights {
-    grid-template-columns: 1fr;
-  }
-
-  .hl {
-    padding-left: 0;
-    border-left: 0;
-  }
-}
-
 /* Print-only elements (QR) stay out of the web layout */
 .print-only {
   display: none;
@@ -3389,13 +3324,31 @@ a.contact-row {
   flex-shrink: 0;
 }
 
-.hl-title {
-  font-variant-numeric: lining-nums;
-  font-feature-settings: "lnum" 1;
+/* Languages sit right after the profile: full width, certificates at a glance */
+.dashboard > section[aria-labelledby="h-langs"],
+.dashboard > section[aria-labelledby="h-courses"] {
+  grid-column: 1 / -1;
 }
 
-/* The header already closes with a rule; avoid a double line above the key facts */
-.highlights {
-  border-top: 0;
-  padding-top: 0;
+.dashboard > section[aria-labelledby="h-langs"] .lang-inline {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px 32px;
+}
+
+@media (max-width: 860px) {
+  .dashboard > section[aria-labelledby="h-langs"] .lang-inline {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dashboard > section[aria-labelledby="h-langs"] .lang-inline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 40px;
+}
+
+.dashboard > section[aria-labelledby="h-langs"] .lang-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
 }

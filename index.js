@@ -390,7 +390,7 @@ const forcePrintReadyState = () => {
   document.querySelectorAll('.reveal').forEach(element => element.classList.add('visible'));
 };
 
-const STATIC_PDF_VERSION = '20260929-ats-v3';
+const STATIC_PDF_VERSION = '20260929-ats-v4';
 
 // Pre-rendered PDFs (instant and reliable); every other language is rendered on demand.
 const STATIC_PDFS = { es: '/Eneko_Ruiz_CV_ES.pdf', en: '/Eneko_Ruiz_CV_EN.pdf' };
