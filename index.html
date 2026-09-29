@@ -85,14 +85,15 @@
 
   <!-- ── TOPBAR ────────────────────────────────────────── -->
   <nav id="topbar" aria-label="Controles del sitio">
+  <div class="topbar-inner">
     <div class="live-wrap hide-print" style="margin-right: auto; margin-top: 0; align-self: center;">
             <span class="live-dot"></span>
             <span data-i18n="status_available">Disponible</span>
             <span class="tagline-sep">—</span>
             <span data-i18n="local_time">Hora local:</span> <span class="time-now" id="live-time">00:00</span>
           </div>
-
-    <div id="lang-wrap" class="magnetic">
+    <div class="topbar-actions">
+      <div id="lang-wrap" class="magnetic">
       <button id="lang-trigger" class="ctrl" aria-haspopup="listbox" aria-expanded="false"
         data-i18n="aria_lang">
         <span id="lang-label">Español</span>
@@ -179,7 +180,9 @@
           d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z" />
       </svg>
     </button>
-  </nav>
+    </div>
+  </div>
+</nav>
 
   <!-- ── ROOT ──────────────────────────────────────────── -->
   <main id="main-content">
