@@ -390,11 +390,15 @@ const forcePrintReadyState = () => {
   document.querySelectorAll('.reveal').forEach(element => element.classList.add('visible'));
 };
 
-const STATIC_PDF_VERSION = '20260929-ats-v2';
+const STATIC_PDF_VERSION = '20260929-ats-v3';
+
+// Pre-rendered PDFs (instant and reliable); every other language is rendered on demand.
+const STATIC_PDFS = { es: '/Eneko_Ruiz_CV_ES.pdf', en: '/Eneko_Ruiz_CV_EN.pdf' };
 
 const getPdfDownloadUrl = () => {
-  if ((currentLang || 'es') === 'es') {
-    const staticPdfUrl = new URL('/Eneko_Ruiz_CV_ES.pdf', window.location.origin);
+  const staticPdfPath = STATIC_PDFS[currentLang || 'es'];
+  if (staticPdfPath) {
+    const staticPdfUrl = new URL(staticPdfPath, window.location.origin);
     staticPdfUrl.searchParams.set('v', STATIC_PDF_VERSION);
     return staticPdfUrl.toString();
   }

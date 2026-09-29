@@ -3258,3 +3258,144 @@ a.contact-row {
     padding-right: 190px;
   }
 }
+
+/* Name comes first in the DOM (ATS read it as the candidate's name); keep the eyebrow above it visually */
+.header-id {
+  display: flex;
+  flex-direction: column;
+}
+
+.header-id .eyebrow {
+  order: -1;
+}
+
+/* Key facts: editorial band between hairlines, no boxes or fills */
+.highlights {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1.3fr;
+  list-style: none;
+  margin: 0 0 var(--s5);
+  padding: 18px 0;
+  border-top: 1px solid var(--c-rule-2);
+  border-bottom: 1px solid var(--c-rule-2);
+}
+
+.hl {
+  padding: 2px 20px;
+  border-left: 1px solid var(--c-rule-2);
+}
+
+.hl:first-child {
+  padding-left: 0;
+  border-left: 0;
+}
+
+.hl-title {
+  display: block;
+  font-family: var(--f-serif);
+  font-size: 21px;
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--c-ink);
+}
+
+.hl-sub {
+  display: block;
+  margin-top: 4px;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--c-ink-3);
+}
+
+.hl-accent .hl-title {
+  color: var(--c-brand);
+}
+
+@media (max-width: 860px) {
+  .highlights {
+    grid-template-columns: 1fr 1fr;
+    row-gap: 16px;
+  }
+
+  .hl:nth-child(3) {
+    padding-left: 0;
+    border-left: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .highlights {
+    grid-template-columns: 1fr;
+  }
+
+  .hl {
+    padding-left: 0;
+    border-left: 0;
+  }
+}
+
+/* Print-only elements (QR) stay out of the web layout */
+.print-only {
+  display: none;
+}
+
+/* Project title doubles as the main link */
+.proj-title-link {
+  color: inherit;
+  text-decoration: none;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size var(--dur) var(--ease);
+}
+
+.proj-title-link:hover {
+  background-size: 100% 1px;
+}
+
+/* Quiet outlined pills instead of raw URLs */
+.proj-links {
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.proj-links .pill-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border: 1px solid var(--c-rule-2);
+  border-radius: 999px;
+  font-family: var(--f-sans);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--c-ink-2);
+  text-decoration: none;
+  background: transparent;
+  transition: border-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease);
+}
+
+.proj-links .pill-link:hover,
+.proj-links .pill-link:focus-visible {
+  border-color: var(--c-brand);
+  color: var(--c-ink);
+  background: var(--c-accent-s);
+}
+
+.pl-icon {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+}
+
+.hl-title {
+  font-variant-numeric: lining-nums;
+  font-feature-settings: "lnum" 1;
+}
+
+/* The header already closes with a rule; avoid a double line above the key facts */
+.highlights {
+  border-top: 0;
+  padding-top: 0;
+}
