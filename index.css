@@ -3185,3 +3185,76 @@ a.contact-row {
     font-size: 15px;
   }
 }
+
+/* Internship bullets, project type and links */
+.tl-list {
+  margin: 6px 0 0 18px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--c-ink-2);
+}
+
+.tl-list li {
+  padding-left: 2px;
+  margin-bottom: 2px;
+}
+
+.tl-list li::marker {
+  color: var(--c-brand);
+}
+
+.proj-kind {
+  font-weight: 400;
+  color: var(--c-ink-3);
+}
+
+.proj-kind::before {
+  content: ' — ';
+}
+
+.proj-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin-top: 4px;
+}
+
+.proj-links a {
+  font-family: var(--f-mono);
+  font-size: 11px;
+  color: var(--c-ink-3);
+  text-decoration: none;
+  border-bottom: 1px solid var(--c-rule-2);
+  overflow-wrap: anywhere;
+}
+
+.proj-links a:hover {
+  color: var(--c-ink);
+  border-color: var(--c-brand);
+}
+
+.proj-item + .proj-item {
+  margin-top: 6px;
+}
+
+.tl-list {
+  list-style: disc outside;
+}
+
+/* Date sits on the title line only, so descriptions use the full width */
+@media (min-width: 601px) {
+  .tl-item {
+    display: block;
+    position: relative;
+  }
+
+  .tl-item .tl-date {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+
+  .tl-item .tl-title {
+    padding-right: 190px;
+  }
+}

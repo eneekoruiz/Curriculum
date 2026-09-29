@@ -7,7 +7,7 @@
 
 @page {
   size: A4 portrait;
-  margin: 11mm 14mm 10mm;
+  margin: 10mm 13mm 9mm;
 }
 
 :root {
@@ -31,6 +31,9 @@
   box-shadow: none !important;
   text-shadow: none !important;
   filter: none !important;
+  /* Ligatures turn "fi"/"fl" into single glyphs (ﬁ, ﬂ) that ATS keyword search misses */
+  font-variant-ligatures: none !important;
+  font-feature-settings: "liga" 0, "clig" 0, "dlig" 0 !important;
 }
 
 html,
@@ -38,8 +41,8 @@ body {
   background: #fff !important;
   color: var(--ink-2);
   font-family: var(--f-sans);
-  font-size: 9pt;
-  line-height: 1.36;
+  font-size: 9.2pt;
+  line-height: 1.32;
   print-color-adjust: exact;
   -webkit-print-color-adjust: exact;
 }
@@ -116,10 +119,10 @@ h1 strong {
 }
 
 .contacts {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: .5mm;
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-items: end;
+  gap: .4mm 5mm;
   font-style: normal;
   font-size: 8.6pt;
   color: var(--ink-2);
@@ -147,13 +150,13 @@ h1 strong {
   color: var(--ink-2);
 }
 
-/* ── Sections ── */
+/* ── Sections (single column: safest reading order for ATS parsers) ── */
 .dashboard {
   display: block;
 }
 
 .dashboard > section {
-  margin-bottom: 3mm;
+  margin-bottom: 2.7mm;
 }
 
 .dashboard > section:last-child {
@@ -162,21 +165,25 @@ h1 strong {
 
 .sec-title,
 .profile-label {
-  font-size: 9pt;
+  font-size: 9.6pt;
   font-weight: 700;
   text-transform: uppercase;
   color: var(--ink);
-  padding-bottom: .9mm;
+  padding-bottom: .8mm;
   border-bottom: .6pt solid var(--rule);
-  margin-bottom: 1.6mm;
+  margin-bottom: 1.8mm;
 }
 
 /* Title / org on the left, dates on the right; DOM order stays title → org → date */
+/*
+ * No position/float here: positioned and floated boxes are painted out of document
+ * order, which scrambles the text order ATS parsers extract from the PDF.
+ * Instead the date overlaps the body's first row in a grid (painted in DOM order).
+ */
 .tl-item {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  column-gap: 6mm;
-  margin-bottom: 1.8mm;
+  margin-bottom: 2mm;
   break-inside: avoid;
 }
 
@@ -184,80 +191,66 @@ h1 strong {
   margin-bottom: 0;
 }
 
+/* The body spans both columns, so descriptions use the full width */
 .tl-body {
-  grid-column: 1;
+  grid-column: 1 / -1;
   grid-row: 1;
 }
 
 .tl-date {
   grid-column: 2;
   grid-row: 1;
-  font-size: 8.6pt;
+  align-self: start;
+  padding-top: .4mm;
+  font-size: 9pt;
   color: var(--ink-3);
   white-space: nowrap;
   text-align: right;
 }
 
 .tl-title {
-  font-size: 10pt;
+  padding-right: 42mm;
+  font-size: 10.4pt;
   font-weight: 700;
   color: var(--ink);
   line-height: 1.3;
 }
 
 .tl-org {
-  font-size: 9pt;
+  font-size: 9.4pt;
   color: var(--ink-2);
   font-style: italic;
 }
 
 .tl-mention {
-  font-size: 9pt;
+  font-size: 9.2pt;
   color: var(--brand);
 }
 
 .tl-desc {
-  margin-top: .6mm;
-  font-size: 8.9pt;
+  margin-top: .5mm;
+  font-size: 9.1pt;
   color: var(--ink-2);
-  white-space: pre-line;
 }
 
-.exp-sub {
-  font-size: 7.8pt;
-  font-weight: 600;
-  text-transform: uppercase;
-  color: var(--ink-3);
-  margin: 1.8mm 0 .8mm;
+.tl-list {
+  margin: .8mm 0 0 4.2mm;
+  padding: 0;
+  font-size: 9.1pt;
+  color: var(--ink-2);
 }
 
-.tl-item.micro {
-  margin-bottom: .8mm;
+.tl-list li {
+  padding-left: .6mm;
+  margin-bottom: .2mm;
 }
 
-.tl-item.micro .tl-body {
-  display: flex;
-  gap: 0;
-  align-items: baseline;
-}
-
-.tl-item.micro .tl-title {
-  font-size: 8.9pt;
-  font-weight: 600;
-}
-
-.tl-item.micro .tl-org::before {
-  content: '\00a0· ';
-  font-style: normal;
-}
-
-/* ── Projects ── */
+/* ── Projects: name — type / stack · links / description ── */
 .proj-item {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  column-gap: 0;
-  margin-bottom: 1.4mm;
+  margin-bottom: 1.8mm;
   break-inside: avoid;
 }
 
@@ -266,52 +259,61 @@ h1 strong {
 }
 
 .proj-name {
-  display: inline;
-  font-size: 9.8pt;
+  flex-basis: 100%;
+  font-size: 10pt;
   font-weight: 700;
   color: var(--ink);
 }
 
+.proj-kind {
+  font-weight: 400;
+  color: var(--ink-2);
+}
+
+.proj-kind::before {
+  content: '\00a0— ';
+  color: var(--ink-3);
+}
+
 .proj-stack {
-  display: inline;
-  font-size: 8.6pt;
+  font-size: 8.8pt;
   color: var(--brand);
 }
 
-.proj-stack::before {
-  content: '\00a0— ';
+.proj-links {
+  margin-left: auto;
+  padding-left: 4mm;
+  font-size: 8.6pt;
   color: var(--ink-3);
+  text-align: right;
+}
+
+/* One link per project on paper: the live demo when there is one, else the repo */
+.proj-links a.demo ~ a.repo {
+  display: none;
 }
 
 .proj-desc {
   order: 2;
   flex-basis: 100%;
-  font-size: 8.9pt;
+  font-size: 9.1pt;
   color: var(--ink-2);
-}
-
-.proj-repo {
-  order: 1;
-  margin-left: auto;
-  padding-left: 4mm;
-  font-size: 8.3pt;
-  color: var(--ink-3);
 }
 
 /* ── Skills ── */
 .skills {
   display: grid;
-  gap: .7mm;
+  gap: .6mm;
 }
 
 .skill-group {
   display: grid;
-  grid-template-columns: 34mm minmax(0, 1fr);
+  grid-template-columns: 36mm minmax(0, 1fr);
   gap: 3mm;
 }
 
 .sg-label {
-  font-size: 9pt;
+  font-size: 9.1pt;
   font-weight: 700;
   color: var(--ink);
 }
@@ -321,31 +323,23 @@ h1 strong {
 }
 
 .sg-list {
-  font-size: 8.9pt;
+  font-size: 9.1pt;
   color: var(--ink-2);
 }
 
-/* ── Languages & courses: two compact blocks side by side ── */
-.dashboard > section[aria-labelledby="h-langs"],
-.dashboard > section[aria-labelledby="h-courses"] {
-  display: inline-block;
-  vertical-align: top;
-  width: 48%;
-}
-
-.dashboard > section[aria-labelledby="h-langs"] {
-  margin-right: 3.5%;
-}
-
-.lang-inline,
-.course-list {
-  display: grid;
-  gap: .6mm;
+/* ── Languages: one line ── */
+.lang-inline {
+  display: block;
+  font-size: 9.1pt;
 }
 
 .lang-chip {
-  display: block;
-  font-size: 8.9pt;
+  display: inline;
+}
+
+.lang-chip + .lang-chip::before {
+  content: '\00a0\00a0·\00a0\00a0';
+  color: var(--ink-3);
 }
 
 .lang-chip strong {
@@ -362,9 +356,15 @@ h1 strong {
   color: var(--ink-2);
 }
 
+/* ── Courses ── */
+.course-list {
+  display: grid;
+  gap: .4mm;
+}
+
 .course-item {
   display: block;
-  font-size: 8.9pt;
+  font-size: 9.1pt;
 }
 
 .course-name {

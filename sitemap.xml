@@ -29,6 +29,10 @@
     <xhtml:link rel="alternate" hreflang="pl" href="https://eneko-ruiz-curriculum.vercel.app/?lang=pl"/>
     <xhtml:link rel="alternate" hreflang="no" href="https://eneko-ruiz-curriculum.vercel.app/?lang=no"/>
     <xhtml:link rel="alternate" hreflang="da" href="https://eneko-ruiz-curriculum.vercel.app/?lang=da"/>
+    <xhtml:link rel="alternate" hreflang="cs" href="https://eneko-ruiz-curriculum.vercel.app/?lang=cs"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://eneko-ruiz-curriculum.vercel.app/?lang=ro"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://eneko-ruiz-curriculum.vercel.app/?lang=tr"/>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://eneko-ruiz-curriculum.vercel.app/?lang=uk"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://eneko-ruiz-curriculum.vercel.app/"/>
   </url>
 </urlset>

@@ -348,7 +348,19 @@ const EXPORT_COPY = {
   }
 };
 
-const getExportCopy = () => EXPORT_COPY[currentLang] || EXPORT_COPY.default;
+const getExportCopy = () => {
+  const base = EXPORT_COPY[currentLang] || EXPORT_COPY.default;
+  const t = T[currentLang] || T.en;
+  return {
+    ...base,
+    download: t.pdf_download || base.download,
+    preparing: t.pdf_preparing || base.preparing,
+    opening: t.pdf_opening || base.opening,
+    ready: t.pdf_ready || base.ready,
+    failed: t.pdf_failed || base.failed,
+    ariaDownload: t.pdf_download || base.ariaDownload
+  };
+};
 const shouldUsePdfDownload = () => true;
 
 const getPrintButtonLabel = (printButton = document.getElementById('print-btn')) => {
@@ -378,7 +390,7 @@ const forcePrintReadyState = () => {
   document.querySelectorAll('.reveal').forEach(element => element.classList.add('visible'));
 };
 
-const STATIC_PDF_VERSION = '20260929-ats';
+const STATIC_PDF_VERSION = '20260929-ats-v2';
 
 const getPdfDownloadUrl = () => {
   if ((currentLang || 'es') === 'es') {
@@ -598,7 +610,10 @@ const handleCopy = async (event) => {
   if (!textToCopy) {
     return;
   }
-  
+
+  // Email/phone are real mailto:/tel: links (clickable in the PDF); on the web a click copies instead.
+  event.preventDefault();
+
   try {
     await navigator.clipboard.writeText(textToCopy);
     if (navigator.vibrate) {
@@ -837,6 +852,29 @@ const setupSurfacePolish = () => {
       surface.style.setProperty('--my', '50%');
     });
   });
+};
+
+/**
+ * Safety net for PDF export: with print media active and an A4-wide viewport,
+ * shrinks the CV just enough to keep it on a single page (never enlarges it).
+ * Printable area = A4 minus the @page margins in print.css (13mm sides, 10mm + 9mm).
+ * @returns {number} the zoom factor applied
+ */
+window.fitPrintToOnePage = () => {
+  const wrapper = document.querySelector('.wrapper');
+  if (!wrapper) {
+    return 1;
+  }
+  wrapper.style.zoom = '';
+  // 1.5% headroom for line-box rounding between screen layout and the PDF renderer
+  const availableHeight = (((297 - 19) * 96) / 25.4) * 0.985;
+  let zoom = 1;
+  // Re-measure after each step: zoom also widens the text column, so lines re-wrap.
+  while (wrapper.getBoundingClientRect().height > availableHeight && zoom > 0.8) {
+    zoom = Math.round((zoom - 0.01) * 100) / 100;
+    wrapper.style.zoom = String(zoom);
+  }
+  return zoom;
 };
 
 /* ── INITIALIZATION ───────────────────────────────────────────── */
@@ -1095,7 +1133,11 @@ const setupSurfacePolish = () => {
 
   // i18n & initial URL query initialization
   const urlParameters = new URLSearchParams(window.location.search);
-  const initialLang = urlParameters.get('lang') || safeStorage.get('cv-lang') || 'es';
+  // URL → saved choice → visitor's browser language → English (international default)
+  const browserLang = (navigator.languages || [navigator.language || ''])
+    .map(code => String(code).slice(0, 2).toLowerCase())
+    .find(code => T[code]);
+  const initialLang = urlParameters.get('lang') || safeStorage.get('cv-lang') || browserLang || 'en';
   applyTranslations(initialLang);
   updateExportButtonLabel();
   window.addEventListener('resize', () => updateExportButtonLabel(), { passive: true });

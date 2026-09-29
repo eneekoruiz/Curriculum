@@ -24,7 +24,9 @@ PDF generation uses the Node dependencies required by the Vercel function.
 
 The CV is a static site with no build step. HTML provides the document structure, `index.css` holds the screen layout, `print.css` the ATS-friendly A4 layout (single column, real text in reading order, no letter-spaced headings), and a JavaScript translation dictionary updates the selected language in the browser. GSAP is loaded only for optional entrance motion.
 
-Spanish, English and Basque carry the full CV content; the other interface languages translate the UI and fall back to English for CV content.
+All 24 languages carry the full CV content. The page opens in the visitor's browser language when it is supported (English otherwise); `?lang=xx` forces one.
+
+ATS rules the print layout follows: single column, text painted in DOM order (no `position`/`float` in `print.css`, which would scramble the extracted text), no ligatures (so "offline-first" is not stored as "ofﬂine-ﬁrst"), numeric dates (MM/YYYY), real `mailto:`/`tel:`/`https:` links, and a one-page guarantee: `window.fitPrintToOnePage()` shrinks the layout slightly when a language runs long.
 
 `Eneko_Ruiz_CV_ES.pdf` is the pre-rendered Spanish PDF; other languages are rendered on demand by `api/pdf.js` (Puppeteer, print media).
 
