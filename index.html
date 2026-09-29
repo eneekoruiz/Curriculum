@@ -23,7 +23,7 @@
 
   <title>Eneko Ruiz Mollón — Ingeniero de Software · Full Stack</title>
   <meta name="description"
-    content="Currículum de Eneko Ruiz Mollón: Ingeniería Informática (UPV/EHU, mención en Ingeniería del Software) y desarrollo Full Stack con React, TypeScript, Next.js y Supabase. Trilingüe: español, euskera C1 e inglés C1." />
+    content="Currículum de Eneko Ruiz Mollón: Ingeniería Informática (UPV/EHU, mención en Ingeniería del Software). Trilingüe: español, euskera C1 e inglés C1." />
   <meta name="author" content="Eneko Ruiz Mollón" />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://eneko-ruiz-curriculum.vercel.app/" />
@@ -63,7 +63,7 @@
   <meta property="og:type" content="profile" />
   <meta property="og:title" content="Eneko Ruiz Mollón — Ingeniero de Software · Full Stack" />
   <meta property="og:description"
-    content="Currículum de Eneko Ruiz Mollón: Ingeniería Informática (UPV/EHU, mención en Ingeniería del Software) y desarrollo Full Stack con React, TypeScript, Next.js y Supabase. Trilingüe: español, euskera C1 e inglés C1." />
+    content="Currículum de Eneko Ruiz Mollón: Ingeniería Informática (UPV/EHU, mención en Ingeniería del Software). Trilingüe: español, euskera C1 e inglés C1." />
   <meta property="og:url" content="https://eneko-ruiz-curriculum.vercel.app/" />
   <meta property="og:image" content="https://eneko-ruiz-curriculum.vercel.app/og.png" />
   <meta property="og:image:width" content="1200" />
@@ -96,7 +96,7 @@
   <meta property="og:site_name" content="Eneko Ruiz Mollón" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Eneko Ruiz Mollón — Ingeniero de Software · Full Stack" />
-  <meta name="twitter:description" content="Currículum de Eneko Ruiz Mollón: Ingeniería Informática (UPV/EHU, mención en Ingeniería del Software) y desarrollo Full Stack con React, TypeScript, Next.js y Supabase. Trilingüe: español, euskera C1 e inglés C1." />
+  <meta name="twitter:description" content="Currículum de Eneko Ruiz Mollón: Ingeniería Informática (UPV/EHU, mención en Ingeniería del Software). Trilingüe: español, euskera C1 e inglés C1." />
   <meta name="twitter:image" content="https://eneko-ruiz-curriculum.vercel.app/og.png" />
 
   <script type="application/ld+json">
@@ -217,6 +217,12 @@
 
   <!-- ── TOPBAR ────────────────────────────────────────── -->
   <nav id="topbar" aria-label="Controles del sitio">
+    <div class="live-wrap hide-print">
+      <span class="live-dot"></span>
+      <span data-i18n="status_available">Disponible</span>
+      <span class="tagline-sep">—</span>
+      <span data-i18n="local_time">Hora local:</span> <span class="time-now" id="live-time">00:00</span>
+    </div>
 
     <div id="lang-wrap" class="magnetic">
       <button id="lang-trigger" class="ctrl" aria-haspopup="listbox" aria-expanded="false"
@@ -322,12 +328,6 @@
           <p class="tagline tagline-loc">
             <span data-i18n="location">Rentería (Gipuzkoa), España</span>
           </p>
-          <div class="live-wrap hide-print">
-            <span class="live-dot"></span>
-            <span data-i18n="status_available">Disponible</span>
-            <span class="tagline-sep">—</span>
-            <span data-i18n="local_time">Hora local:</span> <span class="time-now" id="live-time">00:00</span>
-          </div>
         </div>
 
         <address class="contacts">
@@ -362,7 +362,7 @@
             </svg><span class="ct">github.com/eneekoruiz</span><span class="ct-label hide-print">GitHub</span>
           </a>
 
-          <a class="contact-row" dir="ltr" href="https://eneko-ruiz.vercel.app" target="_blank" rel="noopener noreferrer me">
+          <a class="contact-row hide-print" dir="ltr" href="https://eneko-ruiz.vercel.app" target="_blank" rel="noopener noreferrer me">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8"
               stroke="currentColor" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round"
@@ -388,11 +388,33 @@
       <!-- PERFIL -->
       <section class="profile reveal" aria-labelledby="h-profile">
         <h2 class="profile-label" id="h-profile" data-i18n="profile_title">Perfil profesional</h2>
-        <p class="profile-text" data-i18n="profile_text">Ingeniero de software Full Stack: diseño y desarrollo aplicaciones web completas con React, TypeScript, Node.js y PostgreSQL (Supabase, Firebase), con tests automatizados y CI desde el primer commit. Busco incorporarme a un equipo de desarrollo y aportar desde el primer día.</p>
+        <p class="profile-text" data-i18n="profile_text">Ingeniero de software Full Stack. Diseño y construyo aplicaciones web robustas y escalables, garantizando la calidad del software mediante buenas prácticas, testing automatizado y despliegue continuo. Perfil orientado a producto, a la resolución de problemas y al código limpio, con gran facilidad para integrarme en equipos de trabajo.</p>
       </section>
       </div><!-- /hero -->
 
       <div class="dashboard">
+
+        <!-- FORMACIÓN -->
+        <section class="reveal" aria-labelledby="h-edu">
+          <h2 class="sec-title" id="h-edu" data-i18n="edu_title">Formación académica</h2>
+          <div class="tl-item">
+            <div class="tl-body">
+              <h3 class="tl-title" data-i18n="edu_1_deg">Grado en Ingeniería Informática</h3>
+              <p class="tl-org" data-i18n="edu_1_uni">Universidad del País Vasco (UPV/EHU)</p>
+              <p class="tl-mention" data-i18n="edu_1_mention">Mención en Ingeniería del Software</p>
+              <p class="tl-desc hide-print" data-i18n="edu_1_desc">Algoritmos y estructuras de datos, bases de datos, sistemas operativos, redes, ingeniería del software y desarrollo en Java.</p>
+              <p class="tl-desc" data-i18n="edu_1_tfg">Trabajo Fin de Grado: ampliación de la plataforma StudiOS para el sector de la fotografía.</p>
+            </div>
+            <p class="tl-date" dir="ltr" data-i18n="edu_1_date">09/2023 – 03/2027 (prevista)</p>
+          </div>
+          <div class="tl-item compact hide-print">
+            <div class="tl-body">
+              <h3 class="tl-title" data-i18n="edu_2_deg">Bachillerato Científico</h3>
+              <p class="tl-org">Koldo Mitxelena Herri Ikastetxea</p>
+            </div>
+            <p class="tl-date" dir="ltr"><time datetime="2021-09">09/2021</time> – <time datetime="2023-06">06/2023</time></p>
+          </div>
+        </section>
 
         <!-- IDIOMAS -->
         <section class="reveal" aria-labelledby="h-langs">
@@ -463,28 +485,6 @@
             <p class="proj-desc" data-i18n="proj_4_desc">App de salud femenina: ciclo y bienestar con datos locales, API sincronizada y apps iOS/Android (Capacitor).</p>
             <p class="proj-links"><a class="pill-link" href="https://ayudandonos.vercel.app" target="_blank" rel="noopener noreferrer"><svg class="pl-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg><span data-i18n="proj_demo">Demo</span></a><a class="pill-link" href="https://github.com/eneekoruiz/regla" target="_blank" rel="noopener noreferrer"><svg class="pl-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg><span data-i18n="proj_code">Código</span></a></p>
           </article>
-        </section>
-
-        <!-- FORMACIÓN -->
-        <section class="reveal" aria-labelledby="h-edu">
-          <h2 class="sec-title" id="h-edu" data-i18n="edu_title">Formación académica</h2>
-          <div class="tl-item">
-            <div class="tl-body">
-              <h3 class="tl-title" data-i18n="edu_1_deg">Grado en Ingeniería Informática</h3>
-              <p class="tl-org" data-i18n="edu_1_uni">Universidad del País Vasco (UPV/EHU)</p>
-              <p class="tl-mention" data-i18n="edu_1_mention">Mención en Ingeniería del Software</p>
-              <p class="tl-desc hide-print" data-i18n="edu_1_desc">Algoritmos y estructuras de datos, bases de datos, sistemas operativos, redes, ingeniería del software y desarrollo en Java.</p>
-              <p class="tl-desc" data-i18n="edu_1_tfg">Trabajo Fin de Grado: ampliación de la plataforma StudiOS para el sector de la fotografía.</p>
-            </div>
-            <p class="tl-date" dir="ltr" data-i18n="edu_1_date">09/2023 – 03/2027 (prevista)</p>
-          </div>
-          <div class="tl-item compact hide-print">
-            <div class="tl-body">
-              <h3 class="tl-title" data-i18n="edu_2_deg">Bachillerato Científico</h3>
-              <p class="tl-org">Koldo Mitxelena Herri Ikastetxea</p>
-            </div>
-            <p class="tl-date" dir="ltr"><time datetime="2021-09">09/2021</time> – <time datetime="2023-06">06/2023</time></p>
-          </div>
         </section>
 
         <!-- HABILIDADES TÉCNICAS -->

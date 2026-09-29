@@ -73,6 +73,7 @@ const applyTheme = (isDarkTheme, animate = true) => {
     
     html.setAttribute('data-theme', themeValue);
     html.style.colorScheme = themeValue;
+    html.style.backgroundColor = isDarkTheme ? '#020617' : '#ffffff';
     
     const metaThemeColor = document.getElementById('meta-theme-color');
     if (metaThemeColor) {
@@ -901,13 +902,21 @@ const setupScrollReveal = () => {
   });
 
   // Top header screen scroll progress indicator
+  let scrollTicking = false;
   window.addEventListener('scroll', () => {
-    const progressBar = document.getElementById('scroll-progress');
-    const scrollableRange = document.documentElement.scrollHeight - window.innerHeight;
-    if (progressBar) {
-      progressBar.style.width = scrollableRange <= 0 ? '0%' : ((window.scrollY / scrollableRange) * 100) + '%';
+    if (!scrollTicking) {
+      window.requestAnimationFrame(() => {
+        const progressBar = document.getElementById('scroll-progress');
+        const scrollableRange = document.documentElement.scrollHeight - window.innerHeight;
+        if (progressBar) {
+          const progress = scrollableRange <= 0 ? 0 : (window.scrollY / scrollableRange);
+          progressBar.style.transform = `scaleX(${progress})`;
+        }
+        scrollTicking = false;
+      });
+      scrollTicking = true;
     }
-  });
+  }, { passive: true });
 
   // Disable automatic scroll restoration on refresh and force page to top to trigger animations cleanly
   if ('scrollRestoration' in history) {

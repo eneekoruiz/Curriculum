@@ -31,11 +31,13 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 0%;
+  width: 100%;
   height: 3px;
   background: linear-gradient(to right, var(--c-brand), var(--c-accent), #475569);
   z-index: 10000;
-  transition: width 0.1s ease-out;
+  transform-origin: 0% 50%;
+  transform: scaleX(0);
+  will-change: transform;
 }
 
 /* Timeline static lines (classic) */
@@ -397,26 +399,22 @@ ul {
 .ctrl {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   background: var(--c-surface);
   border: 1px solid var(--c-rule-2);
-  border-radius: 6px;
+  border-radius: 99px;
   cursor: pointer;
   color: var(--c-ink-2);
   font-family: var(--f-mono);
-  font-size: 11px;
-  letter-spacing: .05em;
-  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 16px;
   min-height: 32px;
-  transition: border-color var(--dur) var(--ease),
-              color var(--dur) var(--ease),
-              background var(--dur) var(--ease),
-              transform var(--dur) var(--ease),
-              box-shadow var(--dur) var(--ease);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+  transition: border-color 0.3s var(--ease), color 0.3s var(--ease), background 0.3s var(--ease),
+    transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
   white-space: nowrap;
-  text-transform: uppercase;
   touch-action: manipulation;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.02);
 }
 
 .ctrl:hover {
@@ -590,10 +588,6 @@ html[data-theme="dark"] #icon-moon {
 
 #lang-wrap {
   position: relative;
-}
-
-#lang-trigger {
-  text-transform: uppercase;
 }
 
 #lang-trigger .chev {
@@ -1182,7 +1176,6 @@ h1 strong {
 .site-header .eyebrow,
 .site-header h1,
 .site-header .tagline,
-.site-header .live-wrap,
 .site-header .contacts .contact-row,
 .profile .profile-label,
 .profile .profile-text,
@@ -1198,7 +1191,6 @@ h1 strong {
 .site-header.visible .eyebrow,
 .site-header.visible h1,
 .site-header.visible .tagline,
-.site-header.visible .live-wrap,
 .site-header.visible .contacts .contact-row,
 .profile.visible .profile-label,
 .profile.visible .profile-text,
@@ -1214,7 +1206,6 @@ h1 strong {
 .site-header.visible .eyebrow { transition-delay: 0.04s; }
 .site-header.visible h1 { transition-delay: 0.1s; }
 .site-header.visible .tagline { transition-delay: 0.16s; }
-.site-header.visible .live-wrap { transition-delay: 0.22s; }
 .site-header.visible .contacts .contact-row:nth-child(1) { transition-delay: 0.28s; }
 .site-header.visible .contacts .contact-row:nth-child(2) { transition-delay: 0.34s; }
 
@@ -2025,17 +2016,16 @@ html.cv-loading #root-container {
 }
 
 .hero {
-  min-height: calc(100svh - var(--wrap-top));
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  padding-bottom: clamp(20px, 4svh, 48px);
-  margin-bottom: var(--s4);
+  padding-top: clamp(20px, 3svh, 40px);
+  padding-bottom: clamp(16px, 2svh, 24px);
+  margin-bottom: clamp(48px, 6svh, 80px);
 }
 
 .hero .site-header {
-  padding-bottom: clamp(20px, 4.5svh, 56px);
-  margin-bottom: clamp(20px, 4.5svh, 56px);
+  padding-bottom: clamp(16px, 2svh, 24px);
+  margin-bottom: clamp(16px, 2svh, 24px);
 }
 
 .hero .profile {
@@ -2075,6 +2065,19 @@ html.cv-loading #root-container {
     --wrap-top: 76px;
   }
 
+  .hero {
+    padding-top: 0;
+  }
+
+  .hero .site-header {
+    padding-bottom: 12px;
+    margin-bottom: 12px;
+  }
+
+  .hero .profile-text {
+    line-height: 1.6;
+  }
+
   /* Contacts as labelled tiles: icon + a one-word name, so each one says what it does */
   .hero .contacts {
     display: grid;
@@ -2088,10 +2091,10 @@ html.cv-loading #root-container {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 4px;
-    min-height: 54px;
+    gap: 3px;
+    min-height: 48px;
     margin: 0;
-    padding: 8px 4px;
+    padding: 6px 4px;
     border: 1px solid var(--c-rule-2);
     border-radius: 12px;
     background: var(--c-bg);
@@ -2135,7 +2138,7 @@ html.cv-loading #root-container {
     font-size: clamp(2.4rem, 11vw, 3.2rem);
   }
 
-  .hero .live-wrap {
+  #topbar .live-wrap {
     display: none;
   }
 }
@@ -2181,6 +2184,13 @@ html.scroll-reveal .dashboard > section:not(.is-revealed) {
 .live-wrap {
   flex-wrap: wrap;
   row-gap: 2px;
+}
+
+/* Status line sits at the start of the top bar, controls at the end */
+#topbar .live-wrap {
+  margin: 0;
+  margin-inline-end: auto;
+  align-self: center;
 }
 
 .live-wrap > span {

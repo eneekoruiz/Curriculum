@@ -1,6 +1,6 @@
 // Checks the live page in a real browser:
 //  - every language has exactly the same translation keys and the HTML uses no missing key
-//  - first screen: the profile is complete and the next section starts below the fold (12 viewports)
+//  - first screen: the profile is seen in full (12 viewports)
 //  - no horizontal overflow on phones, no JavaScript errors
 //  - the visitor's browser language is picked up (unsupported ones fall back to English)
 //  - printing the live page (Ctrl+P) stays on one page with all sections
@@ -42,13 +42,11 @@ try {
       const box = selector => document.querySelector(selector).getBoundingClientRect();
       return {
         profileBottom: box('.profile').bottom,
-        nextTop: box('.dashboard > section').top,
         wrapperWidth: box('.wrapper').width
       };
     });
     const label = `${width}x${height}`;
     if (m.profileBottom > height) fail(`${label}: profile cut by the fold (bottom ${Math.round(m.profileBottom)})`);
-    if (m.nextTop < height - 2) fail(`${label}: next section peeks above the fold (${Math.round(m.nextTop)})`);
     if (m.wrapperWidth > width + 1) fail(`${label}: page wider than the viewport (${Math.round(m.wrapperWidth)}px)`);
     if (errors.length) fail(`${label}: JavaScript errors: ${errors.join(' | ')}`);
     await page.close();

@@ -34,8 +34,8 @@ npm run qr       # qr/*, only if the URL changes
 
 ## Quality checks (CI: `.github/workflows/cv-quality.yml`)
 
-- **PDFs**: exactly one A4 page in every language; the committed PDFs match the site; ATS rules hold (name first, reading order languages → experience → projects → education, no ligature glyphs, contact details present).
-- **Web**: 24 languages with identical keys; the first screen shows the complete profile and nothing half-cut at 12 viewports (360×640 → 1920×1080); no horizontal overflow; no JavaScript errors; browser-language detection; Ctrl+P prints on one page.
+- **PDFs**: exactly one A4 page in every language; the committed PDFs match the site; ATS rules hold (name first, reading order education → languages → experience → projects, no ligature glyphs, contact details present).
+- **Web**: 24 languages with identical keys; the first screen shows the complete profile at 12 viewports (360×640 → 1920×1080); no horizontal overflow; no JavaScript errors; browser-language detection; Ctrl+P prints on one page.
 - **Accessibility**: WCAG 2.1 AA audit with axe-core, light and dark themes, desktop and phone, LTR and RTL.
 
 ## Design notes
