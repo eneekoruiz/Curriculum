@@ -6,7 +6,7 @@
 const T = {
   es: {
     eyebrow: "Ingeniero de Software",
-    tagline: "Desarrollador Full Stack · React · TypeScript · Node.js · PostgreSQL",
+    tagline: "Ingeniero de Software Full Stack",
     location: "Rentería (Gipuzkoa), España",
     status_available: "Disponible para incorporarme a un equipo de desarrollo",
     local_time: "Hora local:",
@@ -68,7 +68,7 @@ const T = {
 
   en: {
     eyebrow: "Software Engineer",
-    tagline: "Full Stack Developer · React · TypeScript · Node.js · PostgreSQL",
+    tagline: "Full Stack Software Engineer",
     location: "Rentería (Gipuzkoa), Spain",
     status_available: "Available to join a development team",
     local_time: "Local time:",
@@ -130,7 +130,7 @@ const T = {
 
   eu: {
     eyebrow: "Software Ingeniaria",
-    tagline: "Full Stack Garatzailea · React · TypeScript · Node.js · PostgreSQL",
+    tagline: "Full Stack Software Ingeniaria",
     location: "Errenteria (Gipuzkoa), Espainia",
     status_available: "Garapen talde batean sartzeko prest",
     local_time: "Bertako ordua:",
@@ -192,7 +192,7 @@ const T = {
 
   ca: {
     eyebrow: "Enginyer de Programari",
-    tagline: "Desenvolupador Full Stack · React · TypeScript · Node.js · PostgreSQL",
+    tagline: "Desenvolupador Full Stack",
     location: "Errenteria (Guipúscoa), Espanya",
     status_available: "Disponible per incorporar-me a un equip de desenvolupament",
     local_time: "Hora local:",
@@ -254,7 +254,7 @@ const T = {
 
   gl: {
     eyebrow: "Enxeñeiro de Software",
-    tagline: "Desenvolvedor Full Stack · React · TypeScript · Node.js · PostgreSQL",
+    tagline: "Desenvolvedor Full Stack",
     location: "Errenteria (Guipúscoa), España",
     status_available: "Dispoñible para incorporarme a un equipo de desenvolvemento",
     local_time: "Hora local:",
@@ -316,7 +316,7 @@ const T = {
 
   fr: {
     eyebrow: "Ingénieur Logiciel",
-    tagline: "Développeur Full Stack · React · TypeScript · Node.js · PostgreSQL",
+    tagline: "Développeur Full Stack",
     location: "Errenteria (Guipuscoa), Espagne",
     status_available: "Disponible pour rejoindre une équipe de développement",
     local_time: "Heure locale :",
@@ -378,7 +378,7 @@ const T = {
 
   de: {
     eyebrow: "Softwareentwickler",
-    tagline: "Full-Stack-Entwickler · React · TypeScript · Node.js · PostgreSQL",
+    tagline: "Full-Stack-Entwickler",
     location: "Errenteria (Gipuzkoa), Spanien",
     status_available: "Verfügbar für ein Entwicklungsteam",
     local_time: "Ortszeit:",
@@ -440,7 +440,7 @@ const T = {
 
   it: {
     eyebrow: "Ingegnere del Software",
-    tagline: "Sviluppatore Full Stack · React · TypeScript · Node.js · PostgreSQL",
+    tagline: "Sviluppatore Full Stack",
     location: "Errenteria (Gipuzkoa), Spagna",
     status_available: "Disponibile a entrare in un team di sviluppo",
     local_time: "Ora locale:",
@@ -502,7 +502,7 @@ const T = {
 
   pt: {
     eyebrow: "Engenheiro de Software",
-    tagline: "Desenvolvedor Full Stack · React · TypeScript · Node.js · PostgreSQL",
+    tagline: "Desenvolvedor Full Stack",
     location: "Errenteria (Guipúscoa), Espanha",
     status_available: "Disponível para integrar uma equipa de desenvolvimento",
     local_time: "Hora local:",
@@ -564,7 +564,7 @@ const T = {
 
   nl: {
     eyebrow: "Software Engineer",
-    tagline: "Full-stackontwikkelaar · React · TypeScript · Node.js · PostgreSQL",
+    tagline: "Full-stackontwikkelaar",
     location: "Errenteria (Gipuzkoa), Spanje",
     status_available: "Beschikbaar voor een ontwikkelteam",
     local_time: "Lokale tijd:",
@@ -626,7 +626,7 @@ const T = {
 
   sv: {
     eyebrow: "Mjukvaruingenjör",
-    tagline: "Fullstackutvecklare · React · TypeScript · Node.js · PostgreSQL",
+    tagline: "Fullstackutvecklare",
     location: "Errenteria (Gipuzkoa), Spanien",
     status_available: "Tillgänglig för ett utvecklingsteam",
     local_time: "Lokal tid:",
@@ -688,7 +688,7 @@ const T = {
 
   no: {
     eyebrow: "Programvareingeniør",
-    tagline: "Fullstack-utvikler · React · TypeScript · Node.js · PostgreSQL",
+    tagline: "Fullstack-utvikler",
     location: "Errenteria (Gipuzkoa), Spania",
     status_available: "Tilgjengelig for et utviklingsteam",
     local_time: "Lokal tid:",
@@ -750,7 +750,7 @@ const T = {
 
   da: {
     eyebrow: "Softwareingeniør",
-    tagline: "Fullstack-udvikler · React · TypeScript · Node.js · PostgreSQL",
+    tagline: "Fullstack-udvikler",
     location: "Errenteria (Gipuzkoa), Spanien",
     status_available: "Klar til at indgå i et udviklingsteam",
     local_time: "Lokal tid:",
@@ -812,7 +812,7 @@ const T = {
 
   pl: {
     eyebrow: "Inżynier Oprogramowania",
-    tagline: "Full Stack Developer · React · TypeScript · Node.js · PostgreSQL",
+    tagline: "Full Stack Software Engineer",
     location: "Errenteria (Gipuzkoa), Hiszpania",
     status_available: "Gotowy do dołączenia do zespołu programistów",
     local_time: "Czas lokalny:",
@@ -874,7 +874,7 @@ const T = {
 
   cs: {
     eyebrow: "Softwarový inženýr",
-    tagline: "Full Stack vývojář · React · TypeScript · Node.js · PostgreSQL",
+    tagline: "Full Stack vývojář",
     location: "Errenteria (Gipuzkoa), Španělsko",
     status_available: "K dispozici pro vývojářský tým",
     local_time: "Místní čas:",
@@ -936,7 +936,7 @@ const T = {
 
   ro: {
     eyebrow: "Inginer Software",
-    tagline: "Dezvoltator Full Stack · React · TypeScript · Node.js · PostgreSQL",
+    tagline: "Dezvoltator Full Stack",
     location: "Errenteria (Gipuzkoa), Spania",
     status_available: "Disponibil să mă alătur unei echipe de dezvoltare",
     local_time: "Ora locală:",
@@ -998,7 +998,7 @@ const T = {
 
   tr: {
     eyebrow: "Yazılım Mühendisi",
-    tagline: "Full Stack Geliştirici · React · TypeScript · Node.js · PostgreSQL",
+    tagline: "Full Stack Geliştirici",
     location: "Errenteria (Gipuzkoa), İspanya",
     status_available: "Bir geliştirme ekibine katılmaya hazır",
     local_time: "Yerel saat:",
@@ -1060,7 +1060,7 @@ const T = {
 
   ru: {
     eyebrow: "Инженер-программист",
-    tagline: "Full Stack разработчик · React · TypeScript · Node.js · PostgreSQL",
+    tagline: "Full Stack разработчик",
     location: "Эррентерия (Гипускоа), Испания",
     status_available: "Готов присоединиться к команде разработки",
     local_time: "Местное время:",
@@ -1122,7 +1122,7 @@ const T = {
 
   uk: {
     eyebrow: "Інженер-програміст",
-    tagline: "Full Stack розробник · React · TypeScript · Node.js · PostgreSQL",
+    tagline: "Full Stack розробник",
     location: "Еррентерія (Гіпускоа), Іспанія",
     status_available: "Готовий приєднатися до команди розробки",
     local_time: "Місцевий час:",
@@ -1184,7 +1184,7 @@ const T = {
 
   zh: {
     eyebrow: "软件工程师",
-    tagline: "全栈开发工程师 · React · TypeScript · Node.js · PostgreSQL",
+    tagline: "全栈开发工程师",
     location: "西班牙 吉普斯夸省 埃伦特里亚",
     status_available: "可随时加入开发团队",
     local_time: "当地时间：",
@@ -1246,7 +1246,7 @@ const T = {
 
   ja: {
     eyebrow: "ソフトウェアエンジニア",
-    tagline: "フルスタック開発者 · React · TypeScript · Node.js · PostgreSQL",
+    tagline: "フルスタック開発者",
     location: "スペイン ギプスコア県 エレンテリア",
     status_available: "開発チームへの参加が可能です",
     local_time: "現地時間：",
@@ -1308,7 +1308,7 @@ const T = {
 
   ko: {
     eyebrow: "소프트웨어 엔지니어",
-    tagline: "풀스택 개발자 · React · TypeScript · Node.js · PostgreSQL",
+    tagline: "풀스택 개발자",
     location: "스페인 기푸스코아 에렌테리아",
     status_available: "개발팀 합류 가능",
     local_time: "현지 시간:",
@@ -1370,7 +1370,7 @@ const T = {
 
   ar: {
     eyebrow: "مهندس برمجيات",
-    tagline: "مطوّر Full Stack · React · TypeScript · Node.js · PostgreSQL",
+    tagline: "مطوّر Full Stack",
     location: "إرينتيريا (غيبوثكوا)، إسبانيا",
     status_available: "متاح للانضمام إلى فريق تطوير",
     local_time: "التوقيت المحلي:",
@@ -1432,7 +1432,7 @@ const T = {
 
   he: {
     eyebrow: "מהנדס תוכנה",
-    tagline: "מפתח Full Stack · React · TypeScript · Node.js · PostgreSQL",
+    tagline: "מפתח Full Stack",
     location: "ארנטריה (גיפוסקואה), ספרד",
     status_available: "זמין להצטרף לצוות פיתוח",
     local_time: "שעה מקומית:",
