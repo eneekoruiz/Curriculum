@@ -3481,3 +3481,155 @@ a.contact-row {
     animation: none;
   }
 }
+
+/* ── First paint: one quiet fade once fonts are ready (replaces the blur/slide boot) ── */
+html:not(.pdf-render) #root-container {
+  animation: none;
+  transition: opacity 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+html.cv-loading #root-container {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html:not(.pdf-render) #root-container {
+    transition: none;
+  }
+}
+
+/* ── First screen: header + profile form a cover that fits the viewport exactly,
+      so nothing is shown half-cut before the visitor scrolls ── */
+:root {
+  --wrap-top: clamp(76px, 9vw, 104px);
+}
+
+.wrapper {
+  padding-top: var(--wrap-top);
+}
+
+.hero {
+  min-height: calc(100svh - var(--wrap-top));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-bottom: clamp(20px, 4svh, 48px);
+  margin-bottom: var(--s4);
+}
+
+.hero .site-header {
+  padding-bottom: clamp(20px, 4.5svh, 56px);
+  margin-bottom: clamp(20px, 4.5svh, 56px);
+}
+
+.hero .profile {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+/* The name scales with the viewport height too, so short laptops still fit it */
+.hero h1 {
+  font-size: clamp(2.6rem, min(6vw, 9.5svh), 5.2rem);
+}
+
+.hero .eyebrow {
+  margin-bottom: clamp(8px, 1.6svh, 16px);
+}
+
+.hero .tagline {
+  margin-top: clamp(8px, 1.8svh, 16px);
+}
+
+.hero .contacts {
+  gap: 0;
+}
+
+.hero .contact-row {
+  padding: 5px 10px;
+}
+
+.hero .profile-text {
+  font-size: clamp(15px, 1.2vw + 0.4svh, 17px);
+}
+
+/* Phones: contacts become one row of round icon buttons (names stay for screen readers) */
+@media (max-width: 700px) {
+  :root {
+    --wrap-top: 76px;
+  }
+
+  .hero .contacts {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin-top: 4px;
+  }
+
+  .hero .contact-row {
+    width: 42px;
+    height: 42px;
+    margin: 0;
+    padding: 0;
+    justify-content: center;
+    border: 1px solid var(--c-rule-2);
+    border-radius: 50%;
+    background: var(--c-bg);
+  }
+
+  .hero .contact-row:hover {
+    transform: none;
+  }
+
+  .hero .contact-row svg {
+    width: 17px;
+    height: 17px;
+    opacity: 1;
+  }
+
+  .hero .contact-row .ct,
+  .hero #vcard-btn span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  .hero h1 {
+    font-size: clamp(2.4rem, 11vw, 3.2rem);
+  }
+
+  .hero .live-wrap {
+    display: none;
+  }
+}
+
+/* Never let a wide child push the page past the viewport on small screens */
+@media (max-width: 860px) {
+  .dashboard {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .dashboard > section[aria-labelledby="h-langs"] .lang-inline {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .dashboard > section[aria-labelledby="h-langs"] .lang-chip {
+    padding: 2px 16px;
+  }
+}
+
+.wrapper {
+  min-width: 0;
+  max-width: min(920px, 100%);
+}
+
+.hero,
+.dashboard > section {
+  min-width: 0;
+}

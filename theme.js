@@ -9,6 +9,13 @@
     let isDark = urlTheme ? urlTheme === 'dark' : (savedTheme ? savedTheme === 'dark' : prefersDark);
     
     htmlEl.setAttribute('data-theme', isDark ? 'dark' : 'light');
+
+    // Hold the first paint until the web fonts are in (index.js reveals it), so the
+    // name never jumps from a fallback font to Cormorant. Failsafe if index.js fails.
+    if (!urlParams.has('pdf')) {
+      htmlEl.classList.add('cv-loading');
+      setTimeout(() => htmlEl.classList.remove('cv-loading'), 2500);
+    }
     htmlEl.style.backgroundColor = isDark ? '#020617' : '#ffffff';
     htmlEl.style.colorScheme = isDark ? 'dark' : 'light';
 

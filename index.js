@@ -390,7 +390,7 @@ const forcePrintReadyState = () => {
   document.querySelectorAll('.reveal').forEach(element => element.classList.add('visible'));
 };
 
-const STATIC_PDF_VERSION = '20260929-ats-v5';
+const STATIC_PDF_VERSION = '20260929-ats-v6';
 
 // Pre-rendered PDFs (instant and reliable); every other language is rendered on demand.
 const STATIC_PDFS = { es: '/Eneko_Ruiz_CV_ES.pdf', en: '/Eneko_Ruiz_CV_EN.pdf' };
@@ -1134,6 +1134,13 @@ window.fitPrintToOnePage = () => {
     history.scrollRestoration = 'manual';
   }
   window.scrollTo(0, 0);
+
+  // Calm first paint: reveal once fonts are ready (max 800ms), with a single fade
+  const revealPage = () => requestAnimationFrame(() => html.classList.remove('cv-loading'));
+  Promise.race([
+    document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve(),
+    new Promise(resolve => setTimeout(resolve, 800))
+  ]).then(revealPage, revealPage);
 
   // i18n & initial URL query initialization
   const urlParameters = new URLSearchParams(window.location.search);
