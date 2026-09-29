@@ -265,15 +265,7 @@ h1 strong {
   color: var(--ink);
 }
 
-.proj-kind {
-  font-weight: 400;
-  color: var(--ink-2);
-}
 
-.proj-kind::before {
-  content: '\00a0— ';
-  color: var(--ink-3);
-}
 
 .proj-stack {
   font-size: 8.8pt;
@@ -479,4 +471,25 @@ h1,
 
 .skill-group {
   align-items: center;
+}
+
+/* ── Denser, larger layout: project name and stack share a line; degree and
+      track share a line. Frees vertical space so the text can be bigger. ── */
+.proj-name {
+  flex-basis: auto;
+  margin-right: 2.2mm;
+}
+
+.proj-stack {
+  flex: 1 1 auto;
+}
+
+.tl-org,
+.tl-mention {
+  display: inline;
+}
+
+.tl-mention::before {
+  content: '\00a0·\00a0';
+  color: var(--ink-3);
 }

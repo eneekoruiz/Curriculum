@@ -3203,14 +3203,7 @@ a.contact-row {
   color: var(--c-brand);
 }
 
-.proj-kind {
-  font-weight: 400;
-  color: var(--c-ink-3);
-}
 
-.proj-kind::before {
-  content: ' — ';
-}
 
 .proj-links {
   display: flex;

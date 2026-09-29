@@ -26,7 +26,7 @@ The CV is a static site with no build step. HTML provides the document structure
 
 All 24 languages carry the full CV content. The page opens in the visitor's browser language when it is supported (English otherwise); `?lang=xx` forces one.
 
-ATS rules the print layout follows: single column, text painted in DOM order (no `position`/`float` in `print.css`, which would scramble the extracted text), no ligatures (so "offline-first" is not stored as "ofﬂine-ﬁrst"), numeric dates (MM/YYYY), real `mailto:`/`tel:`/`https:` links, and a one-page guarantee: `window.fitPrintToOnePage()` shrinks the layout slightly when a language runs long.
+ATS rules the print layout follows: single column, text painted in DOM order (no `position`/`float` in `print.css`, which would scramble the extracted text), no ligatures (so "offline-first" is not stored as "ofﬂine-ﬁrst"), numeric dates (MM/YYYY), real `mailto:`/`tel:`/`https:` links, and a one-page guarantee: `window.fitPrintToOnePage()` scales the layout to fill exactly one A4 page (up to +12% when there is room, smaller when a language runs long).
 
 `Eneko_Ruiz_CV_ES.pdf` is the pre-rendered Spanish PDF; other languages are rendered on demand by `api/pdf.js` (Puppeteer, print media).
 

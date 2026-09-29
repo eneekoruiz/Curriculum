@@ -390,7 +390,7 @@ const forcePrintReadyState = () => {
   document.querySelectorAll('.reveal').forEach(element => element.classList.add('visible'));
 };
 
-const STATIC_PDF_VERSION = '20260929-ats-v6';
+const STATIC_PDF_VERSION = '20260929-ats-v7';
 
 // Pre-rendered PDFs (instant and reliable); every other language is rendered on demand.
 const STATIC_PDFS = { es: '/Eneko_Ruiz_CV_ES.pdf', en: '/Eneko_Ruiz_CV_EN.pdf' };
@@ -860,7 +860,8 @@ const setupSurfacePolish = () => {
 
 /**
  * Safety net for PDF export: with print media active and an A4-wide viewport,
- * shrinks the CV just enough to keep it on a single page (never enlarges it).
+ * sizes the CV to fill a single page: grows it (up to +12%) when there is room,
+ * shrinks it when a language runs long.
  * Printable area = A4 minus the @page margins in print.css (13mm sides, 10mm + 9mm).
  * @returns {number} the zoom factor applied
  */
@@ -873,7 +874,16 @@ window.fitPrintToOnePage = () => {
   // 1.5% headroom for line-box rounding between screen layout and the PDF renderer
   const availableHeight = (((297 - 19) * 96) / 25.4) * 0.985;
   let zoom = 1;
-  // Re-measure after each step: zoom also widens the text column, so lines re-wrap.
+  // Grow while there is room (bigger text reads better), up to +12%...
+  while (zoom < 1.12) {
+    wrapper.style.zoom = String(Math.round((zoom + 0.01) * 100) / 100);
+    if (wrapper.getBoundingClientRect().height > availableHeight) {
+      wrapper.style.zoom = String(zoom);
+      break;
+    }
+    zoom = Math.round((zoom + 0.01) * 100) / 100;
+  }
+  // ...or shrink until it fits. Re-measure each step: zoom re-wraps the lines.
   while (wrapper.getBoundingClientRect().height > availableHeight && zoom > 0.8) {
     zoom = Math.round((zoom - 0.01) * 100) / 100;
     wrapper.style.zoom = String(zoom);
