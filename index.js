@@ -2,7 +2,7 @@
  * CURRICULUM VITAE — CORE ENGINE v3.1.2
  * Refactored for ultimate visual code craftsmanship, legibility, and maintainability.
  * Standardized LF line endings & validated for 10/10 production excellence.
- * Zero external dependencies. High efficiency pure Vanilla JS.
+ * Vanilla JS; GSAP is loaded optionally for entrance motion.
  */
 
 const BIRTH_DATE = '2005-07-28';
@@ -55,7 +55,7 @@ const playRevealTimeline = (timeline, section, offset = 0) => {
     ? section.querySelectorAll('.eyebrow, h1, .tagline, .live-wrap, .contact-row')
     : isProfile
       ? section.querySelectorAll('.profile-label, .profile-text')
-      : section.querySelectorAll('.sec-title, .course-item, .lang-chip, .skill-group, .tl-item, .proj-link');
+      : section.querySelectorAll('.sec-title, .course-item, .lang-chip, .skill-group, .tl-item, .proj-item');
 
   // Disable CSS transitions during GSAP animation to avoid rendering conflicts
   section.style.transition = 'none';
@@ -221,7 +221,7 @@ const applyTranslations = (langCode) => {
   // Translate all text elements and accessibility tags
   document.querySelectorAll('[data-i18n]').forEach(element => {
     const translationKey = element.getAttribute('data-i18n');
-    let translatedValue = translations[translationKey];
+    let translatedValue = translations[translationKey] ?? T.en[translationKey];
     
     if (translatedValue !== undefined) {
       if (typeof translatedValue === 'string') {
@@ -239,7 +239,7 @@ const applyTranslations = (langCode) => {
   // Global layout language configuration
   html.setAttribute('lang', langCode);
   html.setAttribute('dir', metadata.dir);
-  document.title = `Eneko Ruiz Mollón — ${translations.eyebrow}`;
+  document.title = `Eneko Ruiz Mollón — ${translations.eyebrow || T.en.eyebrow}`;
   
   const langLabel = document.getElementById('lang-label');
   if (langLabel) {
@@ -247,7 +247,7 @@ const applyTranslations = (langCode) => {
   }
   
   // Search Engine & Metadata synchronization
-  const metaDescription = translations.meta_desc || '';
+  const metaDescription = translations.meta_desc || T.en.meta_desc || '';
   document.querySelector('meta[name="description"]')?.setAttribute('content', metaDescription);
   document.querySelector('meta[property="og:description"]')?.setAttribute('content', metaDescription);
 
@@ -378,7 +378,7 @@ const forcePrintReadyState = () => {
   document.querySelectorAll('.reveal').forEach(element => element.classList.add('visible'));
 };
 
-const STATIC_PDF_VERSION = '20260704-html-faithful';
+const STATIC_PDF_VERSION = '20260929-ats';
 
 const getPdfDownloadUrl = () => {
   if ((currentLang || 'es') === 'es') {
@@ -1098,7 +1098,7 @@ const setupSurfacePolish = () => {
   const initialLang = urlParameters.get('lang') || safeStorage.get('cv-lang') || 'es';
   applyTranslations(initialLang);
   updateExportButtonLabel();
-  window.addEventListener('resize', updateExportButtonLabel, { passive: true });
+  window.addEventListener('resize', () => updateExportButtonLabel(), { passive: true });
 
   if (urlParameters.has('pdf')) {
     forcePrintReadyState();
@@ -1168,7 +1168,7 @@ const setupSurfacePolish = () => {
         if (!document.querySelector('.reveal.visible')) {
           initialReveals.forEach(element => {
             gsap.set(element, { opacity: 1, scale: 1, y: 0, clearProps: 'transform,opacity,clipPath,filter' });
-            element.querySelectorAll('.eyebrow, h1, .tagline, .live-wrap, .contact-row, .profile-label, .profile-text, .sec-title, .course-item, .lang-chip, .skill-group, .tl-item, .proj-link')
+            element.querySelectorAll('.eyebrow, h1, .tagline, .live-wrap, .contact-row, .profile-label, .profile-text, .sec-title, .course-item, .lang-chip, .skill-group, .tl-item, .proj-item')
               .forEach(child => gsap.set(child, { opacity: 1, x: 0, y: 0, clearProps: 'transform,opacity,filter' }));
             element.classList.add('visible');
           });
@@ -1189,7 +1189,7 @@ const setupSurfacePolish = () => {
         remainingHidden.forEach(element => {
           if (shouldAnimateMotion) {
             gsap.set(element, { opacity: 1, scale: 1, y: 0 });
-            const childItems = element.querySelectorAll('.tl-item, .pill, .proj-link');
+            const childItems = element.querySelectorAll('.tl-item, .proj-item');
             if (childItems.length) {
               gsap.set(childItems, { opacity: 1, y: 0 });
             }

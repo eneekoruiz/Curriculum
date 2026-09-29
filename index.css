@@ -2969,3 +2969,219 @@ html:not(.pdf-render) #root-container {
     line-height: 1.34 !important;
   }
 }
+
+/* ── ATS layout (screen): single reading column, title → org → dates ── */
+.wrapper {
+  max-width: 920px;
+}
+
+a.contact-row {
+  text-decoration: none;
+}
+
+.tagline {
+  font-size: 14px;
+  color: var(--c-ink-2);
+}
+
+.tagline-loc {
+  margin-top: 4px;
+  font-size: 13px;
+  color: var(--c-ink-3);
+}
+
+.profile-label {
+  font-weight: 600;
+}
+
+.profile-text {
+  font-size: 15.5px;
+  line-height: 1.7;
+}
+
+.dashboard {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--s5) var(--s4);
+}
+
+.dashboard > section {
+  grid-column: 1 / -1;
+}
+
+.dashboard > section[aria-labelledby="h-langs"],
+.dashboard > section[aria-labelledby="h-courses"] {
+  grid-column: auto;
+}
+
+.sec-title {
+  color: var(--c-ink-2);
+}
+
+/* Timeline rows: content first (for parsers), date aligned right */
+.tl-item {
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0 var(--s4);
+  padding-bottom: 28px;
+}
+
+.tl-item .tl-date {
+  grid-column: 2;
+  grid-row: 1;
+  text-align: right;
+  font-size: 11px;
+  white-space: nowrap;
+  padding-top: 2px;
+}
+
+.tl-item .tl-body {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.tl-title {
+  font-size: 16px;
+}
+
+.tl-org {
+  font-size: 13px;
+}
+
+.tl-desc {
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--c-ink-2);
+  margin-top: 4px;
+}
+
+.tl-mention {
+  font-size: 15px;
+  margin: 2px 0 4px;
+}
+
+.tl-item.micro .tl-title {
+  font-size: 13.5px;
+}
+
+.tl-item.micro .tl-org {
+  font-size: 12px;
+}
+
+.exp-sub {
+  font-size: 9.5px;
+  margin-top: var(--s2);
+}
+
+/* Projects */
+.proj-item {
+  padding: 0 0 22px var(--s3);
+  border-left: 1px solid var(--c-rule);
+  transition: border-color var(--dur) var(--ease);
+}
+
+.proj-item + .proj-item {
+  padding-top: 2px;
+}
+
+.proj-item:last-child {
+  padding-bottom: 0;
+}
+
+.proj-item:hover {
+  border-color: var(--c-brand);
+}
+
+.proj-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--c-ink);
+  line-height: 1.3;
+}
+
+.proj-stack {
+  font-family: var(--f-mono);
+  font-size: 11px;
+  color: var(--c-brand);
+  margin: 3px 0 4px;
+  letter-spacing: .01em;
+}
+
+.proj-desc {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--c-ink-2);
+}
+
+.proj-repo {
+  display: inline-block;
+  margin-top: 3px;
+  font-family: var(--f-mono);
+  font-size: 11px;
+  color: var(--c-ink-3);
+  text-decoration: none;
+  border-bottom: 1px solid var(--c-rule-2);
+}
+
+.proj-repo:hover {
+  color: var(--c-ink);
+  border-color: var(--c-brand);
+}
+
+/* Skills as plain comma lists (parser friendly) */
+.skills {
+  display: grid;
+  gap: 10px;
+}
+
+.skills .skill-group {
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr);
+  gap: var(--s3);
+  align-items: baseline;
+  margin: 0;
+}
+
+.skills .sg-label {
+  margin: 0;
+  font-size: 9.5px;
+}
+
+.sg-list {
+  font-size: 14px;
+  color: var(--c-ink);
+  line-height: 1.55;
+}
+
+@media (max-width: 860px) {
+  .dashboard {
+    grid-template-columns: 1fr;
+    gap: var(--s4);
+  }
+
+  .dashboard > section[aria-labelledby="h-langs"],
+  .dashboard > section[aria-labelledby="h-courses"] {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 600px) {
+  .skills .skill-group {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+
+  .tl-item {
+    grid-template-columns: 1fr;
+  }
+
+  .tl-item .tl-date {
+    grid-column: 1;
+    grid-row: 2;
+    text-align: left;
+    margin-top: 4px;
+  }
+
+  .profile-text {
+    font-size: 15px;
+  }
+}
