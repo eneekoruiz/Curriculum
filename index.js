@@ -560,62 +560,6 @@ END:VCARD`;
   showCopyTip(document.getElementById('vcard-btn'), copyOkMessage);
 };
 
-/* ── EASTER EGG — DEVELOPER CONSOLE CLI ── */
-
-/**
- * Renders a clean terminal message in the developer tools.
- */
-const _runCLI = () => {
-  const monoFont = 'font-family:"JetBrains Mono",monospace;';
-  const headerStyle = `
-    font-size: 48px;
-    font-weight: 900;
-    color: #334155;
-    text-shadow: 
-      3px 3px 0px #1e293b, 
-      6px 6px 0px rgba(51, 65, 85, 0.15);
-    padding: 10px 0;
-    ${monoFont}
-  `;
-  
-  const subtitleStyle = `color: #64748b; font-size: 14px; font-weight: 500; ${monoFont}`;
-  const systemStyle = `color: #334155; font-size: 13px; font-weight: bold; ${monoFont}`;
-
-  console.log("%cENEKO RUIZ", headerStyle);
-  console.log("%cINTERACTIVE CURRICULUM %c// %cVERSION 3.0.4", subtitleStyle, "color:#c4965a", subtitleStyle);
-  console.log("%c ", "font-size: 5px;"); // Spacer
-  console.log("%c> [SYSTEM]: Kernel initialized. Memory stable.", systemStyle);
-  console.log(
-    "%c> [ACCESS]: Terminal granted. Type %chire()%c to connect.",
-    systemStyle,
-    "color:#c4965a; background:rgba(196,150,90,0.1); padding: 1px 4px; border-radius:3px;",
-    systemStyle
-  );
-};
-
-/**
- * Console easter egg: opens the mail client with a ready-made message.
- * @returns {string} success message
- */
-window.hire = function() {
-  const mailtoUrl = "mailto:eneekoruiz@gmail.com?subject=Propuesta%20Laboral%20%E2%80%94%20Eneko%20Ruiz&body=Hola%20Eneko%2C%0A%0AHe%20visto%20tu%20curr%C3%ADculum%20interactivo%20y%20me%20gustar%C3%ADa%20contactar%20contigo...";
-
-  console.log("%c🚀 Iniciando conexión... Abriendo cliente de correo.", "color: #c4965a; font-size: 14px; font-weight: bold;");
-  window.location.href = mailtoUrl;
-  return "🚀 Conexión establecida. ¡Suerte!";
-};
-
-let _devToolsOpened = false;
-window.addEventListener('keydown', (event) => {
-  const isShortcutKey = ['I', 'J', 'C'].includes(event.key.toUpperCase());
-  if (event.key === 'F12' || (event.ctrlKey && event.shiftKey && isShortcutKey)) {
-    if (!_devToolsOpened) {
-      _devToolsOpened = true;
-      setTimeout(_runCLI, 500);
-    }
-  }
-});
-
 const setupSurfacePolish = () => {
   if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     return;
@@ -896,57 +840,6 @@ const setupScrollReveal = () => {
       height: document.documentElement.scrollHeight 
     }, '*');
   }
-
-  // Premium interface Audio Feedback System (Click ticks)
-  let clickAudioContext = null;
-  const playClickTick = () => {
-    try {
-      const AudioCtx = window.AudioContext || window.webkitAudioContext;
-      if (!AudioCtx) return;
-      if (!clickAudioContext) {
-        clickAudioContext = new AudioCtx();
-      }
-      if (clickAudioContext.state === 'suspended') {
-        clickAudioContext.resume();
-      }
-      const oscillator = clickAudioContext.createOscillator();
-      const gainNode = clickAudioContext.createGain();
-      
-      oscillator.type = 'sine';
-      oscillator.frequency.setValueAtTime(1000, clickAudioContext.currentTime);
-      oscillator.frequency.exponentialRampToValueAtTime(100, clickAudioContext.currentTime + 0.1);
-      
-      gainNode.gain.setValueAtTime(0.02, clickAudioContext.currentTime);
-      gainNode.gain.exponentialRampToValueAtTime(0.001, clickAudioContext.currentTime + 0.1);
-      
-      oscillator.connect(gainNode);
-      gainNode.connect(clickAudioContext.destination);
-      
-      oscillator.start();
-      oscillator.stop(clickAudioContext.currentTime + 0.1);
-    } catch (audioError) {
-      // Audio errors are safely suppressed (e.g. user interaction gestures restrictions)
-    }
-  };
-
-  document.addEventListener('click', (event) => {
-    if (event.target.closest('.ctrl, .contact-row, .lm-item, .proj-link')) { 
-      playClickTick(); 
-    }
-  });
-
-  window.addEventListener('beforeunload', () => {
-    try {
-      if (timeUpdaterTimer) { 
-        clearTimeout(timeUpdaterTimer); 
-        timeUpdaterTimer = null; 
-      }
-      if (clickAudioContext && typeof clickAudioContext.close === 'function') { 
-        clickAudioContext.close().catch(() => {}); 
-        clickAudioContext = null; 
-      }
-    } catch (e) {}
-  });
 
   // Top header screen scroll progress indicator
   const cachedProgressBar = document.getElementById('scroll-progress');

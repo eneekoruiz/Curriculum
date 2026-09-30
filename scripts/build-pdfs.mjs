@@ -47,7 +47,8 @@ function atsProblems(lang, { pages, text }) {
   if (M[lang].dir === 'ltr' && !text.trim().startsWith('Eneko Ruiz Mollón')) problems.push('name is not the first line');
   // Education → languages → experience → projects (the section order of the page)
   const order = [at('UPV/EHU')];
-  order.push(at('C1', order[0]), at('SST PRO DYNAMICS'), at('AG Beauty Salon'), at('Aura Health'));
+  // Project titles are translated, so the first and last project are found by their stack
+  order.push(at('C1', order[0]), at('SST PRO DYNAMICS'), at('Resend'), at('Capacitor'));
   if (order.some(i => i < 0) || order.some((i, n) => n && i <= order[n - 1])) problems.push(`reading order broken ${JSON.stringify(order)}`);
   if (/[ﬀ-ﬆ]/.test(text)) problems.push('contains ligature glyphs (ﬁ/ﬂ…) that break keyword search');
   for (const needle of ['eneekoruiz@gmail.com', '+34 600 02 51 61', 'linkedin.com/in/eneko-ruiz-421254410', 'github.com/eneekoruiz']) {
