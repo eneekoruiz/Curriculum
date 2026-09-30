@@ -2113,3 +2113,52 @@ html.scroll-reveal .dashboard > section.is-instant {
 .tl-item .tl-date {
   font-variant-numeric: tabular-nums;
 }
+
+/* ── Timeline: continuous rail joining entries only when a section has 2 or more items ── */
+.tl-item:not(:only-of-type) {
+  position: relative;
+  padding-inline-start: 28px;
+}
+
+.tl-item:not(:only-of-type)::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: 5px;
+  top: 17px;
+  bottom: -5px;
+  width: 1px;
+  background: var(--c-rule-2);
+}
+
+.tl-item:not(:only-of-type):last-child::before {
+  display: none;
+}
+
+.tl-item:not(:only-of-type)::after {
+  content: '';
+  position: absolute;
+  inset-inline-start: 0;
+  top: 5px;
+  width: 11px;
+  height: 11px;
+  box-sizing: border-box;
+  border-radius: 50%;
+  background: var(--c-bg);
+  border: 1.5px solid var(--c-rule-2);
+  transition: border-color var(--dur-fast) var(--ease);
+}
+
+.tl-item:not(:only-of-type):first-of-type::after {
+  background: var(--c-brand);
+  border-color: var(--c-brand);
+  box-shadow: 0 0 0 4px var(--c-key-bg);
+}
+
+.tl-item:not(:only-of-type):hover::after {
+  border-color: var(--c-brand);
+}
+
+.tl-item:not(:only-of-type):first-of-type .tl-date {
+  color: var(--c-brand-ink);
+  font-weight: 600;
+}
