@@ -71,7 +71,7 @@ try {
     await page.evaluate(() => window.dispatchEvent(new Event('beforeprint')));
     const { pages, text } = await pdfText(await page.pdf({ format: 'A4', printBackground: true, preferCSSPageSize: true }));
     if (pages !== 1) fail(`Ctrl+P (${lang}): ${pages} pages`);
-    if (!text.includes('Aura Health') || !text.includes('UPV/EHU')) fail(`Ctrl+P (${lang}): sections missing from the printout`);
+    if (!text.includes('Capacitor') || !text.includes('UPV/EHU')) fail(`Ctrl+P (${lang}): sections missing from the printout`);
     await page.close();
   }
   console.log('browser printing (Ctrl+P) checked');

@@ -6,6 +6,8 @@
 //  - the PDF preview appears whole on hover, stays while the PDF is prepared and hides when the toast shows
 //  - tap targets on phones are at least 24×24 CSS px (WCAG 2.2, 2.5.8)
 //  - no JavaScript errors and no failed requests
+//  - scroll reveal never leaves a painted frame with content missing (slow, hard and jump scrolls)
+//  - the hover glow starts under the pointer
 // Usage: node check-layout.mjs [lang,lang,…]   (default: a sample covering LTR, RTL, CJK, Cyrillic)
 import { ROOT, loadTranslations, startServer, launch } from './lib.mjs';
 
@@ -85,6 +87,57 @@ for (const lang of LANGS) {
     await page.close();
   }
 }
+
+// ── Motion: scroll reveal and hover glow behave (one desktop page, Spanish) ──
+{
+  const page = await context.newPage();
+  await page.setViewportSize({ width: 1366, height: 768 });
+  const fresh = async () => {
+    await page.goto(`${origin}/?lang=es`, { waitUntil: 'networkidle' });
+    await page.waitForFunction(() => !document.documentElement.classList.contains('cv-loading'));
+    await page.waitForTimeout(500);
+    // count frames (measured after painting) where a section that is mostly on screen is not fully opaque
+    await page.evaluate(() => {
+      window.__hidden = 0;
+      const sections = [...document.querySelectorAll('.dashboard > section')];
+      const channel = new MessageChannel();
+      channel.port1.onmessage = () => {
+        for (const section of sections) {
+          const r = section.getBoundingClientRect();
+          if (Math.min(r.bottom, innerHeight) - Math.max(r.top, 0) > 120 && Number(getComputedStyle(section).opacity) < 0.9) window.__hidden++;
+        }
+      };
+      const loop = () => { channel.port2.postMessage(0); requestAnimationFrame(loop); };
+      requestAnimationFrame(loop);
+    });
+  };
+  const scenarios = {
+    'slow scroll': async () => { for (let i = 0; i < 60; i++) { await page.mouse.wheel(0, 12); await page.waitForTimeout(60); } },
+    'moderate scroll': async () => { for (let i = 0; i < 40; i++) { await page.mouse.wheel(0, 40); await page.waitForTimeout(80); } },
+    'hard flick': async () => { for (let i = 0; i < 12; i++) { await page.mouse.wheel(0, 400); await page.waitForTimeout(16); } },
+    'jump to the end': async () => { await page.keyboard.press('End'); }
+  };
+  for (const [name, run] of Object.entries(scenarios)) {
+    await fresh();
+    await run();
+    await page.waitForTimeout(600);
+    const hidden = await page.evaluate(() => window.__hidden);
+    if (hidden) failures.push(`scroll reveal (${name}): ${hidden} frame(s) painted with a section missing or half-faded`);
+  }
+
+  // The hover glow starts under the pointer (never at the centre of the element)
+  await page.goto(`${origin}/?lang=es`, { waitUntil: 'networkidle' });
+  await page.waitForFunction(() => !document.documentElement.classList.contains('cv-loading'));
+  const pill = page.locator('.pill').first();
+  await pill.scrollIntoViewIfNeeded();
+  const box = await pill.boundingBox();
+  await page.mouse.move(box.x + box.width * 0.15, box.y + box.height / 2);
+  await page.waitForTimeout(150);
+  const mx = parseFloat(await pill.evaluate(el => el.style.getPropertyValue('--mx')));
+  if (!(mx < 30)) failures.push(`hover glow starts at ${mx}% instead of under the pointer (15%)`);
+  await page.close();
+}
+
 await browser.close();
 server.close();
 
@@ -93,5 +146,5 @@ if (failures.length) {
   console.error(`\n${failures.length} layout problem(s)`);
   process.exit(1);
 }
-console.log(`layout: ${LANGS.length} languages × ${SIZES.length} screen sizes: nothing cut, off-screen or too small to tap.`);
+console.log(`layout: ${LANGS.length} languages × ${SIZES.length} screen sizes: nothing cut, off-screen or too small to tap; scroll reveal and hover glow behave.`);
 console.log('\nAll layout checks OK.');

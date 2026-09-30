@@ -147,7 +147,7 @@ const applyTranslations = (langCode) => {
   const footerElement = document.querySelector('.site-footer');
   if (footerElement) {
     const currentYear = new Date().getFullYear();
-    footerElement.innerHTML = `${translations.footer_text} &copy; ${currentYear}`;
+    footerElement.textContent = `© ${currentYear} ${translations.footer_text}`;
   }
 
   // Synchronize language dropdown menu visual states
@@ -560,62 +560,6 @@ END:VCARD`;
   showCopyTip(document.getElementById('vcard-btn'), copyOkMessage);
 };
 
-/* ── EASTER EGG — DEVELOPER CONSOLE CLI ── */
-
-/**
- * Renders a clean terminal message in the developer tools.
- */
-const _runCLI = () => {
-  const monoFont = 'font-family:"JetBrains Mono",monospace;';
-  const headerStyle = `
-    font-size: 48px;
-    font-weight: 900;
-    color: #334155;
-    text-shadow: 
-      3px 3px 0px #1e293b, 
-      6px 6px 0px rgba(51, 65, 85, 0.15);
-    padding: 10px 0;
-    ${monoFont}
-  `;
-  
-  const subtitleStyle = `color: #64748b; font-size: 14px; font-weight: 500; ${monoFont}`;
-  const systemStyle = `color: #334155; font-size: 13px; font-weight: bold; ${monoFont}`;
-
-  console.log("%cENEKO RUIZ", headerStyle);
-  console.log("%cINTERACTIVE CURRICULUM %c// %cVERSION 3.0.4", subtitleStyle, "color:#c4965a", subtitleStyle);
-  console.log("%c ", "font-size: 5px;"); // Spacer
-  console.log("%c> [SYSTEM]: Kernel initialized. Memory stable.", systemStyle);
-  console.log(
-    "%c> [ACCESS]: Terminal granted. Type %chire()%c to connect.",
-    systemStyle,
-    "color:#c4965a; background:rgba(196,150,90,0.1); padding: 1px 4px; border-radius:3px;",
-    systemStyle
-  );
-};
-
-/**
- * Console easter egg: opens the mail client with a ready-made message.
- * @returns {string} success message
- */
-window.hire = function() {
-  const mailtoUrl = "mailto:eneekoruiz@gmail.com?subject=Propuesta%20Laboral%20%E2%80%94%20Eneko%20Ruiz&body=Hola%20Eneko%2C%0A%0AHe%20visto%20tu%20curr%C3%ADculum%20interactivo%20y%20me%20gustar%C3%ADa%20contactar%20contigo...";
-
-  console.log("%c🚀 Iniciando conexión... Abriendo cliente de correo.", "color: #c4965a; font-size: 14px; font-weight: bold;");
-  window.location.href = mailtoUrl;
-  return "🚀 Conexión establecida. ¡Suerte!";
-};
-
-let _devToolsOpened = false;
-window.addEventListener('keydown', (event) => {
-  const isShortcutKey = ['I', 'J', 'C'].includes(event.key.toUpperCase());
-  if (event.key === 'F12' || (event.ctrlKey && event.shiftKey && isShortcutKey)) {
-    if (!_devToolsOpened) {
-      _devToolsOpened = true;
-      setTimeout(_runCLI, 500);
-    }
-  }
-});
-
 const setupSurfacePolish = () => {
   if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     return;
@@ -626,33 +570,25 @@ const setupSurfacePolish = () => {
     return;
   }
 
+  // The glow follows the pointer: it starts exactly where the pointer enters and fades out
+  // where it leaves (never jumps to the centre of the element).
+  const follow = (surface, event) => {
+    if (event.pointerType !== 'mouse' && event.pointerType !== 'pen') {
+      return;
+    }
+    const rect = surface.getBoundingClientRect();
+    if (!rect.width || !rect.height) {
+      return;
+    }
+    const x = Math.max(0, Math.min(100, ((event.clientX - rect.left) / rect.width) * 100));
+    const y = Math.max(0, Math.min(100, ((event.clientY - rect.top) / rect.height) * 100));
+    surface.style.setProperty('--mx', `${x.toFixed(1)}%`);
+    surface.style.setProperty('--my', `${y.toFixed(1)}%`);
+  };
+
   surfaces.forEach(surface => {
-    surface.addEventListener('pointerenter', () => {
-      surface.style.setProperty('--mx', '50%');
-      surface.style.setProperty('--my', '50%');
-    });
-
-    surface.addEventListener('pointermove', (event) => {
-      if (event.pointerType !== 'mouse' && event.pointerType !== 'pen') {
-        return;
-      }
-
-      const rect = surface.getBoundingClientRect();
-      if (!rect.width || !rect.height) {
-        return;
-      }
-
-      const nextX = ((event.clientX - rect.left) / rect.width) * 100;
-      const nextY = ((event.clientY - rect.top) / rect.height) * 100;
-
-      surface.style.setProperty('--mx', `${Math.max(0, Math.min(100, nextX))}%`);
-      surface.style.setProperty('--my', `${Math.max(0, Math.min(100, nextY))}%`);
-    });
-
-    surface.addEventListener('pointerleave', () => {
-      surface.style.setProperty('--mx', '50%');
-      surface.style.setProperty('--my', '50%');
-    });
+    surface.addEventListener('pointerenter', (event) => follow(surface, event));
+    surface.addEventListener('pointermove', (event) => follow(surface, event));
   });
 };
 
@@ -717,28 +653,86 @@ const setupPrintScale = () => {
 };
 
 /**
- * Calm scroll reveal: each section below the cover fades in (10px rise) the first time
- * it enters the viewport. Nothing is hidden without JavaScript, with reduced motion,
- * in print or in the PDF render.
+ * Scroll reveal: each section below the cover rises and fades in once. It starts a little
+ * BEFORE the section reaches the screen, so at a normal pace it is already in place when it
+ * arrives. When the reader scrolls hard (or jumps), sections about to enter or already passed
+ * appear instantly with no animation, so there are never empty gaps or late fade-ins.
+ * Nothing is hidden without JavaScript, with reduced motion, in print or in the PDF render.
  */
 const setupScrollReveal = () => {
-  const sections = document.querySelectorAll('.dashboard > section');
+  const sections = [...document.querySelectorAll('.dashboard > section')];
   const reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (!sections.length || reducedMotion || !('IntersectionObserver' in window)) {
     return;
   }
 
+  const FAST = 0.9;        // px per ms (900 px/s): faster than this the 0.4s fade would still be running as the section arrives
+  const LOOKAHEAD = 1.6;   // while scrolling hard, everything within 1.6 screens ahead is shown
+  const pending = new Set(sections);
+  let speed = 0;
+  let lastY = window.scrollY;
+  let lastTime = performance.now();
+  let frame = 0;
+
+  const finish = () => {
+    observer.disconnect();
+    window.removeEventListener('scroll', onScroll);
+  };
+
+  const reveal = (section, instant) => {
+    if (!pending.delete(section)) {
+      return;
+    }
+    if (instant) {
+      section.classList.add('is-instant');
+    }
+    section.classList.add('is-revealed');
+    if (!pending.size) {
+      finish();
+    }
+  };
+
   const observer = new IntersectionObserver((entries) => {
+    const hard = speed > FAST && performance.now() - lastTime < 150;
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        entry.target.classList.add('is-revealed');
-        observer.unobserve(entry.target);
+        reveal(entry.target, hard);
       }
     });
-  }, { rootMargin: '0px 0px -6% 0px', threshold: 0.06 });
+  }, { rootMargin: '0px 0px 12% 0px', threshold: 0 });
+
+  const onScroll = () => {
+    const now = performance.now();
+    // After a pause the gap since the last event says nothing about how hard this scroll starts:
+    // measure over at most ~1.5 frames, so a hard flick counts as hard from its first event
+    const interval = Math.max(4, Math.min(now - lastTime, 24));
+    speed = Math.abs(window.scrollY - lastY) / interval;
+    lastY = window.scrollY;
+    lastTime = now;
+    if (speed > FAST && !frame) {
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        pending.forEach(section => {
+          if (section.getBoundingClientRect().top < window.innerHeight * LOOKAHEAD) {
+            reveal(section, true);
+          }
+        });
+      });
+    }
+  };
 
   html.classList.add('scroll-reveal');
-  sections.forEach(section => observer.observe(section));
+  // Sections already on (or just below) the first screen never start hidden
+  sections.forEach(section => {
+    if (section.getBoundingClientRect().top < window.innerHeight * 1.15) {
+      reveal(section, true);
+    } else {
+      observer.observe(section);
+    }
+  });
+  if (pending.size) {
+    window.addEventListener('scroll', onScroll, { passive: true });
+  }
 };
 
 /* ── INITIALIZATION ───────────────────────────────────────────── */
@@ -896,57 +890,6 @@ const setupScrollReveal = () => {
       height: document.documentElement.scrollHeight 
     }, '*');
   }
-
-  // Premium interface Audio Feedback System (Click ticks)
-  let clickAudioContext = null;
-  const playClickTick = () => {
-    try {
-      const AudioCtx = window.AudioContext || window.webkitAudioContext;
-      if (!AudioCtx) return;
-      if (!clickAudioContext) {
-        clickAudioContext = new AudioCtx();
-      }
-      if (clickAudioContext.state === 'suspended') {
-        clickAudioContext.resume();
-      }
-      const oscillator = clickAudioContext.createOscillator();
-      const gainNode = clickAudioContext.createGain();
-      
-      oscillator.type = 'sine';
-      oscillator.frequency.setValueAtTime(1000, clickAudioContext.currentTime);
-      oscillator.frequency.exponentialRampToValueAtTime(100, clickAudioContext.currentTime + 0.1);
-      
-      gainNode.gain.setValueAtTime(0.02, clickAudioContext.currentTime);
-      gainNode.gain.exponentialRampToValueAtTime(0.001, clickAudioContext.currentTime + 0.1);
-      
-      oscillator.connect(gainNode);
-      gainNode.connect(clickAudioContext.destination);
-      
-      oscillator.start();
-      oscillator.stop(clickAudioContext.currentTime + 0.1);
-    } catch (audioError) {
-      // Audio errors are safely suppressed (e.g. user interaction gestures restrictions)
-    }
-  };
-
-  document.addEventListener('click', (event) => {
-    if (event.target.closest('.ctrl, .contact-row, .lm-item, .proj-link')) { 
-      playClickTick(); 
-    }
-  });
-
-  window.addEventListener('beforeunload', () => {
-    try {
-      if (timeUpdaterTimer) { 
-        clearTimeout(timeUpdaterTimer); 
-        timeUpdaterTimer = null; 
-      }
-      if (clickAudioContext && typeof clickAudioContext.close === 'function') { 
-        clickAudioContext.close().catch(() => {}); 
-        clickAudioContext = null; 
-      }
-    } catch (e) {}
-  });
 
   // Top header screen scroll progress indicator
   const cachedProgressBar = document.getElementById('scroll-progress');
