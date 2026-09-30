@@ -33,6 +33,7 @@ cd scripts && npm install
 npx playwright install chromium   # solo la primera vez
 npm run build    # regenera pdf/*.pdf + print-zoom.js
 npm run og       # regenera og.png
+npm run check    # PDF de una página y ATS, web, maquetación responsive (18 tamaños) y WCAG AA
 ```
 
 ### Licencia
