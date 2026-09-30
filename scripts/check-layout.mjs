@@ -3,6 +3,7 @@
 //  - no sideways scrolling and no visible element outside the viewport
 //  - no text clipped by its own box (overflow hidden/ellipsis)
 //  - the language menu fits the screen when open
+//  - the PDF preview appears whole on hover, stays while the PDF is prepared and hides when the toast shows
 //  - tap targets on phones are at least 24×24 CSS px (WCAG 2.2, 2.5.8)
 //  - no JavaScript errors and no failed requests
 // Usage: node check-layout.mjs [lang,lang,…]   (default: a sample covering LTR, RTL, CJK, Cyrillic)
@@ -55,6 +56,30 @@ for (const lang of LANGS) {
       await page.waitForTimeout(450);
       const m = await page.evaluate(() => { const r = document.querySelector('#lang-menu').getBoundingClientRect(); return { l: r.left, r: r.right, b: r.bottom }; });
       if (m.l < -1 || m.r > width + 1 || m.b > height + 1) issues.push(`language menu outside the screen [${Math.round(m.l)}, ${Math.round(m.r)}] bottom ${Math.round(m.b)}`);
+    }
+    // PDF preview: whole on hover, kept while the PDF is being prepared, gone once the toast shows
+    const printButton = page.locator('#print-btn');
+    if (await printButton.isVisible()) {
+      const previewState = () => page.evaluate(() => {
+        const el = document.querySelector('.pdf-preview');
+        const r = el.getBoundingClientRect();
+        return { shown: getComputedStyle(el).visibility === 'visible' && Number(getComputedStyle(el).opacity) > 0.9, l: r.left, r: r.right, b: r.bottom };
+      });
+      await printButton.hover();
+      await page.waitForTimeout(600);
+      let p = await previewState();
+      if (!p.shown) issues.push('PDF preview does not show on hover');
+      else if (p.l < -1 || p.r > width + 1 || p.b > height + 1) issues.push(`PDF preview cut on hover [${Math.round(p.l)}, ${Math.round(p.r)}] bottom ${Math.round(p.b)}`);
+      await page.mouse.move(width / 2, height / 2);
+      await page.evaluate(() => document.getElementById('print-btn').setAttribute('data-loading', 'true'));
+      await page.waitForTimeout(600);
+      p = await previewState();
+      if (!p.shown) issues.push('PDF preview hides while the PDF is being prepared');
+      else if (p.l < -1 || p.r > width + 1 || p.b > height + 1) issues.push(`PDF preview cut while preparing [${Math.round(p.l)}, ${Math.round(p.r)}]`);
+      await page.evaluate(() => document.getElementById('print-btn').classList.add('is-success'));
+      await page.waitForTimeout(600);
+      p = await previewState();
+      if (p.shown) issues.push('PDF preview stays visible after the download finished');
     }
     for (const issue of new Set(issues)) failures.push(`${lang} ${width}×${height}: ${issue}`);
     await page.close();

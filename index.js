@@ -384,6 +384,28 @@ window.toggleTheme = (event) => {
   };
 
 /**
+ * The PDF preview card hangs from the download button (right edges aligned). When the button
+ * sits near a screen edge the card would leave the viewport, so it is nudged back (--pv-shift).
+ */
+const placePdfPreview = () => {
+  const button = document.getElementById('print-btn');
+  const preview = button && button.querySelector('.pdf-preview');
+  if (!preview) {
+    return;
+  }
+  const margin = 8;
+  const right = button.getBoundingClientRect().right;
+  const left = right - preview.offsetWidth;
+  let shift = 0;
+  if (left < margin) {
+    shift = margin - left;
+  } else if (right > window.innerWidth - margin) {
+    shift = window.innerWidth - margin - right;
+  }
+  preview.style.setProperty('--pv-shift', `${Math.round(shift)}px`);
+};
+
+/**
  * Triggers CV export with a reliable path per runtime.
  * Desktop top-level windows use native print; iframes and mobile use the PDF endpoint.
  */
@@ -407,6 +429,7 @@ window.handlePrint = async () => {
   };
 
   printButton.setAttribute('data-loading', 'true');
+  placePdfPreview();
   if (statusLabel) {
     statusLabel.textContent = copy.preparing;
   }
@@ -874,22 +897,6 @@ const setupScrollReveal = () => {
     }, '*');
   }
 
-  // Active status live time counter
-  let timeUpdaterTimer = null;
-  const updateTime = () => {
-    const liveTimeElement = document.getElementById('live-time');
-    if (!liveTimeElement) return;
-    
-    const now = new Date();
-    const hoursString = now.getHours().toString().padStart(2, '0');
-    const minutesString = now.getMinutes().toString().padStart(2, '0');
-    liveTimeElement.textContent = `${hoursString}:${minutesString}`;
-    
-    const nextTickDelay = (60 - now.getSeconds()) * 1000 - now.getMilliseconds();
-    timeUpdaterTimer = setTimeout(updateTime, nextTickDelay + 100);
-  };
-  updateTime();
-
   // Premium interface Audio Feedback System (Click ticks)
   let clickAudioContext = null;
   const playClickTick = () => {
@@ -971,6 +978,10 @@ const setupScrollReveal = () => {
   window.scrollTo(0, 0);
 
   setupPrintScale();
+  const printControl = document.getElementById('print-btn');
+  if (printControl) {
+    printControl.addEventListener('pointerenter', placePdfPreview);
+  }
 
   // Calm first paint: reveal once fonts are ready (max 800ms), with a single fade
   const revealPage = () => requestAnimationFrame(() => html.classList.remove('cv-loading'));
