@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   # One-page ATS-safe PDFs in every language (and up to date), first screen at 12 viewports,
-  # no JS errors, language detection, Ctrl+P, and a WCAG 2.1 AA audit (axe-core).
+  # no JS errors, language detection, Ctrl+P, a responsive layout audit and a WCAG 2.1 AA audit (axe-core).
   checks:
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -35,5 +35,7 @@ jobs:
         run: node build-pdfs.mjs --check
       - name: Web checks (first screen, overflow, JS errors, languages, Ctrl+P)
         run: node check-web.mjs
+      - name: Layout (nothing cut, off-screen or too small to tap, 18 screen sizes)
+        run: node check-layout.mjs
       - name: Accessibility (WCAG 2.1 AA)
         run: node check-a11y.mjs

@@ -16,8 +16,8 @@
   --ink-3: #475569;
   --rule: #cbd5e1;
   --brand: #8a6532;
-  --f-serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
-  --f-sans: 'DM Sans', Arial, Helvetica, sans-serif;
+  --f-display: 'Bricolage Grotesque', 'Manrope', Arial, Helvetica, sans-serif;
+  --f-sans: 'Manrope', Arial, Helvetica, sans-serif;
 }
 
 *,
@@ -94,7 +94,7 @@ a {
 }
 
 h1 {
-  font-family: var(--f-serif);
+  font-family: var(--f-display);
   font-size: 25pt;
   font-weight: 500;
   line-height: 1;
@@ -171,7 +171,7 @@ h1 strong {
 
 .sec-title,
 .profile-label {
-  font-family: var(--f-serif);
+  font-family: var(--f-display);
   font-size: 13pt;
   font-weight: 600;
   line-height: 1.1;
@@ -226,7 +226,6 @@ h1 strong {
 .tl-org {
   font-size: 9.4pt;
   color: var(--ink-2);
-  font-style: italic;
 }
 
 .tl-mention {
@@ -354,7 +353,7 @@ h1 strong {
 .lang-level {
   display: block;
   margin: .2mm 0 .3mm;
-  font-family: var(--f-serif);
+  font-family: var(--f-display);
   font-size: 19pt;
   font-weight: 600;
   line-height: 1;
@@ -440,7 +439,7 @@ h1 strong {
   max-width: 22mm;
 }
 
-/* Cormorant defaults to old-style figures ("C1" reads as "Cı"): use lining numerals */
+/* Lining numerals keep "C1" and dates unambiguous in every font that falls back here */
 h1,
 .sec-title,
 .profile-label {

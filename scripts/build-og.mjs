@@ -6,7 +6,7 @@ import { ROOT, launch } from './lib.mjs';
 
 const CARD = `<!doctype html>
 <html lang="es"><head><meta charset="utf-8">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=DM+Sans:wght@400;500;700&display=block" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Manrope:wght@400..700&display=block" rel="stylesheet">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html, body { width: 1200px; height: 630px; }
@@ -15,21 +15,21 @@ const CARD = `<!doctype html>
     padding: 72px 84px 64px;
     background: #fbf9f6;
     color: #0f172a;
-    font-family: 'DM Sans', Arial, sans-serif;
+    font-family: 'Manrope', Arial, sans-serif;
     font-variant-numeric: lining-nums;
   }
   body::before { content: ''; position: absolute; inset: 0 0 auto; height: 6px; background: #b8894d; }
   .eyebrow { font-size: 22px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: #9a6f35; }
-  h1 { margin-top: 18px; font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 500; font-size: 104px; line-height: .95; letter-spacing: -.01em; }
+  h1 { margin-top: 18px; font-family: 'Bricolage Grotesque', 'Manrope', Arial, sans-serif; font-weight: 500; font-size: 104px; line-height: .95; letter-spacing: -.01em; }
   .stack { margin-top: 22px; font-size: 30px; color: #334155; }
   .rule { margin: 42px 0 30px; height: 1px; background: #d9cdb8; }
   .facts { display: flex; gap: 0; }
   .fact { padding: 0 44px; border-left: 1px solid #d9cdb8; }
   .fact:first-child { padding-left: 0; border-left: 0; }
-  .level { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; font-size: 64px; line-height: .9; color: #9a6f35; font-feature-settings: "lnum" 1; }
+  .level { font-family: 'Bricolage Grotesque', 'Manrope', Arial, sans-serif; font-weight: 600; font-size: 64px; line-height: .9; color: #9a6f35; font-feature-settings: "lnum" 1; }
   .label { margin-top: 8px; font-size: 22px; font-weight: 700; }
   .sub { margin-top: 2px; font-size: 19px; color: #64748b; }
-  .degree { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; font-size: 44px; line-height: 1.05; color: #0f172a; padding-top: 12px; }
+  .degree { font-family: 'Bricolage Grotesque', 'Manrope', Arial, sans-serif; font-weight: 600; font-size: 44px; line-height: 1.05; color: #0f172a; padding-top: 12px; }
   .url { position: absolute; right: 84px; bottom: 60px; font-size: 20px; color: #64748b; }
 </style></head>
 <body>
@@ -37,7 +37,7 @@ const CARD = `<!doctype html>
   <h1>Eneko Ruiz Mollón</h1>
   <div class="rule"></div>
   <div class="facts">
-    <div class="fact"><p class="degree">UPV/EHU</p><p class="label">Ingeniería de Software</p><p class="sub">Grado oficial — 2027</p></div>
+    <div class="fact"><p class="degree">UPV/EHU</p><p class="label">Ingeniería Informática</p><p class="sub">Mención en Ing. del Software · 2027</p></div>
     <div class="fact"><p class="level">C1</p><p class="label">Inglés</p><p class="sub">Certificado Cambridge</p></div>
     <div class="fact"><p class="level">C1</p><p class="label">Euskera</p><p class="sub">Certificado HABE</p></div>
   </div>
