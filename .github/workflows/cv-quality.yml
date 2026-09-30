@@ -1,0 +1,39 @@
+name: CV quality
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+env:
+  GIT_LFS_SKIP_SMUDGE: '1'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # One-page ATS-safe PDFs in every language (and up to date), first screen at 12 viewports,
+  # no JS errors, language detection, Ctrl+P, and a WCAG 2.1 AA audit (axe-core).
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: scripts
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --no-audit --no-fund
+      - run: npx playwright install --with-deps chromium
+      - name: PDFs are up to date and ATS-safe
+        run: node build-pdfs.mjs --check
+      - name: Web checks (first screen, overflow, JS errors, languages, Ctrl+P)
+        run: node check-web.mjs
+      - name: Accessibility (WCAG 2.1 AA)
+        run: node check-a11y.mjs
