@@ -1,12 +1,11 @@
-/* Grain Texture Overlay — Elite Dynamic Version */
 /* Scroll Progress Bar */
 #scroll-progress {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  height: 3px;
-  background: linear-gradient(to right, var(--c-brand), var(--c-accent), #475569);
+  height: 1.5px;
+  background: var(--c-brand);
   z-index: 10000;
   transform-origin: 0% 50%;
   transform: scaleX(0);
@@ -279,31 +278,32 @@ ul {
 
 .ctrl,
 .contact-row,
-.proj-link,
 .lm-item,
 .pill,
 .course-item,
 .lang-chip,
+.proj-item,
 .tl-item {
   position: relative;
 }
 
-:is(.ctrl, .contact-row, .proj-link, .lm-item, .pill, .course-item, .lang-chip)::before {
+:is(.ctrl, .contact-row, .lm-item, .pill, .course-item, .lang-chip, .proj-item)::before {
   content: "";
   position: absolute;
   inset: -1px;
+  border-radius: inherit;
   background: radial-gradient(120px circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, 0.22), transparent 58%);
   opacity: 0;
   pointer-events: none;
   transition: opacity var(--dur-fast) var(--ease);
 }
 
-[data-theme="dark"] :is(.ctrl, .contact-row, .proj-link, .lm-item, .pill, .course-item, .lang-chip)::before {
-  background: radial-gradient(120px circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, 0.08), transparent 58%);
+[data-theme="dark"] :is(.ctrl, .contact-row, .lm-item, .pill, .course-item, .lang-chip, .proj-item)::before {
+  background: radial-gradient(120px circle at var(--mx, 50%) var(--my, 50%), rgba(212, 166, 106, 0.12), transparent 58%);
 }
 
-:is(.ctrl, .contact-row, .proj-link, .lm-item, .pill, .course-item, .lang-chip):hover::before,
-:is(.ctrl, .contact-row, .proj-link, .lm-item, .pill, .course-item, .lang-chip):focus-visible::before {
+:is(.ctrl, .contact-row, .lm-item, .pill, .course-item, .lang-chip, .proj-item):hover::before,
+:is(.ctrl, .contact-row, .lm-item, .pill, .course-item, .lang-chip, .proj-item):focus-visible::before {
   opacity: 1;
 }
 
@@ -388,15 +388,16 @@ ul {
 }
 
 .pdf-preview::after {
-  content: "PDF";
+  content: "PDF · A4";
   position: absolute;
   top: 6px;
   right: 6px;
-  font-family: var(--f-mono);
+  font-family: var(--f-sans);
   font-size: 7px;
   font-weight: 700;
   color: var(--c-brand-ink);
-  opacity: 0.8;
+  opacity: 0.7;
+  letter-spacing: 0.04em;
 }
 
 .pv-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 4px; border-bottom: 0.5px solid var(--c-rule); padding-bottom: 6px; }
@@ -425,26 +426,6 @@ ul {
 .pv-line.item-title { height: 3px; background: var(--c-ink-3); width: 90%; }
 .pv-line.item-sub { height: 2px; background: var(--c-rule-2); width: 60%; }
 
-/* Skeleton Shimmer for PDF Preview */
-.pdf-preview .pv-line::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  transform: translateX(-100%);
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-  animation: shimmer 2s infinite;
-}
-[data-theme="dark"] .pdf-preview .pv-line::after {
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
-}
-
-/* Skeleton Loading State */
-
-@keyframes shimmer {
-  100% {
-    transform: translateX(100%);
-  }
-}
 
 .ctrl:active {
   background: var(--c-accent-s);
@@ -1182,44 +1163,8 @@ h1 strong {
 
 /* ── PRINT — Elite A4 Layout ── */
 
-/* ── PLATFORM OVERLAYS — Clean Mode ── */
 
-/* ── PREMIUM UI: Custom Cursor ── */
-@media (pointer: fine) {
-  body {
-    cursor: none;
-  }
 
-  /* When hovering over interactive elements */
-}
-
-/* ── PREMIUM UI: 3D Hover & Glassmorphism ── */
-.magnetic {
-  display: inline-block;
-  transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-}
-
-[data-theme="dark"] .glass-card {
-  background: rgba(30, 41, 59, 0.4);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-[data-theme="dark"] .glass-card:hover {
-  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5);
-}
-
-/* Final polish: faster interaction, true pill links, and single-page print export. */
-.proj-link {
-  border-radius: 999px;
-}
-
-@media (pointer: fine) {
-  body {
-    cursor: auto;
-  }
-}
 
 /* Final production pass: stable first paint, readable language levels, and controlled A4 canvas. */
 
@@ -1247,20 +1192,20 @@ h1 strong {
 
 /* Final page-fill pass: keep margins, use more of the A4 canvas. */
 
-/* Recruiter handoff polish: deterministic entrance and PDF closer to the HTML canvas. */
-@keyframes cvBootIn {
-  0% { opacity: 0; transform: translateY(10px); filter: blur(8px); }
-  100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+/* ── Staggered entrance: orchestrated unveil like Linear/Raycast ── */
+@keyframes staggerIn {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-html:not(.pdf-render) #root-container {
-  animation: cvBootIn 460ms cubic-bezier(0.16, 1, 0.3, 1) both;
+html:not(.pdf-render) .hero .site-header {
+  animation: staggerIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 0.04s;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  html:not(.pdf-render) #root-container {
-    animation: none;
-  }
+html:not(.pdf-render) .hero .profile {
+  animation: staggerIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 0.12s;
 }
 
 /* ── ATS layout (screen): single reading column, title → org → dates ── */
@@ -1766,19 +1711,16 @@ a.contact-row {
   }
 }
 
-/* ── First paint: one quiet fade once fonts are ready (replaces the blur/slide boot) ── */
-html:not(.pdf-render) #root-container {
-  animation: none;
-  transition: opacity 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
-}
-
-html.cv-loading #root-container {
-  opacity: 0;
+/* ── First paint: staggered entrance plays once fonts are ready ── */
+html.cv-loading .hero .site-header,
+html.cv-loading .hero .profile {
+  animation-play-state: paused;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html:not(.pdf-render) #root-container {
-    transition: none;
+  html:not(.pdf-render) .hero .site-header,
+  html:not(.pdf-render) .hero .profile {
+    animation: none;
   }
 }
 

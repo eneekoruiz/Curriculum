@@ -578,7 +578,7 @@ const setupSurfacePolish = () => {
     return;
   }
 
-  const surfaces = document.querySelectorAll('.ctrl, .contact-row, .proj-link, .lm-item, .pill, .course-item, .lang-chip');
+  const surfaces = document.querySelectorAll('.ctrl, .contact-row, .lm-item, .pill, .course-item, .lang-chip, .proj-item');
   if (!surfaces.length) {
     return;
   }
@@ -834,21 +834,8 @@ const setupScrollReveal = () => {
     }
   });
   
-  // Custom global shortcut listener (p = print, s = share)
-  window.addEventListener('keydown', (event) => {
-    const targetTag = event.target.tagName.toLowerCase();
-    if (['input', 'textarea'].includes(targetTag) || event.target.isContentEditable) {
-      return;
-    }
-    if (event.key.toLowerCase() === 'p' && !event.ctrlKey && !event.metaKey) {
-      event.preventDefault();
-      handlePrint();
-    }
-    if (event.key.toLowerCase() === 's' && !event.ctrlKey && !event.metaKey) {
-      event.preventDefault();
-      handleShare();
-    }
-  });
+
+
 
   // Handle messages received from parent frame (if embedded inside portfolio context)
   window.addEventListener('message', (event) => {
