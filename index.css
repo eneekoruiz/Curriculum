@@ -868,6 +868,13 @@ h1 strong {
   box-shadow: 0 6px 12px var(--c-accent-s);
 }
 
+.pill:active {
+  transform: scale(0.96);
+  background: var(--c-accent-b);
+  border-color: var(--c-brand);
+  transition-duration: 80ms;
+}
+
 /* ── LANGUAGES — editorial, no borders ──────────────── */
 
 .lang-name {
@@ -1575,6 +1582,11 @@ a.contact-row {
   background: var(--c-brand);
   transform: translateY(-2px);
   box-shadow: 0 4px 12px var(--c-key-bdr);
+}
+
+.proj-links .pill-link:active {
+  transform: scale(0.96) translateY(0);
+  transition-duration: 80ms;
 }
 
 .pl-icon {
