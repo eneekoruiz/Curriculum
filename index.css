@@ -96,41 +96,6 @@
   color: var(--c-bg);
 }
 
-/* Live Status Pulse — Elite Minimal */
-.live-dot {
-  width: 6px;
-  height: 6px;
-  background: #34c759;
-  border-radius: 50%;
-  position: relative;
-}
-@media (prefers-reduced-motion: no-preference) {
-  .live-dot::after {
-    content: '';
-    position: absolute;
-    inset: -4px;
-    border-radius: 50%;
-    border: 1px solid #34c759;
-    animation: pulse-dot 2s infinite;
-  }
-}
-@keyframes pulse-dot {
-  0% { transform: scale(1); opacity: 1; }
-  100% { transform: scale(2.5); opacity: 0; }
-}
-.live-wrap {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  font-family: var(--f-sans);
-  font-size: 11px;
-  color: var(--c-ink-3);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  margin-top: var(--s2);
-}
-.time-now { color: var(--c-accent); font-weight: 600; }
-
 /* ── TOKENS ────────────────────────────────────────── */
 :root {
   --c-bg: #ffffff;
@@ -340,6 +305,7 @@ ul {
 }
 
 .topbar-actions {
+  margin-inline-start: auto;
   display: flex;
   align-items: center;
   gap: var(--s2);
@@ -426,6 +392,111 @@ ul {
 
 #print-btn {
   position: relative;
+}
+
+.pdf-preview {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  width: 142px;
+  height: 200px; /* A4 aspect ratio */
+  background: var(--c-bg);
+  border: 1px solid var(--c-rule-2);
+  border-radius: 6px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.12), 0 5px 15px rgba(0,0,0,0.04);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(var(--pv-shift, 0px)) translateY(10px) rotate(2deg);
+  transition: opacity 0.4s var(--ease), visibility 0.4s var(--ease), transform 0.4s var(--ease);
+  pointer-events: none;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 1000;
+  overflow: hidden;
+}
+
+/* Shown on hover (mouse) and for as long as the PDF is being prepared; when the download
+   finishes the "downloaded" toast takes over (is-success). --pv-shift (set in index.js)
+   nudges the card back inside the viewport when the button sits near a screen edge. */
+@media (hover: hover) and (pointer: fine) {
+  #print-btn:hover .pdf-preview {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(var(--pv-shift, 0px)) translateY(0) rotate(0deg);
+  }
+}
+
+#print-btn[data-loading="true"] .pdf-preview {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(var(--pv-shift, 0px)) translateY(0) rotate(0deg);
+}
+
+#print-btn.is-success .pdf-preview {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(var(--pv-shift, 0px)) translateY(6px) rotate(0deg);
+}
+
+.pdf-preview::after {
+  content: "PDF";
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  font-family: var(--f-mono);
+  font-size: 7px;
+  font-weight: 700;
+  color: var(--c-brand-ink);
+  opacity: 0.8;
+}
+
+.pv-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 4px; border-bottom: 0.5px solid var(--c-rule); padding-bottom: 6px; }
+.pv-title-wrap { display: flex; flex-direction: column; gap: 2px; }
+.pv-line { 
+  height: 3px; 
+  background: var(--c-rule-2); 
+  border-radius: 1px; 
+  width: 100%; 
+  position: relative;
+  overflow: hidden;
+}
+.pv-line.name { height: 6px; background: var(--c-accent); width: 45px; }
+.pv-line.eyebrow { height: 2px; background: var(--c-accent-b); width: 25px; }
+.pv-line.contacts { width: 30px; height: 2px; align-self: flex-end; }
+
+.pv-profile { height: 15px; border-bottom: 0.5px solid var(--c-rule); padding: 4px 0; display: flex; flex-direction: column; gap: 2px; }
+.pv-line.text { height: 2px; width: 100%; opacity: 0.6; }
+.pv-line.text.last { width: 70%; }
+
+.pv-dashboard { flex: 1; display: grid; grid-template-columns: 1fr 1.2fr; gap: 8px; padding-top: 4px; }
+.pv-col { display: flex; flex-direction: column; gap: 6px; }
+.pv-sec { display: flex; flex-direction: column; gap: 3px; }
+.pv-sec-title { height: 4px; background: var(--c-accent-s); width: 80%; border-radius: 1px; margin-bottom: 2px; }
+.pv-item { display: flex; flex-direction: column; gap: 2px; }
+.pv-line.item-title { height: 3px; background: var(--c-ink-3); width: 90%; }
+.pv-line.item-sub { height: 2px; background: var(--c-rule-2); width: 60%; }
+
+/* Skeleton Shimmer for PDF Preview */
+.pdf-preview .pv-line::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  animation: shimmer 2s infinite;
+}
+[data-theme="dark"] .pdf-preview .pv-line::after {
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+}
+
+/* Skeleton Loading State */
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
 }
 
 .ctrl:active {
@@ -643,10 +714,6 @@ h1 strong {
   gap: var(--s2);
   flex-wrap: wrap;
   align-items: center;
-}
-
-.tagline-sep {
-  color: var(--c-rule-2);
 }
 
 /* ── CONTACTS ───────────────────────────────────────── */
@@ -2087,9 +2154,6 @@ html.cv-loading #root-container {
     font-size: clamp(2.2rem, 10vw, 3rem);
   }
 
-  #topbar .live-wrap {
-    display: none !important;
-  }
 }
 
 /* Never let a wide child push the page past the viewport on small screens */
@@ -2127,23 +2191,6 @@ html.scroll-reveal .dashboard > section {
 html.scroll-reveal .dashboard > section:not(.is-revealed) {
   opacity: 0;
   transform: translateY(10px);
-}
-
-/* Status line wraps as whole phrases, never as squeezed columns */
-.live-wrap {
-  flex-wrap: wrap;
-  row-gap: 2px;
-}
-
-/* Status line sits at the start of the top bar, controls at the end */
-#topbar .live-wrap {
-  margin: 0;
-  margin-inline-end: auto;
-  align-self: center;
-}
-
-.live-wrap > span {
-  white-space: nowrap;
 }
 
 /* ── Typography shared with the PDF (print.css): Bricolage Grotesque titles, Manrope text, gold accents ── */
