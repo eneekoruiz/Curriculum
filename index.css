@@ -1,31 +1,4 @@
 /* Grain Texture Overlay — Elite Dynamic Version */
-@keyframes grain {
-  0%, 100% { transform: translate(0, 0); }
-  10%       { transform: translate(-1%, -1%); }
-  30%       { transform: translate(1%, 1%); }
-  50%       { transform: translate(-1%, 0.5%); }
-  70%       { transform: translate(0.5%, -1%); }
-  90%       { transform: translate(-0.5%, 1%); }
-}
-
-.grain {
-  position: fixed;
-  inset: -50%;
-  width: 200%;
-  height: 200%;
-  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
-  opacity: 0.045;
-  mix-blend-mode: multiply;
-  pointer-events: none;
-  z-index: 9999;
-  animation: grain 4s steps(10) infinite;
-}
-
-[data-theme="dark"] .grain {
-  mix-blend-mode: overlay;
-  opacity: 0.04;
-}
-
 /* Scroll Progress Bar */
 #scroll-progress {
   position: fixed;
@@ -314,8 +287,6 @@ ul {
 .lang-chip,
 .tl-item {
   position: relative;
-  transform: translateZ(0);
-  backface-visibility: hidden;
 }
 
 :is(.ctrl, .contact-row, .proj-link, .lm-item, .pill, .course-item, .lang-chip)::before {
@@ -1052,147 +1023,7 @@ h1 strong {
   padding: 0 clamp(var(--s4), 6vw, var(--s6));
 }
 
-/* ── SCROLL REVEAL (Premium Entrance) ───────────────── */
-.reveal {
-  opacity: 1;
-  transform: none;
-  transform-origin: center top;
-  filter: none;
-  transition: opacity 0.8s var(--ease),
-    transform 0.8s var(--ease),
-    filter 0.8s var(--ease);
-  will-change: opacity, transform, filter;
-  backface-visibility: hidden;
-}
 
-.reveal.visible {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-  filter: blur(0);
-}
-
-/* Disable CSS transitions when GSAP handles the animations to prevent double-triggering on clearProps */
-
-@media (prefers-reduced-motion: reduce) {
-  .reveal {
-    opacity: 1;
-    transform: none;
-    transition: none;
-  }
-}
-
-/* Staggered delays for a professional flow */
-.site-header.reveal {
-  transition-delay: 0.04s;
-}
-
-.profile.reveal {
-  transition-delay: 0.08s;
-}
-
-/* ── Waterfall Stagger Reveal for Children ── */
-.site-header .eyebrow,
-.site-header h1,
-.site-header .tagline,
-.site-header .contacts .contact-row,
-.profile .profile-label,
-.profile .profile-text,
-.reveal .sec-title,
-.reveal .course-item,
-.reveal .lang-chip,
-.reveal .tl-item {
-  opacity: 1;
-  transform: none;
-  filter: none;
-  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease), filter 0.7s var(--ease);
-}
-.site-header.visible .eyebrow,
-.site-header.visible h1,
-.site-header.visible .tagline,
-.site-header.visible .contacts .contact-row,
-.profile.visible .profile-label,
-.profile.visible .profile-text,
-.reveal.visible .sec-title,
-.reveal.visible .course-item,
-.reveal.visible .lang-chip,
-.reveal.visible .tl-item {
-  opacity: 1;
-  transform: translateY(0);
-  filter: blur(0);
-}
-
-.site-header.visible .eyebrow { transition-delay: 0.04s; }
-.site-header.visible h1 { transition-delay: 0.1s; }
-.site-header.visible .tagline { transition-delay: 0.16s; }
-.site-header.visible .contacts .contact-row:nth-child(1) { transition-delay: 0.28s; }
-.site-header.visible .contacts .contact-row:nth-child(2) { transition-delay: 0.34s; }
-
-.profile.visible .profile-label { transition-delay: 0.04s; }
-.profile.visible .profile-text { transition-delay: 0.12s; }
-
-.reveal.visible .sec-title { transition-delay: 0.05s; }
-.reveal.visible .course-item:nth-child(1) { transition-delay: 0.06s; }
-.reveal.visible .course-item:nth-child(2) { transition-delay: 0.12s; }
-.reveal.visible .lang-chip:nth-child(1) { transition-delay: 0.06s; }
-.reveal.visible .lang-chip:nth-child(2) { transition-delay: 0.12s; }
-.reveal.visible .lang-chip:nth-child(3) { transition-delay: 0.18s; }
-.reveal.visible .tl-item:nth-child(1) { transition-delay: 0.07s; }
-.reveal.visible .tl-item:nth-child(2) { transition-delay: 0.14s; }
-.reveal.visible .tl-item:nth-child(3) { transition-delay: 0.21s; }
-.reveal.visible .tl-item:nth-child(4) { transition-delay: 0.28s; }
-.reveal.visible .tl-item:nth-child(5) { transition-delay: 0.35s; }
-
-.reveal .proj-link {
-  opacity: 1;
-  transform: none;
-  filter: none;
-  transition: opacity 0.45s var(--ease), transform 0.45s var(--ease), filter 0.35s var(--ease), border-color var(--dur) var(--ease), color var(--dur) var(--ease), background var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
-}
-.reveal.visible .proj-link {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-  filter: blur(0);
-}
-.reveal.visible .proj-link:nth-child(1) { transition-delay: 0.05s; }
-.reveal.visible .proj-link:nth-child(2) { transition-delay: 0.12s; }
-.reveal.visible .proj-link:nth-child(3) { transition-delay: 0.19s; }
-
-.reveal {
-  position: relative;
-}
-
-.reveal::after {
-  content: "";
-  position: absolute;
-  top: -6px;
-  left: 0;
-  width: min(180px, 42%);
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(var(--c-brand-rgb), 0.72), transparent);
-  opacity: 0;
-  transform: scaleX(0);
-  transform-origin: left center;
-  pointer-events: none;
-}
-
-.reveal.visible::after {
-  animation: precision-reveal-trace 720ms cubic-bezier(0.42, 0, 0.16, 1) both;
-}
-
-@keyframes precision-reveal-trace {
-  0%, 18% { opacity: 0; transform: scaleX(0); }
-  38% { opacity: 0.9; transform: scaleX(0.35); }
-  72% { opacity: 0.55; transform: scaleX(1); }
-  100% { opacity: 0; transform: scaleX(1); }
-}
-@media (prefers-reduced-motion: reduce) {
-  
-  .reveal::after,
-  .reveal.visible::after {
-    display: none !important;
-    animation: none !important;
-  }
-}
 /* ── RESPONSIVE ─────────────────────────────────────── */
 
 /* Tablet / small desktop: single column reflow */
@@ -2119,14 +1950,19 @@ html.cv-loading #root-container {
   min-width: 0;
 }
 
-/* ── Scroll reveal: sections below the cover fade in once (see setupScrollReveal) ── */
+/* ── Scroll reveal: each section below the cover rises and fades in once, just before it
+   reaches the screen (see setupScrollReveal). is-instant skips the animation (fast scrolling). ── */
 html.scroll-reveal .dashboard > section {
-  transition: opacity 0.6s cubic-bezier(0.2, 0.7, 0.2, 1), transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition: opacity 0.38s cubic-bezier(0.22, 1, 0.36, 1), transform 0.38s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 html.scroll-reveal .dashboard > section:not(.is-revealed) {
   opacity: 0;
-  transform: translateY(10px);
+  transform: translateY(12px);
+}
+
+html.scroll-reveal .dashboard > section.is-instant {
+  transition: none;
 }
 
 /* ── Typography shared with the PDF (print.css): Bricolage Grotesque titles, Manrope text, gold accents ── */

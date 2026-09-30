@@ -1639,7 +1639,7 @@ const T = {
 
 // Shared values and aliases for the print/export controls.
 Object.values(T).forEach((copy) => {
-  copy.footer_text = 'Coded from scratch by Eneko Ruiz Mollón';
+  copy.footer_text = 'Eneko Ruiz Mollón';
   copy.btn_print = copy.pdf_download;
   copy.aria_print = copy.pdf_download;
 });

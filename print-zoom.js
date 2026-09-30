@@ -3,5 +3,5 @@
 // PDF_SOURCE: hash of the files the PDFs were built from (CI checks it is current).
 // PDF_VERSION: cache-busting version for the PDF downloads.
 window.PRINT_ZOOM = {"es":1.03,"en":1.05,"eu":1.01,"ca":1.03,"gl":1.02,"fr":1.03,"de":1.03,"it":1.03,"pt":1.01,"nl":1.01,"sv":1.03,"no":1.01,"da":1.03,"pl":1,"cs":1.03,"ro":1.01,"tr":1.04,"ru":0.99,"uk":1.01,"zh":1.08,"ja":1.03,"ko":1.04,"ar":1.05,"he":1.08};
-window.PDF_SOURCE = 'ef24e4492b99';
-window.PDF_VERSION = 'ef24e4492b99';
+window.PDF_SOURCE = '80843037b7d4';
+window.PDF_VERSION = '80843037b7d4';

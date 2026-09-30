@@ -147,7 +147,7 @@ const applyTranslations = (langCode) => {
   const footerElement = document.querySelector('.site-footer');
   if (footerElement) {
     const currentYear = new Date().getFullYear();
-    footerElement.innerHTML = `${translations.footer_text} &copy; ${currentYear}`;
+    footerElement.textContent = `© ${currentYear} ${translations.footer_text}`;
   }
 
   // Synchronize language dropdown menu visual states
@@ -570,33 +570,25 @@ const setupSurfacePolish = () => {
     return;
   }
 
+  // The glow follows the pointer: it starts exactly where the pointer enters and fades out
+  // where it leaves (never jumps to the centre of the element).
+  const follow = (surface, event) => {
+    if (event.pointerType !== 'mouse' && event.pointerType !== 'pen') {
+      return;
+    }
+    const rect = surface.getBoundingClientRect();
+    if (!rect.width || !rect.height) {
+      return;
+    }
+    const x = Math.max(0, Math.min(100, ((event.clientX - rect.left) / rect.width) * 100));
+    const y = Math.max(0, Math.min(100, ((event.clientY - rect.top) / rect.height) * 100));
+    surface.style.setProperty('--mx', `${x.toFixed(1)}%`);
+    surface.style.setProperty('--my', `${y.toFixed(1)}%`);
+  };
+
   surfaces.forEach(surface => {
-    surface.addEventListener('pointerenter', () => {
-      surface.style.setProperty('--mx', '50%');
-      surface.style.setProperty('--my', '50%');
-    });
-
-    surface.addEventListener('pointermove', (event) => {
-      if (event.pointerType !== 'mouse' && event.pointerType !== 'pen') {
-        return;
-      }
-
-      const rect = surface.getBoundingClientRect();
-      if (!rect.width || !rect.height) {
-        return;
-      }
-
-      const nextX = ((event.clientX - rect.left) / rect.width) * 100;
-      const nextY = ((event.clientY - rect.top) / rect.height) * 100;
-
-      surface.style.setProperty('--mx', `${Math.max(0, Math.min(100, nextX))}%`);
-      surface.style.setProperty('--my', `${Math.max(0, Math.min(100, nextY))}%`);
-    });
-
-    surface.addEventListener('pointerleave', () => {
-      surface.style.setProperty('--mx', '50%');
-      surface.style.setProperty('--my', '50%');
-    });
+    surface.addEventListener('pointerenter', (event) => follow(surface, event));
+    surface.addEventListener('pointermove', (event) => follow(surface, event));
   });
 };
 
@@ -661,28 +653,86 @@ const setupPrintScale = () => {
 };
 
 /**
- * Calm scroll reveal: each section below the cover fades in (10px rise) the first time
- * it enters the viewport. Nothing is hidden without JavaScript, with reduced motion,
- * in print or in the PDF render.
+ * Scroll reveal: each section below the cover rises and fades in once. It starts a little
+ * BEFORE the section reaches the screen, so at a normal pace it is already in place when it
+ * arrives. When the reader scrolls hard (or jumps), sections about to enter or already passed
+ * appear instantly with no animation, so there are never empty gaps or late fade-ins.
+ * Nothing is hidden without JavaScript, with reduced motion, in print or in the PDF render.
  */
 const setupScrollReveal = () => {
-  const sections = document.querySelectorAll('.dashboard > section');
+  const sections = [...document.querySelectorAll('.dashboard > section')];
   const reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (!sections.length || reducedMotion || !('IntersectionObserver' in window)) {
     return;
   }
 
+  const FAST = 0.9;        // px per ms (900 px/s): faster than this the 0.4s fade would still be running as the section arrives
+  const LOOKAHEAD = 1.6;   // while scrolling hard, everything within 1.6 screens ahead is shown
+  const pending = new Set(sections);
+  let speed = 0;
+  let lastY = window.scrollY;
+  let lastTime = performance.now();
+  let frame = 0;
+
+  const finish = () => {
+    observer.disconnect();
+    window.removeEventListener('scroll', onScroll);
+  };
+
+  const reveal = (section, instant) => {
+    if (!pending.delete(section)) {
+      return;
+    }
+    if (instant) {
+      section.classList.add('is-instant');
+    }
+    section.classList.add('is-revealed');
+    if (!pending.size) {
+      finish();
+    }
+  };
+
   const observer = new IntersectionObserver((entries) => {
+    const hard = speed > FAST && performance.now() - lastTime < 150;
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        entry.target.classList.add('is-revealed');
-        observer.unobserve(entry.target);
+        reveal(entry.target, hard);
       }
     });
-  }, { rootMargin: '0px 0px -6% 0px', threshold: 0.06 });
+  }, { rootMargin: '0px 0px 12% 0px', threshold: 0 });
+
+  const onScroll = () => {
+    const now = performance.now();
+    // After a pause the gap since the last event says nothing about how hard this scroll starts:
+    // measure over at most ~1.5 frames, so a hard flick counts as hard from its first event
+    const interval = Math.max(4, Math.min(now - lastTime, 24));
+    speed = Math.abs(window.scrollY - lastY) / interval;
+    lastY = window.scrollY;
+    lastTime = now;
+    if (speed > FAST && !frame) {
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        pending.forEach(section => {
+          if (section.getBoundingClientRect().top < window.innerHeight * LOOKAHEAD) {
+            reveal(section, true);
+          }
+        });
+      });
+    }
+  };
 
   html.classList.add('scroll-reveal');
-  sections.forEach(section => observer.observe(section));
+  // Sections already on (or just below) the first screen never start hidden
+  sections.forEach(section => {
+    if (section.getBoundingClientRect().top < window.innerHeight * 1.15) {
+      reveal(section, true);
+    } else {
+      observer.observe(section);
+    }
+  });
+  if (pending.size) {
+    window.addEventListener('scroll', onScroll, { passive: true });
+  }
 };
 
 /* ── INITIALIZATION ───────────────────────────────────────────── */
