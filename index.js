@@ -343,13 +343,25 @@ const downloadGeneratedPdf = async (printButton, options = {}) => {
  */
 window.toggleTheme = (event) => {
     const isCurrentlyDark = html.getAttribute('data-theme') === 'dark';
-    if (!document.startViewTransition || !event || !event.clientX) {
+    if (!document.startViewTransition) {
       applyTheme(!isCurrentlyDark, true);
       return;
     }
 
-    const x = event.clientX;
-    const y = event.clientY;
+    let x = event && typeof event.clientX === 'number' ? event.clientX : 0;
+    let y = event && typeof event.clientY === 'number' ? event.clientY : 0;
+    if (x === 0 && y === 0) {
+      const btn = document.getElementById('theme-btn');
+      if (btn) {
+        const rect = btn.getBoundingClientRect();
+        x = rect.left + rect.width / 2;
+        y = rect.top + rect.height / 2;
+      } else {
+        x = window.innerWidth / 2;
+        y = window.innerHeight / 2;
+      }
+    }
+
     const endRadius = Math.hypot(
       Math.max(x, window.innerWidth - x),
       Math.max(y, window.innerHeight - y)
@@ -372,12 +384,13 @@ window.toggleTheme = (event) => {
       
       document.documentElement.animate(
         {
-          clipPath: isCurrentlyDark ? [...clipPath].reverse() : clipPath,
+          clipPath: clipPath,
         },
         {
-          duration: 400,
+          duration: 380,
           easing: 'ease-out',
-          pseudoElement: isCurrentlyDark ? '::view-transition-old(root)' : '::view-transition-new(root)',
+          fill: 'forwards',
+          pseudoElement: '::view-transition-new(root)',
         }
       );
     });

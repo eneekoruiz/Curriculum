@@ -141,6 +141,7 @@ html.theme-transitioning body {
 }
 
 /* Disable native transitions during View Transitions API to avoid snapshot lag */
+html.is-view-transitioning,
 html.is-view-transitioning * {
   transition: none !important;
 }
@@ -152,8 +153,6 @@ html.is-view-transitioning * {
 }
 ::view-transition-old(root) { z-index: 1; }
 ::view-transition-new(root) { z-index: 9999; }
-[data-theme="light"]::view-transition-old(root) { z-index: 9999; }
-[data-theme="light"]::view-transition-new(root) { z-index: 1; }
 body {
   display: flex;
   flex-direction: column;
@@ -545,13 +544,14 @@ html[data-theme="dark"] #icon-moon {
   background: var(--c-surface);
   border: 1px solid var(--c-rule-2);
   border-radius: 8px;
-  min-width: 172px;
+  min-width: 290px;
   max-width: calc(100vw - 32px);
-  max-height: 70vh;
+  max-height: 85vh;
   overflow-y: auto;
   overflow-x: hidden;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(135px, 1fr));
+  align-content: start;
   z-index: 1000;
   box-shadow: 0 15px 35px rgba(0,0,0,0.1), 0 5px 15px rgba(0,0,0,0.04);
   opacity: 0;
@@ -575,7 +575,7 @@ html[data-theme="dark"] #icon-moon {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 14px;
+  padding: 8px 12px;
   background: none;
   border: none;
   border-bottom: 1px solid var(--c-rule);
@@ -588,21 +588,27 @@ html[data-theme="dark"] #icon-moon {
   transition: background var(--dur) var(--ease), color var(--dur) var(--ease), border-color var(--dur) var(--ease);
 }
 
-.lm-item:last-child {
+.lm-item:nth-child(odd) {
+  border-right: 1px solid var(--c-rule);
+}
+
+[dir="rtl"] .lm-item:nth-child(odd) {
+  border-right: none;
+  border-left: 1px solid var(--c-rule);
+}
+
+.lm-item:nth-last-child(-n+2) {
   border-bottom: none;
 }
 
 .lm-item:hover {
   background: var(--c-accent-s);
   color: var(--c-ink);
-  transform: translateX(2px);
 }
 
 .lm-item.active {
   color: var(--c-brand-ink);
   font-weight: 600;
-  border-left: 3px solid var(--c-brand);
-  padding-left: 11px; /* reduced from 14px to compensate for border */
   background: var(--c-accent-s);
 }
 
