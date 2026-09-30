@@ -544,13 +544,15 @@ html[data-theme="dark"] #icon-moon {
   background: var(--c-surface);
   border: 1px solid var(--c-rule-2);
   border-radius: 8px;
-  min-width: 290px;
+  min-width: 280px;
   max-width: calc(100vw - 32px);
-  max-height: 85vh;
+  max-height: calc(100vh - 65px);
   overflow-y: auto;
   overflow-x: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   display: grid;
-  grid-template-columns: repeat(2, minmax(135px, 1fr));
+  grid-template-columns: repeat(2, minmax(130px, 1fr));
   align-content: start;
   z-index: 1000;
   box-shadow: 0 15px 35px rgba(0,0,0,0.1), 0 5px 15px rgba(0,0,0,0.04);
@@ -565,6 +567,10 @@ html[data-theme="dark"] #icon-moon {
               border-color var(--dur) var(--ease);
 }
 
+#lang-menu::-webkit-scrollbar {
+  display: none;
+}
+
 #lang-menu.open {
   opacity: 1;
   visibility: visible;
@@ -575,14 +581,15 @@ html[data-theme="dark"] #icon-moon {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 12px;
+  padding: 6px 12px;
+  line-height: 1.35;
   background: none;
   border: none;
   border-bottom: 1px solid var(--c-rule);
   width: 100%;
   text-align: left;
   font-family: var(--f-sans);
-  font-size: 12.5px;
+  font-size: 12px;
   color: var(--c-ink-2);
   cursor: pointer;
   transition: background var(--dur) var(--ease), color var(--dur) var(--ease), border-color var(--dur) var(--ease);
@@ -2103,55 +2110,6 @@ html.scroll-reveal .dashboard > section.is-instant {
   }
 }
 
-/* ── Timeline: one continuous rail joining the entries; the newest one is marked in gold ── */
-.tl-item {
-  position: relative;
-  padding-inline-start: 30px;
-}
-
-.tl-item::before {
-  content: '';
-  position: absolute;
-  inset-inline-start: 5px;
-  top: 17px;
-  bottom: -5px;
-  width: 1px;
-  background: var(--c-rule-2);
-}
-
-.tl-item:last-child::before {
-  display: none;
-}
-
-.tl-item::after {
-  content: '';
-  position: absolute;
-  inset-inline-start: 0;
-  top: 5px;
-  width: 11px;
-  height: 11px;
-  box-sizing: border-box;
-  border-radius: 50%;
-  background: var(--c-bg);
-  border: 1.5px solid var(--c-rule-2);
-  transition: border-color var(--dur-fast) var(--ease);
-}
-
-.tl-item:first-of-type::after {
-  background: var(--c-brand);
-  border-color: var(--c-brand);
-  box-shadow: 0 0 0 4px var(--c-key-bg);
-}
-
-.tl-item:hover::after {
-  border-color: var(--c-brand);
-}
-
 .tl-item .tl-date {
   font-variant-numeric: tabular-nums;
-}
-
-.tl-item:first-of-type .tl-date {
-  color: var(--c-brand-ink);
-  font-weight: 600;
 }
