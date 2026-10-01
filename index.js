@@ -711,7 +711,7 @@ const setupScrollReveal = () => {
       return;
     }
     if (instant) {
-      section.classList.add('is-instant');
+      section.classList.add('is-instant'); void section.offsetWidth;
     }
     section.classList.add('is-revealed');
     if (!pending.size) {
