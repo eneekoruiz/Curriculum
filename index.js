@@ -341,60 +341,74 @@ const downloadGeneratedPdf = async (printButton, options = {}) => {
 /**
  * Toggles current theme between light and dark modes.
  */
+let activeThemeTransition = null;
+
 window.toggleTheme = (event) => {
-    const isCurrentlyDark = html.getAttribute('data-theme') === 'dark';
-    if (!document.startViewTransition) {
-      applyTheme(!isCurrentlyDark, true);
-      return;
+  const isCurrentlyDark = html.getAttribute('data-theme') === 'dark';
+  const targetTheme = !isCurrentlyDark;
+
+  if (activeThemeTransition && typeof activeThemeTransition.skipTransition === 'function') {
+    try { activeThemeTransition.skipTransition(); } catch (e) {}
+  }
+
+  if (!document.startViewTransition) {
+    applyTheme(targetTheme, true);
+    return;
+  }
+
+  let x = event && typeof event.clientX === 'number' ? event.clientX : 0;
+  let y = event && typeof event.clientY === 'number' ? event.clientY : 0;
+  if (x === 0 && y === 0) {
+    const btn = document.getElementById('theme-btn');
+    if (btn) {
+      const rect = btn.getBoundingClientRect();
+      x = rect.left + rect.width / 2;
+      y = rect.top + rect.height / 2;
+    } else {
+      x = window.innerWidth / 2;
+      y = window.innerHeight / 2;
     }
+  }
 
-    let x = event && typeof event.clientX === 'number' ? event.clientX : 0;
-    let y = event && typeof event.clientY === 'number' ? event.clientY : 0;
-    if (x === 0 && y === 0) {
-      const btn = document.getElementById('theme-btn');
-      if (btn) {
-        const rect = btn.getBoundingClientRect();
-        x = rect.left + rect.width / 2;
-        y = rect.top + rect.height / 2;
-      } else {
-        x = window.innerWidth / 2;
-        y = window.innerHeight / 2;
-      }
-    }
+  const endRadius = Math.hypot(
+    Math.max(x, window.innerWidth - x),
+    Math.max(y, window.innerHeight - y)
+  );
 
-    const endRadius = Math.hypot(
-      Math.max(x, window.innerWidth - x),
-      Math.max(y, window.innerHeight - y)
-    );
+  html.classList.add('is-view-transitioning');
+  const transition = document.startViewTransition(() => {
+    applyTheme(targetTheme, false);
+  });
+  activeThemeTransition = transition;
 
-    html.classList.add('is-view-transitioning');
-    const transition = document.startViewTransition(() => {
-      applyTheme(!isCurrentlyDark, false);
-    });
-
-    transition.finished.finally(() => {
+  transition.finished.finally(() => {
+    if (activeThemeTransition === transition) {
+      activeThemeTransition = null;
       html.classList.remove('is-view-transitioning');
-    });
+    }
+  });
 
-    transition.ready.then(() => {
-      const clipPath = [
-        'circle(0px at ' + x + 'px ' + y + 'px)',
-        'circle(' + endRadius + 'px at ' + x + 'px ' + y + 'px)'
-      ];
-      
-      document.documentElement.animate(
-        {
-          clipPath: clipPath,
-        },
-        {
-          duration: 380,
-          easing: 'ease-out',
-          fill: 'forwards',
-          pseudoElement: '::view-transition-new(root)',
-        }
-      );
-    });
-  };
+  transition.ready.then(() => {
+    const clipPath = [
+      'circle(0px at ' + x + 'px ' + y + 'px)',
+      'circle(' + endRadius + 'px at ' + x + 'px ' + y + 'px)'
+    ];
+    
+    document.documentElement.animate(
+      {
+        clipPath: clipPath,
+      },
+      {
+        duration: 260,
+        easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
+        fill: 'forwards',
+        pseudoElement: '::view-transition-new(root)',
+      }
+    );
+  }).catch(() => {
+    applyTheme(targetTheme, true);
+  });
+};
 
 /**
  * The PDF preview card hangs from the download button (right edges aligned). When the button
@@ -955,7 +969,57 @@ const setupScrollReveal = () => {
     setTimeout(handlePrint, 500);
   }
 
+  const setupSkillInspector = () => {
+    const pills = document.querySelectorAll('.skills .pill');
+    const projectItems = document.querySelectorAll('.proj-item');
+    if (!pills.length || !projectItems.length) return;
+
+    let activeSkill = null;
+
+    const clearHighlight = () => {
+      activeSkill = null;
+      pills.forEach(p => p.classList.remove('is-active'));
+      projectItems.forEach(proj => {
+        proj.classList.remove('is-highlighted', 'is-dimmed');
+      });
+    };
+
+    const applyHighlight = (skillName, clickedPill) => {
+      activeSkill = skillName;
+      pills.forEach(p => p.classList.toggle('is-active', p === clickedPill));
+
+      const normalized = skillName.toLowerCase().trim();
+      projectItems.forEach(proj => {
+        const stack = proj.querySelector('.proj-stack');
+        const text = (stack ? stack.textContent : '') + ' ' + (proj.textContent || '');
+        const matches = text.toLowerCase().includes(normalized);
+        proj.classList.toggle('is-highlighted', matches);
+        proj.classList.toggle('is-dimmed', !matches);
+      });
+    };
+
+    pills.forEach(pill => {
+      pill.style.cursor = 'pointer';
+      pill.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const skillName = pill.textContent.trim();
+        if (activeSkill === skillName) {
+          clearHighlight();
+        } else {
+          applyHighlight(skillName, pill);
+        }
+      });
+    });
+
+    document.addEventListener('click', (e) => {
+      if (activeSkill && !e.target.closest('.skills .pill')) {
+        clearHighlight();
+      }
+    });
+  };
+
   setupScrollReveal();
+  setupSkillInspector();
 
   setTimeout(() => {
     document.documentElement.classList.add('theme-loaded');
