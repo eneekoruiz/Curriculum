@@ -296,25 +296,7 @@ html.cv-loading * {
   position: relative;
 }
 
-:is(.ctrl, .contact-row, .lm-item, .pill, .course-item, .lang-chip, .proj-item)::before {
-  content: "";
-  position: absolute;
-  inset: -1px;
-  border-radius: inherit;
-  background: radial-gradient(120px circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, 0.22), transparent 58%);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity var(--dur-fast) var(--ease);
-}
 
-[data-theme="dark"] :is(.ctrl, .contact-row, .lm-item, .pill, .course-item, .lang-chip, .proj-item)::before {
-  background: radial-gradient(120px circle at var(--mx, 50%) var(--my, 50%), rgba(212, 166, 106, 0.12), transparent 58%);
-}
-
-:is(.ctrl, .contact-row, .lm-item, .pill, .course-item, .lang-chip, .proj-item):hover::before,
-:is(.ctrl, .contact-row, .lm-item, .pill, .course-item, .lang-chip, .proj-item):focus-visible::before {
-  opacity: 1;
-}
 
 .ctrl {
   position: relative;
@@ -683,6 +665,7 @@ h1 strong {
 
 .contact-row:active {
   background: var(--c-accent-s);
+  transform: scale(0.98);
 }
 
 .contact-row:hover {
@@ -1156,7 +1139,10 @@ h1 strong {
   padding-right: var(--s3);
   border-right: 1px solid var(--c-rule);
 }
-[dir="rtl"] .course-item:hover { border-right-color: var(--c-accent); }
+[dir="rtl"] .course-item:hover {
+  border-right-color: var(--c-accent);
+  transform: translateX(-3px);
+}
 [dir="rtl"] #lang-menu { right: auto; left: 0; }
 [dir="rtl"] .copy-tip {
   left: auto;
@@ -1313,7 +1299,7 @@ a.contact-row {
 .proj-item {
   padding: 0 0 22px var(--s3);
   border-left: 1px solid var(--c-rule);
-  transition: border-color var(--dur) var(--ease);
+  transition: border-color var(--dur) var(--ease), transform var(--dur) var(--ease);
   /* Title and Demo/Code share the first line at every width; if a long title leaves no room,
      the buttons wrap under it instead of being squeezed. Stack and description take full lines.
      (DOM order stays title → stack → description → links for parsers and screen readers.) */
@@ -1338,6 +1324,10 @@ a.contact-row {
 
 .proj-item:hover {
   border-color: var(--c-brand);
+  transform: translateX(4px);
+}
+[dir="rtl"] .proj-item:hover {
+  transform: translateX(-4px);
 }
 
 .proj-name {

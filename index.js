@@ -601,37 +601,7 @@ END:VCARD`;
   showCopyTip(document.getElementById('vcard-btn'), copyOkMessage);
 };
 
-const setupSurfacePolish = () => {
-  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    return;
-  }
 
-  const surfaces = document.querySelectorAll('.ctrl, .contact-row, .lm-item, .pill, .course-item, .lang-chip, .proj-item');
-  if (!surfaces.length) {
-    return;
-  }
-
-  // The glow follows the pointer: it starts exactly where the pointer enters and fades out
-  // where it leaves (never jumps to the centre of the element).
-  const follow = (surface, event) => {
-    if (event.pointerType !== 'mouse' && event.pointerType !== 'pen') {
-      return;
-    }
-    const rect = surface.getBoundingClientRect();
-    if (!rect.width || !rect.height) {
-      return;
-    }
-    const x = Math.max(0, Math.min(100, ((event.clientX - rect.left) / rect.width) * 100));
-    const y = Math.max(0, Math.min(100, ((event.clientY - rect.top) / rect.height) * 100));
-    surface.style.setProperty('--mx', `${x.toFixed(1)}%`);
-    surface.style.setProperty('--my', `${y.toFixed(1)}%`);
-  };
-
-  surfaces.forEach(surface => {
-    surface.addEventListener('pointerenter', (event) => follow(surface, event));
-    surface.addEventListener('pointermove', (event) => follow(surface, event));
-  });
-};
 
 /**
  * Safety net for PDF export: with print media active and an A4-wide viewport,
@@ -789,7 +759,7 @@ const setupScrollReveal = () => {
 
   // Initialize lightweight hover polish where it will not fight an iframe or touch viewport.
   if (!runtimeContext.isEmbedded && !runtimeContext.isMobile) {
-    setupSurfacePolish();
+  
   }
 
   // Setup language dropdown menu list
