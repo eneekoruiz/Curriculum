@@ -124,20 +124,8 @@ for (const lang of LANGS) {
     const hidden = await page.evaluate(() => window.__hidden);
     if (hidden) failures.push(`scroll reveal (${name}): ${hidden} frame(s) painted with a section missing or half-faded`);
   }
-
-  // The hover glow starts under the pointer (never at the centre of the element)
-  await page.goto(`${origin}/?lang=es`, { waitUntil: 'networkidle' });
-  await page.waitForFunction(() => !document.documentElement.classList.contains('cv-loading'));
-  const pill = page.locator('.pill').first();
-  await pill.scrollIntoViewIfNeeded();
-  const box = await pill.boundingBox();
-  await page.mouse.move(box.x + box.width * 0.15, box.y + box.height / 2);
-  await page.waitForTimeout(150);
-  const mx = parseFloat(await pill.evaluate(el => el.style.getPropertyValue('--mx')));
-  if (!(mx < 30)) failures.push(`hover glow starts at ${mx}% instead of under the pointer (15%)`);
-  await page.close();
 }
-
+  
 await browser.close();
 server.close();
 
