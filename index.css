@@ -1863,15 +1863,9 @@ html:not(.pdf-render) #root-container {
   flex-direction: column;
   padding-top: clamp(20px, 3svh, 40px);
   padding-bottom: clamp(16px, 2svh, 24px);
-  margin-bottom: clamp(48px, 6svh, 80px);
-}
-
-@media (min-height: 720px) and (min-width: 861px) {
-  .hero {
-    min-height: calc(100svh - var(--wrap-top) - 40px);
-    justify-content: center;
-    margin-bottom: 0;
-  }
+  min-height: calc(100svh - var(--wrap-top) - 40px);
+  justify-content: center;
+  margin-bottom: 0;
 }
 
 .hero .site-header {
