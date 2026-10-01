@@ -351,71 +351,9 @@ const downloadGeneratedPdf = async (printButton, options = {}) => {
  */
 let activeThemeTransition = null;
 
-window.toggleTheme = (event) => {
+window.toggleTheme = () => {
   const isCurrentlyDark = html.getAttribute('data-theme') === 'dark';
-  const targetTheme = !isCurrentlyDark;
-
-  if (activeThemeTransition && typeof activeThemeTransition.skipTransition === 'function') {
-    try { activeThemeTransition.skipTransition(); } catch (e) {}
-  }
-
-  if (!document.startViewTransition) {
-    applyTheme(targetTheme, true);
-    return;
-  }
-
-  let x = event && typeof event.clientX === 'number' ? event.clientX : 0;
-  let y = event && typeof event.clientY === 'number' ? event.clientY : 0;
-  if (x === 0 && y === 0) {
-    const btn = document.getElementById('theme-btn');
-    if (btn) {
-      const rect = btn.getBoundingClientRect();
-      x = rect.left + rect.width / 2;
-      y = rect.top + rect.height / 2;
-    } else {
-      x = window.innerWidth / 2;
-      y = window.innerHeight / 2;
-    }
-  }
-
-  const endRadius = Math.hypot(
-    Math.max(x, window.innerWidth - x),
-    Math.max(y, window.innerHeight - y)
-  );
-
-  html.classList.add('is-view-transitioning');
-  const transition = document.startViewTransition(() => {
-    applyTheme(targetTheme, false);
-  });
-  activeThemeTransition = transition;
-
-  transition.finished.finally(() => {
-    if (activeThemeTransition === transition) {
-      activeThemeTransition = null;
-      html.classList.remove('is-view-transitioning');
-    }
-  });
-
-  transition.ready.then(() => {
-    const clipPath = [
-      'circle(0px at ' + x + 'px ' + y + 'px)',
-      'circle(' + endRadius + 'px at ' + x + 'px ' + y + 'px)'
-    ];
-    
-    document.documentElement.animate(
-      {
-        clipPath: clipPath,
-      },
-      {
-        duration: 260,
-        easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
-        fill: 'forwards',
-        pseudoElement: '::view-transition-new(root)',
-      }
-    );
-  }).catch(() => {
-    applyTheme(targetTheme, true);
-  });
+  applyTheme(!isCurrentlyDark, true);
 };
 
 /**
