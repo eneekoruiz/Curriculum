@@ -25,7 +25,7 @@ const safeStorage = {
     try {
       localStorage.setItem(key, value);
     } catch (error) {
-      // Fail silently if localStorage is restricted
+      console.debug('localStorage is restricted or full; unable to save preference:', key, error);
     }
   }
 };
@@ -90,7 +90,7 @@ const applyTheme = (isDarkTheme, animate = true) => {
       }, 250);
     }
   } catch (error) {
-    // Fail silently in case of paint issues during initial DOM setup
+    console.debug('applyTheme failed to toggle classes (possible initial DOM setup issue):', error);
   }
 };
 
@@ -187,6 +187,7 @@ const getRuntimeContext = () => {
   try {
     isEmbedded = window.self !== window.top;
   } catch (error) {
+    console.debug('Failed to verify if window is embedded (cross-origin iframe restriction likely):', error);
     isEmbedded = true;
   }
 
@@ -264,7 +265,7 @@ const openPdfDirectly = (pdfUrl) => {
       return;
     }
   } catch (error) {
-    // Cross-origin or sandboxed iframes may block top navigation.
+    console.debug('Cross-origin or sandboxed iframes blocked top navigation:', error);
   }
 
   window.location.href = pdfUrl;
@@ -498,7 +499,9 @@ window.handleShare = async () => {
         url: window.location.href
       });
     } catch (shareError) {
-      // Silent catch (handles user canceling share drawer)
+      if (shareError.name !== 'AbortError') {
+        console.error('Web Share API failed:', shareError);
+      }
     }
   } else {
     try {
@@ -507,7 +510,9 @@ window.handleShare = async () => {
       const successMessage = T[currentLang]?.copy_ok || 'Link Copied!';
       showCopyTip(shareButton, successMessage);
     } catch (clipboardError) {
-      // Silent catch
+      console.error('Clipboard writeText failed in handleShare:', clipboardError);
+      const shareButton = document.getElementById('share-btn');
+      showCopyTip(shareButton, 'Error al copiar link');
     }
   }
 };
@@ -563,7 +568,8 @@ const handleCopy = async (event) => {
     const copyOkMessage = T[currentLang]?.copy_ok || 'Copied!';
     showCopyTip(copyButton, copyOkMessage);
   } catch (error) {
-    // Fail silently if clipboard write permissions are denied
+    console.error('Clipboard writeText failed in handleCopy:', error);
+    showCopyTip(copyButton, 'Error de permisos');
   }
 };
 
