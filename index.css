@@ -209,6 +209,15 @@ ul {
   flex: 1;
 }
 
+html.cv-loading #root-container {
+  opacity: 0;
+  visibility: hidden;
+}
+
+html.cv-loading * {
+  animation-play-state: paused !important;
+}
+
 
 
 /* ── WRAPPER ────────────────────────────────────────── */

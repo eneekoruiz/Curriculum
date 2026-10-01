@@ -940,11 +940,16 @@ const setupScrollReveal = () => {
     printControl.addEventListener('pointerenter', placePdfPreview);
   }
 
-  // Calm first paint: reveal once fonts are ready (max 800ms), with a single fade
+  // Calm first paint: reveal once fonts are ready (max 1000ms), with a single fade
   const revealPage = () => requestAnimationFrame(() => html.classList.remove('cv-loading'));
+  const loadFonts = document.fonts ? Promise.all([
+    document.fonts.load('16px "Bricolage Grotesque"'),
+    document.fonts.load('16px "Manrope"')
+  ]) : Promise.resolve();
+
   Promise.race([
-    document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve(),
-    new Promise(resolve => setTimeout(resolve, 800))
+    loadFonts,
+    new Promise(resolve => setTimeout(resolve, 1000))
   ]).then(revealPage, revealPage);
 
   // i18n & initial URL query initialization
