@@ -1726,32 +1726,7 @@ a.contact-row {
   align-items: center;
 }
 
-/* ── Skill Inspector: Cross-highlighting between skills and projects ── */
-.pill.is-active {
-  border-color: var(--c-brand) !important;
-  background: var(--c-brand) !important;
-  color: #ffffff !important;
-  box-shadow: 0 4px 14px var(--c-key-bdr) !important;
-}
 
-.proj-item {
-  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-              border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.proj-item.is-highlighted {
-  border-left-color: var(--c-brand) !important;
-  transform: translateX(4px);
-}
-
-[dir="rtl"] .proj-item.is-highlighted {
-  transform: translateX(-4px);
-}
-
-.proj-item.is-dimmed {
-  opacity: 0.35;
-}
 
 /* Toast: a quiet note in the CV's own voice (paper, hairline, Manrope, gold check) */
 .copy-tip {
