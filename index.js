@@ -101,7 +101,7 @@ const applyTheme = (isDarkTheme, animate = true) => {
  * Updates HTML attributes, search engine tags and the footer copyright year.
  * @param {string} langCode 
  */
-const applyTranslations = (langCode) => {
+const applyTranslations = (langCode, activeMenuCode = langCode) => {
   const translations = T[langCode];
   const metadata = M[langCode];
   
@@ -133,7 +133,7 @@ const applyTranslations = (langCode) => {
   
   const langLabel = document.getElementById('lang-label');
   if (langLabel) {
-    langLabel.textContent = metadata.name;
+    langLabel.textContent = activeMenuCode === 'auto' ? 'Auto' : metadata.name;
   }
   
   // Search Engine & Metadata synchronization
@@ -153,7 +153,7 @@ const applyTranslations = (langCode) => {
   // Synchronize language dropdown menu visual states
   document.querySelectorAll('.lm-item').forEach(menuItem => {
     const menuItemCode = menuItem.getAttribute('data-code');
-    const isActive = menuItemCode === langCode;
+    const isActive = menuItemCode === activeMenuCode;
     
     menuItem.classList.toggle('active', isActive);
     menuItem.setAttribute('aria-selected', isActive ? 'true' : 'false');
@@ -167,8 +167,16 @@ const applyTranslations = (langCode) => {
  * @param {string} langCode 
  */
 const setLang = (langCode) => {
-  applyTranslations(langCode);
-  safeStorage.set('cv-lang', langCode);
+  if (langCode === 'auto') {
+    safeStorage.removeItem('cv-lang');
+    const browserLang = (navigator.languages || [navigator.language || ''])
+      .map(code => String(code).slice(0, 2).toLowerCase())
+      .find(code => T[code]);
+    applyTranslations(browserLang || 'en', 'auto');
+  } else {
+    safeStorage.set('cv-lang', langCode);
+    applyTranslations(langCode);
+  }
 };
 
 
@@ -782,17 +790,24 @@ const setupScrollReveal = () => {
   const languageMenu = document.getElementById('lang-menu');
   if (languageMenu && M) {
     languageMenu.innerHTML = '';
-    Object.entries(M)
-      .sort((a, b) => a[1].name.localeCompare(b[1].name))
-      .forEach(([langCode, langMetadata]) => {
+    
+    const addOption = (code, name, iso) => {
       const optionButton = document.createElement('button');
       optionButton.className = 'lm-item';
       optionButton.setAttribute('role', 'option');
-      optionButton.setAttribute('data-code', langCode);
-      optionButton.innerHTML = `<span>${langMetadata.name}</span><span class="lm-iso">${langMetadata.iso}</span>`;
-      optionButton.addEventListener('click', () => setLang(langCode));
+      optionButton.setAttribute('data-code', code);
+      optionButton.innerHTML = `<span>${name}</span><span class="lm-iso">${iso}</span>`;
+      optionButton.addEventListener('click', () => setLang(code));
       languageMenu.appendChild(optionButton);
-    });
+    };
+
+    addOption('auto', 'Auto', 'SYS');
+
+    Object.entries(M)
+      .sort((a, b) => a[1].name.localeCompare(b[1].name))
+      .forEach(([langCode, langMetadata]) => {
+        addOption(langCode, langMetadata.name, langMetadata.iso);
+      });
   }
 
   // Setup action triggers
@@ -958,8 +973,9 @@ const setupScrollReveal = () => {
   const browserLang = (navigator.languages || [navigator.language || ''])
     .map(code => String(code).slice(0, 2).toLowerCase())
     .find(code => T[code]);
-  const initialLang = urlParameters.get('lang') || safeStorage.get('cv-lang') || browserLang || 'en';
-  applyTranslations(initialLang);
+  const explicitLang = urlParameters.get('lang') || safeStorage.get('cv-lang');
+  const initialLang = explicitLang || browserLang || 'en';
+  applyTranslations(initialLang, explicitLang ? initialLang : 'auto');
   updateExportButtonLabel();
   window.addEventListener('resize', () => updateExportButtonLabel(), { passive: true });
 
