@@ -994,20 +994,43 @@ const setupScrollReveal = () => {
       pills.forEach(p => p.classList.toggle('is-active', p === clickedPill));
 
       const normalized = skillName.toLowerCase().trim();
+      let firstMatch = null;
       projectItems.forEach(proj => {
         const stack = proj.querySelector('.proj-stack');
         const text = (stack ? stack.textContent : '') + ' ' + (proj.textContent || '');
         const matches = text.toLowerCase().includes(normalized);
         proj.classList.toggle('is-highlighted', matches);
         proj.classList.toggle('is-dimmed', !matches);
+        if (matches && !firstMatch) firstMatch = proj;
       });
+
+      if (firstMatch) {
+        const r = firstMatch.getBoundingClientRect();
+        if (r.top < 80 || r.bottom > window.innerHeight) {
+          // Scroll up just enough so the project is clearly visible
+          const top = firstMatch.getBoundingClientRect().top + window.scrollY - 100;
+          window.scrollTo({ top, behavior: 'smooth' });
+        }
+      }
     };
 
     pills.forEach(pill => {
+      const skillName = pill.textContent.trim();
+      const normalized = skillName.toLowerCase();
+      
+      const hasProject = Array.from(projectItems).some(proj => {
+        const stack = proj.querySelector('.proj-stack');
+        const text = (stack ? stack.textContent : '') + ' ' + (proj.textContent || '');
+        return text.toLowerCase().includes(normalized);
+      });
+
+      if (!hasProject) {
+        return;
+      }
+
       pill.style.cursor = 'pointer';
       pill.addEventListener('click', (e) => {
         e.stopPropagation();
-        const skillName = pill.textContent.trim();
         if (activeSkill === skillName) {
           clearHighlight();
         } else {
