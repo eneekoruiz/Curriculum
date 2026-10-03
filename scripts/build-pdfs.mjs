@@ -21,7 +21,8 @@ const { T, M, langs } = loadTranslations();
 const SOURCES = ['index.html', 'print.css', 'translations.js', 'index.js'];
 const sourceHash = () => {
   const hash = createHash('sha1');
-  for (const file of SOURCES) hash.update(file).update(readFileSync(join(ROOT, file)));
+  // Normalise line endings: Windows checkouts use CRLF, CI (Linux) uses LF; the hash must not depend on it.
+  for (const file of SOURCES) hash.update(file).update(readFileSync(join(ROOT, file), 'utf8').replace(/\r\n/g, '\n'));
   return hash.digest('hex').slice(0, 12);
 };
 

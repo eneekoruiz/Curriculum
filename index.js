@@ -27,6 +27,13 @@ const safeStorage = {
     } catch (error) {
       console.debug('localStorage is restricted or full; unable to save preference:', key, error);
     }
+  },
+  remove: (key) => {
+    try {
+      localStorage.removeItem(key);
+    } catch (error) {
+      console.debug('localStorage is restricted; unable to clear preference:', key, error);
+    }
   }
 };
 
@@ -168,7 +175,7 @@ const applyTranslations = (langCode, activeMenuCode = langCode) => {
  */
 const setLang = (langCode) => {
   if (langCode === 'auto') {
-    safeStorage.removeItem('cv-lang');
+    safeStorage.remove('cv-lang');
     const browserLang = (navigator.languages || [navigator.language || ''])
       .map(code => String(code).slice(0, 2).toLowerCase())
       .find(code => T[code]);
