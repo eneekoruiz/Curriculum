@@ -757,6 +757,17 @@ const setupScrollReveal = () => {
 
   const runtimeContext = getRuntimeContext();
 
+  // Cinematic curtain intro — inject only in browser (never in PDF render)
+  const reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!html.classList.contains('pdf-render') && !runtimeContext.isEmbedded && !reducedMotion) {
+    const curtain = document.createElement('div');
+    curtain.className = 'intro-curtain';
+    curtain.setAttribute('aria-hidden', 'true');
+    document.body.prepend(curtain);
+    // Remove from DOM after animation completes (curtain duration 1.17s + 100ms buffer)
+    setTimeout(() => curtain.remove(), 1400);
+  }
+
   // Initialize lightweight hover polish where it will not fight an iframe or touch viewport.
   if (!runtimeContext.isEmbedded && !runtimeContext.isMobile) {
   

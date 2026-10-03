@@ -1181,9 +1181,51 @@ h1 strong {
 
 /* Final page-fill pass: keep margins, use more of the A4 canvas. */
 
-/* ── Staggered entrance: orchestrated unveil like Linear/Raycast ── */
+/* ── Cinematic curtain intro ── */
+.intro-curtain {
+  position: fixed;
+  inset: 0;
+  background: var(--c-bg);
+  z-index: 99999;
+  pointer-events: none;
+  will-change: transform;
+  animation: curtainLift 1.05s cubic-bezier(0.76, 0, 0.24, 1) 0.12s both;
+}
+
+/* Gold hairline that trails along the curtain's bottom edge as it lifts */
+.intro-curtain::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--c-brand) 15%,
+    var(--c-brand) 85%,
+    transparent 100%
+  );
+  opacity: 0;
+  animation: hairlineReveal 1.05s cubic-bezier(0.76, 0, 0.24, 1) 0.12s both;
+}
+
+@keyframes curtainLift {
+  0%   { transform: translateY(0); }
+  100% { transform: translateY(-100%); }
+}
+
+@keyframes hairlineReveal {
+  0%   { opacity: 0; }
+  8%   { opacity: 1; }
+  82%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* ── Staggered entrance: orchestrated unveil synced with the curtain ── */
 html:not(.pdf-render) #topbar {
-  animation: topbarDrop 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: topbarDrop 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.55s forwards;
 }
 
 @keyframes topbarDrop {
@@ -1197,13 +1239,13 @@ html:not(.pdf-render) #topbar {
 }
 
 html:not(.pdf-render) .hero .site-header {
-  animation: staggerIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
-  animation-delay: 0.08s;
+  animation: staggerIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 0.78s;
 }
 
 html:not(.pdf-render) .hero .profile {
-  animation: staggerIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
-  animation-delay: 0.24s;
+  animation: staggerIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 0.98s;
 }
 
 /* ── ATS layout (screen): single reading column, title → org → dates ── */
@@ -1802,7 +1844,9 @@ html:not(.pdf-render) #root-container {
 
   html:not(.pdf-render) #topbar,
   html:not(.pdf-render) .hero .site-header,
-  html:not(.pdf-render) .hero .profile {
+  html:not(.pdf-render) .hero .profile,
+  .intro-curtain,
+  .intro-curtain::after {
     animation: none;
   }
 }
