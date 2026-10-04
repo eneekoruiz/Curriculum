@@ -1,4 +1,4 @@
-const CACHE_NAME = 'eneko-cv-cache-v14';
+const CACHE_NAME = 'eneko-cv-cache-v15';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
@@ -44,7 +44,22 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Stale-while-revalidate strategy for maximum performance and offline support
+  // Network-first for navigation (HTML page) so online visitors always get the latest deployed version immediately
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request)
+        .then((networkResponse) => {
+          if (networkResponse && networkResponse.status === 200) {
+            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, networkResponse.clone()));
+          }
+          return networkResponse;
+        })
+        .catch(() => caches.match(event.request))
+    );
+    return;
+  }
+
+  // Stale-while-revalidate strategy for static sub-resources
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
       const fetchPromise = fetch(event.request).then((networkResponse) => {

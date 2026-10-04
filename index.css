@@ -1656,6 +1656,17 @@ a.contact-row {
   .tl-item .tl-title {
     padding-right: 190px;
   }
+
+  [dir="rtl"] .tl-item .tl-date {
+    right: auto;
+    left: 0;
+    text-align: left;
+  }
+
+  [dir="rtl"] .tl-item .tl-title {
+    padding-right: 0;
+    padding-left: 190px;
+  }
 }
 
 /* Name comes first in the DOM (ATS read it as the candidate's name); keep the eyebrow above it visually */
@@ -1920,6 +1931,19 @@ a.contact-row {
   .copy-tip {
     animation: none;
   }
+
+  html:not(.pdf-render) #topbar,
+  html:not(.pdf-render) .hero .site-header,
+  html:not(.pdf-render) .hero .profile {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .precision-motion {
+    display: none !important;
+    animation: none !important;
+  }
 }
 
 /* ── First paint: hold page until web fonts are ready, eliminating font-swap flicker ── */
@@ -1935,19 +1959,6 @@ html:not(.pdf-render) #root-container {
 @media (prefers-reduced-motion: reduce) {
   html:not(.pdf-render) #root-container {
     transition: none;
-  }
-
-  html:not(.pdf-render) #topbar,
-  html:not(.pdf-render) .hero .site-header,
-  html:not(.pdf-render) .hero .profile {
-    animation: none !important;
-    opacity: 1 !important;
-    transform: none !important;
-  }
-
-  .precision-motion {
-    display: none !important;
-    animation: none !important;
   }
 }
 

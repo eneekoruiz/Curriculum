@@ -222,6 +222,15 @@ h1 strong {
   line-height: 1.3;
 }
 
+[dir="rtl"] .tl-date {
+  text-align: left;
+}
+
+[dir="rtl"] .tl-title {
+  padding-right: 0;
+  padding-left: 42mm;
+}
+
 .tl-org {
   font-size: 9.4pt;
   color: var(--ink-2);
