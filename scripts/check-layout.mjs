@@ -40,7 +40,7 @@ for (const lang of LANGS) {
       const invisible = (el) => { for (let e = el; e; e = e.parentElement) { const s = getComputedStyle(e); if (s.display === 'none' || s.visibility === 'hidden' || s.opacity === '0') return true; } return false; };
       const name = (el) => `${el.tagName.toLowerCase()}.${String(el.className).split(' ')[0]} "${(el.textContent || '').trim().slice(0, 28)}"`;
       for (const el of document.querySelectorAll('body *')) {
-        if (el.closest('#lang-menu, .grain, #scroll-progress, script, style, svg')) continue;
+        if (el.closest('#lang-menu, .grain, #scroll-progress, .precision-motion, script, style, svg')) continue;
         const r = el.getBoundingClientRect();
         if (!r.width || !r.height || (r.width <= 2 && r.height <= 2) || invisible(el)) continue;
         if (r.left < -1 || r.right > W + 1) out.push(`outside the screen: ${name(el)} [${Math.round(r.left)}, ${Math.round(r.right)}]`);

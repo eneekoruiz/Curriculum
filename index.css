@@ -214,8 +214,13 @@ html.cv-loading #root-container {
   visibility: hidden;
 }
 
-html.cv-loading * {
+html.cv-loading *:not(.precision-motion, .precision-motion *) {
   animation-play-state: paused !important;
+}
+
+.precision-motion,
+.precision-motion * {
+  animation-play-state: running !important;
 }
 
 
@@ -1181,51 +1186,143 @@ h1 strong {
 
 /* Final page-fill pass: keep margins, use more of the A4 canvas. */
 
-/* ── Cinematic curtain intro ── */
-.intro-curtain {
+/* ── Precision Motion: advanced entrance animation ── */
+html.pdf-render .precision-motion {
+  display: none !important;
+}
+
+.precision-motion {
+  --motion-color: var(--c-brand);
+  --motion-color-soft: rgba(var(--c-brand-rgb, 196, 150, 90), 0.28);
   position: fixed;
   inset: 0;
-  background: var(--c-bg);
-  z-index: 99999;
+  z-index: 99998;
   pointer-events: none;
-  will-change: transform;
-  animation: curtainLift 1.05s cubic-bezier(0.76, 0, 0.24, 1) 0.12s both;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  background:
+    linear-gradient(rgba(var(--c-brand-rgb, 196, 150, 90), 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(var(--c-brand-rgb, 196, 150, 90), 0.04) 1px, transparent 1px),
+    radial-gradient(circle at 50% 50%, rgba(var(--c-brand-rgb, 196, 150, 90), 0.08), transparent 48vw),
+    var(--c-bg);
+  background-size: 32px 32px, 32px 32px, auto, auto;
+  animation: precision-overlay-exit 1.25s cubic-bezier(0.42, 0, 0.16, 1) forwards;
 }
 
-/* Gold hairline that trails along the curtain's bottom edge as it lifts */
-.intro-curtain::after {
-  content: '';
+.precision-motion__stage {
+  position: relative;
+  width: min(68vw, 620px);
+  height: 140px;
+  transform: translateZ(0);
+}
+
+.precision-motion__ring,
+.precision-motion__core,
+.precision-motion__particle,
+.precision-motion__beam {
   position: absolute;
-  bottom: -1px;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    var(--c-brand) 15%,
-    var(--c-brand) 85%,
-    transparent 100%
-  );
+  top: 50%;
+  left: 18%;
+  transform: translate(-50%, -50%);
+  border-radius: 999px;
+  color: var(--motion-color);
+}
+
+.precision-motion__ring {
+  width: 92px;
+  height: 92px;
+  border: 1px solid currentColor;
   opacity: 0;
-  animation: hairlineReveal 1.05s cubic-bezier(0.76, 0, 0.24, 1) 0.12s both;
+  box-shadow: 0 0 20px var(--motion-color-soft), inset 0 0 16px var(--motion-color-soft);
+  animation: precision-ring 1.25s cubic-bezier(0.42, 0, 0.16, 1) forwards;
 }
 
-@keyframes curtainLift {
-  0%   { transform: translateY(0); }
-  100% { transform: translateY(-100%); }
+.precision-motion__ring.ring-2 {
+  width: 132px;
+  height: 132px;
+  animation-delay: 60ms;
 }
 
-@keyframes hairlineReveal {
-  0%   { opacity: 0; }
-  8%   { opacity: 1; }
-  82%  { opacity: 1; }
-  100% { opacity: 0; }
+.precision-motion__ring.ring-3 {
+  width: 172px;
+  height: 172px;
+  animation-delay: 140ms;
 }
 
-/* ── Staggered entrance: orchestrated unveil synced with the curtain ── */
+.precision-motion__core {
+  width: 8px;
+  height: 8px;
+  background: currentColor;
+  box-shadow: 0 0 24px currentColor;
+  animation: precision-core 1.25s cubic-bezier(0.42, 0, 0.16, 1) forwards;
+}
+
+.precision-motion__particle {
+  width: 6px;
+  height: 6px;
+  background: currentColor;
+  opacity: 0;
+  box-shadow: 0 0 18px currentColor;
+  animation: precision-particle 1.25s cubic-bezier(0.42, 0, 0.16, 1) forwards;
+}
+
+.precision-motion__particle.p1 { --py: -22px; animation-delay: 280ms; }
+.precision-motion__particle.p2 { --py: -10px; animation-delay: 340ms; }
+.precision-motion__particle.p3 { --py: 0px; animation-delay: 400ms; }
+.precision-motion__particle.p4 { --py: 10px; animation-delay: 460ms; }
+.precision-motion__particle.p5 { --py: 22px; animation-delay: 520ms; }
+
+.precision-motion__beam {
+  left: 50%;
+  width: min(56vw, 540px);
+  height: 2px;
+  background: linear-gradient(90deg, transparent, currentColor 16%, currentColor 84%, transparent);
+  opacity: 0;
+  transform: translate(-50%, -50%) scaleX(0);
+  transform-origin: left center;
+  box-shadow: 0 0 16px currentColor, 0 0 32px var(--motion-color-soft);
+  animation: precision-beam 1.25s cubic-bezier(0.42, 0, 0.16, 1) forwards;
+}
+
+@keyframes precision-ring {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.08) rotate(0deg); }
+  16% { opacity: 0.95; transform: translate(-50%, -50%) scale(0.86) rotate(90deg); }
+  34% { opacity: 0.8; transform: translate(-50%, -50%) scale(1) rotate(180deg); }
+  62% { opacity: 0; transform: translate(170%, -50%) scale(0.08) rotate(270deg); }
+  100% { opacity: 0; transform: translate(170%, -50%) scale(0.08) rotate(270deg); }
+}
+
+@keyframes precision-core {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.2); }
+  12% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 1; transform: translate(520%, -50%) scale(0.85); }
+  76%, 100% { opacity: 0; transform: translate(520%, -50%) scale(0.4); }
+}
+
+@keyframes precision-particle {
+  0%, 22% { opacity: 0; transform: translate(-50%, -50%) translateX(0) translateY(0) scale(0.6); }
+  45% { opacity: 1; transform: translate(-50%, -50%) translateX(185px) translateY(var(--py)) scale(1); }
+  76% { opacity: 0.75; transform: translate(-50%, -50%) translateX(370px) translateY(0) scale(0.7); }
+  100% { opacity: 0; transform: translate(-50%, -50%) translateX(430px) translateY(0) scale(0.4); }
+}
+
+@keyframes precision-beam {
+  0%, 58% { opacity: 0; transform: translate(-50%, -50%) scaleX(0); }
+  76% { opacity: 1; transform: translate(-50%, -50%) scaleX(0.72); }
+  90% { opacity: 1; transform: translate(-50%, -50%) scaleX(1); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scaleX(1); }
+}
+
+@keyframes precision-overlay-exit {
+  0%, 75% { opacity: 1; visibility: visible; }
+  100% { opacity: 0; visibility: hidden; }
+}
+
+/* ── Staggered entrance: orchestrated unveil synced with Precision Motion ── */
 html:not(.pdf-render) #topbar {
-  animation: topbarDrop 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.55s forwards;
+  animation: topbarDrop 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.62s both;
 }
 
 @keyframes topbarDrop {
@@ -1234,18 +1331,16 @@ html:not(.pdf-render) #topbar {
 }
 
 @keyframes staggerIn {
-  from { opacity: 0; transform: translateY(32px); }
+  from { opacity: 0; transform: translateY(28px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
 html:not(.pdf-render) .hero .site-header {
-  animation: staggerIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  animation-delay: 0.78s;
+  animation: staggerIn 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.72s both;
 }
 
 html:not(.pdf-render) .hero .profile {
-  animation: staggerIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  animation-delay: 0.98s;
+  animation: staggerIn 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.88s both;
 }
 
 /* ── ATS layout (screen): single reading column, title → org → dates ── */
@@ -1844,10 +1939,15 @@ html:not(.pdf-render) #root-container {
 
   html:not(.pdf-render) #topbar,
   html:not(.pdf-render) .hero .site-header,
-  html:not(.pdf-render) .hero .profile,
-  .intro-curtain,
-  .intro-curtain::after {
-    animation: none;
+  html:not(.pdf-render) .hero .profile {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .precision-motion {
+    display: none !important;
+    animation: none !important;
   }
 }
 

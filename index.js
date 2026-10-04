@@ -764,15 +764,21 @@ const setupScrollReveal = () => {
 
   const runtimeContext = getRuntimeContext();
 
-  // Cinematic curtain intro — inject only in browser (never in PDF render)
-  const reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (!html.classList.contains('pdf-render') && !runtimeContext.isEmbedded && !reducedMotion) {
-    const curtain = document.createElement('div');
-    curtain.className = 'intro-curtain';
-    curtain.setAttribute('aria-hidden', 'true');
-    document.body.prepend(curtain);
-    // Remove from DOM after animation completes (curtain duration 1.17s + 100ms buffer)
-    setTimeout(() => curtain.remove(), 1400);
+  // Precision Motion overlay cleanup after entrance animation concludes
+  const motionOverlay = document.querySelector('.precision-motion');
+  if (motionOverlay) {
+    const reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('pdf') || html.classList.contains('pdf-render') || runtimeContext.isEmbedded || reducedMotion) {
+      motionOverlay.remove();
+    } else {
+      motionOverlay.addEventListener('animationend', (e) => {
+        if (e.target === motionOverlay && e.animationName === 'precision-overlay-exit') {
+          motionOverlay.remove();
+        }
+      });
+      setTimeout(() => motionOverlay.remove(), 2200);
+    }
   }
 
   // Initialize lightweight hover polish where it will not fight an iframe or touch viewport.

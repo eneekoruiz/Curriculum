@@ -15,6 +15,8 @@
     if (!urlParams.has('pdf')) {
       htmlEl.classList.add('cv-loading');
       setTimeout(() => htmlEl.classList.remove('cv-loading'), 2500);
+    } else {
+      htmlEl.classList.add('pdf-render');
     }
     htmlEl.style.backgroundColor = isDark ? '#020617' : '#ffffff';
     htmlEl.style.colorScheme = isDark ? 'dark' : 'light';
