@@ -293,6 +293,15 @@ h1 strong {
   color: var(--brand);
 }
 
+.proj-stack .stack-tag {
+  display: inline;
+}
+
+.proj-stack .stack-tag + .stack-tag::before {
+  content: ' \00b7 ';
+  color: var(--ink-3);
+}
+
 .proj-links {
   margin-left: auto;
   padding-left: 4mm;
@@ -378,9 +387,9 @@ h1 strong {
 }
 
 .lang-level-native {
-  font-size: 13pt;
-  line-height: 1.45;
-  color: var(--ink-2);
+  font-size: 14pt;
+  line-height: 1.35;
+  color: var(--brand);
 }
 
 .lang-cert {

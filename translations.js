@@ -12,6 +12,7 @@ const T = {
     profile_text: "Ingeniero de Software junior. He trabajado en diversas aplicaciones web con tecnologías punteras del sector (React, TypeScript, Node.js...), tanto para proyectos personales como para negocios locales. Con ganas de integrarme en un equipo para seguir creciendo profesionalmente.",
     lang_eu_cert: "HABE",
     lang_en_cert: "Cambridge",
+    lang_es_cert: "Lengua materna",
     exp_title: "Experiencia profesional",
     exp_intern_role: "Desarrollador Full Stack (Prácticas)",
     exp_intern_b1: "Desarrollo full stack en una plataforma web con React y Supabase (PostgreSQL), implementando nuevas funciones de frontend y backend.",
@@ -67,7 +68,8 @@ const T = {
     pdf_preparing: "Generando PDF…",
     pdf_opening: "Abriendo PDF…",
     pdf_ready: "PDF descargado",
-    pdf_failed: "No se pudo generar el PDF"
+    pdf_failed: "No se pudo generar el PDF",
+    footer_source: "Código en GitHub"
   },
 
   en: {
@@ -78,6 +80,7 @@ const T = {
     profile_text: "Junior Software Engineer. I have worked on diverse web applications using industry-leading technologies (React, TypeScript, Node.js...), both for personal projects and local businesses. Eager to join a team to continue growing professionally.",
     lang_eu_cert: "HABE",
     lang_en_cert: "Cambridge",
+    lang_es_cert: "Native language",
     exp_title: "Professional Experience",
     exp_intern_role: "Full Stack Developer (Internship)",
     exp_intern_b1: "Full stack development on a web platform with React and Supabase (PostgreSQL), implementing new frontend and backend features.",
@@ -133,7 +136,8 @@ const T = {
     pdf_preparing: "Building PDF…",
     pdf_opening: "Opening PDF…",
     pdf_ready: "PDF downloaded",
-    pdf_failed: "PDF export failed"
+    pdf_failed: "PDF export failed",
+    footer_source: "Source on GitHub"
   },
 
   eu: {
@@ -144,6 +148,7 @@ const T = {
     profile_text: "Software Ingeniari juniorra. Sektoreko punta-puntako teknologiekin (React, TypeScript, Node.js...) hainbat web aplikaziotan lan egin dut, bai proiektu pertsonaletan bai tokiko negozioetan. Talde batean sartu eta profesionalki hazten jarraitzeko gogoz.",
     lang_eu_cert: "HABE",
     lang_en_cert: "Cambridge",
+    lang_es_cert: "Ama-hizkuntza",
     exp_title: "Lan-esperientzia",
     exp_intern_role: "Full Stack Garatzailea (Praktikak)",
     exp_intern_b1: "Full stack garapena web plataforma batean React eta Supabase-rekin (PostgreSQL), frontend eta backend funtzionalitate berriak inplementatuz.",
@@ -199,7 +204,8 @@ const T = {
     pdf_preparing: "PDFa sortzen…",
     pdf_opening: "PDFa irekitzen…",
     pdf_ready: "PDFa deskargatuta",
-    pdf_failed: "Ezin izan da PDFa sortu"
+    pdf_failed: "Ezin izan da PDFa sortu",
+    footer_source: "Iturburua GitHub-en"
   },
 
   ca: {
@@ -210,6 +216,7 @@ const T = {
     profile_text: "Enginyer de Software júnior. He treballat en diverses aplicacions web amb tecnologies punteres del sector (React, TypeScript, Node.js...), tant per a projectes personals com per a negocis locals. Amb ganes d'integrar-me en un equip per continuar creixent professionalment.",
     lang_eu_cert: "HABE",
     lang_en_cert: "Cambridge",
+    lang_es_cert: "Llengua materna",
     exp_title: "Experiència professional",
     exp_intern_role: "Desenvolupador Full Stack (Pràctiques)",
     exp_intern_b1: "Desenvolupament full stack en una plataforma web amb React i Supabase (PostgreSQL), implementant noves funcionalitats de frontend i backend.",
@@ -265,7 +272,8 @@ const T = {
     pdf_preparing: "Generant PDF…",
     pdf_opening: "Obrint PDF…",
     pdf_ready: "PDF descarregat",
-    pdf_failed: "No s'ha pogut generar el PDF"
+    pdf_failed: "No s'ha pogut generar el PDF",
+    footer_source: "Codi a GitHub"
   },
 
   gl: {
@@ -276,6 +284,7 @@ const T = {
     profile_text: "Enxeñeiro de Software júnior. Traballei en diversas aplicacións web con tecnoloxías punteiras do sector (React, TypeScript, Node.js...), tanto para proxectos persoais como para negocios locais. Con ganas de integrarme nun equipo para seguir crecendo profesionalmente.",
     lang_eu_cert: "HABE",
     lang_en_cert: "Cambridge",
+    lang_es_cert: "Lingua materna",
     exp_title: "Experiencia profesional",
     exp_intern_role: "Desenvolvedor Full Stack (Prácticas)",
     exp_intern_b1: "Desenvolvemento full stack nunha plataforma web con React e Supabase (PostgreSQL), implementando novas funcionalidades de frontend e backend.",
@@ -331,7 +340,8 @@ const T = {
     pdf_preparing: "Xerando PDF…",
     pdf_opening: "Abrindo PDF…",
     pdf_ready: "PDF descargado",
-    pdf_failed: "Non se puido xerar o PDF"
+    pdf_failed: "Non se puido xerar o PDF",
+    footer_source: "Código en GitHub"
   },
 
   fr: {
@@ -342,6 +352,7 @@ const T = {
     profile_text: "Ingénieur logiciel junior. J'ai travaillé sur diverses applications web avec des technologies de pointe du secteur (React, TypeScript, Node.js...), aussi bien pour des projets personnels que pour des entreprises locales. Désireux d'intégrer une équipe pour continuer à évoluer professionnellement.",
     lang_eu_cert: "HABE",
     lang_en_cert: "Cambridge",
+    lang_es_cert: "Langue maternelle",
     exp_title: "Expérience professionnelle",
     exp_intern_role: "Développeur Full Stack (Stage)",
     exp_intern_b1: "Développement full stack sur une plateforme web avec React et Supabase (PostgreSQL), implémentant de nouvelles fonctionnalités frontend et backend.",
@@ -397,7 +408,8 @@ const T = {
     pdf_preparing: "Génération du PDF…",
     pdf_opening: "Ouverture du PDF…",
     pdf_ready: "PDF téléchargé",
-    pdf_failed: "Échec de la génération du PDF"
+    pdf_failed: "Échec de la génération du PDF",
+    footer_source: "Code sur GitHub"
   },
 
   de: {
@@ -408,6 +420,7 @@ const T = {
     profile_text: "Junior-Softwareentwickler. Ich habe an diversen Webanwendungen mit führenden Technologien (React, TypeScript, Node.js...) gearbeitet, sowohl für persönliche Projekte als auch für lokale Unternehmen. Motiviert, mich in ein Team einzubringen und mich beruflich weiterzuentwickeln.",
     lang_eu_cert: "HABE",
     lang_en_cert: "Cambridge",
+    lang_es_cert: "Muttersprache",
     exp_title: "Berufserfahrung",
     exp_intern_role: "Full-Stack-Entwickler (Praktikum)",
     exp_intern_b1: "Full-Stack-Entwicklung auf einer Webplattform mit React und Supabase (PostgreSQL), Implementierung neuer Frontend- und Backend-Funktionen.",
@@ -463,7 +476,8 @@ const T = {
     pdf_preparing: "PDF wird erstellt…",
     pdf_opening: "PDF wird geöffnet…",
     pdf_ready: "PDF heruntergeladen",
-    pdf_failed: "PDF konnte nicht erstellt werden"
+    pdf_failed: "PDF konnte nicht erstellt werden",
+    footer_source: "Quellcode auf GitHub"
   },
 
   it: {
@@ -474,6 +488,7 @@ const T = {
     profile_text: "Ingegnere del Software junior. Ho lavorato a diverse applicazioni web con tecnologie all'avanguardia del settore (React, TypeScript, Node.js...), sia per progetti personali sia per attività locali. Desideroso di entrare in un team per continuare a crescere professionalmente.",
     lang_eu_cert: "HABE",
     lang_en_cert: "Cambridge",
+    lang_es_cert: "Madrelingua",
     exp_title: "Esperienza professionale",
     exp_intern_role: "Sviluppatore Full Stack (Tirocinio)",
     exp_intern_b1: "Sviluppo full stack su piattaforma web con React e Supabase (PostgreSQL), implementando nuove funzionalità frontend e backend.",
@@ -529,7 +544,8 @@ const T = {
     pdf_preparing: "Generazione PDF…",
     pdf_opening: "Apertura PDF…",
     pdf_ready: "PDF scaricato",
-    pdf_failed: "Impossibile generare il PDF"
+    pdf_failed: "Impossibile generare il PDF",
+    footer_source: "Codice su GitHub"
   },
 
   pt: {
@@ -540,6 +556,7 @@ const T = {
     profile_text: "Engenheiro de Software júnior. Trabalhei em diversas aplicações web com tecnologias de ponta do setor (React, TypeScript, Node.js...), tanto para projetos pessoais quanto para negócios locais. Motivado a integrar uma equipe para continuar crescendo profissionalmente.",
     lang_eu_cert: "HABE",
     lang_en_cert: "Cambridge",
+    lang_es_cert: "Língua materna",
     exp_title: "Experiência profissional",
     exp_intern_role: "Desenvolvedor Full Stack (Estágio)",
     exp_intern_b1: "Desenvolvimento full stack em plataforma web com React e Supabase (PostgreSQL), implementando novas funcionalidades de frontend e backend.",
@@ -595,7 +612,8 @@ const T = {
     pdf_preparing: "A gerar PDF…",
     pdf_opening: "A abrir PDF…",
     pdf_ready: "PDF transferido",
-    pdf_failed: "Não foi possível gerar o PDF"
+    pdf_failed: "Não foi possível gerar o PDF",
+    footer_source: "Código no GitHub"
   },
 
   nl: {
@@ -606,6 +624,7 @@ const T = {
     profile_text: "Junior Software Engineer. Gewerkt aan diverse webapplicaties met toonaangevende technologieën (React, TypeScript, Node.js...), zowel voor persoonlijke projecten als voor lokale bedrijven. Gemotiveerd om een team te versterken en professioneel verder te groeien.",
     lang_eu_cert: "HABE",
     lang_en_cert: "Cambridge",
+    lang_es_cert: "Moedertaal",
     exp_title: "Werkervaring",
     exp_intern_role: "Full-stackontwikkelaar (Stage)",
     exp_intern_b1: "Full stack ontwikkeling op een webplatform met React en Supabase (PostgreSQL), implementatie van nieuwe frontend- en backend-functionaliteiten.",
@@ -661,7 +680,8 @@ const T = {
     pdf_preparing: "PDF wordt gemaakt…",
     pdf_opening: "PDF wordt geopend…",
     pdf_ready: "PDF gedownload",
-    pdf_failed: "PDF maken mislukt"
+    pdf_failed: "PDF maken mislukt",
+    footer_source: "Code op GitHub"
   },
 
   sv: {
@@ -672,6 +692,7 @@ const T = {
     profile_text: "Junior mjukvaruingenjör. Har arbetat med olika webbapplikationer med branschledande teknik (React, TypeScript, Node.js...), både för personliga projekt och lokala företag. Motiverad att ansluta till ett team för att fortsätta utvecklas professionellt.",
     lang_eu_cert: "HABE",
     lang_en_cert: "Cambridge",
+    lang_es_cert: "Modersmål",
     exp_title: "Arbetslivserfarenhet",
     exp_intern_role: "Fullstackutvecklare (Praktik)",
     exp_intern_b1: "Fullstack-utveckling på en webbplattform med React och Supabase (PostgreSQL), implementering av nya frontend- och backend-funktioner.",
@@ -727,7 +748,8 @@ const T = {
     pdf_preparing: "Skapar PDF…",
     pdf_opening: "Öppnar PDF…",
     pdf_ready: "PDF nedladdad",
-    pdf_failed: "Kunde inte skapa PDF"
+    pdf_failed: "Kunde inte skapa PDF",
+    footer_source: "Källkod på GitHub"
   },
 
   no: {
@@ -738,6 +760,7 @@ const T = {
     profile_text: "Junior programvareingeniør. Har arbeidet med ulike webapplikasjoner med ledende teknologi (React, TypeScript, Node.js...), både for personlige prosjekter og lokale bedrifter. Motivert for å bli en del av et team for å fortsette å vokse profesjonelt.",
     lang_eu_cert: "HABE",
     lang_en_cert: "Cambridge",
+    lang_es_cert: "Morsmål",
     exp_title: "Arbeidserfaring",
     exp_intern_role: "Fullstack-utvikler (Praksis)",
     exp_intern_b1: "Fullstack-utvikling på en webplattform med React og Supabase (PostgreSQL), implementering av nye frontend- og backend-funksjoner.",
@@ -793,7 +816,8 @@ const T = {
     pdf_preparing: "Lager PDF…",
     pdf_opening: "Åpner PDF…",
     pdf_ready: "PDF lastet ned",
-    pdf_failed: "Kunne ikke lage PDF"
+    pdf_failed: "Kunne ikke lage PDF",
+    footer_source: "Kildekode på GitHub"
   },
 
   da: {
@@ -804,6 +828,7 @@ const T = {
     profile_text: "Junior softwareingeniør. Har arbejdet på forskellige webapplikationer med førende teknologier (React, TypeScript, Node.js...), både til personlige projekter og lokale virksomheder. Motiveret for at blive en del af et team og fortsætte med at vokse professionelt.",
     lang_eu_cert: "HABE",
     lang_en_cert: "Cambridge",
+    lang_es_cert: "Modersmål",
     exp_title: "Erhvervserfaring",
     exp_intern_role: "Fullstack-udvikler (Praktik)",
     exp_intern_b1: "Full stack-udvikling på en webplatform med React og Supabase (PostgreSQL), implementering af nye frontend- og backend-funktioner.",
@@ -859,7 +884,8 @@ const T = {
     pdf_preparing: "Opretter PDF…",
     pdf_opening: "Åbner PDF…",
     pdf_ready: "PDF downloadet",
-    pdf_failed: "Kunne ikke oprette PDF"
+    pdf_failed: "Kunne ikke oprette PDF",
+    footer_source: "Kildekode på GitHub"
   },
 
   pl: {
@@ -870,6 +896,7 @@ const T = {
     profile_text: "Młodszy inżynier oprogramowania. Pracowałem nad różnorodnymi aplikacjami webowymi z wykorzystaniem wiodących technologii (React, TypeScript, Node.js...), zarówno w projektach własnych, jak i dla lokalnych firm. Chętny do dołączenia do zespołu, aby dalej rozwijać się zawodowo.",
     lang_eu_cert: "HABE",
     lang_en_cert: "Cambridge",
+    lang_es_cert: "Język ojczysty",
     exp_title: "Doświadczenie zawodowe",
     exp_intern_role: "Full Stack Developer (Staż)",
     exp_intern_b1: "Rozwój full stack platformy internetowej z użyciem React i Supabase (PostgreSQL), wdrażanie nowych funkcjonalności frontendowych i backendowych.",
@@ -925,7 +952,8 @@ const T = {
     pdf_preparing: "Tworzenie PDF…",
     pdf_opening: "Otwieranie PDF…",
     pdf_ready: "PDF pobrany",
-    pdf_failed: "Nie udało się utworzyć PDF"
+    pdf_failed: "Nie udało się utworzyć PDF",
+    footer_source: "Kod na GitHubie"
   },
 
   cs: {
@@ -936,6 +964,7 @@ const T = {
     profile_text: "Junior softwarový inženýr. Pracoval jsem na různých webových aplikacích s využitím špičkových technologií (React, TypeScript, Node.js...), jak pro osobní projekty, tak pro místní firmy. Motivován připojit se k týmu a dále profesně růst.",
     lang_eu_cert: "HABE",
     lang_en_cert: "Cambridge",
+    lang_es_cert: "Rodný jazyk",
     exp_title: "Pracovní zkušenosti",
     exp_intern_role: "Full Stack vývojář (stáž)",
     exp_intern_b1: "Full stack vývoj webové platformy s využitím React a Supabase (PostgreSQL), implementace nových funkcí pro frontend i backend.",
@@ -991,7 +1020,8 @@ const T = {
     pdf_preparing: "Vytváření PDF…",
     pdf_opening: "Otevírání PDF…",
     pdf_ready: "PDF staženo",
-    pdf_failed: "PDF se nepodařilo vytvořit"
+    pdf_failed: "PDF se nepodařilo vytvořit",
+    footer_source: "Kód na GitHubu"
   },
 
   ro: {
@@ -1002,6 +1032,7 @@ const T = {
     profile_text: "Inginer software junior. Am lucrat la diverse aplicații web cu tehnologii de vârf din industrie (React, TypeScript, Node.js...), atât pentru proiecte personale, cât și pentru afaceri locale. Dornic să mă alătur unei echipe pentru a continua să cresc profesional.",
     lang_eu_cert: "HABE",
     lang_en_cert: "Cambridge",
+    lang_es_cert: "Limba maternă",
     exp_title: "Experiență profesională",
     exp_intern_role: "Dezvoltator Full Stack (Stagiu)",
     exp_intern_b1: "Dezvoltare full stack pe o platformă web cu React și Supabase (PostgreSQL), implementând noi funcționalități de frontend și backend.",
@@ -1057,7 +1088,8 @@ const T = {
     pdf_preparing: "Se generează PDF-ul…",
     pdf_opening: "Se deschide PDF-ul…",
     pdf_ready: "PDF descărcat",
-    pdf_failed: "PDF-ul nu a putut fi generat"
+    pdf_failed: "PDF-ul nu a putut fi generat",
+    footer_source: "Cod pe GitHub"
   },
 
   tr: {
@@ -1068,6 +1100,7 @@ const T = {
     profile_text: "Junior Yazılım Mühendisi. Hem kişisel projelerde hem de yerel işletmeler için sektörün öncü teknolojileriyle (React, TypeScript, Node.js...) çeşitli web uygulamalarında çalıştım. Profesyonel olarak gelişmeye devam etmek için bir ekibe katılmaya istekliyim.",
     lang_eu_cert: "HABE",
     lang_en_cert: "Cambridge",
+    lang_es_cert: "Ana dili",
     exp_title: "İş Deneyimi",
     exp_intern_role: "Full Stack Geliştirici (Staj)",
     exp_intern_b1: "React ve Supabase (PostgreSQL) ile bir web platformunda hem ön uç hem arka uç yeni özellikler uygulayan full stack geliştirme.",
@@ -1123,7 +1156,8 @@ const T = {
     pdf_preparing: "PDF oluşturuluyor…",
     pdf_opening: "PDF açılıyor…",
     pdf_ready: "PDF indirildi",
-    pdf_failed: "PDF oluşturulamadı"
+    pdf_failed: "PDF oluşturulamadı",
+    footer_source: "GitHub'da kaynak kodu"
   },
 
   ru: {
@@ -1134,6 +1168,7 @@ const T = {
     profile_text: "Младший инженер-программист. Работал над различными веб-приложениями с использованием передовых технологий (React, TypeScript, Node.js...) как для личных проектов, так и для местного бизнеса. Стремлюсь присоединиться к команде для дальнейшего профессионального роста.",
     lang_eu_cert: "HABE",
     lang_en_cert: "Cambridge",
+    lang_es_cert: "Родной язык",
     exp_title: "Опыт работы",
     exp_intern_role: "Full Stack разработчик (стажировка)",
     exp_intern_b1: "Full stack разработка веб-платформы на React и Supabase (PostgreSQL), реализация новых функций фронтенда и бэкенда.",
@@ -1189,7 +1224,8 @@ const T = {
     pdf_preparing: "Создание PDF…",
     pdf_opening: "Открытие PDF…",
     pdf_ready: "PDF скачан",
-    pdf_failed: "Не удалось создать PDF"
+    pdf_failed: "Не удалось создать PDF",
+    footer_source: "Код на GitHub"
   },
 
   uk: {
@@ -1200,6 +1236,7 @@ const T = {
     profile_text: "Молодший інженер-програміст. Працював над різноманітними веб-додатками з використанням провідних технологій галузі (React, TypeScript, Node.js...) як для особистих проєктів, так і для місцевого бізнесу. Прагну приєднатися до команди для подальшого професійного зростання.",
     lang_eu_cert: "HABE",
     lang_en_cert: "Cambridge",
+    lang_es_cert: "Рідна мова",
     exp_title: "Досвід роботи",
     exp_intern_role: "Full Stack розробник (стажування)",
     exp_intern_b1: "Full stack розробка веб-платформи на React та Supabase (PostgreSQL), впровадження нових функцій фронтенду та бекенду.",
@@ -1255,7 +1292,8 @@ const T = {
     pdf_preparing: "Створення PDF…",
     pdf_opening: "Відкриття PDF…",
     pdf_ready: "PDF завантажено",
-    pdf_failed: "Не вдалося створити PDF"
+    pdf_failed: "Не вдалося створити PDF",
+    footer_source: "Код на GitHub"
   },
 
   zh: {
@@ -1266,6 +1304,7 @@ const T = {
     profile_text: "初级软件工程师。使用行业前沿技术（React、TypeScript、Node.js...）开发了多款网页应用，涵盖个人项目与本地商家项目。渴望加入团队，持续实现专业成长。",
     lang_eu_cert: "HABE",
     lang_en_cert: "Cambridge",
+    lang_es_cert: "母语",
     exp_title: "工作经历",
     exp_intern_role: "全栈开发工程师（实习）",
     exp_intern_b1: "使用 React 和 Supabase (PostgreSQL) 进行全栈平台开发，实现前端与后端新功能。",
@@ -1321,7 +1360,8 @@ const T = {
     pdf_preparing: "正在生成 PDF…",
     pdf_opening: "正在打开 PDF…",
     pdf_ready: "PDF 已下载",
-    pdf_failed: "PDF 生成失败"
+    pdf_failed: "PDF 生成失败",
+    footer_source: "GitHub 源码"
   },
 
   ja: {
@@ -1332,6 +1372,7 @@ const T = {
     profile_text: "ジュニアソフトウェアエンジニア。業界先端の技術（React、TypeScript、Node.js...）を活用し、個人プロジェクトから地域ビジネス向けまで多彩なWebアプリケーションを開発。チームに参画し、プロとして成長を続けたいと考えています。",
     lang_eu_cert: "HABE",
     lang_en_cert: "Cambridge",
+    lang_es_cert: "母国語",
     exp_title: "職務経歴",
     exp_intern_role: "フルスタック開発者（インターン）",
     exp_intern_b1: "ReactとSupabase（PostgreSQL）を用いたWebプラットフォームのフルスタック開発、フロントエンドおよびバックエンドの新機能実装。",
@@ -1387,7 +1428,8 @@ const T = {
     pdf_preparing: "PDF を作成中…",
     pdf_opening: "PDF を開いています…",
     pdf_ready: "PDF をダウンロードしました",
-    pdf_failed: "PDF を作成できませんでした"
+    pdf_failed: "PDF を作成できませんでした",
+    footer_source: "GitHubでコードを見る"
   },
 
   ko: {
@@ -1398,6 +1440,7 @@ const T = {
     profile_text: "주니어 소프트웨어 엔지니어. 업계 선도 기술(React, TypeScript, Node.js...)을 활용하여 개인 프로젝트 및 지역 비즈니스를 위한 다양한 웹 애플리케이션을 개발했습니다. 팀에 합류하여 전문가로 꾸준히 성장하고자 합니다.",
     lang_eu_cert: "HABE",
     lang_en_cert: "Cambridge",
+    lang_es_cert: "모국어",
     exp_title: "경력",
     exp_intern_role: "풀스택 개발자 (인턴)",
     exp_intern_b1: "React 및 Supabase(PostgreSQL) 기반 웹 플랫폼 풀스택 개발, 프론트엔드 및 백엔드 신규 기능 구현.",
@@ -1453,7 +1496,8 @@ const T = {
     pdf_preparing: "PDF 생성 중…",
     pdf_opening: "PDF 여는 중…",
     pdf_ready: "PDF 다운로드 완료",
-    pdf_failed: "PDF를 생성하지 못했습니다"
+    pdf_failed: "PDF를 생성하지 못했습니다",
+    footer_source: "GitHub 소스코드"
   },
 
   ar: {
@@ -1464,6 +1508,7 @@ const T = {
     profile_text: "مهندس برمجيات مبتدئ. عملت على تطبيقات ويب متنوعة بأحدث تقنيات القطاع (React وTypeScript وNode.js...)، لمشاريع شخصية وأنشطة تجارية محلية. أتطلع للانضمام إلى فريق عمل لمواصلة النمو المهني.",
     lang_eu_cert: "HABE",
     lang_en_cert: "Cambridge",
+    lang_es_cert: "اللغة الأم",
     exp_title: "الخبرة المهنية",
     exp_intern_role: "مطوّر Full Stack (تدريب)",
     exp_intern_b1: "تطوير شامل (Full Stack) لمنصة ويب باستخدام React وSupabase (PostgreSQL)، وتنفيذ ميزات جديدة للواجهة الأمامية والخلفية.",
@@ -1519,7 +1564,8 @@ const T = {
     pdf_preparing: "جارٍ إنشاء ملف PDF…",
     pdf_opening: "جارٍ فتح ملف PDF…",
     pdf_ready: "تم تنزيل ملف PDF",
-    pdf_failed: "تعذّر إنشاء ملف PDF"
+    pdf_failed: "تعذّر إنشاء ملف PDF",
+    footer_source: "المصدر على GitHub"
   }
 };
 
