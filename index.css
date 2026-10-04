@@ -1760,6 +1760,9 @@ a.contact-row {
 
 .dashboard > section[aria-labelledby="h-langs"] .sec-title {
   text-align: center;
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 14px;
 }
 
 .dashboard > section[aria-labelledby="h-langs"] .lang-inline {
@@ -1817,9 +1820,13 @@ a.contact-row {
 }
 
 .lang-level-native {
-  font-size: clamp(14px, 2.4vw, 24px);
-  line-height: 1.55;
-  color: var(--c-ink-2);
+  display: block;
+  font-family: var(--f-display);
+  font-size: clamp(24px, 2.8vw, 34px);
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--c-brand-ink);
+  margin: 8px 0 4px;
   word-break: break-word;
   overflow-wrap: anywhere;
 }
@@ -1858,7 +1865,8 @@ a.contact-row {
   }
 
   .dashboard > section[aria-labelledby="h-langs"] .lang-level-native {
-    font-size: clamp(11px, 3.2vw, 15px);
+    font-size: clamp(13px, 3.8vw, 18px);
+    margin: 4px 0 2px;
   }
 
   .dashboard > section[aria-labelledby="h-langs"] .lang-cert {
