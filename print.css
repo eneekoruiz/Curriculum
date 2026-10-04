@@ -92,6 +92,13 @@ a {
   color: var(--brand);
 }
 
+.role-sep {
+  display: inline-block;
+  margin: 0 1.2mm;
+  color: var(--brand);
+  opacity: 0.7;
+}
+
 h1 {
   font-family: var(--f-display);
   font-size: 25pt;

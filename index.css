@@ -612,6 +612,14 @@ html[data-theme="dark"] #icon-moon {
   font-weight: 600;
 }
 
+.role-sep {
+  display: inline-block;
+  margin: 0 6px;
+  color: var(--c-brand-ink);
+  opacity: 0.6;
+  font-weight: 400;
+}
+
 h1 {
   font-family: var(--f-display);
   font-size: clamp(3rem, 7vw, 5rem);
@@ -1316,31 +1324,31 @@ html.pdf-render .precision-motion {
 }
 
 @keyframes precision-overlay-exit {
-  0%, 75% { opacity: 1; visibility: visible; }
-  100% { opacity: 0; visibility: hidden; }
+  0%, 65% { opacity: 1; visibility: visible; }
+  100%    { opacity: 0; visibility: hidden; }
 }
 
 /* ── Staggered entrance: orchestrated unveil synced with Precision Motion ── */
 html:not(.pdf-render) #topbar {
-  animation: topbarDrop 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.62s both;
+  animation: topbarDrop 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.58s both;
 }
 
 @keyframes topbarDrop {
-  from { opacity: 0; transform: translateY(-8px); }
+  from { opacity: 0; transform: translateY(-6px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes staggerIn {
-  from { opacity: 0; transform: translateY(28px); }
+  from { opacity: 0; transform: translateY(14px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
 html:not(.pdf-render) .hero .site-header {
-  animation: staggerIn 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.72s both;
+  animation: staggerIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.55s both;
 }
 
 html:not(.pdf-render) .hero .profile {
-  animation: staggerIn 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.88s both;
+  animation: staggerIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.68s both;
 }
 
 /* ── ATS layout (screen): single reading column, title → org → dates ── */
@@ -1740,46 +1748,35 @@ a.contact-row {
   flex-shrink: 0;
 }
 
-/* Languages sit right after the profile: full width, certificates at a glance */
+/* Languages sit right after the profile: full width, certificates centered */
 .dashboard > section[aria-labelledby="h-langs"],
 .dashboard > section[aria-labelledby="h-courses"] {
   grid-column: 1 / -1;
 }
 
-.dashboard > section[aria-labelledby="h-langs"] .lang-inline {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px 32px;
+.dashboard > section[aria-labelledby="h-langs"] {
+  text-align: center;
 }
 
-@media (max-width: 860px) {
-  .dashboard > section[aria-labelledby="h-langs"] .lang-inline {
-    grid-template-columns: 1fr;
-  }
+.dashboard > section[aria-labelledby="h-langs"] .sec-title {
+  text-align: center;
 }
 
-.dashboard > section[aria-labelledby="h-langs"] .lang-inline {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px 40px;
-}
-
-.dashboard > section[aria-labelledby="h-langs"] .lang-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-}
-
-/* Languages: typographic columns, certified level in the brand serif */
 .dashboard > section[aria-labelledby="h-langs"] .lang-inline {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
+  max-width: 680px;
+  margin: 0 auto;
   gap: 0;
+  width: 100%;
 }
 
 .dashboard > section[aria-labelledby="h-langs"] .lang-chip {
+  min-width: 0;
   display: block;
+  text-align: center;
   margin: 0;
-  padding: 2px 28px;
+  padding: 2px 20px;
   border-left: 1px solid var(--c-rule-2);
   transform: none;
 }
@@ -1787,6 +1784,16 @@ a.contact-row {
 .dashboard > section[aria-labelledby="h-langs"] .lang-chip:first-child {
   padding-left: 0;
   border-left: 0;
+}
+
+[dir="rtl"] .dashboard > section[aria-labelledby="h-langs"] .lang-chip {
+  border-left: 0;
+  border-right: 1px solid var(--c-rule-2);
+}
+
+[dir="rtl"] .dashboard > section[aria-labelledby="h-langs"] .lang-chip:first-child {
+  padding-right: 0;
+  border-right: 0;
 }
 
 .lang-name {
@@ -1810,9 +1817,11 @@ a.contact-row {
 }
 
 .lang-level-native {
-  font-size: 28px;
+  font-size: clamp(14px, 2.4vw, 24px);
   line-height: 1.55;
   color: var(--c-ink-2);
+  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
 .dashboard > section[aria-labelledby="h-langs"] .lang-cert {
@@ -1826,14 +1835,14 @@ a.contact-row {
   font-style: normal;
   font-weight: 400;
   letter-spacing: 0;
-  text-align: left;
+  text-align: center;
   color: var(--c-ink-3);
 }
 
 @media (max-width: 600px) {
   .dashboard > section[aria-labelledby="h-langs"] .lang-inline {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 6px;
+    max-width: 100%;
+    gap: 2px;
   }
 
   .dashboard > section[aria-labelledby="h-langs"] .lang-chip {
@@ -1841,15 +1850,19 @@ a.contact-row {
   }
 
   .dashboard > section[aria-labelledby="h-langs"] .lang-name {
-    font-size: 13px;
+    font-size: 12px;
   }
 
   .dashboard > section[aria-labelledby="h-langs"] .lang-level {
-    font-size: 32px;
+    font-size: 28px;
+  }
+
+  .dashboard > section[aria-labelledby="h-langs"] .lang-level-native {
+    font-size: clamp(11px, 3.2vw, 15px);
   }
 
   .dashboard > section[aria-labelledby="h-langs"] .lang-cert {
-    font-size: 11.5px;
+    font-size: 11px;
   }
 }
 
