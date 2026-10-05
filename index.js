@@ -931,6 +931,7 @@ const setupScrollReveal = () => {
   }, { passive: true });
 
   window.addEventListener('scroll', () => {
+    html.classList.toggle('has-scrolled', window.scrollY > 24);
     if (!scrollTicking) {
       window.requestAnimationFrame(() => {
         if (cachedProgressBar) {
