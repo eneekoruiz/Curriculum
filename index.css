@@ -2019,13 +2019,11 @@ html:not(.pdf-render) #root-container {
   margin-bottom: var(--s5);
 }
 
-@media (min-width: 861px) and (min-height: 720px) {
+@media (min-width: 861px) {
   .hero {
-    min-height: calc(100svh - var(--wrap-top) - 40px);
+    min-height: calc(100vh - var(--wrap-top) - 24px);
     justify-content: center;
-    margin-bottom: 8svh;
-    padding-top: clamp(20px, 3svh, 40px);
-    padding-bottom: clamp(16px, 2svh, 24px);
+    margin-bottom: 32px;
   }
 }
 
@@ -2075,7 +2073,7 @@ html:not(.pdf-render) #root-container {
   }
 
   .hero {
-    min-height: auto;
+    min-height: calc(100svh - var(--wrap-top) - 16px);
     justify-content: flex-start;
     padding-top: 0;
     padding-bottom: 0;
