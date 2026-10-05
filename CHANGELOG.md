@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - **Languages Section (UX / Content Architecture)**:
-  - Cleaned Spanish language chip: "Nativo" is now the primary highlighted level with an elegant, non-duplicative subtitle (`—`).
+  - Cleaned Spanish language chip: "Nativo" is now the primary highlighted level cleanly centered, completely removing placeholder dashes or redundant subtitles.
   - Eradicated redundant repetitions ("Nativo / Lengua materna", "Ama-hizkuntza / Ama-hizkuntza", "Langue maternelle / Langue maternelle") across all 23 language sets in `translations.js`.
   - Added dedicated styling for native certification subtitle in `index.css` and `print.css`.
 - **SEO & i18n Technical Compliance**:

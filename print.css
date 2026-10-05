@@ -389,6 +389,7 @@ h1 strong {
 .lang-level-native {
   font-size: 14pt;
   line-height: 1.35;
+  margin-top: .8mm;
   color: var(--brand);
 }
 
@@ -397,10 +398,6 @@ h1 strong {
   font-size: 8.6pt;
   font-style: normal;
   color: var(--ink-2);
-}
-
-.lang-level-native + .lang-cert {
-  color: var(--ink-3);
 }
 
 /* ── Courses ── */
