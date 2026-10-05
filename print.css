@@ -387,9 +387,9 @@ h1 strong {
 }
 
 .lang-level-native {
-  font-size: 14pt;
-  line-height: 1.35;
-  margin-top: .8mm;
+  font-size: 16pt;
+  line-height: 1.2;
+  margin-top: .6mm;
   color: var(--brand);
 }
 

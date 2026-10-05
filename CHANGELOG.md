@@ -12,13 +12,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - **Languages Section (UX / Content Architecture)**:
-  - Cleaned Spanish language chip: "Nativo" is now the primary highlighted level cleanly centered, completely removing placeholder dashes or redundant subtitles.
+  - Cleaned Spanish language chip: "Nativo" is now scaled to match "C1" optically (26px mobile / 38-42px desktop) and cleanly centered, completely removing placeholder dashes or redundant subtitles.
   - Eradicated redundant repetitions ("Nativo / Lengua materna", "Ama-hizkuntza / Ama-hizkuntza", "Langue maternelle / Langue maternelle") across all 23 language sets in `translations.js`.
-  - Added dedicated styling for native certification subtitle in `index.css` and `print.css`.
+- **Mobile First-Screen Craft & Breathing Room**:
+  - Increased spacing between contacts (LinkedIn, GitHub, etc.) and "Perfil profesional" on mobile with a clean dividing border and comfortable 36px touch targets.
+  - Added dedicated compact media query for short screens (<=660px) ensuring zero vertical clipping.
 - **SEO & i18n Technical Compliance**:
   - Removed ghost `he` (Hebrew) alternate link and `he_IL` locale from `index.html`, `sitemap.xml`, and `api/pdf.js`, strictly aligning metadata to the 23 active supported languages.
   - Rebuilt all 23 language PDFs with updated layout and synchronized SHA-1 source hashes.
-  - Bumped Service Worker cache to `eneko-cv-cache-v21`.
+  - Bumped Service Worker cache to `eneko-cv-cache-v23`.
 
 ### Removed
 - Removed experimental scroll cue / chevron and obsolete motion tests to preserve minimal, high-craft aesthetics.

@@ -1841,11 +1841,11 @@ a.contact-row {
 .lang-level-native {
   display: block;
   font-family: var(--f-display);
-  font-size: clamp(24px, 2.8vw, 34px);
+  font-size: clamp(32px, 3.2vw, 42px);
   font-weight: 600;
-  line-height: 1.15;
+  line-height: 1.05;
   color: var(--c-brand-ink);
-  margin: 8px 0 4px;
+  margin: 6px 0 4px;
   word-break: break-word;
   overflow-wrap: anywhere;
 }
@@ -1884,7 +1884,8 @@ a.contact-row {
   }
 
   .dashboard > section[aria-labelledby="h-langs"] .lang-level-native {
-    font-size: clamp(13px, 3.8vw, 18px);
+    font-size: clamp(22px, 5.8vw, 26px);
+    line-height: 1.05;
     margin: 4px 0 2px;
   }
 
@@ -2085,8 +2086,9 @@ html:not(.pdf-render) #root-container {
   .hero .site-header {
     grid-template-columns: minmax(0, 1fr);
     gap: 10px;
-    padding-bottom: 10px;
-    margin-bottom: 10px;
+    padding-bottom: 14px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--c-rule);
   }
 
   .hero .profile-text {
@@ -2111,13 +2113,30 @@ html:not(.pdf-render) #root-container {
     justify-content: flex-start;
     gap: 8px;
     min-width: 0;
-    min-height: 34px;
+    min-height: 36px;
     margin: 0;
     padding: 0;
     border: 0;
     border-radius: 0;
     background: none;
     text-align: start;
+  }
+
+  @media (max-height: 660px) {
+    :root {
+      --wrap-top: 64px;
+    }
+    .hero .site-header {
+      padding-bottom: 8px;
+      margin-bottom: 10px;
+    }
+    .hero .contacts {
+      padding-top: 6px;
+      margin-top: 4px;
+    }
+    .hero .contact-row {
+      min-height: 32px;
+    }
   }
 
   .hero .contact-row:hover {
