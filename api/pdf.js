@@ -10,7 +10,7 @@ const puppeteer = require('puppeteer-core');
 
 const VALID_LANGS = [
   'es', 'en', 'eu', 'fr', 'de', 'it', 'pt', 'ca', 'gl', 'nl',
-  'ru', 'zh', 'ja', 'ko', 'ar', 'he', 'sv', 'pl', 'no', 'da',
+  'ru', 'zh', 'ja', 'ko', 'ar', 'sv', 'pl', 'no', 'da',
   'cs', 'ro', 'tr', 'uk'
 ];
 

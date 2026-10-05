@@ -1865,6 +1865,11 @@ a.contact-row {
   color: var(--c-ink-3);
 }
 
+.dashboard > section[aria-labelledby="h-langs"] .lang-level-native + .lang-cert {
+  opacity: 0.45;
+  letter-spacing: .08em;
+}
+
 @media (max-width: 600px) {
   .dashboard > section[aria-labelledby="h-langs"] .lang-inline {
     max-width: 100%;
