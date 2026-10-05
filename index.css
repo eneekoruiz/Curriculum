@@ -2066,27 +2066,7 @@ html:not(.pdf-render) #root-container {
   line-height: 1.7;
 }
 
-.scroll-cue {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 16px auto 0;
-  color: var(--c-ink-3);
-  opacity: 0.45;
-  transition: opacity 0.35s var(--ease), transform 0.35s var(--ease);
-  pointer-events: none;
-  user-select: none;
-}
 
-.scroll-cue-icon {
-  width: 14px;
-  height: 14px;
-}
-
-html.has-scrolled .scroll-cue {
-  opacity: 0;
-  transform: translateY(4px);
-}
 
 /* Phones: contacts become one row of round icon buttons (names stay for screen readers) */
 @media (max-width: 700px) {
