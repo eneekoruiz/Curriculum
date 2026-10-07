@@ -30,6 +30,9 @@ jobs:
         with:
           node-version: 22
       - run: npm install --no-audit --no-fund
+      - name: Install the PDF function's dependencies (api/pdf.js)
+        working-directory: .
+        run: npm install --ignore-scripts --no-audit --no-fund
       - run: npx playwright install --with-deps chromium
       - name: PDFs are up to date and ATS-safe
         run: node build-pdfs.mjs --check
@@ -37,5 +40,9 @@ jobs:
         run: node check-web.mjs
       - name: Layout (nothing cut, off-screen or too small to tap, 18 screen sizes)
         run: node check-layout.mjs
+      - name: Production headers (CSP) while using every control
+        run: node check-headers.mjs
+      - name: PDF fallback function (api/pdf.js) as Vercel runs it
+        run: node check-api-pdf.mjs
       - name: Accessibility (WCAG 2.1 AA)
         run: node check-a11y.mjs

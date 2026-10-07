@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.1] - 2026-10-07
+
+### Fixed
+- The "PDF downloaded" notice was always in Spanish; it now uses the visitor's language.
+- The official-certificate wording is back under both C1 levels ("Certificado oficial Cambridge" / "Certificado oficial HABE") in all 23 languages.
+- PDF: the technology lists no longer glue a middle dot to the next word (`·TypeScript`), which broke keyword matching in ATS parsers; they are comma-separated.
+- PDF: the role line no longer splits onto two lines. It is measured during the page fit and shrunk only where needed (stored per language in `print-zoom.js`, also used by Ctrl+P and `api/pdf.js`).
+- Service Worker: the page's code (HTML, JS, CSS, JSON) is now network-first, so the first visit after a deployment no longer mixes new HTML with old scripts and the cache version no longer has to be bumped by hand. Offline still works.
+- An unsupported `?lang=` (for example the removed Hebrew) now follows the same fallback as no `?lang=`: saved choice, browser language, English.
+
+### Added
+- `check-api-pdf`: runs `api/pdf.js` with its own Chromium, as Vercel does (CI, Linux only), so a Dependabot upgrade of `puppeteer-core` or `@sparticuz/chromium` cannot break the PDF fallback unnoticed.
+- `check-headers`: loads the page under the production security headers from `vercel.json` and uses every control; any Content-Security-Policy violation fails the build.
+
+### Security
+- Removed the unused `cdn.jsdelivr.net` from the `script-src` of the Content-Security-Policy.
+
 ## [2.1.0] - 2026-10-05
 
 ### Added

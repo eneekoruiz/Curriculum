@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "node build-pdfs.mjs",
-    "check": "node build-pdfs.mjs --check && node check-web.mjs && node check-layout.mjs && node check-a11y.mjs",
+    "check": "node build-pdfs.mjs --check && node check-web.mjs && node check-layout.mjs && node check-headers.mjs && node check-api-pdf.mjs && node check-a11y.mjs",
     "qr": "node build-qr.mjs",
     "og": "node build-og.mjs"
   },

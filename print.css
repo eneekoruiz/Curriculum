@@ -297,9 +297,9 @@ h1 strong {
   display: inline;
 }
 
-.proj-stack .stack-tag + .stack-tag::before {
-  content: ' \00b7 ';
-  color: var(--ink-3);
+/* Comma + space: a middle dot is extracted glued to the next word ("·TypeScript"), which breaks keyword matching */
+.proj-stack .stack-tag:not(:last-child)::after {
+  content: ', ';
 }
 
 .proj-links {

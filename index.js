@@ -338,7 +338,7 @@ const downloadGeneratedPdf = async (printButton, options = {}) => {
     }
 
     setTimeout(() => URL.revokeObjectURL(objectUrl), 15000);
-    showCopyTip(printButton, '¡Correctamente descargado!');
+    showCopyTip(printButton, copy.ready);
       printButton.classList.add('is-success');
       setTimeout(() => printButton.classList.remove('is-success'), 4000);
   } catch (error) {
@@ -617,6 +617,27 @@ END:VCARD`;
  * Printable area = A4 minus the @page margins in print.css (13mm sides, 10mm + 9mm).
  * @returns {number} the zoom factor applied
  */
+/**
+ * The role line ("Software Engineer · Full Stack Developer") must stay on one line in the PDF:
+ * shrink it until it does. Longer languages need it, and the page fit below rescales everything,
+ * so whether it wraps depends on the zoom and the browser: it is measured, not guessed.
+ */
+window.fitRoleLine = () => {
+  const role = document.querySelector('.header-id .eyebrow');
+  if (!role) {
+    return;
+  }
+  role.style.fontSize = '';
+  const wrapper = document.querySelector('.wrapper');
+  const zoom = parseFloat(wrapper && wrapper.style.zoom) || 1;
+  let size = parseFloat(getComputedStyle(role).fontSize);
+  const lineHeight = (parseFloat(getComputedStyle(role).lineHeight) || size * 1.3) * zoom;
+  while (role.getBoundingClientRect().height > lineHeight * 1.5 && size > 9) {
+    size -= 0.25;
+    role.style.fontSize = `${size}px`;
+  }
+};
+
 window.fitPrintToOnePage = () => {
   const wrapper = document.querySelector('.wrapper');
   if (!wrapper) {
@@ -629,8 +650,10 @@ window.fitPrintToOnePage = () => {
   // Grow while there is room (bigger text reads better), up to +12%...
   while (zoom < 1.12) {
     wrapper.style.zoom = String(Math.round((zoom + 0.01) * 100) / 100);
+    window.fitRoleLine();
     if (wrapper.getBoundingClientRect().height > availableHeight) {
       wrapper.style.zoom = String(zoom);
+      window.fitRoleLine();
       break;
     }
     zoom = Math.round((zoom + 0.01) * 100) / 100;
@@ -639,6 +662,7 @@ window.fitPrintToOnePage = () => {
   while (wrapper.getBoundingClientRect().height > availableHeight && zoom > 0.8) {
     zoom = Math.round((zoom - 0.01) * 100) / 100;
     wrapper.style.zoom = String(zoom);
+    window.fitRoleLine();
   }
   return zoom;
 };
@@ -659,12 +683,21 @@ const setupPrintScale = () => {
     const zoom = window.PRINT_ZOOM && window.PRINT_ZOOM[currentLang];
     if (zoom && !wrapper.style.zoom) {
       wrapper.style.zoom = String(zoom);
+      const roleSize = window.PRINT_ROLE && window.PRINT_ROLE[currentLang];
+      const role = document.querySelector('.header-id .eyebrow');
+      if (roleSize && role) {
+        role.style.fontSize = `${roleSize}px`;
+      }
       applied = true;
     }
   });
   window.addEventListener('afterprint', () => {
     if (applied) {
       wrapper.style.zoom = '';
+      const role = document.querySelector('.header-id .eyebrow');
+      if (role) {
+        role.style.fontSize = '';
+      }
       applied = false;
     }
   });
@@ -973,7 +1006,7 @@ const setupScrollReveal = () => {
   const browserLang = (navigator.languages || [navigator.language || ''])
     .map(code => String(code).slice(0, 2).toLowerCase())
     .find(code => T[code]);
-  const explicitLang = urlParameters.get('lang') || safeStorage.get('cv-lang');
+  const explicitLang = [urlParameters.get('lang'), safeStorage.get('cv-lang')].find(code => code && T[code]);
   const initialLang = explicitLang || browserLang || 'en';
   applyTranslations(initialLang, explicitLang ? initialLang : 'auto');
   updateExportButtonLabel();

@@ -29,8 +29,20 @@ const TYPES = {
   '.webp': 'image/webp', '.xml': 'application/xml', '.txt': 'text/plain'
 };
 
-/** Minimal static server for the repo root (no caching, no directory listing). */
-export async function startServer() {
+/**
+ * The security headers Vercel sends in production (vercel.json), minus the two that only make sense on
+ * https (HSTS, upgrade-insecure-requests), so a local http server can serve the page the way visitors get it.
+ */
+export function productionHeaders() {
+  const config = JSON.parse(readFileSync(join(ROOT, 'vercel.json'), 'utf8'));
+  const headers = Object.fromEntries(config.headers.find(h => h.source === '/(.*)').headers.map(h => [h.key, h.value]));
+  delete headers['Strict-Transport-Security'];
+  headers['Content-Security-Policy'] = headers['Content-Security-Policy'].replace(/;?\s*upgrade-insecure-requests;?/, ';');
+  return headers;
+}
+
+/** Minimal static server for the repo root (no caching, no directory listing). Optional extra response headers. */
+export async function startServer({ headers = {} } = {}) {
   const server = createServer(async (req, res) => {
     try {
       let path = decodeURIComponent(new URL(req.url, 'http://x').pathname);
@@ -38,7 +50,7 @@ export async function startServer() {
       const file = normalize(join(ROOT, path));
       if (!file.startsWith(ROOT)) throw new Error('outside root');
       const body = await readFile(file);
-      res.writeHead(200, { 'content-type': TYPES[extname(file)] || 'application/octet-stream', 'cache-control': 'no-store' });
+      res.writeHead(200, { 'content-type': TYPES[extname(file)] || 'application/octet-stream', 'cache-control': 'no-store', ...headers });
       res.end(body);
     } catch {
       res.writeHead(404).end();
