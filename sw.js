@@ -1,4 +1,4 @@
-const CACHE_NAME = 'eneko-cv-cache-v23';
+const CACHE_NAME = 'eneko-cv-cache-v24';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
@@ -44,13 +44,16 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Network-first for navigation (HTML page) so online visitors always get the latest deployed version immediately
-  if (event.request.mode === 'navigate') {
+  // Network-first for the page and its code (HTML, JS, CSS, JSON): they ship together, so an online visitor
+  // must never get a new page with old scripts. The cache is only the offline fallback.
+  const isCode = event.request.mode === 'navigate' || /\.(?:js|css|json)$/.test(requestUrl.pathname);
+  if (isCode) {
     event.respondWith(
       fetch(event.request)
         .then((networkResponse) => {
-          if (networkResponse && networkResponse.status === 200) {
-            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, networkResponse.clone()));
+          if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
+            const copy = networkResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
           }
           return networkResponse;
         })
@@ -59,7 +62,7 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Stale-while-revalidate strategy for static sub-resources
+  // Stale-while-revalidate for images and other static files
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
       const fetchPromise = fetch(event.request).then((networkResponse) => {

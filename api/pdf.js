@@ -170,6 +170,9 @@ module.exports = async function handler(request, response) {
         const wrapper = document.querySelector('.wrapper');
         const zoom = parseFloat(wrapper.style.zoom || '1') - 0.01;
         wrapper.style.zoom = String(Math.round(zoom * 100) / 100);
+        if (typeof window.fitRoleLine === 'function') {
+          window.fitRoleLine();
+        }
       });
       pdfBuffer = await renderPdf();
     }
