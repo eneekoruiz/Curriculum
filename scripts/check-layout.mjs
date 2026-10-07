@@ -49,6 +49,23 @@ for (const lang of LANGS) {
         // Standalone controls only: inline links inside a sentence are exempt from the target-size rule
         if (isPhone && el.matches('a, button') && getComputedStyle(el).display !== 'inline' && Math.min(r.width, r.height) < 24) out.push(`tap target ${Math.round(r.width)}×${Math.round(r.height)}: ${name(el)}`);
       }
+
+      // Language chips must never overlap each other and certificate text must fit within its column
+      const chips = document.querySelectorAll('.dashboard > section[aria-labelledby="h-langs"] .lang-chip');
+      const isRTL = document.documentElement.getAttribute('dir') === 'rtl';
+      for (let i = 0; i < chips.length - 1; i++) {
+        const r1 = chips[i].getBoundingClientRect();
+        const r2 = chips[i + 1].getBoundingClientRect();
+        if (isRTL ? r2.right > r1.left + 0.5 : r1.right > r2.left + 0.5) {
+          out.push(`language chips overlap [${Math.round(r1.left)}..${Math.round(r1.right)}] with [${Math.round(r2.left)}..${Math.round(r2.right)}]`);
+        }
+      }
+      for (const cert of document.querySelectorAll('.dashboard > section[aria-labelledby="h-langs"] .lang-cert')) {
+        if (cert.scrollWidth > cert.clientWidth + 1) {
+          out.push(`language certificate text overflows column: "${cert.textContent.trim()}" (${cert.scrollWidth}px > ${cert.clientWidth}px)`);
+        }
+      }
+
       return out;
     }, width <= 700));
 
