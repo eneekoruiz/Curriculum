@@ -409,13 +409,15 @@ h1 strong {
   color: var(--brand);
   font-variant-numeric: lining-nums;
   font-feature-settings: "lnum" 1, "liga" 0 !important;
+  white-space: nowrap;
 }
 
 .lang-level-native {
-  font-size: 16pt;
+  font-size: 15pt;
   line-height: 1.2;
   margin-top: .6mm;
   color: var(--brand);
+  white-space: nowrap;
 }
 
 .lang-cert {

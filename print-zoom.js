@@ -5,5 +5,5 @@
 // PDF_VERSION: cache-busting version for the PDF downloads.
 window.PRINT_ZOOM = {"es":1.02,"en":1.02,"eu":1.02,"ca":1.02,"gl":1.02,"fr":1.02,"de":1,"it":1.02,"pt":1,"nl":1,"sv":1.02,"no":1.02,"da":1.02,"pl":1.01,"cs":1.04,"ro":1.01,"tr":1.02,"ru":0.98,"uk":1,"zh":1.07,"ja":1.04,"ko":1.05,"ar":1.09};
 window.PRINT_ROLE = {};
-window.PDF_SOURCE = '6f1e7c8de3a3';
-window.PDF_VERSION = '6f1e7c8de3a3';
+window.PDF_SOURCE = '98d840cefe5b';
+window.PDF_VERSION = '98d840cefe5b';

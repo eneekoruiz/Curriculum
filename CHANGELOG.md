@@ -4,13 +4,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.2] - 2026-10-08
+
+### Fixed
+- Eliminated awkward mid-word line breaks and orphaned word wraps across all 23 languages (enforced `nowrap` on language levels, refined French `Natif` and Czech `Rodilý`, and scaled mobile certificates).
+- Re-rendered all 23 language PDFs with 100% 1-page compliance and full ATS pass.
+
 ## [2.2.1] - 2026-10-08
 
 ### Changed
 - Enlarged print profile headshot from 16mm to 28mm (~1.65× the QR code) with contemporary circular avatar framing (`border-radius: 50%`) for clear, recognizable facial detail.
 - Re-centered portrait framing with natural headroom, full neck, polo shirt collar, and shoulders, eliminating tight chin crop and clothing logos.
 - Re-architected print header into an executive 2-row grid layout: top row features the 28mm circular portrait, unconstrained single-line role title, and interactive QR code; bottom row features a dedicated full-width contacts bar.
-- Re-rendered all 23 language PDFs with 100% 1-page compliance, unscaled full-size role line across all locales, and full ATS pass.
 
 ## [2.2.0] - 2026-10-08
 

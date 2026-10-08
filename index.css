@@ -1841,13 +1841,12 @@ a.contact-row {
 .lang-level-native {
   display: block;
   font-family: var(--f-display);
-  font-size: clamp(32px, 3.2vw, 42px);
+  font-size: clamp(20px, 2.4vw, 32px);
   font-weight: 600;
-  line-height: 1.05;
+  line-height: 1.15;
   color: var(--c-brand-ink);
   margin: 6px 0 4px;
-  word-break: break-word;
-  overflow-wrap: anywhere;
+  white-space: nowrap;
 }
 
 .dashboard > section[aria-labelledby="h-langs"] .lang-cert {
@@ -1865,7 +1864,7 @@ a.contact-row {
   color: var(--c-ink-3);
   white-space: normal;
   line-height: 1.25;
-  overflow-wrap: break-word;
+  overflow-wrap: normal;
   word-break: normal;
 }
 
@@ -1876,7 +1875,7 @@ a.contact-row {
   }
 
   .dashboard > section[aria-labelledby="h-langs"] .lang-chip {
-    padding: 2px 4px;
+    padding: 2px 2px;
   }
 
   .dashboard > section[aria-labelledby="h-langs"] .lang-name {
@@ -1888,14 +1887,22 @@ a.contact-row {
   }
 
   .dashboard > section[aria-labelledby="h-langs"] .lang-level-native {
-    font-size: clamp(22px, 5.8vw, 26px);
-    line-height: 1.05;
+    font-size: clamp(14px, 4vw, 19px);
+    line-height: 1.15;
     margin: 4px 0 2px;
+    white-space: nowrap;
   }
 
   .dashboard > section[aria-labelledby="h-langs"] .lang-cert {
-    font-size: 11px;
-    line-height: 1.2;
+    font-size: clamp(9px, 2.5vw, 10.2px);
+    line-height: 1.25;
+    overflow-wrap: normal;
+    word-break: normal;
+  }
+
+  [lang="zh"] .dashboard > section[aria-labelledby="h-langs"] .lang-cert,
+  [lang="ja"] .dashboard > section[aria-labelledby="h-langs"] .lang-cert {
+    white-space: nowrap;
   }
 }
 
