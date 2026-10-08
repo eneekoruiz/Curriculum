@@ -1546,11 +1546,41 @@ const T = {
   }
 };
 
+const PHOTO_LABELS = {
+  es: { btn: 'Foto', aria: 'Ver foto de perfil', close: 'Cerrar' },
+  en: { btn: 'Photo', aria: 'View profile photo', close: 'Close' },
+  eu: { btn: 'Argazkia', aria: 'Ikusi profileko argazkia', close: 'Itxi' },
+  ca: { btn: 'Foto', aria: 'Veure foto de perfil', close: 'Tancar' },
+  gl: { btn: 'Foto', aria: 'Ver foto de perfil', close: 'Pechar' },
+  fr: { btn: 'Photo', aria: 'Voir la photo de profil', close: 'Fermer' },
+  de: { btn: 'Foto', aria: 'Profilfoto ansehen', close: 'Schließen' },
+  it: { btn: 'Foto', aria: 'Vedi foto profilo', close: 'Chiudi' },
+  pt: { btn: 'Foto', aria: 'Ver foto de perfil', close: 'Fechar' },
+  nl: { btn: 'Foto', aria: 'Profielfoto bekijken', close: 'Sluiten' },
+  sv: { btn: 'Foto', aria: 'Visa profilfoto', close: 'Stäng' },
+  no: { btn: 'Foto', aria: 'Se profilbilde', close: 'Lukk' },
+  da: { btn: 'Foto', aria: 'Se profilbillede', close: 'Luk' },
+  pl: { btn: 'Zdjęcie', aria: 'Zobacz zdjęcie profilowe', close: 'Zamknij' },
+  cs: { btn: 'Foto', aria: 'Zobrazit profilovou fotografii', close: 'Zavřít' },
+  ro: { btn: 'Foto', aria: 'Vezi fotografia de profil', close: 'Închide' },
+  tr: { btn: 'Fotoğraf', aria: 'Profil fotoğrafını gör', close: 'Kapat' },
+  ru: { btn: 'Фото', aria: 'Посмотреть фото профиля', close: 'Закрыть' },
+  uk: { btn: 'Фото', aria: 'Переглянути фото профілю', close: 'Закрити' },
+  zh: { btn: '照片', aria: '查看个人照片', close: '关闭' },
+  ja: { btn: '写真', aria: 'プロフィール写真を見る', close: '閉じる' },
+  ko: { btn: '사진', aria: '프로필 사진 보기', close: '닫기' },
+  ar: { btn: 'صورة', aria: 'عرض الصورة الشخصية', close: 'إغلاق' }
+};
+
 // Shared values and aliases for the print/export controls.
-Object.values(T).forEach((copy) => {
+Object.entries(T).forEach(([lang, copy]) => {
   copy.footer_text = 'Eneko Ruiz Mollón';
   copy.btn_print = copy.pdf_download;
   copy.aria_print = copy.pdf_download;
+  const p = PHOTO_LABELS[lang] || PHOTO_LABELS.en;
+  copy.btn_photo = p.btn;
+  copy.aria_photo = p.aria;
+  copy.aria_close = p.close;
 });
 
 const M = {

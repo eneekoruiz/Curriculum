@@ -79,10 +79,28 @@ a {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  gap: 8mm;
+  gap: 4.5mm;
   padding-bottom: 2.6mm;
   border-bottom: 1.2pt solid var(--ink);
   margin-bottom: 3mm;
+}
+
+.header-main {
+  display: flex;
+  align-items: center;
+  gap: 3.5mm;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.header-photo {
+  display: block;
+  width: 16mm;
+  height: 16mm;
+  object-fit: cover;
+  border-radius: 2mm;
+  border: 0.8pt solid #cfc7bc;
+  flex-shrink: 0;
 }
 
 .eyebrow {
@@ -101,10 +119,11 @@ a {
 
 h1 {
   font-family: var(--f-display);
-  font-size: 25pt;
+  font-size: 21.5pt;
   font-weight: 500;
   line-height: 1;
   color: var(--ink);
+  white-space: nowrap;
 }
 
 h1 strong {

@@ -631,8 +631,11 @@ window.fitRoleLine = () => {
   const wrapper = document.querySelector('.wrapper');
   const zoom = parseFloat(wrapper && wrapper.style.zoom) || 1;
   let size = parseFloat(getComputedStyle(role).fontSize);
-  const lineHeight = (parseFloat(getComputedStyle(role).lineHeight) || size * 1.3) * zoom;
-  while (role.getBoundingClientRect().height > lineHeight * 1.5 && size > 9) {
+  while (size > 9) {
+    const lh = (parseFloat(getComputedStyle(role).lineHeight) || size * 1.25) * zoom;
+    if (role.getBoundingClientRect().height <= lh * 1.45) {
+      break;
+    }
     size -= 0.25;
     role.style.fontSize = `${size}px`;
   }
@@ -847,6 +850,25 @@ const setupScrollReveal = () => {
   const printButton = document.getElementById('print-btn');
   if (printButton) {
     printButton.addEventListener('click', handlePrint);
+  }
+
+  const photoButton = document.getElementById('photo-btn');
+  const photoDialog = document.getElementById('photo-dialog');
+  const photoCloseBtn = document.getElementById('photo-close-btn');
+  if (photoButton && photoDialog) {
+    photoButton.addEventListener('click', () => {
+      photoDialog.showModal();
+    });
+    if (photoCloseBtn) {
+      photoCloseBtn.addEventListener('click', () => {
+        photoDialog.close();
+      });
+    }
+    photoDialog.addEventListener('click', (event) => {
+      if (event.target === photoDialog) {
+        photoDialog.close();
+      }
+    });
   }
 
   const shareButton = document.getElementById('share-btn');

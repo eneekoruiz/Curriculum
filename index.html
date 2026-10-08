@@ -296,6 +296,15 @@
       <span data-i18n="btn_share">Compartir</span>
     </button>
 
+    <button id="photo-btn" class="ctrl" data-i18n="aria_photo" aria-haspopup="dialog">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"
+        aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+      </svg>
+      <span data-i18n="btn_photo">Foto</span>
+    </button>
+
     <button id="theme-btn" class="ctrl" data-i18n="aria_theme">
       <svg id="icon-sun" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8"
         stroke="currentColor" aria-hidden="true">
@@ -318,16 +327,19 @@
 
       <div class="hero">
       <header class="site-header reveal">
-        <div class="header-id">
-          <h1><strong>Eneko</strong> Ruiz Mollón</h1>
-          <p class="eyebrow">
-            <span data-i18n="eyebrow">Ingeniero de Software</span>
-            <span class="role-sep" aria-hidden="true">·</span>
-            <span data-i18n="tagline">Desarrollador Full Stack</span>
-          </p>
-          <p class="tagline tagline-loc">
-            <span data-i18n="location">Rentería (Gipuzkoa), España · Presencial, híbrido o remoto</span>
-          </p>
+        <div class="header-main">
+          <img class="header-photo" src="foto.webp" alt="Eneko Ruiz Mollón" width="96" height="96" loading="eager" decoding="async">
+          <div class="header-id">
+            <h1><strong>Eneko</strong> Ruiz Mollón</h1>
+            <p class="eyebrow">
+              <span data-i18n="eyebrow">Ingeniero de Software</span>
+              <span class="role-sep" aria-hidden="true">·</span>
+              <span data-i18n="tagline">Desarrollador Full Stack</span>
+            </p>
+            <p class="tagline tagline-loc">
+              <span data-i18n="location">Rentería (Gipuzkoa), España · Presencial, híbrido o remoto</span>
+            </p>
+          </div>
         </div>
 
         <address class="contacts">
@@ -535,6 +547,23 @@
         </a>
       </div>
     </footer>
+    <dialog id="photo-dialog" class="photo-dialog hide-print" aria-labelledby="photo-name">
+      <div class="photo-card">
+        <button id="photo-close-btn" class="photo-close" type="button" data-i18n="aria_close" aria-label="Cerrar">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+          </svg>
+        </button>
+        <div class="photo-avatar-wrap">
+          <img src="foto.webp" alt="Eneko Ruiz Mollón" width="280" height="280" class="photo-img" loading="lazy">
+        </div>
+        <div class="photo-info">
+          <h3 id="photo-name" class="photo-name">Eneko Ruiz Mollón</h3>
+          <p class="photo-role" data-i18n="eyebrow">Ingeniero de Software</p>
+          <p class="photo-loc" data-i18n="location">Rentería (Gipuzkoa), España · Presencial, híbrido o remoto</p>
+        </div>
+      </div>
+    </dialog>
   </main><!-- /root -->
 
   <script src="translations.js"></script>
