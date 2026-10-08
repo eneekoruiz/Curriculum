@@ -3,7 +3,7 @@
 // PRINT_ROLE: per-language font size (px) of the role line where it had to shrink to stay on one line.
 // PDF_SOURCE: hash of the files the PDFs were built from (CI checks it is current).
 // PDF_VERSION: cache-busting version for the PDF downloads.
-window.PRINT_ZOOM = {"es":1.05,"en":1.06,"eu":1.04,"ca":1.05,"gl":1.04,"fr":1.05,"de":1.04,"it":1.05,"pt":1.05,"nl":1.05,"sv":1.06,"no":1.05,"da":1.04,"pl":1.03,"cs":1.06,"ro":1.03,"tr":1.06,"ru":1,"uk":1.03,"zh":1.12,"ja":1.06,"ko":1.09,"ar":1.12};
-window.PRINT_ROLE = {"es":11.3333,"en":13.0833,"eu":12.8333,"ca":10.5833,"gl":11.0833,"fr":13.0833,"de":12.8333,"it":11.3333,"pt":10.5833,"nl":12.5833,"sv":13.8333,"no":13.3333,"pl":11.8333,"cs":13.5833,"ro":14.0833,"tr":13.3333,"ru":12.3333,"uk":12.8333,"ja":12.0833,"ko":14.5833};
-window.PDF_SOURCE = '77f6ea850275';
-window.PDF_VERSION = '77f6ea850275';
+window.PRINT_ZOOM = {"es":1.02,"en":1.02,"eu":1.02,"ca":1.02,"gl":1.02,"fr":1.02,"de":1,"it":1.02,"pt":1,"nl":1,"sv":1.02,"no":1.02,"da":1.02,"pl":1.01,"cs":1.04,"ro":1.01,"tr":1.02,"ru":0.98,"uk":1,"zh":1.07,"ja":1.04,"ko":1.05,"ar":1.09};
+window.PRINT_ROLE = {};
+window.PDF_SOURCE = '72ebe912498d';
+window.PDF_VERSION = '72ebe912498d';

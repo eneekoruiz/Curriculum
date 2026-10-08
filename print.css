@@ -76,36 +76,45 @@ a {
 
 /* ── Header ── */
 .site-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  gap: 4.5mm;
-  padding-bottom: 2.6mm;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    "main qr"
+    "contacts contacts";
+  row-gap: 2mm;
+  column-gap: 5mm;
+  align-items: center;
+  padding-bottom: 2.2mm;
   border-bottom: 1.2pt solid var(--ink);
-  margin-bottom: 3mm;
+  margin-bottom: 2.6mm;
 }
 
 .header-main {
+  grid-area: main;
   display: flex;
   align-items: center;
-  gap: 3.5mm;
-  flex: 1 1 auto;
+  gap: 4mm;
   min-width: 0;
 }
 
 .header-photo {
   display: block;
-  width: 16mm;
-  height: 16mm;
+  width: 28mm;
+  height: 28mm;
   object-fit: cover;
-  border-radius: 2mm;
+  border-radius: 2.5mm;
   border: 0.8pt solid #cfc7bc;
   flex-shrink: 0;
 }
 
+.header-id {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
 .eyebrow {
-  margin-top: 1.2mm;
-  font-size: 11.5pt;
+  margin-top: 1mm;
+  font-size: 11pt;
   font-weight: 700;
   color: var(--brand);
 }
@@ -119,7 +128,7 @@ a {
 
 h1 {
   font-family: var(--f-display);
-  font-size: 21.5pt;
+  font-size: 21pt;
   font-weight: 500;
   line-height: 1;
   color: var(--ink);
@@ -131,30 +140,32 @@ h1 strong {
 }
 
 .tagline {
-  margin-top: 1.6mm;
-  font-size: 8.9pt;
+  margin-top: 1.4mm;
+  font-size: 8.8pt;
   color: var(--ink-2);
 }
 
 .tagline-loc {
-  margin-top: .4mm;
-  font-size: 8.8pt;
+  margin-top: .3mm;
+  font-size: 8.6pt;
   color: var(--ink-3);
 }
 
 .contacts {
-  display: grid;
-  grid-template-columns: auto;
-  justify-items: end;
-  gap: .4mm 5mm;
+  grid-area: contacts;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1mm 4mm;
   font-style: normal;
-  font-size: 8.6pt;
+  font-size: 8.3pt;
   color: var(--ink-2);
-  text-align: right;
 }
 
 .contact-row {
-  display: block;
+  display: inline-flex;
+  align-items: center;
   font: inherit;
   color: inherit;
   background: none;
@@ -163,11 +174,6 @@ h1 strong {
   margin: 0;
   /* A link split across lines ("eneko-" / "ruiz-…") is read as two words by ATS parsers */
   white-space: nowrap;
-}
-
-.header-id {
-  flex: 1 1 auto;
-  min-width: 0;
 }
 
 /* ── Profile ── */
@@ -456,15 +462,12 @@ h1 strong {
 }
 
 /* ── QR to the interactive portfolio (paper → phone) ── */
-.site-header {
-  align-items: center;
-}
-
 .qr-block {
+  grid-area: qr;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: .8mm;
+  gap: .6mm;
   flex: 0 0 auto;
   color: var(--ink);
 }

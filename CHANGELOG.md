@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.1] - 2026-10-08
+
+### Changed
+- Enlarged print profile headshot from 16mm to 28mm (~1.65× the QR code) for clear, recognizable facial detail on printed paper.
+- Re-architected print header into an executive 2-row grid layout: top row features the 28mm portrait photo, unconstrained single-line role title, and interactive QR code; bottom row features a dedicated full-width contacts bar.
+- Re-rendered all 23 language PDFs with 100% 1-page compliance, unscaled full-size role line across all locales, and full ATS pass.
+
 ## [2.2.0] - 2026-10-08
 
 ### Added
