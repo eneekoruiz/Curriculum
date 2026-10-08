@@ -102,7 +102,7 @@ a {
   width: 28mm;
   height: 28mm;
   object-fit: cover;
-  border-radius: 2.5mm;
+  border-radius: 50%;
   border: 0.8pt solid #cfc7bc;
   flex-shrink: 0;
 }

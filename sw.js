@@ -1,4 +1,4 @@
-const CACHE_NAME = 'eneko-cv-cache-v28';
+const CACHE_NAME = 'eneko-cv-cache-v29';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
