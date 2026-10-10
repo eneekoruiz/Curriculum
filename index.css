@@ -1132,10 +1132,14 @@ h1 strong {
   }
 }
 
-@media (max-width:540px) {
+/* Five controls no longer fit with their labels below ~820px (long languages first): icons only, names stay as aria-labels */
+@media (max-width:820px) {
   .ctrl > span:not(#lang-label) {
     display: none;
   }
+}
+
+@media (max-width:540px) {
   .ctrl {
     position: relative;
     padding: 6px 10px;
