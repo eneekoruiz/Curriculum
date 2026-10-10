@@ -102,7 +102,7 @@ for (const lang of LANGS) {
       if (p.shown) issues.push('PDF preview stays visible after the download finished');
     }
     // Dialogs: whole inside the screen, nothing cut; the long letter scrolls inside its card down to the signature
-    for (const [opener, dialogId, scrolls] of [['#letter-btn', 'letter-dialog', true], ['#print-btn', 'print-dialog', false]]) {
+    for (const [opener, dialogId, scrolls] of [['#letter-btn', 'letter-dialog', true], ['#print-opts-btn', 'print-dialog', false]]) {
       await page.evaluate(() => document.getElementById('lang-menu').classList.remove('open'));
       await page.keyboard.press('Escape');
       await page.evaluate(() => { document.getElementById('print-btn').removeAttribute('data-loading'); document.getElementById('print-btn').classList.remove('is-success'); });

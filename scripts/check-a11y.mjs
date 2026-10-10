@@ -38,7 +38,7 @@ try {
     const label = `${lang} ${theme} ${viewport.width}x${viewport.height}`;
     await audit(label);
     await audit(`${label} · letter dialog`, '#letter-btn');
-    await audit(`${label} · PDF options dialog`, '#print-btn');
+    await audit(`${label} · PDF options dialog`, '#print-opts-btn');
     await page.close();
   }
 } finally {

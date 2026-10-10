@@ -109,7 +109,7 @@ try {
     if (!paper.text.includes(T[lang].letter_print_p2.slice(-40))) fail(`letter (${lang}): paper text missing`);
 
     // Options dialog: defaults, remembered choice
-    await page.click('#print-btn');
+    await page.click('#print-opts-btn');
     const defaults = await page.evaluate(() => ({ photo: document.getElementById('opt-photo').checked, letter: document.getElementById('opt-letter').checked }));
     if (!defaults.photo || defaults.letter) fail(`PDF options (${lang}): defaults should be photo on, letter off`);
     await page.locator('label.opt-row:has(#opt-letter)').click();
@@ -129,6 +129,9 @@ try {
     await page.waitForFunction(() => !document.documentElement.classList.contains('cv-loading'));
     const kept = await page.evaluate(() => [...document.documentElement.classList].filter(c => c.startsWith('opt-')).sort().join());
     if (kept !== 'opt-letter,opt-no-photo') fail(`PDF options (${lang}): the choice was not remembered (${kept})`);
+    // The main button downloads at once, with the remembered options
+    const [quick] = await Promise.all([page.waitForEvent('download'), page.click('#print-btn')]);
+    if (quick.suggestedFilename() !== expectedName) fail(`PDF button (${lang}): downloaded "${quick.suggestedFilename()}" without asking, expected ${expectedName}`);
     await fresh.close();
   }
 
@@ -141,7 +144,7 @@ try {
       await page.goto(`${origin}/?lang=${lang}`, { waitUntil: 'networkidle' });
       await page.waitForFunction(() => !document.documentElement.classList.contains('cv-loading'));
       await page.evaluate(({ photo, letter }) => {
-        document.getElementById('print-btn').click();
+        document.getElementById('print-opts-btn').click();
         for (const [id, wanted] of [['opt-photo', photo], ['opt-letter', letter]]) {
           const box = document.getElementById(id);
           if (box.checked !== wanted) box.click();

@@ -30,7 +30,7 @@ await page.click('.contact-row[data-copy]');                       // copy-to-cl
 await page.waitForTimeout(400);
 if (!(await page.evaluate(() => !!document.querySelector('.copy-tip')))) problems.push('the copy toast did not appear');
 
-await page.click('#print-btn');                                    // PDF options dialog
+await page.click('#print-opts-btn');                               // PDF options dialog
 await page.locator('label.opt-row:has(#opt-letter)').click();     // with the cover letter
 const download = page.waitForEvent('download', { timeout: 20000 }).catch(() => null);
 await page.click('#opt-download');                                 // PDF download + success toast
