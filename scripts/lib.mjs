@@ -21,7 +21,18 @@ export function loadTranslations() {
   return { T: context.T, M: context.M, langs: Object.keys(context.M) };
 }
 
-export const pdfPath = (lang) => join(ROOT, 'pdf', `Eneko_Ruiz_CV_${lang.toUpperCase()}.pdf`);
+/** The four PDFs every language ships: with/without the photo, with/without the cover letter before the CV. */
+export const VARIANTS = [
+  { photo: true, letter: false },
+  { photo: false, letter: false },
+  { photo: true, letter: true },
+  { photo: false, letter: true }
+];
+
+export const variantName = ({ photo, letter }) => `${letter ? '_Letter' : ''}${photo ? '' : '_NoPhoto'}`;
+
+export const pdfPath = (lang, variant = VARIANTS[0]) =>
+  join(ROOT, 'pdf', `Eneko_Ruiz_CV_${lang.toUpperCase()}${variantName(variant)}.pdf`);
 
 const TYPES = {
   '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css',

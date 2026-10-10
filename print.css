@@ -541,3 +541,92 @@ h1,
   content: '\00a0·\00a0';
   color: var(--ink-3);
 }
+
+/* ── PDF options ──
+   html.opt-no-photo / html.opt-letter are set from the download dialog (index.js) or by the PDF renderers. */
+.opt-no-photo .header-photo {
+  display: none;
+}
+
+/* ── Cover letter page: its own A4 page before the CV, same header language as the CV ── */
+.letter-page {
+  display: none;
+}
+
+.opt-letter .letter-page {
+  display: block;
+  break-after: page;
+  page-break-after: always;
+}
+
+.cl-head {
+  padding-bottom: 2.2mm;
+  border-bottom: 1.2pt solid var(--ink);
+  margin-bottom: 7mm;
+}
+
+.cl-name {
+  font-family: var(--f-display);
+  font-size: 21pt;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.cl-name strong {
+  font-weight: 700;
+}
+
+.cl-role {
+  margin-top: 1mm;
+  font-size: 11pt;
+  font-weight: 700;
+  color: var(--brand);
+}
+
+.cl-contacts {
+  margin-top: 1.6mm;
+  font-size: 8.3pt;
+  color: var(--ink-2);
+}
+
+.cl-title {
+  font-family: var(--f-display);
+  font-size: 13pt;
+  font-weight: 600;
+  line-height: 1.1;
+  color: var(--ink);
+  padding-bottom: .7mm;
+  border-bottom: .5pt solid var(--rule);
+  margin-bottom: 4mm;
+}
+
+.cl-body {
+  display: grid;
+  gap: 3.4mm;
+}
+
+.cl-p {
+  font-size: 10.6pt;
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+
+.cl-lead {
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.cl-sign {
+  margin-top: 7mm;
+  font-size: 10.6pt;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+.cl-sign strong {
+  font-family: var(--f-display);
+  font-size: 12pt;
+  color: var(--ink);
+}

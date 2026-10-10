@@ -296,6 +296,15 @@
       <span data-i18n="btn_share">Compartir</span>
     </button>
 
+    <button id="letter-btn" class="ctrl" data-i18n="aria_letter" aria-haspopup="dialog">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"
+        aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
+      </svg>
+      <span data-i18n="btn_letter">Carta</span>
+    </button>
+
     <button id="photo-btn" class="ctrl" data-i18n="aria_photo" aria-haspopup="dialog">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"
         aria-hidden="true">
@@ -323,12 +332,30 @@
 
   <!-- ── ROOT ──────────────────────────────────────────── -->
   <main id="main-content">
+    <!-- Cover letter for paper and PDF (shown only when "include letter" is on); the web has its own text in #letter-dialog -->
+    <section id="letter-print" class="letter-page" aria-labelledby="cl-print-title">
+      <header class="cl-head">
+        <p class="cl-name"><strong>Eneko</strong> Ruiz Mollón</p>
+        <p class="cl-role"><span data-i18n="eyebrow">Ingeniero de Software</span> · <span data-i18n="tagline">Desarrollador Full Stack</span></p>
+        <p class="cl-contacts" dir="ltr">eneekoruiz@gmail.com · +34 600 02 51 61 · linkedin.com/in/eneko-ruiz-421254410 · github.com/eneekoruiz</p>
+      </header>
+      <h2 class="cl-title" id="cl-print-title" data-i18n="letter_title">Carta de presentación</h2>
+      <div class="cl-body">
+        <p class="cl-p"><span data-i18n="letter_p1">p1</span></p>
+        <p class="cl-p"><strong class="cl-lead" data-i18n="letter_lead_2">l2</strong> <span data-i18n="letter_print_p2">p2</span></p>
+        <p class="cl-p"><strong class="cl-lead" data-i18n="letter_lead_3">l3</strong> <span data-i18n="letter_p3">p3</span></p>
+        <p class="cl-p"><strong class="cl-lead" data-i18n="letter_lead_4">l4</strong> <span data-i18n="letter_p4">p4</span></p>
+        <p class="cl-p"><span data-i18n="letter_close">close</span></p>
+      </div>
+      <p class="cl-sign"><span data-i18n="letter_sign">Un saludo,</span><br><strong>Eneko Ruiz Mollón</strong></p>
+    </section>
+
     <div class="wrapper">
 
       <div class="hero">
       <header class="site-header reveal">
         <div class="header-main">
-          <img class="header-photo" src="foto.webp" alt="Eneko Ruiz Mollón" width="96" height="96" loading="eager" decoding="async">
+          <img class="header-photo" src="foto-small.jpg" alt="Eneko Ruiz Mollón" width="96" height="96" loading="eager" decoding="async">
           <div class="header-id">
             <h1><strong>Eneko</strong> Ruiz Mollón</h1>
             <p class="eyebrow">
@@ -561,6 +588,48 @@
           <h3 id="photo-name" class="photo-name">Eneko Ruiz Mollón</h3>
           <p class="photo-role" data-i18n="eyebrow">Ingeniero de Software</p>
           <p class="photo-loc" data-i18n="location">Rentería (Gipuzkoa), España · Presencial, híbrido o remoto</p>
+        </div>
+      </div>
+    </dialog>
+    <dialog id="letter-dialog" class="letter-dialog hide-print" aria-labelledby="cl-web-title">
+      <div class="letter-card">
+        <button id="letter-close-btn" class="photo-close" type="button" data-i18n="aria_close" aria-label="Cerrar">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+          </svg>
+        </button>
+        <h3 class="cl-web-title" id="cl-web-title" data-i18n="letter_title">Carta de presentación</h3>
+        <div class="cl-web-body">
+        <p class="cl-p"><span data-i18n="letter_p1">p1</span></p>
+        <p class="cl-p"><strong class="cl-lead" data-i18n="letter_lead_2">l2</strong> <span data-i18n="letter_web_p2">p2</span></p>
+        <p class="cl-p"><strong class="cl-lead" data-i18n="letter_lead_3">l3</strong> <span data-i18n="letter_p3">p3</span></p>
+        <p class="cl-p"><strong class="cl-lead" data-i18n="letter_lead_4">l4</strong> <span data-i18n="letter_p4">p4</span></p>
+        <p class="cl-p"><span data-i18n="letter_close">close</span></p>
+        </div>
+        <p class="cl-sign"><span data-i18n="letter_sign">Un saludo,</span><br><strong>Eneko Ruiz Mollón</strong></p>
+      </div>
+    </dialog>
+    <dialog id="print-dialog" class="opt-dialog hide-print" aria-labelledby="opt-title">
+      <div class="opt-card">
+        <button id="opt-close-btn" class="photo-close" type="button" data-i18n="aria_close" aria-label="Cerrar">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+          </svg>
+        </button>
+        <h3 class="opt-title" id="opt-title" data-i18n="opt_title">Opciones del PDF</h3>
+        <label class="opt-row">
+          <input type="checkbox" id="opt-photo" class="opt-input" checked>
+          <span class="opt-switch" aria-hidden="true"></span>
+          <span class="opt-text"><strong data-i18n="opt_photo">Incluir foto</strong></span>
+        </label>
+        <label class="opt-row">
+          <input type="checkbox" id="opt-letter" class="opt-input">
+          <span class="opt-switch" aria-hidden="true"></span>
+          <span class="opt-text"><strong data-i18n="opt_letter">Incluir carta de presentación</strong><small data-i18n="opt_letter_hint">Una página aparte, antes del currículum.</small></span>
+        </label>
+        <div class="opt-actions">
+          <button id="opt-download" class="opt-btn opt-btn-main" type="button" data-i18n="pdf_download">Descargar PDF</button>
+          <button id="opt-print" class="opt-btn" type="button" data-i18n="opt_print">Imprimir</button>
         </div>
       </div>
     </dialog>

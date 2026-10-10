@@ -3,6 +3,7 @@
 //  - no sideways scrolling and no visible element outside the viewport
 //  - no text clipped by its own box (overflow hidden/ellipsis)
 //  - the language menu fits the screen when open
+//  - the cover letter and PDF options dialogs open whole inside the screen; the letter scrolls to its signature
 //  - the PDF preview appears whole on hover, stays while the PDF is prepared and hides when the toast shows
 //  - tap targets on phones are at least 24×24 CSS px (WCAG 2.2, 2.5.8)
 //  - no JavaScript errors and no failed requests
@@ -99,6 +100,37 @@ for (const lang of LANGS) {
       await page.waitForTimeout(600);
       p = await previewState();
       if (p.shown) issues.push('PDF preview stays visible after the download finished');
+    }
+    // Dialogs: whole inside the screen, nothing cut; the long letter scrolls inside its card down to the signature
+    for (const [opener, dialogId, scrolls] of [['#letter-btn', 'letter-dialog', true], ['#print-btn', 'print-dialog', false]]) {
+      await page.evaluate(() => document.getElementById('lang-menu').classList.remove('open'));
+      await page.keyboard.press('Escape');
+      await page.evaluate(() => { document.getElementById('print-btn').removeAttribute('data-loading'); document.getElementById('print-btn').classList.remove('is-success'); });
+      await page.click(opener, { force: true });
+      await page.waitForTimeout(300);
+      const box = await page.evaluate(async (id) => {
+        const dialog = document.getElementById(id);
+        const r = dialog.getBoundingClientRect();
+        const card = dialog.firstElementChild;
+        let cut = '';
+        for (const el of dialog.querySelectorAll('*')) {
+          const e = el.getBoundingClientRect();
+          if (!e.width || !e.height || getComputedStyle(el).visibility === 'hidden' || el.closest('svg') || el.matches('.opt-input')) continue;
+          if (e.left < r.left - 1 || e.right > r.right + 1) cut = `${el.tagName.toLowerCase()}.${String(el.className).split(' ')[0]} [${Math.round(e.left)}, ${Math.round(e.right)}] outside the dialog [${Math.round(r.left)}, ${Math.round(r.right)}]`;
+        }
+        card.scrollTop = card.scrollHeight;
+        const sign = dialog.querySelector('.cl-sign');
+        const s = sign && sign.getBoundingClientRect();
+        const c = card.getBoundingClientRect();
+        return { open: dialog.open, l: r.left, r: r.right, t: r.top, b: r.bottom, cut, signature: s ? { top: s.top, bottom: s.bottom, cardBottom: c.bottom } : null };
+      }, dialogId);
+      if (!box.open) issues.push(`${dialogId} did not open`);
+      else {
+        if (box.l < -1 || box.r > width + 1 || box.t < -1 || box.b > height + 1) issues.push(`${dialogId} outside the screen [${Math.round(box.l)}, ${Math.round(box.r)}] top ${Math.round(box.t)} bottom ${Math.round(box.b)}`);
+        if (box.cut) issues.push(`${dialogId}: ${box.cut}`);
+        if (scrolls && box.signature && box.signature.bottom > box.signature.cardBottom + 1) issues.push(`${dialogId}: the signature cannot be scrolled into view`);
+      }
+      await page.keyboard.press('Escape');
     }
     for (const issue of new Set(issues)) failures.push(`${lang} ${width}×${height}: ${issue}`);
     await page.close();

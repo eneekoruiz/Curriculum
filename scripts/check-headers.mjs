@@ -30,8 +30,10 @@ await page.click('.contact-row[data-copy]');                       // copy-to-cl
 await page.waitForTimeout(400);
 if (!(await page.evaluate(() => !!document.querySelector('.copy-tip')))) problems.push('the copy toast did not appear');
 
+await page.click('#print-btn');                                    // PDF options dialog
+await page.locator('label.opt-row:has(#opt-letter)').click();     // with the cover letter
 const download = page.waitForEvent('download', { timeout: 20000 }).catch(() => null);
-await page.click('#print-btn');                                    // PDF download + success toast
+await page.click('#opt-download');                                 // PDF download + success toast
 const file = await download;
 if (!file) {
   problems.push('the PDF button did not download a file');
@@ -47,6 +49,11 @@ await page.waitForTimeout(400);
 if (!(await page.evaluate(() => document.getElementById('photo-dialog')?.open))) problems.push('the photo dialog did not open');
 await page.click('#photo-close-btn').catch(() => problems.push('the photo close button could not be clicked'));
 await page.waitForTimeout(400);
+await page.click('#letter-btn').catch(() => problems.push('the letter button could not be clicked'));
+await page.waitForTimeout(400);
+if (!(await page.evaluate(() => document.getElementById('letter-dialog')?.open))) problems.push('the cover letter dialog did not open');
+await page.click('#letter-close-btn').catch(() => problems.push('the letter close button could not be clicked'));
+await page.waitForTimeout(400);
 for (const violation of new Set(await page.evaluate(() => window.__csp))) problems.push(`securitypolicyviolation: ${violation}`);
 
 await browser.close();
@@ -56,5 +63,5 @@ if (problems.length) {
   console.error(`\n${problems.length} problem(s) under the production headers`);
   process.exit(1);
 }
-console.log('headers: no CSP violations or console errors while using language, theme, copy, PDF and vCard under the production headers.');
+console.log('headers: no CSP violations or console errors while using language, theme, copy, PDF (with the cover letter), vCard, photo and letter under the production headers.');
 console.log('\nAll header checks OK.');

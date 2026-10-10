@@ -1,4 +1,5 @@
-// WCAG 2.1 AA audit with axe-core: light and dark theme, desktop and phone, LTR and RTL.
+// WCAG 2.1 AA audit with axe-core: light and dark theme, desktop and phone, LTR and RTL; the page itself
+// and each dialog (photo, cover letter, PDF options) open.
 import AxeBuilder from '@axe-core/playwright';
 import { startServer, launch } from './lib.mjs';
 
@@ -18,16 +19,26 @@ try {
     await page.setViewportSize(viewport);
     await page.goto(`${origin}/?lang=${lang}&theme=${theme}`, { waitUntil: 'networkidle' });
     await page.waitForFunction(() => !document.documentElement.classList.contains('cv-loading'));
-    const { violations } = await new AxeBuilder({ page })
-      .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'best-practice'])
-      .analyze();
+    const audit = async (label, openWith) => {
+      if (openWith) {
+        await page.click(openWith);
+        await page.waitForTimeout(150);
+      }
+      const { violations } = await new AxeBuilder({ page })
+        .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'best-practice'])
+        .analyze();
+      if (!violations.length) console.log(`✓ ${label}`);
+      for (const v of violations) {
+        total++;
+        console.log(`✗ ${label}  [${v.impact}] ${v.id}: ${v.help}`);
+        for (const node of v.nodes.slice(0, 6)) console.log(`     ${node.target.join(' ')}  ${node.failureSummary.split('\n').slice(1, 2).join(' ').trim()}`);
+      }
+      if (openWith) await page.keyboard.press('Escape');
+    };
     const label = `${lang} ${theme} ${viewport.width}x${viewport.height}`;
-    if (!violations.length) console.log(`✓ ${label}`);
-    for (const v of violations) {
-      total++;
-      console.log(`✗ ${label}  [${v.impact}] ${v.id}: ${v.help}`);
-      for (const node of v.nodes.slice(0, 6)) console.log(`     ${node.target.join(' ')}  ${node.failureSummary.split('\n').slice(1, 2).join(' ').trim()}`);
-    }
+    await audit(label);
+    await audit(`${label} · letter dialog`, '#letter-btn');
+    await audit(`${label} · PDF options dialog`, '#print-btn');
     await page.close();
   }
 } finally {

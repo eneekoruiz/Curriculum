@@ -14,14 +14,14 @@ Ingeniería Informática — UPV/EHU · Inglés C1 · Euskera C1
 
 ---
 
-CV interactivo construido con HTML, CSS y JavaScript vanilla — sin dependencias, sin build step. PDF pregenerado en 24 idiomas, optimizado para ATS y una sola página A4.
+CV interactivo construido con HTML, CSS y JavaScript vanilla — sin dependencias, sin build step. PDF pregenerado en 23 idiomas, optimizado para ATS y una sola página A4. Cada idioma incluye carta de presentación y se descarga con o sin foto y con o sin carta.
 
 ### Estructura
 
 - **`index.html` · `index.css` · `index.js`** — La web completa, sin build
-- **`translations.js`** — Contenido del CV en 24 idiomas
+- **`translations.js`** — Contenido del CV y de la carta de presentación en 23 idiomas
 - **`print.css`** — Layout A4 de una columna, compatible con ATS
-- **`pdf/`** — PDFs pregenerados por idioma
+- **`pdf/`** — PDFs pregenerados por idioma y variante (`_NoPhoto`, `_Letter`, `_Letter_NoPhoto`)
 - **`og.png`** — Tarjeta social (WhatsApp, LinkedIn, Twitter)
 - **`api/pdf.js`** — Función Vercel que renderiza PDF bajo demanda
 - **`scripts/`** — Herramientas de build y calidad (Playwright)
@@ -31,7 +31,7 @@ CV interactivo construido con HTML, CSS y JavaScript vanilla — sin dependencia
 ```bash
 cd scripts && npm install
 npx playwright install chromium   # solo la primera vez
-npm run build    # regenera pdf/*.pdf + print-zoom.js
+npm run build    # regenera pdf/*.pdf (4 variantes por idioma) + print-zoom.js
 npm run og       # regenera og.png
 npm run check    # PDF de una página y ATS, web, maquetación responsive (18 tamaños) y WCAG AA
 ```

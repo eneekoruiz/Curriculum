@@ -245,12 +245,44 @@ const forcePrintReadyState = () => {
 };
 
 
-// Every language ships a pre-rendered PDF (scripts/build-pdfs.mjs): instant and reliable.
-// /api/pdf stays as a fallback for a language without one.
+/* ── PDF options: photo and cover letter ─────────────────────────────
+   Chosen in the download dialog and remembered. They are classes on <html> that print.css reads, so
+   Ctrl+P, the pre-rendered PDFs (scripts/build-pdfs.mjs) and /api/pdf all lay the page out the same way. */
+const printOptions = { photo: true, letter: false };
+
+const applyPrintOptions = () => {
+  html.classList.toggle('opt-no-photo', !printOptions.photo);
+  html.classList.toggle('opt-letter', printOptions.letter);
+};
+
+const loadPrintOptions = () => {
+  try {
+    const saved = JSON.parse(safeStorage.get('cv-print-options') || '{}');
+    printOptions.photo = saved.photo !== false;
+    printOptions.letter = saved.letter === true;
+  } catch (error) {
+    console.debug('Saved PDF options ignored:', error);
+  }
+  applyPrintOptions();
+};
+
+const setPrintOption = (name, value) => {
+  printOptions[name] = value;
+  safeStorage.set('cv-print-options', JSON.stringify(printOptions));
+  applyPrintOptions();
+};
+
+/** File-name suffix of the chosen variant: "", "_NoPhoto", "_Letter" or "_Letter_NoPhoto". */
+const pdfVariantSuffix = () => `${printOptions.letter ? '_Letter' : ''}${printOptions.photo ? '' : '_NoPhoto'}`;
+
+const getPdfFileName = () => `Eneko_Ruiz_CV_${(currentLang || 'es').toUpperCase()}${pdfVariantSuffix()}.pdf`;
+
+// Every language ships all four pre-rendered variants (scripts/build-pdfs.mjs): instant and reliable.
+// /api/pdf stays as a fallback for a language without them.
 const getPdfDownloadUrl = () => {
   const lang = currentLang || 'es';
-  if (window.PRINT_ZOOM && lang in window.PRINT_ZOOM) {
-    const staticPdfUrl = new URL(`/pdf/Eneko_Ruiz_CV_${lang.toUpperCase()}.pdf`, window.location.origin);
+  if (window.PRINT_FIT && lang in window.PRINT_FIT) {
+    const staticPdfUrl = new URL(`/pdf/${getPdfFileName()}`, window.location.origin);
     staticPdfUrl.searchParams.set('v', window.PDF_VERSION || '1');
     return staticPdfUrl.toString();
   }
@@ -262,6 +294,12 @@ const getPdfDownloadUrl = () => {
 const getDynamicPdfUrl = () => {
   const pdfUrl = new URL('/api/pdf', window.location.origin);
   pdfUrl.searchParams.set('lang', currentLang || 'es');
+  if (!printOptions.photo) {
+    pdfUrl.searchParams.set('photo', '0');
+  }
+  if (printOptions.letter) {
+    pdfUrl.searchParams.set('letter', '1');
+  }
   return pdfUrl.toString();
 };
 
@@ -327,7 +365,7 @@ const downloadGeneratedPdf = async (printButton, options = {}) => {
     const objectUrl = URL.createObjectURL(pdfBlob);
     const link = document.createElement('a');
     link.href = objectUrl;
-    link.download = `Eneko_Ruiz_CV_${(currentLang || 'es').toUpperCase()}.pdf`;
+    link.download = getPdfFileName();
     link.rel = 'noopener';
     document.body.appendChild(link);
     link.click();
@@ -449,8 +487,8 @@ const placePdfPreview = () => {
 };
 
 /**
- * Triggers CV export with a reliable path per runtime.
- * Desktop top-level windows use native print; iframes and mobile use the PDF endpoint.
+ * Downloads the CV as a PDF with the current options. Used by the download dialog, by the embedding
+ * portfolio (postMessage) and by ?print.
  */
 window.handlePrint = async () => {
   const printButton = document.getElementById('print-btn');
@@ -641,11 +679,28 @@ window.fitRoleLine = () => {
   }
 };
 
+/** The cover letter must fill no more than its own A4 page: shrink it until it does. */
+window.fitLetterToOnePage = () => {
+  const letter = document.getElementById('letter-print');
+  if (!letter || getComputedStyle(letter).display === 'none') {
+    return 1;
+  }
+  letter.style.zoom = '';
+  const availableHeight = (((297 - 19) * 96) / 25.4) * 0.985;
+  let zoom = 1;
+  while (letter.getBoundingClientRect().height > availableHeight && zoom > 0.7) {
+    zoom = Math.round((zoom - 0.01) * 100) / 100;
+    letter.style.zoom = String(zoom);
+  }
+  return zoom;
+};
+
 window.fitPrintToOnePage = () => {
   const wrapper = document.querySelector('.wrapper');
   if (!wrapper) {
     return 1;
   }
+  window.fitLetterToOnePage();
   wrapper.style.zoom = '';
   // 1.5% headroom for line-box rounding between screen layout and the PDF renderer
   const availableHeight = (((297 - 19) * 96) / 25.4) * 0.985;
@@ -681,15 +736,19 @@ const setupPrintScale = () => {
   if (!wrapper) {
     return;
   }
+  const letter = document.getElementById('letter-print');
+  const role = document.querySelector('.header-id .eyebrow');
   let applied = false;
   window.addEventListener('beforeprint', () => {
-    const zoom = window.PRINT_ZOOM && window.PRINT_ZOOM[currentLang];
-    if (zoom && !wrapper.style.zoom) {
-      wrapper.style.zoom = String(zoom);
-      const roleSize = window.PRINT_ROLE && window.PRINT_ROLE[currentLang];
-      const role = document.querySelector('.header-id .eyebrow');
-      if (roleSize && role) {
-        role.style.fontSize = `${roleSize}px`;
+    const fit = window.PRINT_FIT && window.PRINT_FIT[currentLang];
+    if (fit && !wrapper.style.zoom) {
+      const cv = printOptions.photo ? fit.photo : fit.nophoto;
+      wrapper.style.zoom = String(cv.zoom);
+      if (cv.role && role) {
+        role.style.fontSize = `${cv.role}px`;
+      }
+      if (printOptions.letter && letter) {
+        letter.style.zoom = String(fit.letter);
       }
       applied = true;
     }
@@ -697,7 +756,9 @@ const setupPrintScale = () => {
   window.addEventListener('afterprint', () => {
     if (applied) {
       wrapper.style.zoom = '';
-      const role = document.querySelector('.header-id .eyebrow');
+      if (letter) {
+        letter.style.zoom = '';
+      }
       if (role) {
         role.style.fontSize = '';
       }
@@ -847,27 +908,55 @@ const setupScrollReveal = () => {
   }
 
   // Setup action triggers
-  const printButton = document.getElementById('print-btn');
-  if (printButton) {
-    printButton.addEventListener('click', handlePrint);
-  }
-
-  const photoButton = document.getElementById('photo-btn');
-  const photoDialog = document.getElementById('photo-dialog');
-  const photoCloseBtn = document.getElementById('photo-close-btn');
-  if (photoButton && photoDialog) {
-    photoButton.addEventListener('click', () => {
-      photoDialog.showModal();
-    });
-    if (photoCloseBtn) {
-      photoCloseBtn.addEventListener('click', () => {
-        photoDialog.close();
-      });
+  /** Opens a <dialog> from its button; closes on the X button, a click on the backdrop or Escape. */
+  const wireDialog = (openButton, dialog, closeButton, onOpen) => {
+    if (!openButton || !dialog) {
+      return;
     }
-    photoDialog.addEventListener('click', (event) => {
-      if (event.target === photoDialog) {
-        photoDialog.close();
+    openButton.addEventListener('click', () => {
+      if (onOpen) {
+        onOpen();
       }
+      dialog.showModal();
+    });
+    if (closeButton) {
+      closeButton.addEventListener('click', () => dialog.close());
+    }
+    dialog.addEventListener('click', (event) => {
+      if (event.target === dialog) {
+        dialog.close();
+      }
+    });
+  };
+
+  wireDialog(document.getElementById('photo-btn'), document.getElementById('photo-dialog'),
+    document.getElementById('photo-close-btn'));
+  wireDialog(document.getElementById('letter-btn'), document.getElementById('letter-dialog'),
+    document.getElementById('letter-close-btn'));
+
+  const printDialog = document.getElementById('print-dialog');
+  const photoOption = document.getElementById('opt-photo');
+  const letterOption = document.getElementById('opt-letter');
+  const nativePrintButton = document.getElementById('opt-print');
+  wireDialog(document.getElementById('print-btn'), printDialog, document.getElementById('opt-close-btn'), () => {
+    photoOption.checked = printOptions.photo;
+    letterOption.checked = printOptions.letter;
+    // Native print only where it works well: a top-level desktop window
+    const { isEmbedded, isMobile } = getRuntimeContext();
+    nativePrintButton.hidden = isEmbedded || isMobile;
+  });
+  if (printDialog) {
+    photoOption.addEventListener('change', () => setPrintOption('photo', photoOption.checked));
+    letterOption.addEventListener('change', () => setPrintOption('letter', letterOption.checked));
+    document.getElementById('opt-download').addEventListener('click', () => {
+      printDialog.close();
+      handlePrint();
+    });
+    nativePrintButton.addEventListener('click', () => {
+      printDialog.close();
+      forcePrintReadyState();
+      // Let the dialog finish closing so it is not part of the printout
+      setTimeout(() => window.print(), 80);
     });
   }
 
@@ -1039,6 +1128,8 @@ const setupScrollReveal = () => {
     document.documentElement.classList.add('pdf-render');
     return;
   }
+
+  loadPrintOptions();
 
   // Direct headless print query (?print)
   if (urlParameters.has('print')) {

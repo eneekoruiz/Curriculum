@@ -91,6 +91,9 @@ module.exports = async function handler(request, response) {
   try {
     const rawLang = String(request.query?.lang || 'es').slice(0, 5).replace(/[^a-z]/gi, '').toLowerCase();
     const lang = VALID_LANGS.includes(rawLang) ? rawLang : 'es';
+    // Same options as the download dialog: ?photo=0 leaves the photo out, ?letter=1 puts the cover letter first
+    const withPhoto = String(request.query?.photo) !== '0';
+    const withLetter = String(request.query?.letter) === '1';
     const protocol = request.headers['x-forwarded-proto'] || 'https';
     const host = request.headers['x-forwarded-host'] || request.headers.host;
     const targetUrl = new URL(`/?pdf=1&lang=${lang}&theme=light`, `${protocol}://${host}`);
@@ -126,8 +129,10 @@ module.exports = async function handler(request, response) {
     // Lay out at the printable A4 width (210mm - 2 × 13mm) so the one-page check measures the real page.
     await page.setViewport({ width: 695, height: 1051, deviceScaleFactor: 1 });
     await page.emulateMediaType('print');
-    await page.evaluate(async () => {
+    await page.evaluate(async (withPhoto, withLetter) => {
       document.documentElement.classList.add('pdf-render', 'print-ready');
+      document.documentElement.classList.toggle('opt-no-photo', !withPhoto);
+      document.documentElement.classList.toggle('opt-letter', withLetter);
       document.querySelectorAll('.reveal').forEach((element) => element.classList.add('visible'));
       window.scrollTo(0, 0);
 
@@ -151,7 +156,7 @@ module.exports = async function handler(request, response) {
       if (typeof window.fitPrintToOnePage === 'function') {
         window.fitPrintToOnePage();
       }
-    });
+    }, withPhoto, withLetter);
     await new Promise(resolve => setTimeout(resolve, 40));
 
     // Guarantee one page: if this Chromium lays it out slightly longer, shrink 1% and re-render
@@ -162,10 +167,11 @@ module.exports = async function handler(request, response) {
       displayHeaderFooter: false,
       preferCSSPageSize: true
     });
-    // Raw Chromium output has a single "/Type /Page" dictionary only when the PDF is one page
-    const isMultiPage = (buffer) => (buffer.toString('latin1').match(/\/Type\s*\/Page(?!s)/g) || []).length > 1;
+    // Raw Chromium output has one "/Type /Page" dictionary per page: the CV is one page, the letter another
+    const expectedPages = withLetter ? 2 : 1;
+    const isTooLong = (buffer) => (buffer.toString('latin1').match(/\/Type\s*\/Page(?!s)/g) || []).length > expectedPages;
     let pdfBuffer = await renderPdf();
-    for (let attempt = 0; attempt < 10 && isMultiPage(pdfBuffer); attempt++) {
+    for (let attempt = 0; attempt < 10 && isTooLong(pdfBuffer); attempt++) {
       await page.evaluate(() => {
         const wrapper = document.querySelector('.wrapper');
         const zoom = parseFloat(wrapper.style.zoom || '1') - 0.01;
@@ -180,7 +186,7 @@ module.exports = async function handler(request, response) {
     response.setHeader('Access-Control-Allow-Origin', '*');
     response.setHeader('Content-Type', 'application/pdf');
     response.setHeader('Content-Length', pdfBuffer.length);
-    response.setHeader('Content-Disposition', `attachment; filename="Eneko_Ruiz_CV_${lang.toUpperCase()}.pdf"`);
+    response.setHeader('Content-Disposition', `attachment; filename="Eneko_Ruiz_CV_${lang.toUpperCase()}${withLetter ? '_Letter' : ''}${withPhoto ? '' : '_NoPhoto'}.pdf"`);
     response.setHeader('Cache-Control', 'private, max-age=300, stale-while-revalidate=86400');
     response.setHeader('X-Content-Type-Options', 'nosniff');
     response.status(200).end(pdfBuffer);

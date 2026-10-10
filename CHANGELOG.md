@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.3.0] - 2026-10-10
+
+### Added
+- Cover letter ("Carta de presentación") in all 23 languages, with two texts adapted to where it is read: the web shows it in a dialog (`#letter-btn`) and mentions this very site as proof of the care put into the work; paper and PDF use their own wording, which points to the QR code in the header instead.
+- PDF options dialog: clicking the download button now asks whether to include the photo and the cover letter (choice remembered). Four pre-rendered variants per language: `Eneko_Ruiz_CV_XX.pdf`, `_NoPhoto`, `_Letter` and `_Letter_NoPhoto` (92 files). The letter is its own A4 page before the CV; the CV page keeps its one-page fit. "Print" uses the browser's native printing with the same options (desktop only); Ctrl+P follows the saved choice.
+- `/api/pdf` accepts `photo=0` and `letter=1`, so the on-demand fallback produces the same variants.
+- Checks: the options and the letter are exercised end to end (dialogs, remembered choice, downloaded variant, Ctrl+P in all four variants), both dialogs are audited for WCAG and fit every screen size, and the build verifies each variant's page count and reading order.
+
+### Changed
+- The header photo is now `foto-small.jpg` (360 px, 18 KB), which the PDF embeds as it is: each PDF went from ~1 MB to ~90 KB, well under the size limits of application portals.
+- `print-zoom.js` now exports `PRINT_FIT` (scale and role-line size per language, with and without the photo, plus the letter's scale) instead of `PRINT_ZOOM` / `PRINT_ROLE`.
+
+### Fixed
+- `--c-subtle` (hover and background of the photo dialog) was never defined; it now uses `--c-surface`.
+
 ## [2.2.2] - 2026-10-08
 
 ### Fixed

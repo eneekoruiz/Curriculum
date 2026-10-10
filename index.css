@@ -2478,7 +2478,7 @@ html.scroll-reveal .dashboard > section.is-instant {
 
 .photo-close:hover {
   color: var(--c-ink);
-  background: var(--c-subtle);
+  background: var(--c-surface);
   transform: rotate(90deg);
 }
 
@@ -2495,7 +2495,7 @@ html.scroll-reveal .dashboard > section.is-instant {
   border: 3px solid var(--c-bg);
   box-shadow: 0 0 0 1.5px var(--c-rule-2), 0 12px 28px -6px rgba(0, 0, 0, 0.2);
   margin-bottom: 16px;
-  background: var(--c-subtle);
+  background: var(--c-surface);
 }
 
 .photo-img {
@@ -2525,4 +2525,237 @@ html.scroll-reveal .dashboard > section.is-instant {
   color: var(--c-ink-3);
   margin: 0;
   line-height: 1.4;
+}
+
+/* ── Cover letter & PDF options ──────────────────────────────────────────
+   #letter-print is only for paper/PDF (print.css shows it when "include letter" is on);
+   the web reads the letter in #letter-dialog, with its own, web-adapted text. */
+.letter-page {
+  display: none;
+}
+
+.letter-dialog,
+.opt-dialog {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  margin: auto;
+  border-radius: 16px;
+  box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.28), 0 0 0 1px var(--c-rule-2);
+  color: var(--c-ink);
+  overflow: visible;
+}
+
+.letter-dialog {
+  width: min(94vw, 680px);
+}
+
+.opt-dialog {
+  width: min(92vw, 400px);
+}
+
+.letter-dialog::backdrop,
+.opt-dialog::backdrop {
+  background: rgba(15, 15, 18, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.letter-card,
+.opt-card {
+  position: relative;
+  background: var(--c-bg);
+  border-radius: 16px;
+}
+
+.letter-card {
+  max-height: min(90vh, 900px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 40px 40px 32px;
+}
+
+.opt-card {
+  padding: 32px 24px 24px;
+}
+
+.cl-web-title,
+.opt-title {
+  font-family: var(--f-display);
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--c-ink);
+  margin: 0 0 20px;
+  padding-inline-end: 40px;
+}
+
+.cl-web-body {
+  display: grid;
+  gap: 14px;
+  font-size: 15.5px;
+  line-height: 1.65;
+  color: var(--c-ink-2);
+}
+
+.cl-p {
+  margin: 0;
+}
+
+.cl-lead {
+  font-weight: 700;
+  color: var(--c-brand-ink);
+}
+
+.cl-sign {
+  margin: 22px 0 0;
+  font-size: 15.5px;
+  line-height: 1.5;
+  color: var(--c-ink-2);
+}
+
+.cl-sign strong {
+  font-family: var(--f-display);
+  font-size: 17px;
+  color: var(--c-ink);
+}
+
+/* Switch rows */
+.opt-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 14px 0;
+  border-top: 1px solid var(--c-rule-2);
+  cursor: pointer;
+}
+
+.opt-input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+
+.opt-switch {
+  position: relative;
+  flex: 0 0 auto;
+  width: 40px;
+  height: 24px;
+  margin-top: 1px;
+  border-radius: 99px;
+  background: var(--c-rule-2);
+  transition: background var(--dur) var(--ease);
+}
+
+.opt-switch::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  transition: transform var(--dur) var(--ease);
+}
+
+[dir="rtl"] .opt-switch::after {
+  left: auto;
+  right: 3px;
+}
+
+.opt-input:checked + .opt-switch {
+  background: var(--c-brand-ink);
+}
+
+.opt-input:checked + .opt-switch::after {
+  transform: translateX(16px);
+}
+
+[dir="rtl"] .opt-input:checked + .opt-switch::after {
+  transform: translateX(-16px);
+}
+
+.opt-input:focus-visible + .opt-switch {
+  outline: 2px solid var(--c-brand-ink);
+  outline-offset: 3px;
+}
+
+.opt-text {
+  display: grid;
+  gap: 2px;
+  font-size: 15px;
+  line-height: 1.35;
+  color: var(--c-ink);
+}
+
+.opt-text small {
+  font-size: 12.5px;
+  color: var(--c-ink-3);
+}
+
+.opt-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+  padding-top: 18px;
+  border-top: 1px solid var(--c-rule-2);
+}
+
+.opt-btn {
+  flex: 1 1 auto;
+  min-height: 44px;
+  padding: 10px 18px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--c-ink);
+  background: transparent;
+  border: 1px solid var(--c-rule-2);
+  border-radius: 99px;
+  cursor: pointer;
+  transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+
+.opt-btn:hover {
+  border-color: var(--c-brand-ink);
+  background: var(--c-surface);
+}
+
+.opt-btn-main {
+  color: #fff;
+  background: var(--c-brand-ink);
+  border-color: var(--c-brand-ink);
+}
+
+[data-theme="dark"] .opt-btn-main {
+  color: #020617;
+}
+
+.opt-btn-main:hover {
+  background: var(--c-brand-ink);
+  filter: brightness(1.08);
+}
+
+.opt-btn:focus-visible {
+  outline: 2px solid var(--c-brand-ink);
+  outline-offset: 2px;
+}
+
+.opt-btn[hidden] {
+  display: none;
+}
+
+@media (max-width: 540px) {
+  .letter-card {
+    padding: 32px 22px 24px;
+  }
+
+  .cl-web-body,
+  .cl-sign {
+    font-size: 15px;
+  }
 }
