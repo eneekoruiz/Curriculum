@@ -1991,6 +1991,7 @@ Object.entries(T).forEach(([lang, copy]) => {
   copy.footer_text = 'Eneko Ruiz Mollón';
   copy.btn_print = copy.pdf_download;
   copy.aria_print = copy.pdf_download;
+  copy.aria_print_opts = copy.opt_title;
   const p = PHOTO_LABELS[lang] || PHOTO_LABELS.en;
   copy.btn_photo = p.btn;
   copy.aria_photo = p.aria;

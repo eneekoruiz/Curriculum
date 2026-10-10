@@ -938,7 +938,8 @@ const setupScrollReveal = () => {
   const photoOption = document.getElementById('opt-photo');
   const letterOption = document.getElementById('opt-letter');
   const nativePrintButton = document.getElementById('opt-print');
-  wireDialog(document.getElementById('print-btn'), printDialog, document.getElementById('opt-close-btn'), () => {
+  document.getElementById('print-btn')?.addEventListener('click', () => { handlePrint(); });
+  wireDialog(document.getElementById('print-opts-btn'), printDialog, document.getElementById('opt-close-btn'), () => {
     photoOption.checked = printOptions.photo;
     letterOption.checked = printOptions.letter;
     // Native print only where it works well: a top-level desktop window
@@ -1154,6 +1155,7 @@ const setupScrollReveal = () => {
   }
 
 })();
+
 
 
 
