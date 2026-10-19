@@ -16,6 +16,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - "Download PDF with cover letter" in the menu: the same shortcut at any time.
 - Checks: the phone bar and its menu (every item, Escape, tap outside, the two downloads and the offer), the menu's size and position at all 18 screen sizes, and WCAG with the menu and every dialog open.
 
+### Fixed
+- WCAG 2.5.3 (Label in Name): the language selector, email, phone, contact card and letter buttons had an `aria-label` that did not contain their visible text, so voice control ("click Español") could not reach them. The accessible name now starts with the visible text. A newer axe-core flagged it in CI; the checks now run against it.
+
 ### Removed
 - The inline `style` of the PDF options button (blocked by the production Content-Security-Policy) and the "icons only" breakpoint it needed.
 

@@ -166,7 +166,42 @@ const applyTranslations = (langCode, activeMenuCode = langCode) => {
     menuItem.setAttribute('aria-selected', isActive ? 'true' : 'false');
   });
 
+  syncAccessibleNames();
   updateExportButtonLabel();
+};
+
+/**
+ * WCAG 2.5.3 (Label in Name): a control's accessible name must contain its visible text, or someone using
+ * voice control ("click Español") cannot reach it. Controls that carry a description as aria-label
+ * (language selector, email, phone, contact card...) get the visible text in front of it.
+ */
+const syncAccessibleNames = () => {
+  // Text that is on screen: not inside a display:none child (the contact labels are only for paper)
+  const shownText = (element) => {
+    const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+    const parts = [];
+    for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+      let hidden = false;
+      for (let parent = node.parentElement; parent && parent !== element.parentElement; parent = parent.parentElement) {
+        if (getComputedStyle(parent).display === 'none') {
+          hidden = true;
+          break;
+        }
+      }
+      if (!hidden && node.textContent.trim()) {
+        parts.push(node.textContent.trim());
+      }
+    }
+    return parts.join(' ');
+  };
+
+  document.querySelectorAll('[data-i18n^="aria_"][aria-label]').forEach(element => {
+    const visible = shownText(element);
+    const label = element.getAttribute('aria-label');
+    if (visible && !label.toLowerCase().includes(visible.toLowerCase())) {
+      element.setAttribute('aria-label', `${visible}, ${label}`);
+    }
+  });
 };
 
 /**
