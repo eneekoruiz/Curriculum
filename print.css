@@ -74,6 +74,15 @@ a {
   visibility: visible !important;
 }
 
+/* The screen-only portrait never reaches paper; the right column is transparent so the contacts keep their grid area */
+.portrait {
+  display: none !important;
+}
+
+.header-side {
+  display: contents;
+}
+
 /* ── Header ── */
 .site-header {
   display: grid;

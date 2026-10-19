@@ -6,6 +6,8 @@
 //  - printing the live page (Ctrl+P) stays on one page with all sections
 //  - the cover letter (web text in its dialog, paper text in the printout) and the PDF options (photo, letter):
 //    the choice is remembered, the right pre-rendered variant downloads, Ctrl+P follows the choice
+//  - the phone top bar (language · PDF · menu): the menu reaches every secondary action, the PDF is one tap,
+//    and a plain download offers the cover-letter variant
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { ROOT, VARIANTS, variantName, loadTranslations, startServer, launch, pdfText } from './lib.mjs';
@@ -160,6 +162,77 @@ try {
       if (emails !== (variant.letter ? 2 : 1)) fail(`Ctrl+P (${lang}${variantName(variant)}): the email appears ${emails} times, so the letter is ${variant.letter ? 'missing' : 'present though not chosen'}`);
       await fresh.close();
     }
+  }
+
+  // ── Phone top bar: language · PDF (one tap) · menu ──
+  {
+    const fresh = await browser.newContext({ acceptDownloads: true, viewport: { width: 390, height: 844 } });
+    const page = await fresh.newPage();
+    await page.goto(`${origin}/?lang=es`, { waitUntil: 'networkidle' });
+    await page.waitForFunction(() => !document.documentElement.classList.contains('cv-loading'));
+    const visible = (selector) => page.evaluate((s) => getComputedStyle(document.querySelector(s)).display !== 'none', selector);
+    for (const selector of ['#lang-trigger', '#print-btn', '#more-btn']) if (!(await visible(selector))) fail(`phone bar: ${selector} is not shown`);
+    for (const selector of ['#print-opts-btn', '#letter-btn', '#share-btn', '#photo-btn', '#theme-btn']) if (await visible(selector)) fail(`phone bar: ${selector} crowds the bar`);
+
+    const openMenu = async () => { await page.click('#more-btn'); await page.waitForTimeout(300); };
+    const choose = (text) => page.locator('#more-menu .mm-item', { hasText: text }).click();
+    await openMenu();
+    if ((await page.getAttribute('#more-btn', 'aria-expanded')) !== 'true') fail('phone bar: the menu does not report itself open');
+    await choose(T.es.letter_title);
+    if (!(await page.evaluate(() => document.getElementById('letter-dialog').open))) fail('phone menu: the letter item did not open the letter');
+    await page.keyboard.press('Escape');
+    await openMenu();
+    // "Photo" switches the opt-in portrait (off by default); the portrait opens the photo dialog
+    const portrait = () => page.evaluate(() => { const el = document.getElementById('portrait-btn'); const r = el.getBoundingClientRect(); return { on: document.documentElement.classList.contains('show-portrait'), w: Math.round(r.width), shown: getComputedStyle(el).display !== 'none', pressed: document.getElementById('mm-photo').getAttribute('aria-pressed') }; });
+    if ((await portrait()).shown) fail('portrait: shown by default, it must be opt-in');
+    await choose(T.es.btn_photo);
+    const shown = await portrait();
+    if (!shown.on || !shown.shown || shown.w < 120 || shown.pressed !== 'true') fail(`portrait (phone): after switching on it is ${JSON.stringify(shown)}`);
+    await page.click('#portrait-btn');
+    if (!(await page.evaluate(() => document.getElementById('photo-dialog').open))) fail('portrait (phone): a click did not open the photo dialog');
+    await page.keyboard.press('Escape');
+    await openMenu();
+    await choose(T.es.btn_photo);
+    if ((await portrait()).shown) fail('portrait (phone): switching off did not hide it');
+    await openMenu();
+    await choose(T.es.opt_title);
+    if (!(await page.evaluate(() => document.getElementById('print-dialog').open))) fail('phone menu: the options item did not open the PDF options');
+    await page.keyboard.press('Escape');
+    const theme = () => page.evaluate(() => document.documentElement.getAttribute('data-theme'));
+    const before = await theme();
+    await openMenu();
+    await choose(T.es.menu_theme);
+    await page.waitForTimeout(900);   // the theme change plays a short transition
+    if ((await theme()) === before) fail('phone menu: the theme item did not switch the theme');
+    await openMenu();
+    await page.mouse.click(20, 400);
+    if ((await page.getAttribute('#more-btn', 'aria-expanded')) !== 'false') fail('phone menu: a tap outside did not close it');
+
+    // The PDF button downloads at once; the offer after it gets the cover-letter variant; the menu has the same shortcut
+    const [plain] = await Promise.all([page.waitForEvent('download'), page.click('#print-btn')]);
+    if (plain.suggestedFilename() !== 'Eneko_Ruiz_CV_ES.pdf') fail(`phone PDF button: downloaded "${plain.suggestedFilename()}" instead of Eneko_Ruiz_CV_ES.pdf`);
+    await page.waitForSelector('.pdf-snack', { timeout: 5000 }).catch(() => fail('phone PDF button: no offer for the cover letter after the download'));
+    const [offered] = await Promise.all([page.waitForEvent('download'), page.click('.pdf-snack button')]);
+    if (offered.suggestedFilename() !== 'Eneko_Ruiz_CV_ES_Letter.pdf') fail(`phone PDF offer: downloaded "${offered.suggestedFilename()}"`);
+    if (await page.locator('.pdf-snack').count()) fail('phone PDF offer: it stays after being used');
+    await openMenu();
+    const [viaMenu] = await Promise.all([page.waitForEvent('download'), choose(T.es.menu_pdf_letter)]);
+    const letterPdf = await pdfText(readFileSync(await viaMenu.path()));
+    if (viaMenu.suggestedFilename() !== 'Eneko_Ruiz_CV_ES_Letter.pdf' || letterPdf.pages !== 2) fail(`phone menu: "PDF with letter" gave ${viaMenu.suggestedFilename()} with ${letterPdf.pages} pages`);
+    // ...and none of this changed the saved options
+    if ((await page.evaluate(() => localStorage.getItem('cv-print-options'))) !== null) fail('phone menu: asking for the letter changed the saved options');
+    await fresh.close();
+
+    const wide = await browser.newContext({ viewport: { width: 1366, height: 800 } });
+    const desktop = await wide.newPage();
+    await desktop.goto(`${origin}/?lang=es`, { waitUntil: 'networkidle' });
+    if (await desktop.evaluate(() => document.getElementById('more-btn').getBoundingClientRect().width > 0)) fail('wide bar: the phone menu button is shown');
+    await desktop.click('#photo-btn');
+    const big = await desktop.evaluate(() => document.getElementById('portrait-btn').getBoundingClientRect().width);
+    if (big < 150) fail(`portrait (wide): only ${Math.round(big)}px wide`);
+    await desktop.reload({ waitUntil: 'networkidle' });
+    if (!(await desktop.evaluate(() => document.documentElement.classList.contains('show-portrait')))) fail('portrait: the choice was not remembered');
+    await wide.close();
   }
   console.log('cover letter and PDF options checked');
 } finally {

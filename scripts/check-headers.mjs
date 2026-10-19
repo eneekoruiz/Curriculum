@@ -45,6 +45,8 @@ await page.waitForTimeout(600);
 await page.click('#vcard-btn').catch(() => problems.push('the vCard button could not be clicked'));
 await page.waitForTimeout(400);
 await page.click('#photo-btn').catch(() => problems.push('the photo button could not be clicked'));
+await page.waitForTimeout(300);
+await page.click('#portrait-btn').catch(() => problems.push('the portrait could not be clicked'));
 await page.waitForTimeout(400);
 if (!(await page.evaluate(() => document.getElementById('photo-dialog')?.open))) problems.push('the photo dialog did not open');
 await page.click('#photo-close-btn').catch(() => problems.push('the photo close button could not be clicked'));

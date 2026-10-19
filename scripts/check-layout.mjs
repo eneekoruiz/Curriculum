@@ -4,6 +4,8 @@
 //  - no text clipped by its own box (overflow hidden/ellipsis)
 //  - the language menu fits the screen when open
 //  - the cover letter and PDF options dialogs open whole inside the screen; the letter scrolls to its signature
+//  - the opt-in portrait, switched on: large, whole on screen, clear of the contacts, opens the photo dialog
+//  - the top bar: language · PDF · menu up to 920px (menu whole on screen, 44px targets), the full bar above it
 //  - the PDF preview appears whole on hover, stays while the PDF is prepared and hides when the toast shows
 //  - tap targets on phones are at least 24×24 CSS px (WCAG 2.2, 2.5.8)
 //  - no JavaScript errors and no failed requests
@@ -101,12 +103,56 @@ for (const lang of LANGS) {
       p = await previewState();
       if (p.shown) issues.push('PDF preview stays visible after the download finished');
     }
+    // Top bar: phones/tablets get language · PDF · menu; the secondary controls live in the menu
+    const bar = await page.evaluate(() => {
+      const shown = (selector) => { const el = document.querySelector(selector); return !!el && getComputedStyle(el).display !== 'none' && el.getBoundingClientRect().width > 0; };
+      return { more: shown('#more-btn'), pdf: shown('#print-btn'), others: ['#print-opts-btn', '#letter-btn', '#theme-btn'].filter(shown) };
+    });
+    if (width <= 920) {
+      if (!bar.more || !bar.pdf) issues.push('top bar: the PDF button or the menu button is missing');
+      if (bar.others.length) issues.push(`top bar: ${bar.others.join(', ')} still crowd the bar (they belong in the menu)`);
+      await page.evaluate(() => document.getElementById('lang-menu').classList.remove('open'));
+      await page.click('#more-btn');
+      await page.waitForTimeout(350);
+      const menu = await page.evaluate(() => {
+        const r = document.getElementById('more-menu').getBoundingClientRect();
+        const items = [...document.querySelectorAll('#more-menu .mm-item')].filter(i => i.getBoundingClientRect().height);
+        return { l: r.left, r: r.right, b: r.bottom, items: items.length, small: items.filter(i => i.getBoundingClientRect().height < 44).length, open: document.getElementById('more-btn').getAttribute('aria-expanded') };
+      });
+      if (menu.open !== 'true') issues.push('top bar: the menu button does not report the menu as open');
+      if (menu.l < -1 || menu.r > width + 1 || menu.b > height + 1) issues.push(`top bar: menu outside the screen [${Math.round(menu.l)}, ${Math.round(menu.r)}] bottom ${Math.round(menu.b)}`);
+      if (menu.items < 4 || menu.small) issues.push(`top bar: menu has ${menu.items} items, ${menu.small} under 44px tall`);
+      await page.keyboard.press('Escape');
+      if ((await page.evaluate(() => document.getElementById('more-btn').getAttribute('aria-expanded'))) !== 'false') issues.push('top bar: Escape does not close the menu');
+    } else if (bar.more) {
+      issues.push('top bar: the menu button shows on a wide screen');
+    }
+
+    // Opt-in portrait: big enough to matter, inside the screen, not on top of anything, opens the dialog
+    await page.evaluate(() => document.getElementById('photo-btn').click());
+    await page.waitForTimeout(200);
+    const portrait = await page.evaluate(() => {
+      const r = document.getElementById('portrait-btn').getBoundingClientRect();
+      const name = document.querySelector('h1').getBoundingClientRect();
+      const contacts = document.querySelector('.contacts').getBoundingClientRect();
+      const overlap = (a, b) => a.left < b.right - 1 && a.right > b.left + 1 && a.top < b.bottom - 1 && a.bottom > b.top + 1;
+      return { l: r.left, r: r.right, w: r.width, name: overlap(r, name), contacts: overlap(r, contacts), scroll: document.documentElement.scrollWidth };
+    });
+    if (portrait.w < 120) issues.push(`portrait: only ${Math.round(portrait.w)}px wide`);
+    if (portrait.l < -1 || portrait.r > width + 1 || portrait.scroll > width + 1) issues.push(`portrait: outside the screen [${Math.round(portrait.l)}, ${Math.round(portrait.r)}]`);
+    if (portrait.name || portrait.contacts) issues.push('portrait: overlaps the name or the contacts');
+    await page.click('#portrait-btn');
+    await page.waitForTimeout(250);
+    if (!(await page.evaluate(() => document.getElementById('photo-dialog').open))) issues.push('portrait: click does not open the photo dialog');
+    await page.keyboard.press('Escape');
+    await page.evaluate(() => document.getElementById('photo-btn').click());
+
     // Dialogs: whole inside the screen, nothing cut; the long letter scrolls inside its card down to the signature
     for (const [opener, dialogId, scrolls] of [['#letter-btn', 'letter-dialog', true], ['#print-opts-btn', 'print-dialog', false]]) {
       await page.evaluate(() => document.getElementById('lang-menu').classList.remove('open'));
       await page.keyboard.press('Escape');
       await page.evaluate(() => { document.getElementById('print-btn').removeAttribute('data-loading'); document.getElementById('print-btn').classList.remove('is-success'); });
-      await page.click(opener, { force: true });
+      await page.evaluate((selector) => document.querySelector(selector).click(), opener);
       await page.waitForTimeout(300);
       const box = await page.evaluate(async (id) => {
         const dialog = document.getElementById(id);
