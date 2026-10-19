@@ -233,65 +233,67 @@
       <div id="lang-menu" role="listbox" aria-label="Idiomas"></div>
     </div>
 
-    <button id="print-btn" class="ctrl" data-i18n="aria_print">
-      <div class="spinner" aria-hidden="true"></div>
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-        aria-hidden="true">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v11m0 0 4-4m-4 4-4-4M5 19h14" />
-      </svg>
-      <span data-i18n="btn_print">Imprimir CV</span>
-      <span class="pdf-short" aria-hidden="true">PDF</span>
+    <div class="pdf-split">
+      <button id="print-btn" class="ctrl" data-i18n="aria_print">
+        <div class="spinner" aria-hidden="true"></div>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+          aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v11m0 0 4-4m-4 4-4-4M5 19h14" />
+        </svg>
+        <span data-i18n="btn_print">Imprimir CV</span>
+        <span class="pdf-short" aria-hidden="true">PDF</span>
 
-      <div class="pdf-preview hide-print" aria-hidden="true">
-        <div class="pv-header">
-          <div class="pv-title-wrap">
-            <div class="pv-line eyebrow"></div>
-            <div class="pv-line name"></div>
+        <div class="pdf-preview hide-print" aria-hidden="true">
+          <div class="pv-header">
+            <div class="pv-title-wrap">
+              <div class="pv-line eyebrow"></div>
+              <div class="pv-line name"></div>
+            </div>
+            <div class="pv-flex-col">
+              <div class="pv-line contacts"></div>
+              <div class="pv-line contacts"></div>
+            </div>
           </div>
-          <div class="pv-flex-col">
-            <div class="pv-line contacts"></div>
-            <div class="pv-line contacts"></div>
+          <div class="pv-profile">
+            <div class="pv-line text"></div>
+            <div class="pv-line text"></div>
+            <div class="pv-line text last"></div>
+          </div>
+          <div class="pv-dashboard">
+            <div class="pv-col">
+              <div class="pv-sec">
+                <div class="pv-sec-title"></div>
+                <div class="pv-flex-wrap">
+                <div class="pv-pill-sm"></div>
+                <div class="pv-pill-md"></div>
+                <div class="pv-pill-lg"></div>
+              </div>
+              </div>
+              <div class="pv-sec pv-sec-auto">
+                <div class="pv-qr-stub"></div>
+              </div>
+            </div>
+            <div class="pv-col">
+              <div class="pv-sec">
+                <div class="pv-sec-title"></div>
+                <div class="pv-item"><div class="pv-line item-title"></div><div class="pv-line item-sub"></div></div>
+                <div class="pv-item"><div class="pv-line item-title"></div><div class="pv-line item-sub"></div></div>
+              </div>
+              <div class="pv-sec">
+                <div class="pv-sec-title"></div>
+                <div class="pv-item"><div class="pv-line item-title"></div><div class="pv-line item-sub"></div></div>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="pv-profile">
-          <div class="pv-line text"></div>
-          <div class="pv-line text"></div>
-          <div class="pv-line text last"></div>
-        </div>
-        <div class="pv-dashboard">
-          <div class="pv-col">
-            <div class="pv-sec">
-              <div class="pv-sec-title"></div>
-              <div class="pv-flex-wrap">
-              <div class="pv-pill-sm"></div>
-              <div class="pv-pill-md"></div>
-              <div class="pv-pill-lg"></div>
-            </div>
-            </div>
-            <div class="pv-sec pv-sec-auto">
-              <div class="pv-qr-stub"></div>
-            </div>
-          </div>
-          <div class="pv-col">
-            <div class="pv-sec">
-              <div class="pv-sec-title"></div>
-              <div class="pv-item"><div class="pv-line item-title"></div><div class="pv-line item-sub"></div></div>
-              <div class="pv-item"><div class="pv-line item-title"></div><div class="pv-line item-sub"></div></div>
-            </div>
-            <div class="pv-sec">
-              <div class="pv-sec-title"></div>
-              <div class="pv-item"><div class="pv-line item-title"></div><div class="pv-line item-sub"></div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </button>
+      </button>
 
-    <button id="print-opts-btn" class="ctrl" data-i18n="aria_print_opts" aria-haspopup="dialog">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" aria-hidden="true">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
-      </svg>
-    </button>
+      <button id="print-opts-btn" class="ctrl" data-i18n="aria_print_opts" aria-haspopup="dialog">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
+        </svg>
+      </button>
+    </div>
 
     <button id="share-btn" class="ctrl" data-i18n="aria_share" hidden>
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"

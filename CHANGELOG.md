@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.4.1] - 2026-10-19
+
+### Changed
+- On wide screens the PDF button and its options button are one capsule with two halves ("Download PDF | options"), so the options read as part of the download. They are still two buttons; on phones the options live in the menu as before.
+
 ## [2.4.0] - 2026-10-19
 
 ### Changed
