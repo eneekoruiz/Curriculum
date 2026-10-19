@@ -202,6 +202,7 @@ try {
     const before = await theme();
     await openMenu();
     await choose(T.es.menu_theme);
+    await page.waitForTimeout(900);   // the theme change plays a short transition
     if ((await theme()) === before) fail('phone menu: the theme item did not switch the theme');
     await openMenu();
     await page.mouse.click(20, 400);
@@ -225,7 +226,7 @@ try {
     const wide = await browser.newContext({ viewport: { width: 1366, height: 800 } });
     const desktop = await wide.newPage();
     await desktop.goto(`${origin}/?lang=es`, { waitUntil: 'networkidle' });
-    if (await desktop.evaluate(() => getComputedStyle(document.getElementById('more-btn')).display !== 'none')) fail('wide bar: the phone menu button is shown');
+    if (await desktop.evaluate(() => document.getElementById('more-btn').getBoundingClientRect().width > 0)) fail('wide bar: the phone menu button is shown');
     await desktop.click('#photo-btn');
     const big = await desktop.evaluate(() => document.getElementById('portrait-btn').getBoundingClientRect().width);
     if (big < 150) fail(`portrait (wide): only ${Math.round(big)}px wide`);
