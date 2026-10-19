@@ -1204,6 +1204,11 @@ h1 strong {
   right: 0;
   width: 270px;
   max-width: calc(100vw - 24px);
+  /* Short screens (landscape phones): the menu scrolls instead of leaving the screen */
+  max-height: calc(100vh - 76px);
+  max-height: calc(100dvh - 76px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
   padding: 6px;
   display: flex;
   flex-direction: column;
