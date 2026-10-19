@@ -19,10 +19,12 @@ try {
     await page.setViewportSize(viewport);
     await page.goto(`${origin}/?lang=${lang}&theme=${theme}`, { waitUntil: 'networkidle' });
     await page.waitForFunction(() => !document.documentElement.classList.contains('cv-loading'));
+    // openWith: a selector to click; { script } clicks it programmatically (the desktop buttons are hidden on phones)
     const audit = async (label, openWith) => {
       if (openWith) {
-        await page.click(openWith);
-        await page.waitForTimeout(150);
+        if (openWith.script) await page.evaluate((selector) => document.querySelector(selector).click(), openWith.script);
+        else await page.click(openWith);
+        await page.waitForTimeout(250);
       }
       const { violations } = await new AxeBuilder({ page })
         .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'best-practice'])
@@ -37,8 +39,10 @@ try {
     };
     const label = `${lang} ${theme} ${viewport.width}x${viewport.height}`;
     await audit(label);
-    await audit(`${label} · letter dialog`, '#letter-btn');
-    await audit(`${label} · PDF options dialog`, '#print-opts-btn');
+    await audit(`${label} · letter dialog`, { script: '#letter-btn' });
+    await audit(`${label} · PDF options dialog`, { script: '#print-opts-btn' });
+    await audit(`${label} · photo dialog`, { script: '#photo-btn' });
+    if (viewport.width <= 920) await audit(`${label} · menu`, '#more-btn');
     await page.close();
   }
 } finally {

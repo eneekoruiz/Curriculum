@@ -272,32 +272,32 @@ const setPrintOption = (name, value) => {
   applyPrintOptions();
 };
 
-/** File-name suffix of the chosen variant: "", "_NoPhoto", "_Letter" or "_Letter_NoPhoto". */
-const pdfVariantSuffix = () => `${printOptions.letter ? '_Letter' : ''}${printOptions.photo ? '' : '_NoPhoto'}`;
+/** File-name suffix of a variant: "", "_NoPhoto", "_Letter" or "_Letter_NoPhoto" (default: the saved options). */
+const pdfVariantSuffix = (choice = printOptions) => `${choice.letter ? '_Letter' : ''}${choice.photo ? '' : '_NoPhoto'}`;
 
-const getPdfFileName = () => `Eneko_Ruiz_CV_${(currentLang || 'es').toUpperCase()}${pdfVariantSuffix()}.pdf`;
+const getPdfFileName = (choice) => `Eneko_Ruiz_CV_${(currentLang || 'es').toUpperCase()}${pdfVariantSuffix(choice)}.pdf`;
 
 // Every language ships all four pre-rendered variants (scripts/build-pdfs.mjs): instant and reliable.
 // /api/pdf stays as a fallback for a language without them.
-const getPdfDownloadUrl = () => {
+const getPdfDownloadUrl = (choice = printOptions) => {
   const lang = currentLang || 'es';
   if (window.PRINT_FIT && lang in window.PRINT_FIT) {
-    const staticPdfUrl = new URL(`/pdf/${getPdfFileName()}`, window.location.origin);
+    const staticPdfUrl = new URL(`/pdf/${getPdfFileName(choice)}`, window.location.origin);
     staticPdfUrl.searchParams.set('v', window.PDF_VERSION || '1');
     return staticPdfUrl.toString();
   }
 
-  return getDynamicPdfUrl();
+  return getDynamicPdfUrl(choice);
 };
 
 /** On-demand rendering (api/pdf.js): fallback when a pre-rendered PDF is missing or fails. */
-const getDynamicPdfUrl = () => {
+const getDynamicPdfUrl = (choice = printOptions) => {
   const pdfUrl = new URL('/api/pdf', window.location.origin);
   pdfUrl.searchParams.set('lang', currentLang || 'es');
-  if (!printOptions.photo) {
+  if (!choice.photo) {
     pdfUrl.searchParams.set('photo', '0');
   }
-  if (printOptions.letter) {
+  if (choice.letter) {
     pdfUrl.searchParams.set('letter', '1');
   }
   return pdfUrl.toString();
@@ -317,7 +317,8 @@ const openPdfDirectly = (pdfUrl) => {
 };
 
 const downloadGeneratedPdf = async (printButton, options = {}) => {
-  const pdfUrl = getPdfDownloadUrl();
+  const choice = options.choice || printOptions;
+  const pdfUrl = getPdfDownloadUrl(choice);
   const runtime = getRuntimeContext();
   const copy = getExportCopy();
 
@@ -335,7 +336,7 @@ const downloadGeneratedPdf = async (printButton, options = {}) => {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 28000);
 
-  const dynamicPdfUrl = getDynamicPdfUrl();
+  const dynamicPdfUrl = getDynamicPdfUrl(choice);
   let effectiveUrl = pdfUrl;
 
   try {
@@ -365,7 +366,7 @@ const downloadGeneratedPdf = async (printButton, options = {}) => {
     const objectUrl = URL.createObjectURL(pdfBlob);
     const link = document.createElement('a');
     link.href = objectUrl;
-    link.download = getPdfFileName();
+    link.download = getPdfFileName(choice);
     link.rel = 'noopener';
     document.body.appendChild(link);
     link.click();
@@ -379,6 +380,9 @@ const downloadGeneratedPdf = async (printButton, options = {}) => {
     showCopyTip(printButton, copy.ready);
       printButton.classList.add('is-success');
       setTimeout(() => printButton.classList.remove('is-success'), 4000);
+    if (!choice.letter) {
+      offerLetter();
+    }
   } catch (error) {
     console.error('Blob PDF download failed; falling back to direct PDF navigation:', error);
     if (runtime.isEmbedded && window.parent) {
@@ -390,6 +394,30 @@ const downloadGeneratedPdf = async (printButton, options = {}) => {
     clearTimeout(timeoutId);
   }
 };
+/**
+ * After a PDF without the cover letter: a short offer to get it with the letter, one tap away
+ * (the saved options are not changed).
+ */
+const offerLetter = () => {
+  document.querySelector('.pdf-snack')?.remove();
+  const copy = T[currentLang] || T.en;
+  const snack = document.createElement('div');
+  snack.className = 'pdf-snack';
+  snack.setAttribute('role', 'status');
+  const question = document.createElement('span');
+  question.textContent = copy.toast_letter_ask;
+  const accept = document.createElement('button');
+  accept.type = 'button';
+  accept.textContent = copy.menu_pdf_letter;
+  accept.addEventListener('click', () => {
+    snack.remove();
+    window.handlePrint({ photo: printOptions.photo, letter: true });
+  });
+  snack.append(question, accept);
+  document.body.append(snack);
+  setTimeout(() => snack.remove(), 9000);
+};
+
 /* ── CORE ACTIONS ─────────────────────────────────────────────── */
 
 /**
@@ -487,10 +515,12 @@ const placePdfPreview = () => {
 };
 
 /**
- * Downloads the CV as a PDF with the current options. Used by the download dialog, by the embedding
- * portfolio (postMessage) and by ?print.
+ * Downloads the CV as a PDF: with the saved options, or with the variant given (the menu and the offer
+ * after a download ask for the letter without changing the saved choice). Used by the PDF button, by the
+ * embedding portfolio (postMessage) and by ?print.
+ * @param {{photo: boolean, letter: boolean}} [choice]
  */
-window.handlePrint = async () => {
+window.handlePrint = async (choice) => {
   const printButton = document.getElementById('print-btn');
   if (!printButton || printButton.getAttribute('data-loading') === 'true') {
     return;
@@ -518,13 +548,19 @@ window.handlePrint = async () => {
   forcePrintReadyState();
 
   try {
-    await downloadGeneratedPdf(printButton, { preferDirect: isIOS || (isSafari && !isEmbedded) });
+    await downloadGeneratedPdf(printButton, { preferDirect: isIOS || (isSafari && !isEmbedded), choice });
     resetPrintButton();
   } catch (error) {
     console.error('CV export failed:', error);
     resetPrintButton();
     showCopyTip(printButton, copy.failed);
   }
+};
+
+/** The control the share toast hangs from: the share button, or the menu button where share lives in the menu. */
+const visibleShareAnchor = () => {
+  const shareButton = document.getElementById('share-btn');
+  return shareButton.offsetParent ? shareButton : document.getElementById('more-btn');
 };
 
 /**
@@ -551,13 +587,11 @@ window.handleShare = async () => {
   } else {
     try {
       await navigator.clipboard.writeText(window.location.href);
-      const shareButton = document.getElementById('share-btn');
       const successMessage = T[currentLang]?.copy_ok || 'Link Copied!';
-      showCopyTip(shareButton, successMessage);
+      showCopyTip(visibleShareAnchor(), successMessage);
     } catch (clipboardError) {
       console.error('Clipboard writeText failed in handleShare:', clipboardError);
-      const shareButton = document.getElementById('share-btn');
-      showCopyTip(shareButton, 'Error al copiar link');
+      showCopyTip(visibleShareAnchor(), 'Error al copiar link');
     }
   }
 };
@@ -961,11 +995,44 @@ const setupScrollReveal = () => {
     });
   }
 
+  // Phone/tablet menu (#more-menu): disclosure button + labelled actions. Most items forward to the
+  // desktop button that already does the job; the PDF-with-letter item downloads straight away.
+  const moreButton = document.getElementById('more-btn');
+  const moreMenu = document.getElementById('more-menu');
+  if (moreButton && moreMenu) {
+    const setMoreMenu = (open) => {
+      moreMenu.classList.toggle('open', open);
+      moreButton.setAttribute('aria-expanded', String(open));
+    };
+    moreButton.addEventListener('click', () => setMoreMenu(!moreMenu.classList.contains('open')));
+    document.addEventListener('pointerdown', (event) => {
+      if (!event.target.closest('#more-wrap')) {
+        setMoreMenu(false);
+      }
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && moreMenu.classList.contains('open')) {
+        setMoreMenu(false);
+        moreButton.focus();
+      }
+    });
+    moreMenu.querySelectorAll('.mm-item').forEach((item) => {
+      item.addEventListener('click', () => {
+        setMoreMenu(false);
+        if (item.id === 'mm-pdf-letter') {
+          window.handlePrint({ photo: printOptions.photo, letter: true });
+        } else {
+          document.querySelector(item.dataset.forward).click();
+        }
+      });
+    });
+    // Share only where the browser can (same condition as the desktop button, set just below)
+    document.getElementById('mm-share').hidden = !(navigator.share || navigator.clipboard);
+  }
+
   const shareButton = document.getElementById('share-btn');
   if (shareButton) { 
-    if (navigator.share || navigator.clipboard) {
-      shareButton.style.display = 'flex';
-    }
+    shareButton.hidden = !(navigator.share || navigator.clipboard);
     shareButton.addEventListener('click', handleShare);
   }
 

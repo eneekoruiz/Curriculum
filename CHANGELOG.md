@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.4.0] - 2026-10-19
+
+### Changed
+- **Top bar on phones and tablets (up to 920 px): language · PDF · menu.** The seven same-looking icons are gone. The PDF button is the single highlighted action and still downloads in one tap, with the saved options. A "⋯" menu with full labels holds the rest: cover letter, PDF with letter, PDF options, photo, share and theme. Items are 48 px tall (WCAG target size) and the menu closes with Escape or a tap outside. Wide screens keep the full bar with labels.
+- The PDF button uses a download icon (it used to show a printer) and the short label "PDF" on phones.
+- The photo stays opt-in: it is not shown on the page, only through "Photo" (bar on wide screens, menu on phones) and in the PDF.
+
+### Added
+- After a PDF without the cover letter, a short offer appears ("Want it with the cover letter?") with a one-tap download of the letter variant. It does not change the saved options.
+- "Download PDF with cover letter" in the menu: the same shortcut at any time.
+- Checks: the phone bar and its menu (every item, Escape, tap outside, the two downloads and the offer), the menu's size and position at all 18 screen sizes, and WCAG with the menu and every dialog open.
+
+### Removed
+- The inline `style` of the PDF options button (blocked by the production Content-Security-Policy) and the "icons only" breakpoint it needed.
+
 ## [2.3.0] - 2026-10-10
 
 ### Added
