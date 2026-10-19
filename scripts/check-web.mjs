@@ -182,9 +182,18 @@ try {
     if (!(await page.evaluate(() => document.getElementById('letter-dialog').open))) fail('phone menu: the letter item did not open the letter');
     await page.keyboard.press('Escape');
     await openMenu();
+    // "Photo" switches the opt-in portrait (off by default); the portrait opens the photo dialog
+    const portrait = () => page.evaluate(() => { const el = document.getElementById('portrait-btn'); const r = el.getBoundingClientRect(); return { on: document.documentElement.classList.contains('show-portrait'), w: Math.round(r.width), shown: getComputedStyle(el).display !== 'none', pressed: document.getElementById('mm-photo').getAttribute('aria-pressed') }; });
+    if ((await portrait()).shown) fail('portrait: shown by default, it must be opt-in');
     await choose(T.es.btn_photo);
-    if (!(await page.evaluate(() => document.getElementById('photo-dialog').open))) fail('phone menu: the photo item did not open the photo');
+    const shown = await portrait();
+    if (!shown.on || !shown.shown || shown.w < 120 || shown.pressed !== 'true') fail(`portrait (phone): after switching on it is ${JSON.stringify(shown)}`);
+    await page.click('#portrait-btn');
+    if (!(await page.evaluate(() => document.getElementById('photo-dialog').open))) fail('portrait (phone): a click did not open the photo dialog');
     await page.keyboard.press('Escape');
+    await openMenu();
+    await choose(T.es.btn_photo);
+    if ((await portrait()).shown) fail('portrait (phone): switching off did not hide it');
     await openMenu();
     await choose(T.es.opt_title);
     if (!(await page.evaluate(() => document.getElementById('print-dialog').open))) fail('phone menu: the options item did not open the PDF options');
@@ -217,6 +226,11 @@ try {
     const desktop = await wide.newPage();
     await desktop.goto(`${origin}/?lang=es`, { waitUntil: 'networkidle' });
     if (await desktop.evaluate(() => getComputedStyle(document.getElementById('more-btn')).display !== 'none')) fail('wide bar: the phone menu button is shown');
+    await desktop.click('#photo-btn');
+    const big = await desktop.evaluate(() => document.getElementById('portrait-btn').getBoundingClientRect().width);
+    if (big < 150) fail(`portrait (wide): only ${Math.round(big)}px wide`);
+    await desktop.reload({ waitUntil: 'networkidle' });
+    if (!(await desktop.evaluate(() => document.documentElement.classList.contains('show-portrait')))) fail('portrait: the choice was not remembered');
     await wide.close();
   }
   console.log('cover letter and PDF options checked');

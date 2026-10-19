@@ -41,7 +41,9 @@ try {
     await audit(label);
     await audit(`${label} · letter dialog`, { script: '#letter-btn' });
     await audit(`${label} · PDF options dialog`, { script: '#print-opts-btn' });
-    await audit(`${label} · photo dialog`, { script: '#photo-btn' });
+    await audit(`${label} · portrait on`, { script: '#photo-btn' });
+    await audit(`${label} · photo dialog`, '#portrait-btn');
+    await page.evaluate(() => document.getElementById('photo-btn').click());
     if (viewport.width <= 920) await audit(`${label} · menu`, '#more-btn');
     await page.close();
   }

@@ -4,6 +4,7 @@
 //  - no text clipped by its own box (overflow hidden/ellipsis)
 //  - the language menu fits the screen when open
 //  - the cover letter and PDF options dialogs open whole inside the screen; the letter scrolls to its signature
+//  - the opt-in portrait, switched on: large, whole on screen, clear of the contacts, opens the photo dialog
 //  - the top bar: language · PDF · menu up to 920px (menu whole on screen, 44px targets), the full bar above it
 //  - the PDF preview appears whole on hover, stays while the PDF is prepared and hides when the toast shows
 //  - tap targets on phones are at least 24×24 CSS px (WCAG 2.2, 2.5.8)
@@ -126,6 +127,25 @@ for (const lang of LANGS) {
     } else if (bar.more) {
       issues.push('top bar: the menu button shows on a wide screen');
     }
+
+    // Opt-in portrait: big enough to matter, inside the screen, not on top of anything, opens the dialog
+    await page.evaluate(() => document.getElementById('photo-btn').click());
+    await page.waitForTimeout(200);
+    const portrait = await page.evaluate(() => {
+      const r = document.getElementById('portrait-btn').getBoundingClientRect();
+      const name = document.querySelector('h1').getBoundingClientRect();
+      const contacts = document.querySelector('.contacts').getBoundingClientRect();
+      const overlap = (a, b) => a.left < b.right - 1 && a.right > b.left + 1 && a.top < b.bottom - 1 && a.bottom > b.top + 1;
+      return { l: r.left, r: r.right, w: r.width, name: overlap(r, name), contacts: overlap(r, contacts), scroll: document.documentElement.scrollWidth };
+    });
+    if (portrait.w < 120) issues.push(`portrait: only ${Math.round(portrait.w)}px wide`);
+    if (portrait.l < -1 || portrait.r > width + 1 || portrait.scroll > width + 1) issues.push(`portrait: outside the screen [${Math.round(portrait.l)}, ${Math.round(portrait.r)}]`);
+    if (portrait.name || portrait.contacts) issues.push('portrait: overlaps the name or the contacts');
+    await page.click('#portrait-btn');
+    await page.waitForTimeout(250);
+    if (!(await page.evaluate(() => document.getElementById('photo-dialog').open))) issues.push('portrait: click does not open the photo dialog');
+    await page.keyboard.press('Escape');
+    await page.evaluate(() => document.getElementById('photo-btn').click());
 
     // Dialogs: whole inside the screen, nothing cut; the long letter scrolls inside its card down to the signature
     for (const [opener, dialogId, scrolls] of [['#letter-btn', 'letter-dialog', true], ['#print-opts-btn', 'print-dialog', false]]) {

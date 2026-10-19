@@ -272,6 +272,15 @@ const setPrintOption = (name, value) => {
   applyPrintOptions();
 };
 
+/* ── Opt-in portrait ── off by default; the choice is remembered. */
+const setPortrait = (on, save = true) => {
+  html.classList.toggle('show-portrait', on);
+  document.querySelectorAll('#photo-btn, #mm-photo').forEach(button => button.setAttribute('aria-pressed', String(on)));
+  if (save) {
+    safeStorage.set('cv-portrait', on ? '1' : '0');
+  }
+};
+
 /** File-name suffix of a variant: "", "_NoPhoto", "_Letter" or "_Letter_NoPhoto" (default: the saved options). */
 const pdfVariantSuffix = (choice = printOptions) => `${choice.letter ? '_Letter' : ''}${choice.photo ? '' : '_NoPhoto'}`;
 
@@ -963,8 +972,9 @@ const setupScrollReveal = () => {
     });
   };
 
-  wireDialog(document.getElementById('photo-btn'), document.getElementById('photo-dialog'),
+  wireDialog(document.getElementById('portrait-btn'), document.getElementById('photo-dialog'),
     document.getElementById('photo-close-btn'));
+  document.getElementById('photo-btn')?.addEventListener('click', () => setPortrait(!html.classList.contains('show-portrait')));
   wireDialog(document.getElementById('letter-btn'), document.getElementById('letter-dialog'),
     document.getElementById('letter-close-btn'));
 
@@ -1198,6 +1208,7 @@ const setupScrollReveal = () => {
   }
 
   loadPrintOptions();
+  setPortrait(safeStorage.get('cv-portrait') === '1', false);
 
   // Direct headless print query (?print)
   if (urlParameters.has('print')) {
