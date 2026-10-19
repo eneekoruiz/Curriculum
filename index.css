@@ -337,6 +337,37 @@ html.cv-loading *:not(.precision-motion, .precision-motion *) {
   position: relative;
 }
 
+/* PDF button + its options: one capsule, two buttons, so the options read as part of the download */
+.pdf-split {
+  display: flex;
+  align-items: stretch;
+}
+
+@media (min-width: 921px) {
+  .pdf-split > .ctrl:hover {
+    z-index: 1;
+    transform: none;
+  }
+
+  .pdf-split > #print-btn {
+    border-start-end-radius: 0;
+    border-end-end-radius: 0;
+  }
+
+  .pdf-split > #print-opts-btn {
+    margin-inline-start: -1px;
+    padding-inline: 12px;
+    border-start-start-radius: 0;
+    border-end-start-radius: 0;
+  }
+}
+
+@media (max-width: 920px) {
+  .pdf-split {
+    display: contents;
+  }
+}
+
 .pdf-preview {
   position: absolute;
   top: calc(100% + 12px);
