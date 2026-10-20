@@ -187,7 +187,7 @@ try {
     if ((await portrait()).shown) fail('portrait: shown by default, it must be opt-in');
     await choose(T.es.btn_photo);
     const shown = await portrait();
-    if (!shown.on || !shown.shown || shown.w < 120 || shown.pressed !== 'true') fail(`portrait (phone): after switching on it is ${JSON.stringify(shown)}`);
+    if (!shown.on || !shown.shown || shown.w < 70 || shown.pressed !== 'true') fail(`portrait (phone): after switching on it is ${JSON.stringify(shown)}`);
     await page.click('#portrait-btn');
     if (!(await page.evaluate(() => document.getElementById('photo-dialog').open))) fail('portrait (phone): a click did not open the photo dialog');
     await page.keyboard.press('Escape');

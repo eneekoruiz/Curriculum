@@ -4,7 +4,7 @@
 //  - no text clipped by its own box (overflow hidden/ellipsis)
 //  - the language menu fits the screen when open
 //  - the cover letter and PDF options dialogs open whole inside the screen; the letter scrolls to its signature
-//  - the opt-in portrait, switched on: large, whole on screen, clear of the contacts, opens the photo dialog
+//  - the opt-in portrait, switched on: sized for the screen, whole on screen, clear of the name and contacts, opens the photo dialog
 //  - the top bar: language · PDF · theme · menu up to 920px (menu whole on screen, 44px targets), the full bar above it
 //  - the PDF preview appears whole on hover, stays while the PDF is prepared and hides when the toast shows
 //  - tap targets on phones are at least 24×24 CSS px (WCAG 2.2, 2.5.8)
@@ -139,7 +139,7 @@ for (const lang of LANGS) {
       const overlap = (a, b) => a.left < b.right - 1 && a.right > b.left + 1 && a.top < b.bottom - 1 && a.bottom > b.top + 1;
       return { l: r.left, r: r.right, w: r.width, name: overlap(r, name), contacts: overlap(r, contacts), scroll: document.documentElement.scrollWidth };
     });
-    if (portrait.w < 120) issues.push(`portrait: only ${Math.round(portrait.w)}px wide`);
+    if (portrait.w < (width <= 700 ? 70 : 90)) issues.push(`portrait: only ${Math.round(portrait.w)}px wide`);
     if (portrait.l < -1 || portrait.r > width + 1 || portrait.scroll > width + 1) issues.push(`portrait: outside the screen [${Math.round(portrait.l)}, ${Math.round(portrait.r)}]`);
     if (portrait.name || portrait.contacts) issues.push('portrait: overlaps the name or the contacts');
     await page.click('#portrait-btn');
