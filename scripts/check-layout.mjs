@@ -5,7 +5,7 @@
 //  - the language menu fits the screen when open
 //  - the cover letter and PDF options dialogs open whole inside the screen; the letter scrolls to its signature
 //  - the opt-in portrait, switched on: large, whole on screen, clear of the contacts, opens the photo dialog
-//  - the top bar: language · PDF · menu up to 920px (menu whole on screen, 44px targets), the full bar above it
+//  - the top bar: language · PDF · theme · menu up to 920px (menu whole on screen, 44px targets), the full bar above it
 //  - the PDF preview appears whole on hover, stays while the PDF is prepared and hides when the toast shows
 //  - tap targets on phones are at least 24×24 CSS px (WCAG 2.2, 2.5.8)
 //  - no JavaScript errors and no failed requests
@@ -106,11 +106,12 @@ for (const lang of LANGS) {
     // Top bar: phones/tablets get language · PDF · menu; the secondary controls live in the menu
     const bar = await page.evaluate(() => {
       const shown = (selector) => { const el = document.querySelector(selector); return !!el && getComputedStyle(el).display !== 'none' && el.getBoundingClientRect().width > 0; };
-      return { more: shown('#more-btn'), pdf: shown('#print-btn'), others: ['#print-opts-btn', '#letter-btn', '#theme-btn'].filter(shown) };
+      return { more: shown('#more-btn'), pdf: shown('#print-btn'), others: ['#print-opts-btn', '#letter-btn'].filter(shown), theme: shown('#theme-btn') && document.querySelector('#theme-btn').getBoundingClientRect().height >= 44 };
     });
     if (width <= 920) {
       if (!bar.more || !bar.pdf) issues.push('top bar: the PDF button or the menu button is missing');
       if (bar.others.length) issues.push(`top bar: ${bar.others.join(', ')} still crowd the bar (they belong in the menu)`);
+      if (!bar.theme) issues.push('top bar: the theme button is missing or smaller than 44px');
       await page.evaluate(() => document.getElementById('lang-menu').classList.remove('open'));
       await page.click('#more-btn');
       await page.waitForTimeout(350);

@@ -1186,9 +1186,14 @@ h1 strong {
   #print-opts-btn,
   #share-btn,
   #letter-btn,
-  #photo-btn,
-  #theme-btn {
+  #photo-btn {
     display: none;
+  }
+
+  /* The theme switch stays in the bar: the animation is worth having at hand */
+  #theme-btn {
+    width: 44px;
+    height: 44px;
   }
 
   #more-wrap {
@@ -3041,15 +3046,48 @@ html.scroll-reveal .dashboard > section.is-instant {
   color: var(--c-brand-ink);
 }
 
-@media (max-width: 860px) {
+@media (max-width: 700px) {
   .header-side {
     display: contents;
   }
 
   .show-portrait .portrait {
     order: -1;
+    grid-column: 1 / -1;
     width: 132px;
     margin-top: var(--s2);
     border-radius: 24px;
+  }
+}
+
+/* Tablets and wider, portrait on: a proper three-part header (portrait · name · contacts), the name a step smaller so it keeps two lines */
+@media (min-width: 701px) {
+  .show-portrait .header-side {
+    display: contents;
+  }
+
+  .show-portrait .hero .site-header {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    column-gap: clamp(20px, 3vw, 32px);
+  }
+
+  .show-portrait .portrait {
+    grid-column: 1;
+    grid-row: 1;
+    width: clamp(96px, 12vw, 156px);
+  }
+
+  .show-portrait .header-main {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .show-portrait .contacts {
+    grid-column: 3;
+    grid-row: 1;
+  }
+
+  .show-portrait .hero h1 {
+    font-size: clamp(2.4rem, min(4.2vw, 8.5svh), 3.4rem);
   }
 }

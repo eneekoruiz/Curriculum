@@ -88,7 +88,6 @@ const T = {
     opt_letter_hint: "Una página aparte, antes del currículum.",
     opt_print: "Imprimir",
     aria_menu: "Más opciones",
-    menu_theme: "Cambiar tema",
     menu_pdf_letter: "Descargar PDF con carta",
     toast_letter_ask: "¿Lo quieres con carta de presentación?"
   },
@@ -177,7 +176,6 @@ const T = {
     opt_letter_hint: "A separate page before the résumé.",
     opt_print: "Print",
     aria_menu: "More options",
-    menu_theme: "Switch theme",
     menu_pdf_letter: "Download PDF with cover letter",
     toast_letter_ask: "Want it with the cover letter?"
   },
@@ -266,7 +264,6 @@ const T = {
     opt_letter_hint: "Orri bereizia, curriculumaren aurretik.",
     opt_print: "Inprimatu",
     aria_menu: "Aukera gehiago",
-    menu_theme: "Gaia aldatu",
     menu_pdf_letter: "Deskargatu PDFa gutunarekin",
     toast_letter_ask: "Aurkezpen-gutunarekin nahi duzu?"
   },
@@ -355,7 +352,6 @@ const T = {
     opt_letter_hint: "Una pàgina a part, abans del currículum.",
     opt_print: "Imprimir",
     aria_menu: "Més opcions",
-    menu_theme: "Canviar el tema",
     menu_pdf_letter: "Descarregar PDF amb carta",
     toast_letter_ask: "El vols amb la carta de presentació?"
   },
@@ -444,7 +440,6 @@ const T = {
     opt_letter_hint: "Unha páxina á parte, antes do currículo.",
     opt_print: "Imprimir",
     aria_menu: "Máis opcións",
-    menu_theme: "Cambiar o tema",
     menu_pdf_letter: "Descargar PDF con carta",
     toast_letter_ask: "Queres tamén a carta de presentación?"
   },
@@ -533,7 +528,6 @@ const T = {
     opt_letter_hint: "Une page à part, avant le CV.",
     opt_print: "Imprimer",
     aria_menu: "Plus d'options",
-    menu_theme: "Changer de thème",
     menu_pdf_letter: "Télécharger le PDF avec la lettre",
     toast_letter_ask: "Avec la lettre de motivation ?"
   },
@@ -622,7 +616,6 @@ const T = {
     opt_letter_hint: "Eine eigene Seite vor dem Lebenslauf.",
     opt_print: "Drucken",
     aria_menu: "Weitere Optionen",
-    menu_theme: "Design wechseln",
     menu_pdf_letter: "PDF mit Anschreiben herunterladen",
     toast_letter_ask: "Mit Anschreiben?"
   },
@@ -711,7 +704,6 @@ const T = {
     opt_letter_hint: "Una pagina a parte, prima del curriculum.",
     opt_print: "Stampa",
     aria_menu: "Altre opzioni",
-    menu_theme: "Cambia tema",
     menu_pdf_letter: "Scarica PDF con lettera",
     toast_letter_ask: "Lo vuoi con la lettera di presentazione?"
   },
@@ -800,7 +792,6 @@ const T = {
     opt_letter_hint: "Uma página à parte, antes do currículo.",
     opt_print: "Imprimir",
     aria_menu: "Mais opções",
-    menu_theme: "Mudar de tema",
     menu_pdf_letter: "Transferir PDF com carta",
     toast_letter_ask: "Quer com a carta de apresentação?"
   },
@@ -889,7 +880,6 @@ const T = {
     opt_letter_hint: "Een aparte pagina vóór het cv.",
     opt_print: "Afdrukken",
     aria_menu: "Meer opties",
-    menu_theme: "Thema wisselen",
     menu_pdf_letter: "Pdf met motivatiebrief downloaden",
     toast_letter_ask: "Met motivatiebrief?"
   },
@@ -978,7 +968,6 @@ const T = {
     opt_letter_hint: "En separat sida före cv:t.",
     opt_print: "Skriv ut",
     aria_menu: "Fler alternativ",
-    menu_theme: "Byt tema",
     menu_pdf_letter: "Ladda ner PDF med personligt brev",
     toast_letter_ask: "Vill du ha det med personligt brev?"
   },
@@ -1067,7 +1056,6 @@ const T = {
     opt_letter_hint: "En egen side foran CV-en.",
     opt_print: "Skriv ut",
     aria_menu: "Flere valg",
-    menu_theme: "Bytt tema",
     menu_pdf_letter: "Last ned PDF med søknadsbrev",
     toast_letter_ask: "Vil du ha det med søknadsbrev?"
   },
@@ -1156,7 +1144,6 @@ const T = {
     opt_letter_hint: "En separat side før cv'et.",
     opt_print: "Udskriv",
     aria_menu: "Flere muligheder",
-    menu_theme: "Skift tema",
     menu_pdf_letter: "Download PDF med ansøgning",
     toast_letter_ask: "Vil du have den med ansøgning?"
   },
@@ -1245,7 +1232,6 @@ const T = {
     opt_letter_hint: "Osobna strona przed CV.",
     opt_print: "Drukuj",
     aria_menu: "Więcej opcji",
-    menu_theme: "Zmień motyw",
     menu_pdf_letter: "Pobierz PDF z listem motywacyjnym",
     toast_letter_ask: "Chcesz z listem motywacyjnym?"
   },
@@ -1334,7 +1320,6 @@ const T = {
     opt_letter_hint: "Samostatná stránka před životopisem.",
     opt_print: "Tisk",
     aria_menu: "Další možnosti",
-    menu_theme: "Změnit motiv",
     menu_pdf_letter: "Stáhnout PDF s motivačním dopisem",
     toast_letter_ask: "Chcete jej s motivačním dopisem?"
   },
@@ -1423,7 +1408,6 @@ const T = {
     opt_letter_hint: "O pagină separată, înaintea CV-ului.",
     opt_print: "Tipărește",
     aria_menu: "Mai multe opțiuni",
-    menu_theme: "Schimbă tema",
     menu_pdf_letter: "Descarcă PDF cu scrisoare",
     toast_letter_ask: "Îl vrei cu scrisoarea de intenție?"
   },
@@ -1512,7 +1496,6 @@ const T = {
     opt_letter_hint: "Özgeçmişten önce ayrı bir sayfa.",
     opt_print: "Yazdır",
     aria_menu: "Daha fazla seçenek",
-    menu_theme: "Temayı değiştir",
     menu_pdf_letter: "PDF'yi ön yazıyla indir",
     toast_letter_ask: "Ön yazıyla birlikte ister misiniz?"
   },
@@ -1601,7 +1584,6 @@ const T = {
     opt_letter_hint: "Отдельная страница перед резюме.",
     opt_print: "Печать",
     aria_menu: "Ещё",
-    menu_theme: "Сменить тему",
     menu_pdf_letter: "Скачать PDF с письмом",
     toast_letter_ask: "Нужно с сопроводительным письмом?"
   },
@@ -1690,7 +1672,6 @@ const T = {
     opt_letter_hint: "Окрема сторінка перед резюме.",
     opt_print: "Друк",
     aria_menu: "Ще",
-    menu_theme: "Змінити тему",
     menu_pdf_letter: "Завантажити PDF з листом",
     toast_letter_ask: "Потрібно із супровідним листом?"
   },
@@ -1779,7 +1760,6 @@ const T = {
     opt_letter_hint: "位于简历之前的单独一页。",
     opt_print: "打印",
     aria_menu: "更多选项",
-    menu_theme: "切换主题",
     menu_pdf_letter: "下载含求职信的 PDF",
     toast_letter_ask: "需要附上求职信吗？"
   },
@@ -1868,7 +1848,6 @@ const T = {
     opt_letter_hint: "履歴書の前に別ページとして追加します。",
     opt_print: "印刷",
     aria_menu: "その他のオプション",
-    menu_theme: "テーマを切り替え",
     menu_pdf_letter: "カバーレター付きでPDFをダウンロード",
     toast_letter_ask: "カバーレターも付けますか？"
   },
@@ -1957,7 +1936,6 @@ const T = {
     opt_letter_hint: "이력서 앞에 별도 페이지로 추가됩니다.",
     opt_print: "인쇄",
     aria_menu: "더 보기",
-    menu_theme: "테마 전환",
     menu_pdf_letter: "자기소개서 포함 PDF 다운로드",
     toast_letter_ask: "자기소개서도 함께 받으시겠어요?"
   },
@@ -2046,7 +2024,6 @@ const T = {
     opt_letter_hint: "صفحة منفصلة قبل السيرة الذاتية.",
     opt_print: "طباعة",
     aria_menu: "المزيد من الخيارات",
-    menu_theme: "تبديل السمة",
     menu_pdf_letter: "تنزيل PDF مع رسالة التقديم",
     toast_letter_ask: "هل تريده مع رسالة التقديم؟"
   }

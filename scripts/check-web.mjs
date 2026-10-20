@@ -171,8 +171,8 @@ try {
     await page.goto(`${origin}/?lang=es`, { waitUntil: 'networkidle' });
     await page.waitForFunction(() => !document.documentElement.classList.contains('cv-loading'));
     const visible = (selector) => page.evaluate((s) => getComputedStyle(document.querySelector(s)).display !== 'none', selector);
-    for (const selector of ['#lang-trigger', '#print-btn', '#more-btn']) if (!(await visible(selector))) fail(`phone bar: ${selector} is not shown`);
-    for (const selector of ['#print-opts-btn', '#letter-btn', '#share-btn', '#photo-btn', '#theme-btn']) if (await visible(selector)) fail(`phone bar: ${selector} crowds the bar`);
+    for (const selector of ['#lang-trigger', '#print-btn', '#theme-btn', '#more-btn']) if (!(await visible(selector))) fail(`phone bar: ${selector} is not shown`);
+    for (const selector of ['#print-opts-btn', '#letter-btn', '#share-btn', '#photo-btn']) if (await visible(selector)) fail(`phone bar: ${selector} crowds the bar`);
 
     const openMenu = async () => { await page.click('#more-btn'); await page.waitForTimeout(300); };
     const choose = (text) => page.locator('#more-menu .mm-item', { hasText: text }).click();
@@ -200,10 +200,9 @@ try {
     await page.keyboard.press('Escape');
     const theme = () => page.evaluate(() => document.documentElement.getAttribute('data-theme'));
     const before = await theme();
-    await openMenu();
-    await choose(T.es.menu_theme);
+    await page.click('#theme-btn');   // the theme switch stays in the bar, one tap
     await page.waitForTimeout(900);   // the theme change plays a short transition
-    if ((await theme()) === before) fail('phone menu: the theme item did not switch the theme');
+    if ((await theme()) === before) fail('phone bar: the theme button did not switch the theme');
     await openMenu();
     await page.mouse.click(20, 400);
     if ((await page.getAttribute('#more-btn', 'aria-expanded')) !== 'false') fail('phone menu: a tap outside did not close it');
