@@ -2,11 +2,14 @@
 // on LinkedIn, WhatsApp, Slack or email. Same fonts and palette as the CV.
 import { writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
-import { ROOT, launch } from './lib.mjs';
+import { ROOT, launch, startServer } from './lib.mjs';
+
+// The card loads the CV's own self-hosted fonts from a local server
+const { server, origin } = await startServer();
 
 const CARD = `<!doctype html>
 <html lang="es"><head><meta charset="utf-8">
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Manrope:wght@400..700&display=block" rel="stylesheet">
+<link href="${origin}/fonts/fonts.css" rel="stylesheet">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html, body { width: 1200px; height: 630px; }
@@ -30,7 +33,10 @@ const CARD = `<!doctype html>
   .label { margin-top: 8px; font-size: 22px; font-weight: 700; }
   .sub { margin-top: 2px; font-size: 19px; color: #64748b; }
   .degree { font-family: 'Bricolage Grotesque', 'Manrope', Arial, sans-serif; font-weight: 600; font-size: 44px; line-height: 1.05; color: #0f172a; padding-top: 12px; }
-  .url { position: absolute; right: 84px; bottom: 60px; font-size: 20px; color: #64748b; }
+  .foot { position: absolute; left: 84px; right: 84px; bottom: 60px; display: flex; justify-content: space-between; align-items: baseline; gap: 32px; }
+  .stackline { font-size: 22px; font-weight: 600; color: #334155; }
+  .stackline span { color: #b8894d; padding: 0 10px; }
+  .url { font-size: 20px; color: #64748b; }
 </style></head>
 <body>
   <p class="eyebrow">Ingeniero de Software · Full Stack</p>
@@ -41,16 +47,22 @@ const CARD = `<!doctype html>
     <div class="fact"><p class="level">C1</p><p class="label">Inglés</p><p class="sub">Certificado Cambridge</p></div>
     <div class="fact"><p class="level">C1</p><p class="label">Euskera</p><p class="sub">Certificado HABE</p></div>
   </div>
-  <p class="url">eneko-ruiz-curriculum.vercel.app</p>
+  <div class="foot">
+    <p class="stackline">React<span>·</span>TypeScript<span>·</span>Node.js<span>·</span>PostgreSQL</p>
+    <p class="url">eneko-ruiz-curriculum.vercel.app</p>
+  </div>
 </body></html>`;
 
 const { browser, context } = await launch({ viewport: { width: 1200, height: 630 }, deviceScaleFactor: 1 });
 try {
   const page = await context.newPage();
+  // Same origin as the font files (a blank page would be cross-origin and the fonts would be refused)
+  await page.goto(`${origin}/robots.txt`);
   await page.setContent(CARD, { waitUntil: 'networkidle' });
   await page.evaluate(() => document.fonts.ready);
   await writeFile(join(ROOT, 'og.png'), await page.screenshot({ type: 'png' }));
   console.log('og.png written (1200×630)');
 } finally {
   await browser.close();
+  server.close();
 }

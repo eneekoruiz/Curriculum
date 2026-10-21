@@ -22,6 +22,7 @@ CV interactivo construido con HTML, CSS y JavaScript vanilla — sin dependencia
 - **`translations.js`** — Contenido del CV y de la carta de presentación en 23 idiomas
 - **`print.css`** — Layout A4 de una columna, compatible con ATS
 - **`pdf/`** — PDFs pregenerados por idioma y variante (`_NoPhoto`, `_Letter`, `_Letter_NoPhoto`)
+- **`fonts/`** — Tipografías alojadas en la propia web (sin Google Fonts)
 - **`og.png`** — Tarjeta social (WhatsApp, LinkedIn, Twitter)
 - **`api/pdf.js`** — Función Vercel que renderiza PDF bajo demanda
 - **`scripts/`** — Herramientas de build y calidad (Playwright)
@@ -35,6 +36,12 @@ npm run build    # regenera pdf/*.pdf (4 variantes por idioma) + print-zoom.js
 npm run og       # regenera og.png
 npm run check    # PDF de una página y ATS, web, maquetación responsive (18 tamaños) y WCAG AA
 ```
+
+### Enlace personalizado por candidatura
+
+Añade `?para=` con el nombre de la empresa al enlace que envías, por ejemplo
+`https://eneko-ruiz-curriculum.vercel.app/?para=Iberdrola`. La carta de presentación (web y PDF con carta)
+incluirá una frase con ese nombre. Se combina con el idioma: `?lang=en&para=Iberdrola`.
 
 ### Licencia
 

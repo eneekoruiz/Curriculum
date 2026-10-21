@@ -6,6 +6,8 @@
 //  - printing the live page (Ctrl+P) stays on one page with all sections
 //  - the cover letter (web text in its dialog, paper text in the printout) and the PDF options (photo, letter):
 //    the choice is remembered, the right pre-rendered variant downloads, Ctrl+P follows the choice
+//  - the personalised link (?para=Company) names the company in the letter, as plain text, and asks the PDF
+//    with the letter from the on-demand renderer
 //  - the phone top bar (language · PDF · menu): the menu reaches every secondary action, the PDF is one tap,
 //    and a plain download offers the cover-letter variant
 import { readFileSync } from 'node:fs';
@@ -162,6 +164,30 @@ try {
       if (emails !== (variant.letter ? 2 : 1)) fail(`Ctrl+P (${lang}${variantName(variant)}): the email appears ${emails} times, so the letter is ${variant.letter ? 'missing' : 'present though not chosen'}`);
       await fresh.close();
     }
+  }
+
+  // ── Personalised link ──
+  {
+    const fresh = await browser.newContext({ viewport: { width: 1366, height: 800 } });
+    const page = await fresh.newPage();
+    await page.goto(`${origin}/?lang=es&para=${encodeURIComponent('Iberdrola <img src=x onerror=alert(1)>')}`, { waitUntil: 'networkidle' });
+    await page.waitForFunction(() => !document.documentElement.classList.contains('cv-loading'));
+    const letter = await page.evaluate(() => [...document.querySelectorAll('.cl-company')].map(p => ({ hidden: p.hidden, text: p.textContent, html: p.innerHTML })));
+    if (letter.length !== 2 || letter.some(p => p.hidden || !p.text.includes('Iberdrola'))) fail(`personalised link: the letters do not name the company (${JSON.stringify(letter)})`);
+    if (letter.some(p => /[<>]/.test(p.html))) fail('personalised link: markup from the link reached the page');
+    // The PDF with the letter cannot be pre-rendered for a company: it comes from /api/pdf with the name
+    await page.click('#print-opts-btn');
+    await page.locator('label.opt-row:has(#opt-letter)').click();
+    const [request] = await Promise.all([page.waitForRequest(/\/api\/pdf/), page.click('#opt-download')]);
+    const asked = new URL(request.url());
+    if (asked.searchParams.get('letter') !== '1' || !asked.searchParams.get('para')?.startsWith('Iberdrola')) fail(`personalised link: the PDF request was ${asked.search}`);
+    await fresh.close();
+
+    const plain = await browser.newContext();
+    const plainPage = await plain.newPage();
+    await plainPage.goto(`${origin}/?lang=es`, { waitUntil: 'networkidle' });
+    if (await plainPage.evaluate(() => [...document.querySelectorAll('.cl-company')].some(p => !p.hidden))) fail('personalised link: the company sentence shows without ?para=');
+    await plain.close();
   }
 
   // ── Phone top bar: language · PDF (one tap) · menu ──

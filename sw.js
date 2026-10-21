@@ -1,4 +1,4 @@
-const CACHE_NAME = 'eneko-cv-cache-v31';
+const CACHE_NAME = 'eneko-cv-cache-v32';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
@@ -13,8 +13,10 @@ const ASSETS_TO_CACHE = [
   '/icon-512.png',
   '/favicon.png',
   '/foto.webp',
-  '/foto.jpg',
-  '/foto-small.jpg'
+  '/foto-small.jpg',
+  '/fonts/fonts.css',
+  '/fonts/manrope-latin.woff2',
+  '/fonts/bricolage-latin.woff2'
 ];
 
 self.addEventListener('install', (event) => {

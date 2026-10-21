@@ -186,12 +186,10 @@
   }
   </script>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <!-- Fonts load async: screen uses swap (shows system font immediately) -->
-  <link
-    href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Manrope:wght@400..700&display=swap"
-    rel="stylesheet" />
+  <!-- Fonts are self-hosted (fonts/): no request to Google, so no visitor IP leaves this site -->
+  <link rel="preload" href="/fonts/manrope-latin.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/fonts/bricolage-latin.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="fonts/fonts.css" />
 
   <link rel="stylesheet" href="index.css" media="screen">
   <link rel="stylesheet" href="print.css" media="print">
@@ -383,6 +381,7 @@
         <p class="cl-p"><strong class="cl-lead" data-i18n="letter_lead_2">l2</strong> <span data-i18n="letter_print_p2">p2</span></p>
         <p class="cl-p"><strong class="cl-lead" data-i18n="letter_lead_3">l3</strong> <span data-i18n="letter_p3">p3</span></p>
         <p class="cl-p"><strong class="cl-lead" data-i18n="letter_lead_4">l4</strong> <span data-i18n="letter_p4">p4</span></p>
+        <p class="cl-p cl-company" hidden></p>
         <p class="cl-p"><span data-i18n="letter_close">close</span></p>
       </div>
       <p class="cl-sign"><span data-i18n="letter_sign">Un saludo,</span><br><strong>Eneko Ruiz Mollón</strong></p>
@@ -644,6 +643,7 @@
         <p class="cl-p"><strong class="cl-lead" data-i18n="letter_lead_2">l2</strong> <span data-i18n="letter_web_p2">p2</span></p>
         <p class="cl-p"><strong class="cl-lead" data-i18n="letter_lead_3">l3</strong> <span data-i18n="letter_p3">p3</span></p>
         <p class="cl-p"><strong class="cl-lead" data-i18n="letter_lead_4">l4</strong> <span data-i18n="letter_p4">p4</span></p>
+        <p class="cl-p cl-company" hidden></p>
         <p class="cl-p"><span data-i18n="letter_close">close</span></p>
         </div>
         <p class="cl-sign"><span data-i18n="letter_sign">Un saludo,</span><br><strong>Eneko Ruiz Mollón</strong></p>

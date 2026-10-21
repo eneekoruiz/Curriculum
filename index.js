@@ -167,6 +167,7 @@ const applyTranslations = (langCode, activeMenuCode = langCode) => {
   });
 
   syncAccessibleNames();
+  renderCompany();
   updateExportButtonLabel();
 };
 
@@ -307,6 +308,25 @@ const setPrintOption = (name, value) => {
   applyPrintOptions();
 };
 
+/* ── Personalised link ──
+   ?para=Company (e.g. …/?para=Iberdrola) adds one sentence naming the company to the cover letter, on the web
+   and in the PDF with the letter. The link is made by hand for each application; nothing is detected.
+   Only letters, digits, spaces and a few name characters are kept, so the text is always plain. */
+const companyName = (new URLSearchParams(window.location.search).get('para') || '')
+  .normalize('NFC')
+  .replace(/[^\p{L}\p{N} &.,'’()+-]/gu, '')
+  .replace(/\s+/g, ' ')
+  .trim()
+  .slice(0, 40);
+
+const renderCompany = () => {
+  const sentence = (T[currentLang] || T.en).letter_company.replace('{empresa}', companyName);
+  document.querySelectorAll('.cl-company').forEach(paragraph => {
+    paragraph.hidden = !companyName;
+    paragraph.textContent = companyName ? sentence : '';
+  });
+};
+
 /* ── Opt-in portrait ── off by default; the choice is remembered. */
 const setPortrait = (on, save = true) => {
   html.classList.toggle('show-portrait', on);
@@ -325,7 +345,8 @@ const getPdfFileName = (choice) => `Eneko_Ruiz_CV_${(currentLang || 'es').toUppe
 // /api/pdf stays as a fallback for a language without them.
 const getPdfDownloadUrl = (choice = printOptions) => {
   const lang = currentLang || 'es';
-  if (window.PRINT_FIT && lang in window.PRINT_FIT) {
+  // A letter that names the company cannot be pre-rendered: it is rendered on demand
+  if (window.PRINT_FIT && lang in window.PRINT_FIT && !(choice.letter && companyName)) {
     const staticPdfUrl = new URL(`/pdf/${getPdfFileName(choice)}`, window.location.origin);
     staticPdfUrl.searchParams.set('v', window.PDF_VERSION || '1');
     return staticPdfUrl.toString();
@@ -343,6 +364,9 @@ const getDynamicPdfUrl = (choice = printOptions) => {
   }
   if (choice.letter) {
     pdfUrl.searchParams.set('letter', '1');
+    if (companyName) {
+      pdfUrl.searchParams.set('para', companyName);
+    }
   }
   return pdfUrl.toString();
 };
@@ -1257,6 +1281,16 @@ const setupScrollReveal = () => {
   setTimeout(() => {
     document.documentElement.classList.add('theme-loaded');
   }, 100);
+
+  // Vercel Web Analytics: page views only, no cookies (switched on in the Vercel dashboard). Production only,
+  // so previews and local runs are not counted.
+  if (['eneko-ruiz-curriculum.vercel.app'].includes(window.location.hostname)) {
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+    const analytics = document.createElement('script');
+    analytics.defer = true;
+    analytics.src = '/_vercel/insights/script.js';
+    document.head.append(analytics);
+  }
 
   // PWA Service Worker Registration
   if ('serviceWorker' in navigator) {
