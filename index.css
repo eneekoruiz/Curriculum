@@ -1186,9 +1186,14 @@ h1 strong {
   #print-opts-btn,
   #share-btn,
   #letter-btn,
-  #photo-btn,
-  #theme-btn {
+  #photo-btn {
     display: none;
+  }
+
+  /* The theme switch stays in the bar: the animation is worth having at hand */
+  #theme-btn {
+    width: 44px;
+    height: 44px;
   }
 
   #more-wrap {
@@ -2984,22 +2989,17 @@ html.scroll-reveal .dashboard > section.is-instant {
 }
 
 /* ── Opt-in portrait ──
-   Off by default. "Photo" (bar or menu) switches it on; it then takes real room: a large portrait above the
-   contacts on wide screens, a block of its own above the name on phones. A click opens it in #photo-dialog. */
-.header-side {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: var(--s4);
-}
-
+   Off by default. "Photo" (bar or menu) switches it on; a click on it opens #photo-dialog.
+   Tablets and wider: portrait · name block · contacts, the name a step smaller so it keeps two lines.
+   Phones: a round avatar beside the two-line name, in the space that was already there (no extra height). */
 .portrait {
   display: none;
 }
 
 .show-portrait .portrait {
   display: block;
-  width: clamp(160px, 19vw, 220px);
+  flex: none;
+  width: clamp(96px, 12vw, 156px);
   aspect-ratio: 1;
   padding: 0;
   border: 0;
@@ -3041,15 +3041,56 @@ html.scroll-reveal .dashboard > section.is-instant {
   color: var(--c-brand-ink);
 }
 
-@media (max-width: 860px) {
-  .header-side {
+@media (min-width: 701px) {
+  .show-portrait .header-main {
+    display: flex;
+    align-items: center;
+    gap: clamp(20px, 3vw, 32px);
+  }
+
+  .show-portrait .hero h1 {
+    font-size: clamp(2.4rem, min(4.2vw, 8.5svh), 3.4rem);
+  }
+}
+
+@media (max-width: 700px) {
+  .show-portrait .header-main {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: 16px;
+    align-items: center;
+  }
+
+  /* The role line above, avatar and name side by side, the location below */
+  .show-portrait .header-id {
     display: contents;
   }
 
+  .show-portrait .eyebrow {
+    grid-column: 1 / -1;
+    grid-row: 1;
+  }
+
   .show-portrait .portrait {
-    order: -1;
-    width: 132px;
-    margin-top: var(--s2);
-    border-radius: 24px;
+    grid-column: 1;
+    grid-row: 2;
+    width: 84px;
+    border-radius: 50%;
+  }
+
+  .show-portrait h1 {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .show-portrait .tagline {
+    grid-column: 1 / -1;
+    grid-row: 3;
+  }
+}
+
+@media (max-width: 359px) {
+  .show-portrait h1 {
+    font-size: 2.2rem;
   }
 }

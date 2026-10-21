@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.4.2] - 2026-10-20
+
+### Changed
+- **The theme switch is back in the phone bar** (Language · PDF · theme · menu): the transition is worth having at hand. The menu keeps only the extras: letter, PDF with letter, PDF options, photo and share.
+- **Portrait on: a proper header.** On tablets and wider it is a three-part row (portrait · name · contacts), vertically centred, with the name a step smaller so it keeps two lines; it no longer floats above the title. On phones it is a round avatar beside the two-line name, in the space that was already there, so the first screen does not grow.
+
+### Removed
+- The unused `menu_theme` text.
+
 ## [2.4.1] - 2026-10-19
 
 ### Changed

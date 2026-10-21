@@ -4,8 +4,8 @@
 //  - no text clipped by its own box (overflow hidden/ellipsis)
 //  - the language menu fits the screen when open
 //  - the cover letter and PDF options dialogs open whole inside the screen; the letter scrolls to its signature
-//  - the opt-in portrait, switched on: large, whole on screen, clear of the contacts, opens the photo dialog
-//  - the top bar: language · PDF · menu up to 920px (menu whole on screen, 44px targets), the full bar above it
+//  - the opt-in portrait, switched on: sized for the screen, whole on screen, clear of the name and contacts, opens the photo dialog
+//  - the top bar: language · PDF · theme · menu up to 920px (menu whole on screen, 44px targets), the full bar above it
 //  - the PDF preview appears whole on hover, stays while the PDF is prepared and hides when the toast shows
 //  - tap targets on phones are at least 24×24 CSS px (WCAG 2.2, 2.5.8)
 //  - no JavaScript errors and no failed requests
@@ -106,11 +106,12 @@ for (const lang of LANGS) {
     // Top bar: phones/tablets get language · PDF · menu; the secondary controls live in the menu
     const bar = await page.evaluate(() => {
       const shown = (selector) => { const el = document.querySelector(selector); return !!el && getComputedStyle(el).display !== 'none' && el.getBoundingClientRect().width > 0; };
-      return { more: shown('#more-btn'), pdf: shown('#print-btn'), others: ['#print-opts-btn', '#letter-btn', '#theme-btn'].filter(shown) };
+      return { more: shown('#more-btn'), pdf: shown('#print-btn'), others: ['#print-opts-btn', '#letter-btn'].filter(shown), theme: shown('#theme-btn') && document.querySelector('#theme-btn').getBoundingClientRect().height >= 44 };
     });
     if (width <= 920) {
       if (!bar.more || !bar.pdf) issues.push('top bar: the PDF button or the menu button is missing');
       if (bar.others.length) issues.push(`top bar: ${bar.others.join(', ')} still crowd the bar (they belong in the menu)`);
+      if (!bar.theme) issues.push('top bar: the theme button is missing or smaller than 44px');
       await page.evaluate(() => document.getElementById('lang-menu').classList.remove('open'));
       await page.click('#more-btn');
       await page.waitForTimeout(350);
@@ -138,7 +139,7 @@ for (const lang of LANGS) {
       const overlap = (a, b) => a.left < b.right - 1 && a.right > b.left + 1 && a.top < b.bottom - 1 && a.bottom > b.top + 1;
       return { l: r.left, r: r.right, w: r.width, name: overlap(r, name), contacts: overlap(r, contacts), scroll: document.documentElement.scrollWidth };
     });
-    if (portrait.w < 120) issues.push(`portrait: only ${Math.round(portrait.w)}px wide`);
+    if (portrait.w < (width <= 700 ? 70 : 90)) issues.push(`portrait: only ${Math.round(portrait.w)}px wide`);
     if (portrait.l < -1 || portrait.r > width + 1 || portrait.scroll > width + 1) issues.push(`portrait: outside the screen [${Math.round(portrait.l)}, ${Math.round(portrait.r)}]`);
     if (portrait.name || portrait.contacts) issues.push('portrait: overlaps the name or the contacts');
     await page.click('#portrait-btn');
