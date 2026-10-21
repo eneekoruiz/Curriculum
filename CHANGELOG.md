@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.5.0] - 2026-10-21
+
+### Added
+- **Personalised link for each application:** `…/?para=Iberdrola` adds one sentence naming the company to the cover letter ("Me encantaría aportar todo esto en Iberdrola."), on the web and in the PDF with the letter, in all 23 languages. The link is made by hand when applying; nothing is detected. The name is reduced to plain text (letters, digits and a few name characters, 40 at most). That PDF cannot be pre-rendered, so it comes from `/api/pdf`, which now accepts `para`.
+- **Vercel Web Analytics** (page views, no cookies), loaded on the production domain only. It counts once it is switched on in the Vercel dashboard (Project → Analytics).
+
+### Changed
+- **Fonts are self-hosted** (`fonts/`): Bricolage Grotesque and Manrope as variable woff2 files per script subset, the two Latin ones preloaded. No request to Google any more, so no visitor IP leaves the site (German courts have ruled embedded Google Fonts a GDPR breach); one less third-party connection, and the Content-Security-Policy no longer allows Google's domains.
+- Social card (`og.png`): same design; the empty lower half now carries the main stack (React · TypeScript · Node.js · PostgreSQL). It is rendered with the self-hosted fonts.
+
+### Removed
+- `foto.jpg` from the Service Worker pre-cache (the page does not use it; every visitor downloaded 96 KB for nothing).
+- The Google Fonts workaround in the build and check scripts.
+
 ## [2.4.2] - 2026-10-20
 
 ### Changed

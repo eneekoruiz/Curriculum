@@ -94,9 +94,19 @@ module.exports = async function handler(request, response) {
     // Same options as the download dialog: ?photo=0 leaves the photo out, ?letter=1 puts the cover letter first
     const withPhoto = String(request.query?.photo) !== '0';
     const withLetter = String(request.query?.letter) === '1';
+    // ?para=Company: the letter names the company (same plain-text filter as the page)
+    const company = String(request.query?.para || '')
+      .normalize('NFC')
+      .replace(/[^\p{L}\p{N} &.,'’()+-]/gu, '')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .slice(0, 40);
     const protocol = request.headers['x-forwarded-proto'] || 'https';
     const host = request.headers['x-forwarded-host'] || request.headers.host;
     const targetUrl = new URL(`/?pdf=1&lang=${lang}&theme=light`, `${protocol}://${host}`);
+    if (withLetter && company) {
+      targetUrl.searchParams.set('para', company);
+    }
 
     const browser = await getBrowser();
     page = await browser.newPage();

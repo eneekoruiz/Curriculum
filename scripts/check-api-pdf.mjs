@@ -21,22 +21,25 @@ const { server, origin } = await startServer();
 const { port } = new URL(origin);
 const failures = [];
 
-for (const lang of ['es', 'en', 'ru']) {
+// The three plain CVs, and the letter + CV with a company named through ?para= (the personalised link)
+for (const [lang, extra] of [['es', {}], ['en', {}], ['ru', {}], ['es', { letter: '1', para: 'Acme <b>Corp</b>' }]]) {
   const response = { headers: {}, setHeader(key, value) { this.headers[key] = value; }, status(code) { this.code = code; return this; }, json(body) { this.body = JSON.stringify(body); }, end(body) { this.body = body; } };
   const started = Date.now();
-  await handler({ method: 'GET', query: { lang }, headers: { host: `127.0.0.1:${port}`, 'x-forwarded-proto': 'http' } }, response);
+  await handler({ method: 'GET', query: { lang, ...extra }, headers: { host: `127.0.0.1:${port}`, 'x-forwarded-proto': 'http' } }, response);
   if (response.code !== 200 || !Buffer.isBuffer(response.body)) {
     failures.push(`${lang}: status ${response.code} ${String(response.body).slice(0, 120)}`);
     continue;
   }
   const { pages, text } = await pdfText(response.body);
   if (response.headers['Content-Type'] !== 'application/pdf') failures.push(`${lang}: wrong content type ${response.headers['Content-Type']}`);
-  if (pages !== 1) failures.push(`${lang}: ${pages} pages (must be 1)`);
+  const expected = extra.letter ? 2 : 1;
+  if (pages !== expected) failures.push(`${lang}: ${pages} pages (must be ${expected})`);
+  if (extra.para && (!text.includes('Acme bCorpb') || text.includes('<'))) failures.push(`${lang}: the letter does not name the company as plain text`);
   if (!text.trim().startsWith('Eneko Ruiz Mollón')) failures.push(`${lang}: the name is not the first line`);
   for (const needle of ['eneekoruiz@gmail.com', 'linkedin.com/in/eneko-ruiz-421254410', 'Capacitor']) {
     if (!text.includes(needle)) failures.push(`${lang}: missing "${needle}"`);
   }
-  console.log(`api/pdf ${lang}: ${response.body.length} bytes, ${pages} page, ${Date.now() - started} ms`);
+  console.log(`api/pdf ${lang}${extra.letter ? ' + letter for a company' : ''}: ${response.body.length} bytes, ${pages} page(s), ${Date.now() - started} ms`);
 }
 
 server.close();

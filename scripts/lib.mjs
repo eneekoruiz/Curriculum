@@ -2,7 +2,6 @@
 import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { readFileSync } from 'node:fs';
-import { execFileSync } from 'node:child_process';
 import { extname, join, normalize, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import vm from 'node:vm';
@@ -37,7 +36,7 @@ export const pdfPath = (lang, variant = VARIANTS[0]) =>
 const TYPES = {
   '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css',
   '.json': 'application/json', '.png': 'image/png', '.svg': 'image/svg+xml', '.pdf': 'application/pdf',
-  '.webp': 'image/webp', '.xml': 'application/xml', '.txt': 'text/plain'
+  '.webp': 'image/webp', '.woff2': 'font/woff2', '.jpg': 'image/jpeg', '.xml': 'application/xml', '.txt': 'text/plain'
 };
 
 /**
@@ -71,28 +70,11 @@ export async function startServer({ headers = {} } = {}) {
   return { server, origin: `http://127.0.0.1:${server.address().port}` };
 }
 
-/**
- * Chromium + a context. With CV_FONTS_VIA_CURL=1, Google Fonts requests are fetched with curl
- * (for sandboxes whose TLS proxy the browser does not trust); CI fetches them directly.
- */
+/** Chromium + a context. The fonts are self-hosted, so nothing is fetched from outside the repo. */
 export async function launch(contextOptions = {}) {
   // CV_CHROMIUM_PATH: use a preinstalled Chromium instead of Playwright's bundled one
   const browser = await chromium.launch(process.env.CV_CHROMIUM_PATH ? { executablePath: process.env.CV_CHROMIUM_PATH } : {});
   const context = await browser.newContext(contextOptions);
-  if (process.env.CV_FONTS_VIA_CURL === '1') {
-    const cache = new Map();
-    await context.route(/fonts\.(googleapis|gstatic)\.com/, async route => {
-      const url = route.request().url();
-      if (!cache.has(url)) {
-        cache.set(url, execFileSync('curl', ['-sS', '-A', 'Mozilla/5.0 (X11; Linux x86_64) Chrome/140.0', url], { maxBuffer: 1 << 26 }));
-      }
-      await route.fulfill({
-        body: cache.get(url),
-        contentType: url.includes('googleapis') ? 'text/css' : 'font/woff2',
-        headers: { 'access-control-allow-origin': '*' }
-      });
-    });
-  }
   return { browser, context };
 }
 
