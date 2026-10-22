@@ -5,6 +5,7 @@
  */
 
 const path = require('path');
+const fs = require('fs');
 const chromium = require('@sparticuz/chromium');
 const puppeteer = require('puppeteer-core');
 
@@ -94,6 +95,20 @@ module.exports = async function handler(request, response) {
     // Same options as the download dialog: ?photo=0 leaves the photo out, ?letter=1 puts the cover letter first
     const withPhoto = String(request.query?.photo) !== '0';
     const withLetter = String(request.query?.letter) === '1';
+    const pdfFilename = `Eneko_Ruiz_CV_${lang.toUpperCase()}${withLetter ? '_Letter' : ''}${withPhoto ? '' : '_NoPhoto'}.pdf`;
+
+    // Optimización de recursos y cuota: Si el PDF precompilado existe estáticamente, servirlo de inmediato sin Chromium
+    const staticPdfPath = path.join(__dirname, '..', 'pdf', pdfFilename);
+    if (fs.existsSync(staticPdfPath)) {
+      const staticBuf = fs.readFileSync(staticPdfPath);
+      response.setHeader('Access-Control-Allow-Origin', '*');
+      response.setHeader('Content-Type', 'application/pdf');
+      response.setHeader('Content-Length', staticBuf.length);
+      response.setHeader('Content-Disposition', `attachment; filename="${pdfFilename}"`);
+      response.setHeader('Cache-Control', 'public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800');
+      response.setHeader('X-Content-Type-Options', 'nosniff');
+      return response.status(200).end(staticBuf);
+    }
     const protocol = request.headers['x-forwarded-proto'] || 'https';
     const host = request.headers['x-forwarded-host'] || request.headers.host;
     const targetUrl = new URL(`/?pdf=1&lang=${lang}&theme=light`, `${protocol}://${host}`);
@@ -187,7 +202,7 @@ module.exports = async function handler(request, response) {
     response.setHeader('Content-Type', 'application/pdf');
     response.setHeader('Content-Length', pdfBuffer.length);
     response.setHeader('Content-Disposition', `attachment; filename="Eneko_Ruiz_CV_${lang.toUpperCase()}${withLetter ? '_Letter' : ''}${withPhoto ? '' : '_NoPhoto'}.pdf"`);
-    response.setHeader('Cache-Control', 'private, max-age=300, stale-while-revalidate=86400');
+    response.setHeader('Cache-Control', 'public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800');
     response.setHeader('X-Content-Type-Options', 'nosniff');
     response.status(200).end(pdfBuffer);
   } catch (error) {

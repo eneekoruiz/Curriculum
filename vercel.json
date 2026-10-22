@@ -19,7 +19,7 @@
       "headers": [
         {
           "key": "Cache-Control",
-          "value": "no-store, max-age=0"
+          "value": "public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800"
         },
         {
           "key": "Access-Control-Allow-Origin",
@@ -56,7 +56,7 @@
   "functions": {
     "api/pdf.js": {
       "maxDuration": 30,
-      "memory": 2048
+      "memory": 1024
     }
   },
   "rewrites": [
