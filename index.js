@@ -438,9 +438,6 @@ const downloadGeneratedPdf = async (printButton, options = {}) => {
     showCopyTip(printButton, copy.ready);
       printButton.classList.add('is-success');
       setTimeout(() => printButton.classList.remove('is-success'), 4000);
-    if (!choice.letter) {
-      offerLetter();
-    }
   } catch (error) {
     console.error('Blob PDF download failed; falling back to direct PDF navigation:', error);
     if (runtime.isEmbedded && window.parent) {
@@ -451,29 +448,6 @@ const downloadGeneratedPdf = async (printButton, options = {}) => {
   } finally {
     clearTimeout(timeoutId);
   }
-};
-/**
- * After a PDF without the cover letter: a short offer to get it with the letter, one tap away
- * (the saved options are not changed).
- */
-const offerLetter = () => {
-  document.querySelector('.pdf-snack')?.remove();
-  const copy = T[currentLang] || T.en;
-  const snack = document.createElement('div');
-  snack.className = 'pdf-snack';
-  snack.setAttribute('role', 'status');
-  const question = document.createElement('span');
-  question.textContent = copy.toast_letter_ask;
-  const accept = document.createElement('button');
-  accept.type = 'button';
-  accept.textContent = copy.menu_pdf_letter;
-  accept.addEventListener('click', () => {
-    snack.remove();
-    window.handlePrint({ photo: printOptions.photo, letter: true });
-  });
-  snack.append(question, accept);
-  document.body.append(snack);
-  setTimeout(() => snack.remove(), 9000);
 };
 
 /* ── CORE ACTIONS ─────────────────────────────────────────────── */
@@ -939,12 +913,9 @@ const setupScrollReveal = () => {
 
 /* ── INITIALIZATION ───────────────────────────────────────────── */
 (function init() {
-  // Force manual scroll position behavior on page load to prevent erratic scroll jumps
   if ('scrollRestoration' in history) {
-    history.scrollRestoration = 'manual';
+    history.scrollRestoration = 'auto';
   }
-  window.scrollTo(0, 0);
-  requestAnimationFrame(() => window.scrollTo(0, 0));
 
   const runtimeContext = getRuntimeContext();
 
@@ -1204,12 +1175,6 @@ const setupScrollReveal = () => {
       scrollTicking = true;
     }
   }, { passive: true });
-
-  // Disable automatic scroll restoration on refresh and force page to top to trigger animations cleanly
-  if ('scrollRestoration' in history) {
-    history.scrollRestoration = 'manual';
-  }
-  window.scrollTo(0, 0);
 
   setupPrintScale();
   const printControl = document.getElementById('print-btn');

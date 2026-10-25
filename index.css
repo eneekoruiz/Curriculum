@@ -636,7 +636,7 @@ html[data-theme="dark"] #icon-moon {
 .eyebrow {
   font-family: var(--f-sans);
   font-size: 9px;
-  letter-spacing: .3em;
+  letter-spacing: .12em;
   text-transform: uppercase;
   color: var(--c-brand-ink);
   margin-bottom: var(--s3);
@@ -876,6 +876,13 @@ h1 strong {
     box-shadow var(--dur) var(--ease);
   cursor: default;
   box-shadow: 0 1px 2px rgba(0,0,0,0.01);
+}
+
+.pill.pill-primary {
+  font-weight: 600;
+  color: var(--c-ink);
+  border-color: var(--c-brand);
+  background: var(--c-accent-s);
 }
 
 .pill:hover {
@@ -2732,7 +2739,7 @@ html.scroll-reveal .dashboard > section.is-instant {
   border: 0;
   padding: 0;
   background: transparent;
-  width: min(92vw, 520px);
+  width: min(92vw, 560px);
   max-width: 92vw;
   max-height: calc(100dvh - 32px);
   margin: auto;
@@ -2793,7 +2800,7 @@ html.scroll-reveal .dashboard > section.is-instant {
 }
 
 .photo-avatar-wrap {
-  width: min(100%, 360px);
+  width: min(100%, 420px);
   height: auto;
   aspect-ratio: 1;
   flex-shrink: 0;

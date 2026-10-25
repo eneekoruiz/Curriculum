@@ -33,13 +33,20 @@ const CARD = `<!doctype html>
   .url { position: absolute; right: 84px; bottom: 60px; font-size: 20px; color: #64748b; }
 </style></head>
 <body>
-  <p class="eyebrow">Ingeniero de Software · Full Stack</p>
+  <p class="eyebrow">Software Engineer · Full Stack Developer</p>
   <h1>Eneko Ruiz Mollón</h1>
   <div class="rule"></div>
   <div class="facts">
-    <div class="fact"><p class="degree">UPV/EHU</p><p class="label">Ingeniería Informática</p><p class="sub">Mención en Ing. del Software · 2027</p></div>
-    <div class="fact"><p class="level">C1</p><p class="label">Inglés</p><p class="sub">Certificado Cambridge</p></div>
-    <div class="fact"><p class="level">C1</p><p class="label">Euskera</p><p class="sub">Certificado HABE</p></div>
+    <div class="fact">
+      <p class="degree">Ingeniería del Software</p>
+      <p class="label">Grado en Ingeniería Informática</p>
+      <p class="sub">Universidad del País Vasco (UPV/EHU)</p>
+    </div>
+    <div class="fact">
+      <p class="degree">Stack principal</p>
+      <p class="label">React · TypeScript · Node.js</p>
+      <p class="sub">Next.js · PostgreSQL · Supabase</p>
+    </div>
   </div>
   <p class="url">eneko-ruiz-curriculum.vercel.app</p>
 </body></html>`;

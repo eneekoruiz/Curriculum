@@ -522,6 +522,12 @@ h1,
   color: var(--ink-2);
 }
 
+.pill.pill-primary {
+  font-weight: 700;
+  color: var(--ink);
+  border-color: var(--brand);
+}
+
 .skills {
   gap: 1.2mm;
 }

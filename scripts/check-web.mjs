@@ -213,15 +213,11 @@ try {
     await page.mouse.click(20, 400);
     if ((await page.getAttribute('#more-btn', 'aria-expanded')) !== 'false') fail('phone menu: a tap outside did not close it');
 
-    // The PDF button downloads at once; the offer after it gets the cover-letter variant.
+    // The PDF button downloads at once cleanly without interruptions
     const [plain] = await Promise.all([page.waitForEvent('download'), page.click('#print-btn')]);
     if (plain.suggestedFilename() !== 'Eneko_Ruiz_CV_ES.pdf') fail(`phone PDF button: downloaded "${plain.suggestedFilename()}" instead of Eneko_Ruiz_CV_ES.pdf`);
-    await page.waitForSelector('.pdf-snack', { timeout: 5000 }).catch(() => fail('phone PDF button: no offer for the cover letter after the download'));
-    const [offered] = await Promise.all([page.waitForEvent('download'), page.click('.pdf-snack button')]);
-    if (offered.suggestedFilename() !== 'Eneko_Ruiz_CV_ES_Letter.pdf') fail(`phone PDF offer: downloaded "${offered.suggestedFilename()}"`);
-    if (await page.locator('.pdf-snack').count()) fail('phone PDF offer: it stays after being used');
-    // ...and none of this changed the saved options
-    if ((await page.evaluate(() => localStorage.getItem('cv-print-options'))) !== null) fail('phone menu: asking for the letter changed the saved options');
+    if (await page.locator('.pdf-snack').count() > 0) fail('phone PDF button: snackbar should not appear');
+    if ((await page.evaluate(() => localStorage.getItem('cv-print-options'))) !== null) fail('phone menu: download changed the saved options');
     await fresh.close();
 
     const wide = await browser.newContext({ viewport: { width: 1366, height: 800 } });
