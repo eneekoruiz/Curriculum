@@ -882,7 +882,7 @@ h1 strong {
   font-weight: 600;
   color: var(--c-ink);
   border-color: var(--c-brand);
-  background: var(--c-accent-s);
+  background: var(--c-accent-b);
 }
 
 .pill:hover {
