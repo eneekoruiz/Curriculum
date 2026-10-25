@@ -29,12 +29,21 @@ CV interactivo construido con HTML, CSS y JavaScript vanilla — sin dependencia
 ### Tras editar el CV
 
 ```bash
-cd scripts && npm install
+npm ci --ignore-scripts
+cd scripts && npm ci
 npx playwright install chromium   # solo la primera vez
 npm run build    # regenera pdf/*.pdf (4 variantes por idioma) + print-zoom.js
 npm run og       # regenera og.png
 npm run check    # PDF de una página y ATS, web, maquetación responsive (18 tamaños) y WCAG AA
 ```
+
+Para regenerar `foto.webp` y `foto.jpg` desde la foto original (recorte fijo de 720 × 720 desde x=24, y=165):
+
+```bash
+node scripts/generate-headshot.mjs "ruta/a/la/foto-original.jpg"
+```
+
+La función PDF usa `VERCEL_URL` en Vercel y el dominio público del CV como alternativa. Las pruebas locales fijan `CV_SITE_ORIGIN` al servidor de prueba; las cabeceras de la petición no determinan el destino del navegador.
 
 ### Licencia
 

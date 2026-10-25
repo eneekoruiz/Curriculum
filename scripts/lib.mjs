@@ -100,11 +100,15 @@ export async function launch(contextOptions = {}) {
 export async function pdfText(buffer) {
   const pdfjs = await import('pdfjs-dist/legacy/build/pdf.mjs');
   const doc = await pdfjs.getDocument({ data: new Uint8Array(buffer), useSystemFonts: false, verbosity: 0 }).promise;
-  const pages = [];
-  for (let i = 1; i <= doc.numPages; i++) {
-    const content = await (await doc.getPage(i)).getTextContent();
-    pages.push(content.items.map(item => item.str + (item.hasEOL ? '\n' : '')).join(''));
+  try {
+    const pages = [];
+    for (let i = 1; i <= doc.numPages; i++) {
+      const content = await (await doc.getPage(i)).getTextContent();
+      pages.push(content.items.map(item => item.str + (item.hasEOL ? '\n' : '')).join(''));
+    }
+    return { pages: doc.numPages, text: pages.join('\n') };
+  } finally {
+    await doc.destroy();
   }
-  return { pages: doc.numPages, text: pages.join('\n') };
 }
 

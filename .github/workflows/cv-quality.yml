@@ -29,11 +29,13 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: npm install --no-audit --no-fund
+      - run: npm ci --no-audit --no-fund
       - name: Install the PDF function's dependencies (api/pdf.js)
         working-directory: .
-        run: npm install --ignore-scripts --no-audit --no-fund
+        run: npm ci --ignore-scripts --no-audit --no-fund
       - run: npx playwright install --with-deps chromium
+      - name: Audit regression checks
+        run: node check-regressions.mjs
       - name: PDFs are up to date and ATS-safe
         run: node build-pdfs.mjs --check
       - name: Web checks (first screen, overflow, JS errors, languages, Ctrl+P)

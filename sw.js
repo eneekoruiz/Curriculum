@@ -1,4 +1,4 @@
-const CACHE_NAME = 'eneko-cv-cache-v31';
+const CACHE_NAME = 'eneko-cv-cache-v32';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
@@ -43,13 +43,14 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
   const requestUrl = new URL(event.request.url);
-  if (requestUrl.pathname.startsWith('/api/')) {
+  if (event.request.method !== 'GET' || requestUrl.origin !== self.location.origin ||
+      requestUrl.pathname.startsWith('/api/')) {
     return;
   }
 
-  // Network-first for the page and its code (HTML, JS, CSS, JSON): they ship together, so an online visitor
+  // Network-first for the page, code and PDFs: an online visitor
   // must never get a new page with old scripts. The cache is only the offline fallback.
-  const isCode = event.request.mode === 'navigate' || /\.(?:js|css|json)$/.test(requestUrl.pathname);
+  const isCode = event.request.mode === 'navigate' || /\.(?:js|css|json|pdf)$/.test(requestUrl.pathname);
   if (isCode) {
     event.respondWith(
       fetch(event.request)
@@ -60,7 +61,14 @@ self.addEventListener('fetch', (event) => {
           }
           return networkResponse;
         })
-        .catch(() => caches.match(event.request))
+        .catch(async () => {
+          const cached = await caches.match(event.request);
+          if (cached) return cached;
+          if (event.request.mode === 'navigate' && ['/', '/index.html'].includes(requestUrl.pathname)) {
+            return (await caches.match('/index.html')) || Response.error();
+          }
+          return Response.error();
+        })
     );
     return;
   }

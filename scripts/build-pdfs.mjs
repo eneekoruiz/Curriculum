@@ -6,7 +6,7 @@
 //                                  rebuild), if a committed PDF breaks an ATS rule, or if a fresh
 //                                  render in this browser breaks one
 //
-// Staleness is judged on the sources (a hash of the files the PDFs are made from), not on the PDF
+// Each PDF carries its source hash, language and variant in its metadata, not a hash of the PDF
 // bytes or text: those shift slightly between Chromium versions without any content change.
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { existsSync, readFileSync } from 'node:fs';
@@ -19,7 +19,7 @@ const CHECK = process.argv.includes('--check');
 const { T, M, langs } = loadTranslations();
 
 /** Files the PDFs are rendered from; any change to them requires a rebuild. */
-const SOURCES = ['index.html', 'print.css', 'translations.js', 'index.js', 'foto-small.jpg'];
+const SOURCES = ['index.html', 'print.css', 'translations.js', 'index.js', 'foto-small.jpg', 'scripts/lib.mjs', 'scripts/build-pdfs.mjs'];
 const sourceHash = () => {
   const hash = createHash('sha1');
   // Normalise line endings of the text files: Windows checkouts use CRLF, CI (Linux) uses LF; the hash must not depend on it.
@@ -96,14 +96,14 @@ function atsProblems(lang, { pages, text: fullText }, { letter }) {
   return problems;
 }
 
-async function withMetadata(buffer, lang, title) {
+async function withMetadata(buffer, lang, title, creator) {
   const doc = await PDFDocument.load(buffer);
   doc.setTitle(title);
   doc.setAuthor('Eneko Ruiz Mollón');
   doc.setSubject(T[lang].meta_desc);
   doc.setKeywords(KEYWORDS);
   doc.setLanguage(lang);
-  doc.setCreator('eneko-cv build-pdfs');
+  doc.setCreator(creator);
   return Buffer.from(await doc.save());
 }
 
@@ -121,7 +121,7 @@ const committedSource = (() => {
 
 if (CHECK && committedSource !== sourceHash()) {
   failures.push('sources');
-  console.log('✗ PDFs are out of date with index.html / print.css / translations.js / index.js / foto-small.jpg: run `npm run build` in scripts/ and commit pdf/ and print-zoom.js');
+  console.log('✗ PDFs are out of date with their sources or build script: run `npm run build` in scripts/ and commit pdf/ and print-zoom.js');
 }
 
 try {
@@ -145,7 +145,8 @@ try {
       if (variant.letter && variant.photo) fits[lang].letter = letterFit || 1;
       summary.push(`${zoom.toFixed(2)}${letterFit ? `/${letterFit.toFixed(2)}` : ''}`);
 
-      const pdf = await withMetadata(raw, lang, title);
+      const creator = `eneko-cv build-pdfs ${sourceHash()} ${lang}${variantName(variant)}`;
+      const pdf = await withMetadata(raw, lang, title, creator);
       const found = atsProblems(lang, await pdfText(pdf), variant).map(p => `render ${name}: ${p}`);
       if (roleWrapped) found.push(`render ${name}: the role line is split over two lines`);
       if (variant.letter && letterFit && letterFit < 0.8) found.push(`render ${name}: the letter had to shrink to ${letterFit}`);
@@ -155,7 +156,11 @@ try {
         if (!existsSync(committed)) {
           found.push(`missing ${committed.replace(ROOT, '')}`);
         } else {
-          found.push(...atsProblems(lang, await pdfText(await readFile(committed)), variant).map(p => `committed ${name}: ${p}`));
+          const committedBytes = await readFile(committed);
+          if ((await PDFDocument.load(committedBytes)).getCreator() !== creator) {
+            found.push(`committed ${name}: source hash, language or variant is out of date`);
+          }
+          found.push(...atsProblems(lang, await pdfText(committedBytes), variant).map(p => `committed ${name}: ${p}`));
         }
       } else {
         await writeFile(pdfPath(lang, variant), pdf);

@@ -5,7 +5,7 @@
  */
 
 const path = require('path');
-const chromium = require('@sparticuz/chromium');
+const { default: chromium } = require('@sparticuz/chromium');
 const puppeteer = require('puppeteer-core');
 
 const VALID_LANGS = [
@@ -18,7 +18,7 @@ let browserInstance = null;
 let browserLaunchLock = null;
 
 const getBrowser = async () => {
-  if (browserInstance && browserInstance.isConnected()) {
+  if (browserInstance && browserInstance.connected) {
     return browserInstance;
   }
 
@@ -48,7 +48,7 @@ const getBrowser = async () => {
             ],
             defaultViewport: { width: 1080, height: 1528, deviceScaleFactor: 2 },
             executablePath,
-            headless: chromium.headless
+            headless: 'shell'
           });
 
           return browserInstance;
@@ -94,9 +94,12 @@ module.exports = async function handler(request, response) {
     // Same options as the download dialog: ?photo=0 leaves the photo out, ?letter=1 puts the cover letter first
     const withPhoto = String(request.query?.photo) !== '0';
     const withLetter = String(request.query?.letter) === '1';
-    const protocol = request.headers['x-forwarded-proto'] || 'https';
-    const host = request.headers['x-forwarded-host'] || request.headers.host;
-    const targetUrl = new URL(`/?pdf=1&lang=${lang}&theme=light`, `${protocol}://${host}`);
+    const site = new URL(process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : process.env.CV_SITE_ORIGIN || 'https://eneko-ruiz-curriculum.vercel.app');
+    const localTest = !process.env.VERCEL && site.protocol === 'http:' && site.hostname === '127.0.0.1';
+    if (site.protocol !== 'https:' && !localTest) throw new Error('Invalid PDF site origin');
+    const targetUrl = new URL(`/?pdf=1&lang=${lang}&theme=light`, site.origin);
 
     const browser = await getBrowser();
     page = await browser.newPage();
@@ -105,11 +108,11 @@ module.exports = async function handler(request, response) {
     await page.setBypassServiceWorker(true);
     await page.setRequestInterception(true);
     page.on('request', (route) => {
-      const url = route.url();
-      const resourceType = route.resourceType();
+      const url = new URL(route.url());
+      const allowed = url.origin === targetUrl.origin ||
+        ['https://fonts.googleapis.com', 'https://fonts.gstatic.com'].includes(url.origin);
       const skipResource =
-        url.endsWith('/manifest.json') ||
-        url.endsWith('/sw.js');
+        !allowed || url.pathname === '/manifest.json' || url.pathname === '/sw.js';
 
       if (skipResource) {
         route.abort();
@@ -121,10 +124,13 @@ module.exports = async function handler(request, response) {
     page.setDefaultNavigationTimeout(10000);
     page.setDefaultTimeout(10000);
 
-    await page.goto(targetUrl.toString(), {
+    const navigation = await page.goto(targetUrl.toString(), {
       waitUntil: 'domcontentloaded',
       timeout: 10000
     });
+    if (!navigation || navigation.status() !== 200 || new URL(page.url()).origin !== targetUrl.origin) {
+      throw new Error('PDF page could not be loaded from the configured origin');
+    }
 
     // Lay out at the printable A4 width (210mm - 2 × 13mm) so the one-page check measures the real page.
     await page.setViewport({ width: 695, height: 1051, deviceScaleFactor: 1 });
@@ -160,13 +166,13 @@ module.exports = async function handler(request, response) {
     await new Promise(resolve => setTimeout(resolve, 40));
 
     // Guarantee one page: if this Chromium lays it out slightly longer, shrink 1% and re-render
-    const renderPdf = () => page.pdf({
+    const renderPdf = async () => Buffer.from(await page.pdf({
       format: 'A4',
       printBackground: true,
       margin: { top: '0px', right: '0px', bottom: '0px', left: '0px' },
       displayHeaderFooter: false,
       preferCSSPageSize: true
-    });
+    }));
     // Raw Chromium output has one "/Type /Page" dictionary per page: the CV is one page, the letter another
     const expectedPages = withLetter ? 2 : 1;
     const isTooLong = (buffer) => (buffer.toString('latin1').match(/\/Type\s*\/Page(?!s)/g) || []).length > expectedPages;

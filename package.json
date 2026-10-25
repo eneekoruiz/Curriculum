@@ -9,7 +9,7 @@
     "prepare": "git config core.hooksPath .githooks"
   },
   "dependencies": {
-    "@sparticuz/chromium": "148.0.0",
-    "puppeteer-core": "22.15.0"
+    "@sparticuz/chromium": "153.0.0",
+    "puppeteer-core": "25.16.0"
   }
 }

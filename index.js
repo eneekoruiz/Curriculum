@@ -142,6 +142,10 @@ const applyTranslations = (langCode, activeMenuCode = langCode) => {
   if (langLabel) {
     langLabel.textContent = activeMenuCode === 'auto' ? 'Auto' : metadata.name;
   }
+  const langShort = document.getElementById('lang-short');
+  if (langShort) {
+    langShort.textContent = activeMenuCode === 'auto' ? 'Auto' : metadata.iso;
+  }
   
   // Search Engine & Metadata synchronization
   const metaDescription = translations.meta_desc || T.en.meta_desc || '';
@@ -151,7 +155,7 @@ const applyTranslations = (langCode, activeMenuCode = langCode) => {
   document.querySelector('meta[property="og:locale"]')?.setAttribute('content', metadata.locale);
   
   // Dynamic footer copyright year update
-  const footerElement = document.querySelector('.site-footer');
+  const footerElement = document.getElementById('footer-copyright');
   if (footerElement) {
     const currentYear = new Date().getFullYear();
     footerElement.textContent = `© ${currentYear} ${translations.footer_text}`;
@@ -209,11 +213,21 @@ const syncAccessibleNames = () => {
  * @param {string} langCode 
  */
 const setLang = (langCode) => {
+  if (langCode !== 'auto' && (!Object.hasOwn(T, langCode) || !Object.hasOwn(M, langCode))) {
+    return;
+  }
+  const url = new URL(window.location.href);
+  if (langCode === 'auto') {
+    url.searchParams.delete('lang');
+  } else {
+    url.searchParams.set('lang', langCode);
+  }
+  history.replaceState(history.state, '', url);
   if (langCode === 'auto') {
     safeStorage.remove('cv-lang');
     const browserLang = (navigator.languages || [navigator.language || ''])
       .map(code => String(code).slice(0, 2).toLowerCase())
-      .find(code => T[code]);
+      .find(code => Object.hasOwn(T, code));
     applyTranslations(browserLang || 'en', 'auto');
   } else {
     safeStorage.set('cv-lang', langCode);
@@ -601,18 +615,13 @@ window.handlePrint = async (choice) => {
   }
 };
 
-/** The control the share toast hangs from: the share button, or the menu button where share lives in the menu. */
-const visibleShareAnchor = () => {
-  const shareButton = document.getElementById('share-btn');
-  return shareButton.offsetParent ? shareButton : document.getElementById('more-btn');
-};
-
 /**
  * Shares the curriculum URL.
  * Automatically tries to invoke the native Web Share API on mobile,
  * falling back to copy-to-clipboard on desktop browsers.
  */
 window.handleShare = async () => {
+  const shareButton = document.getElementById('share-btn');
   if (navigator.vibrate) {
     navigator.vibrate(5);
   }
@@ -632,10 +641,10 @@ window.handleShare = async () => {
     try {
       await navigator.clipboard.writeText(window.location.href);
       const successMessage = T[currentLang]?.copy_ok || 'Link Copied!';
-      showCopyTip(visibleShareAnchor(), successMessage);
+      showCopyTip(shareButton, successMessage);
     } catch (clipboardError) {
       console.error('Clipboard writeText failed in handleShare:', clipboardError);
-      showCopyTip(visibleShareAnchor(), 'Error al copiar link');
+      showCopyTip(shareButton, 'Error al copiar link');
     }
   }
 };
@@ -1040,8 +1049,7 @@ const setupScrollReveal = () => {
     });
   }
 
-  // Phone/tablet menu (#more-menu): disclosure button + labelled actions. Most items forward to the
-  // desktop button that already does the job; the PDF-with-letter item downloads straight away.
+  // Phone/tablet menu: photo, PDF options and cover letter reuse the desktop controls.
   const moreButton = document.getElementById('more-btn');
   const moreMenu = document.getElementById('more-menu');
   if (moreButton && moreMenu) {
@@ -1064,15 +1072,9 @@ const setupScrollReveal = () => {
     moreMenu.querySelectorAll('.mm-item').forEach((item) => {
       item.addEventListener('click', () => {
         setMoreMenu(false);
-        if (item.id === 'mm-pdf-letter') {
-          window.handlePrint({ photo: printOptions.photo, letter: true });
-        } else {
-          document.querySelector(item.dataset.forward).click();
-        }
+        document.querySelector(item.dataset.forward).click();
       });
     });
-    // Share only where the browser can (same condition as the desktop button, set just below)
-    document.getElementById('mm-share').hidden = !(navigator.share || navigator.clipboard);
   }
 
   const shareButton = document.getElementById('share-btn');
@@ -1126,10 +1128,13 @@ const setupScrollReveal = () => {
   // Handle messages received from parent frame (if embedded inside portfolio context)
   window.addEventListener('message', (event) => {
     const trustedOrigins = [window.location.origin, 'https://eneko-ruiz.vercel.app'];
-    if (!trustedOrigins.some(origin => event.origin.startsWith(origin))) {
+    if (window.parent === window || event.source !== window.parent ||
+        !trustedOrigins.includes(event.origin) || !event.data ||
+        typeof event.data !== 'object' || typeof event.data.type !== 'string') {
       return;
     }
     if (event.data.type === 'set-theme') {
+      if (!['light', 'dark'].includes(event.data.theme)) return;
       applyTheme(event.data.theme === 'dark');
     }
     if (event.data.type === 'print-cv') {
@@ -1229,12 +1234,15 @@ const setupScrollReveal = () => {
   // URL → saved choice → visitor's browser language → English (international default)
   const browserLang = (navigator.languages || [navigator.language || ''])
     .map(code => String(code).slice(0, 2).toLowerCase())
-    .find(code => T[code]);
-  const explicitLang = [urlParameters.get('lang'), safeStorage.get('cv-lang')].find(code => code && T[code]);
+    .find(code => Object.hasOwn(T, code));
+  const explicitLang = [urlParameters.get('lang'), safeStorage.get('cv-lang')].find(code => code && Object.hasOwn(T, code));
   const initialLang = explicitLang || browserLang || 'en';
   applyTranslations(initialLang, explicitLang ? initialLang : 'auto');
   updateExportButtonLabel();
-  window.addEventListener('resize', () => updateExportButtonLabel(), { passive: true });
+  window.addEventListener('resize', () => {
+    updateExportButtonLabel();
+    syncAccessibleNames();
+  }, { passive: true });
 
   if (urlParameters.has('pdf')) {
     forcePrintReadyState();

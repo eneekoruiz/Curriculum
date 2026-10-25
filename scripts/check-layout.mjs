@@ -72,6 +72,13 @@ for (const lang of LANGS) {
       return out;
     }, width <= 700));
 
+    const footer = await page.evaluate(() => {
+      const icon = document.querySelector('.footer-icon').getBoundingClientRect();
+      const link = document.querySelector('.footer-link');
+      return { iconWidth: icon.width, iconHeight: icon.height, fontSize: parseFloat(getComputedStyle(link).fontSize), height: link.getBoundingClientRect().height };
+    });
+    if (footer.iconWidth > 16 || footer.iconHeight > 16 || footer.fontSize > 12 || footer.height > 44) issues.push('footer: source link or icon is oversized');
+
     const trigger = page.locator('#lang-trigger');
     if (await trigger.isVisible()) {
       await trigger.click();
@@ -99,17 +106,20 @@ for (const lang of LANGS) {
       if (!p.shown) issues.push('PDF preview hides while the PDF is being prepared');
       else if (p.l < -1 || p.r > width + 1 || p.b > height + 1) issues.push(`PDF preview cut while preparing [${Math.round(p.l)}, ${Math.round(p.r)}]`);
       await page.evaluate(() => document.getElementById('print-btn').classList.add('is-success'));
-      await page.waitForTimeout(600);
+      await page.waitForFunction(() => {
+        const style = getComputedStyle(document.querySelector('.pdf-preview'));
+        return style.visibility === 'hidden' && Number(style.opacity) === 0;
+      }, null, { timeout: 3000 }).catch(() => {});
       p = await previewState();
       if (p.shown) issues.push('PDF preview stays visible after the download finished');
     }
-    // Top bar: phones/tablets get language · PDF · menu; the secondary controls live in the menu
+    // Sharing and theme stay outside the three document options on phones/tablets.
     const bar = await page.evaluate(() => {
       const shown = (selector) => { const el = document.querySelector(selector); return !!el && getComputedStyle(el).display !== 'none' && el.getBoundingClientRect().width > 0; };
-      return { more: shown('#more-btn'), pdf: shown('#print-btn'), others: ['#print-opts-btn', '#letter-btn', '#theme-btn'].filter(shown) };
+      return { more: shown('#more-btn'), pdf: shown('#print-btn'), share: shown('#share-btn'), theme: shown('#theme-btn'), others: ['#print-opts-btn', '#letter-btn', '#photo-btn'].filter(shown) };
     });
     if (width <= 920) {
-      if (!bar.more || !bar.pdf) issues.push('top bar: the PDF button or the menu button is missing');
+      if (!bar.more || !bar.pdf || !bar.theme || !bar.share) issues.push('top bar: PDF, share, theme or menu button is missing');
       if (bar.others.length) issues.push(`top bar: ${bar.others.join(', ')} still crowd the bar (they belong in the menu)`);
       await page.evaluate(() => document.getElementById('lang-menu').classList.remove('open'));
       await page.click('#more-btn');
@@ -121,7 +131,7 @@ for (const lang of LANGS) {
       });
       if (menu.open !== 'true') issues.push('top bar: the menu button does not report the menu as open');
       if (menu.l < -1 || menu.r > width + 1 || menu.b > height + 1) issues.push(`top bar: menu outside the screen [${Math.round(menu.l)}, ${Math.round(menu.r)}] bottom ${Math.round(menu.b)}`);
-      if (menu.items < 4 || menu.small) issues.push(`top bar: menu has ${menu.items} items, ${menu.small} under 44px tall`);
+      if (menu.items !== 3 || menu.small) issues.push(`top bar: menu has ${menu.items} items, ${menu.small} under 44px tall`);
       await page.keyboard.press('Escape');
       if ((await page.evaluate(() => document.getElementById('more-btn').getAttribute('aria-expanded'))) !== 'false') issues.push('top bar: Escape does not close the menu');
     } else if (bar.more) {
@@ -134,16 +144,25 @@ for (const lang of LANGS) {
     const portrait = await page.evaluate(() => {
       const r = document.getElementById('portrait-btn').getBoundingClientRect();
       const name = document.querySelector('h1').getBoundingClientRect();
+      const identity = document.querySelector('.header-main').getBoundingClientRect();
       const contacts = document.querySelector('.contacts').getBoundingClientRect();
       const overlap = (a, b) => a.left < b.right - 1 && a.right > b.left + 1 && a.top < b.bottom - 1 && a.bottom > b.top + 1;
-      return { l: r.left, r: r.right, w: r.width, name: overlap(r, name), contacts: overlap(r, contacts), scroll: document.documentElement.scrollWidth };
+      return { l: r.left, r: r.right, w: r.width, top: r.top, identityBottom: identity.bottom, name: overlap(r, name), contacts: overlap(r, contacts), scroll: document.documentElement.scrollWidth };
     });
     if (portrait.w < 120) issues.push(`portrait: only ${Math.round(portrait.w)}px wide`);
     if (portrait.l < -1 || portrait.r > width + 1 || portrait.scroll > width + 1) issues.push(`portrait: outside the screen [${Math.round(portrait.l)}, ${Math.round(portrait.r)}]`);
     if (portrait.name || portrait.contacts) issues.push('portrait: overlaps the name or the contacts');
+    if (width <= 860 && portrait.top < portrait.identityBottom - 1) issues.push('portrait: must appear below the name and location');
     await page.click('#portrait-btn');
     await page.waitForTimeout(250);
     if (!(await page.evaluate(() => document.getElementById('photo-dialog').open))) issues.push('portrait: click does not open the photo dialog');
+    const photoModal = await page.evaluate(() => {
+      const dialog = document.getElementById('photo-dialog').getBoundingClientRect();
+      const image = document.querySelector('.photo-avatar-wrap').getBoundingClientRect();
+      return { width: image.width, left: dialog.left, right: dialog.right, top: dialog.top, bottom: dialog.bottom };
+    });
+    if (width <= 860 && photoModal.width < portrait.w * 1.5) issues.push('portrait: enlarged photo must be noticeably bigger than the inline portrait');
+    if (photoModal.left < -1 || photoModal.right > width + 1 || photoModal.top < -1 || photoModal.bottom > height + 1) issues.push('portrait: photo dialog is outside the viewport');
     await page.keyboard.press('Escape');
     await page.evaluate(() => document.getElementById('photo-btn').click());
 

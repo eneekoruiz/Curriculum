@@ -168,11 +168,17 @@ try {
   {
     const fresh = await browser.newContext({ acceptDownloads: true, viewport: { width: 390, height: 844 } });
     const page = await fresh.newPage();
+    await page.addInitScript(() => {
+      Object.defineProperty(navigator, 'share', { value: async data => { window.__shared = data; } });
+    });
     await page.goto(`${origin}/?lang=es`, { waitUntil: 'networkidle' });
     await page.waitForFunction(() => !document.documentElement.classList.contains('cv-loading'));
     const visible = (selector) => page.evaluate((s) => getComputedStyle(document.querySelector(s)).display !== 'none', selector);
-    for (const selector of ['#lang-trigger', '#print-btn', '#more-btn']) if (!(await visible(selector))) fail(`phone bar: ${selector} is not shown`);
-    for (const selector of ['#print-opts-btn', '#letter-btn', '#share-btn', '#photo-btn', '#theme-btn']) if (await visible(selector)) fail(`phone bar: ${selector} crowds the bar`);
+    for (const selector of ['#lang-trigger', '#print-btn', '#share-btn', '#theme-btn', '#more-btn']) if (!(await visible(selector))) fail(`phone bar: ${selector} is not shown`);
+    for (const selector of ['#print-opts-btn', '#letter-btn', '#photo-btn']) if (await visible(selector)) fail(`phone bar: ${selector} crowds the bar`);
+    if (await page.locator('#more-menu .mm-item').count() !== 3) fail('phone menu: must contain only photo, PDF options and cover letter');
+    await page.click('#share-btn');
+    if (await page.evaluate(() => window.__shared?.url) !== page.url()) fail('phone share: the visible button did not share the current URL');
 
     const openMenu = async () => { await page.click('#more-btn'); await page.waitForTimeout(300); };
     const choose = (text) => page.locator('#more-menu .mm-item', { hasText: text }).click();
@@ -200,25 +206,20 @@ try {
     await page.keyboard.press('Escape');
     const theme = () => page.evaluate(() => document.documentElement.getAttribute('data-theme'));
     const before = await theme();
-    await openMenu();
-    await choose(T.es.menu_theme);
+    await page.click('#theme-btn');
     await page.waitForTimeout(900);   // the theme change plays a short transition
-    if ((await theme()) === before) fail('phone menu: the theme item did not switch the theme');
+    if ((await theme()) === before) fail('phone bar: the theme button did not switch the theme');
     await openMenu();
     await page.mouse.click(20, 400);
     if ((await page.getAttribute('#more-btn', 'aria-expanded')) !== 'false') fail('phone menu: a tap outside did not close it');
 
-    // The PDF button downloads at once; the offer after it gets the cover-letter variant; the menu has the same shortcut
+    // The PDF button downloads at once; the offer after it gets the cover-letter variant.
     const [plain] = await Promise.all([page.waitForEvent('download'), page.click('#print-btn')]);
     if (plain.suggestedFilename() !== 'Eneko_Ruiz_CV_ES.pdf') fail(`phone PDF button: downloaded "${plain.suggestedFilename()}" instead of Eneko_Ruiz_CV_ES.pdf`);
     await page.waitForSelector('.pdf-snack', { timeout: 5000 }).catch(() => fail('phone PDF button: no offer for the cover letter after the download'));
     const [offered] = await Promise.all([page.waitForEvent('download'), page.click('.pdf-snack button')]);
     if (offered.suggestedFilename() !== 'Eneko_Ruiz_CV_ES_Letter.pdf') fail(`phone PDF offer: downloaded "${offered.suggestedFilename()}"`);
     if (await page.locator('.pdf-snack').count()) fail('phone PDF offer: it stays after being used');
-    await openMenu();
-    const [viaMenu] = await Promise.all([page.waitForEvent('download'), choose(T.es.menu_pdf_letter)]);
-    const letterPdf = await pdfText(readFileSync(await viaMenu.path()));
-    if (viaMenu.suggestedFilename() !== 'Eneko_Ruiz_CV_ES_Letter.pdf' || letterPdf.pages !== 2) fail(`phone menu: "PDF with letter" gave ${viaMenu.suggestedFilename()} with ${letterPdf.pages} pages`);
     // ...and none of this changed the saved options
     if ((await page.evaluate(() => localStorage.getItem('cv-print-options'))) !== null) fail('phone menu: asking for the letter changed the saved options');
     await fresh.close();
