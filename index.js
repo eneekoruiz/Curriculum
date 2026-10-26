@@ -38,31 +38,6 @@ const safeStorage = {
 };
 
 /**
- * Dynamic favicon update to match the current visual theme immediately.
- * @param {boolean} isDarkTheme 
- */
-const updateFavicon = (isDarkTheme) => {
-  const textColor = isDarkTheme ? '#94a3b8' : '#334155';
-  const backgroundColor = isDarkTheme ? '#0f172a' : '#ffffff';
-  
-  const svgContent = `
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-      <rect width="100" height="100" rx="20" fill="${backgroundColor}"/>
-      <text x="50" y="66" font-family="sans-serif" font-size="52" font-weight="bold" fill="${textColor}" text-anchor="middle">ER</text>
-    </svg>
-  `.trim().replace(/\s+/g, ' ');
-  
-  let faviconLink = document.querySelector("link[rel~='icon']");
-  if (!faviconLink) {
-    faviconLink = document.createElement('link');
-    faviconLink.rel = 'icon';
-    document.head.appendChild(faviconLink);
-  }
-  
-  faviconLink.href = `data:image/svg+xml,${encodeURIComponent(svgContent)}`;
-};
-
-/**
  * Applies the visual theme (light/dark) to the document and updates relevant meta tags and favicon.
  * @param {boolean} isDarkTheme 
  * @param {boolean} animate 
@@ -79,6 +54,7 @@ const applyTheme = (isDarkTheme, animate = true) => {
     }
     
     html.setAttribute('data-theme', themeValue);
+    document.getElementById('theme-btn')?.setAttribute('aria-pressed', String(isDarkTheme));
     html.style.colorScheme = themeValue;
     html.style.backgroundColor = '';
     
@@ -88,7 +64,6 @@ const applyTheme = (isDarkTheme, animate = true) => {
     }
     
     safeStorage.set('cv-theme', themeValue);
-    updateFavicon(isDarkTheme);
     
     if (animate) {
       themeTransitionTimeout = setTimeout(() => {
@@ -199,7 +174,7 @@ const syncAccessibleNames = () => {
     return parts.join(' ');
   };
 
-  document.querySelectorAll('[data-i18n^="aria_"][aria-label]').forEach(element => {
+  document.querySelectorAll(':is(a, button)[data-i18n^="aria_"][aria-label]').forEach(element => {
     const visible = shownText(element);
     const label = element.getAttribute('aria-label');
     if (visible && !label.toLowerCase().includes(visible.toLowerCase())) {
@@ -636,6 +611,12 @@ const showCopyTip = (anchorElement, message) => {
   
   const tipElement = document.createElement('div');
   tipElement.className = 'copy-tip';
+  tipElement.setAttribute('aria-hidden', 'true');
+  const status = document.getElementById('action-status');
+  if (status) {
+    status.textContent = '';
+    requestAnimationFrame(() => { status.textContent = message; });
+  }
   tipElement.innerHTML = `
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
@@ -643,8 +624,11 @@ const showCopyTip = (anchorElement, message) => {
     <span>${message}</span>
   `;
   
-  anchorElement.style.position = 'relative';
-    anchorElement.appendChild(tipElement);
+  document.body.appendChild(tipElement);
+  const anchor = anchorElement.getBoundingClientRect();
+  const tip = tipElement.getBoundingClientRect();
+  tipElement.style.left = `${Math.max(8, Math.min(anchor.right - tip.width, innerWidth - tip.width - 8))}px`;
+  tipElement.style.top = `${anchor.bottom + tip.height + 16 <= innerHeight ? anchor.bottom + 8 : Math.max(8, anchor.top - tip.height - 8)}px`;
   
   setTimeout(() => {
     tipElement.remove();
@@ -942,7 +926,19 @@ const setupScrollReveal = () => {
   }
 
   // Setup language dropdown menu list
+  const langTrigger = document.getElementById('lang-trigger');
   const languageMenu = document.getElementById('lang-menu');
+  const focusLanguageOption = (option) => {
+    if (!option) return;
+    languageMenu.querySelectorAll('.lm-item').forEach(item => { item.tabIndex = item === option ? 0 : -1; });
+    option.focus();
+  };
+  const setLanguageMenu = (open) => {
+    languageMenu.classList.toggle('open', open);
+    langTrigger.classList.toggle('open', open);
+    langTrigger.setAttribute('aria-expanded', String(open));
+    if (open) focusLanguageOption(languageMenu.querySelector('[aria-selected="true"]') || languageMenu.firstElementChild);
+  };
   if (languageMenu && M) {
     languageMenu.innerHTML = '';
     
@@ -950,9 +946,14 @@ const setupScrollReveal = () => {
       const optionButton = document.createElement('button');
       optionButton.className = 'lm-item';
       optionButton.setAttribute('role', 'option');
+      optionButton.tabIndex = -1;
       optionButton.setAttribute('data-code', code);
       optionButton.innerHTML = `<span>${name}</span><span class="lm-iso">${iso}</span>`;
-      optionButton.addEventListener('click', () => setLang(code));
+      optionButton.addEventListener('click', () => {
+        setLang(code);
+        setLanguageMenu(false);
+        langTrigger.focus();
+      });
       languageMenu.appendChild(optionButton);
     };
 
@@ -971,11 +972,17 @@ const setupScrollReveal = () => {
     if (!openButton || !dialog) {
       return;
     }
+    openButton.setAttribute('aria-haspopup', 'dialog');
+    openButton.setAttribute('aria-controls', dialog.id);
     openButton.addEventListener('click', () => {
       if (onOpen) {
         onOpen();
       }
       dialog.showModal();
+    });
+    dialog.addEventListener('close', () => {
+      const trigger = openButton.getClientRects().length ? openButton : document.getElementById('more-btn');
+      trigger?.focus({ preventScroll: true });
     });
     if (closeButton) {
       closeButton.addEventListener('click', () => dialog.close());
@@ -1029,6 +1036,9 @@ const setupScrollReveal = () => {
       moreButton.setAttribute('aria-expanded', String(open));
     };
     moreButton.addEventListener('click', () => setMoreMenu(!moreMenu.classList.contains('open')));
+    document.getElementById('more-wrap').addEventListener('focusout', (event) => {
+      if (!event.currentTarget.contains(event.relatedTarget)) setMoreMenu(false);
+    });
     document.addEventListener('pointerdown', (event) => {
       if (!event.target.closest('#more-wrap')) {
         setMoreMenu(false);
@@ -1041,9 +1051,14 @@ const setupScrollReveal = () => {
       }
     });
     moreMenu.querySelectorAll('.mm-item').forEach((item) => {
+      const target = document.querySelector(item.dataset.forward);
+      if (target.hasAttribute('aria-haspopup')) {
+        item.setAttribute('aria-haspopup', target.getAttribute('aria-haspopup'));
+        item.setAttribute('aria-controls', target.getAttribute('aria-controls'));
+      }
       item.addEventListener('click', () => {
         setMoreMenu(false);
-        document.querySelector(item.dataset.forward).click();
+        target.click();
       });
     });
   }
@@ -1061,6 +1076,7 @@ const setupScrollReveal = () => {
 
   const themeButton = document.getElementById('theme-btn');
   if (themeButton) {
+    themeButton.setAttribute('aria-pressed', String(html.dataset.theme === 'dark'));
     themeButton.addEventListener('click', toggleTheme);
   }
 
@@ -1070,27 +1086,43 @@ const setupScrollReveal = () => {
   });
 
   // Language selector expanded logic
-  const langTrigger = document.getElementById('lang-trigger');
   langTrigger?.addEventListener('click', (event) => {
     event.stopPropagation();
-    const trigger = event.currentTarget;
-    const menu = document.getElementById('lang-menu');
-    const isMenuOpen = menu?.classList.toggle('open');
-    trigger.classList.toggle('open', isMenuOpen);
-    trigger.setAttribute('aria-expanded', isMenuOpen ? 'true' : 'false');
+    setLanguageMenu(!languageMenu.classList.contains('open'));
+  });
+  langTrigger?.addEventListener('keydown', (event) => {
+    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+      event.preventDefault();
+      setLanguageMenu(true);
+    }
+  });
+  let languageSearch = '';
+  let languageSearchAt = 0;
+  languageMenu?.addEventListener('keydown', (event) => {
+    const options = [...languageMenu.querySelectorAll('.lm-item')];
+    const at = options.indexOf(document.activeElement);
+    const targets = { ArrowDown: Math.min(at + 1, options.length - 1), ArrowUp: Math.max(at - 1, 0), Home: 0, End: options.length - 1 };
+    if (Object.hasOwn(targets, event.key)) {
+      event.preventDefault();
+      focusLanguageOption(options[targets[event.key]]);
+    } else if (event.key === 'Escape' || event.key === 'Tab') {
+      setLanguageMenu(false);
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        langTrigger.focus();
+      }
+    } else if (event.key.length === 1 && event.key !== ' ' && !event.ctrlKey && !event.metaKey && !event.altKey) {
+      event.preventDefault();
+      languageSearch = (performance.now() - languageSearchAt < 700 ? languageSearch : '') + event.key.toLocaleLowerCase();
+      languageSearchAt = performance.now();
+      const ordered = [...options.slice(at + 1), ...options.slice(0, at + 1)];
+      focusLanguageOption(ordered.find(option => option.firstElementChild.textContent.toLocaleLowerCase().startsWith(languageSearch)));
+    }
   });
 
   // Click outside to collapse language menu
-  document.addEventListener('click', () => {
-    const menu = document.getElementById('lang-menu');
-    if (menu?.classList.contains('open')) {
-      menu.classList.remove('open');
-      const trigger = document.getElementById('lang-trigger');
-      if (trigger) {
-        trigger.setAttribute('aria-expanded', 'false');
-        trigger.classList.remove('open');
-      }
-    }
+  document.addEventListener('click', (event) => {
+    if (!event.target.closest('#lang-wrap')) setLanguageMenu(false);
   });
   
 
@@ -1138,20 +1170,7 @@ const setupScrollReveal = () => {
     }
   });
 
-  // Height dynamic synchronization inside iframes
-  if (window.parent !== window) {
-    const heightSyncObserver = new ResizeObserver(() => {
-      const scrollHeight = document.documentElement.scrollHeight;
-      window.parent.postMessage({ type: 'set-cv-height', height: scrollHeight }, '*');
-    });
-    heightSyncObserver.observe(document.body);
-    
-    // Initial height post
-    window.parent.postMessage({ 
-      type: 'set-cv-height', 
-      height: document.documentElement.scrollHeight 
-    }, '*');
-  }
+  // Keep the host's iframe viewport: reporting a vh-based page height creates a resize loop.
 
   // Top header screen scroll progress indicator
   const cachedProgressBar = document.getElementById('scroll-progress');

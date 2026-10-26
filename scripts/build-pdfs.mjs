@@ -19,7 +19,7 @@ const CHECK = process.argv.includes('--check');
 const { T, M, langs } = loadTranslations();
 
 /** Files the PDFs are rendered from; any change to them requires a rebuild. */
-const SOURCES = ['index.html', 'print.css', 'translations.js', 'index.js', 'foto-small.jpg', 'scripts/lib.mjs', 'scripts/build-pdfs.mjs'];
+const SOURCES = ['index.html', 'print.css', 'translations.js', 'index.js', 'theme.js', 'foto-small.jpg', 'scripts/lib.mjs', 'scripts/build-pdfs.mjs'];
 const sourceHash = () => {
   const hash = createHash('sha1');
   // Normalise line endings of the text files: Windows checkouts use CRLF, CI (Linux) uses LF; the hash must not depend on it.

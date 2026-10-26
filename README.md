@@ -34,7 +34,7 @@ cd scripts && npm ci
 npx playwright install chromium   # solo la primera vez
 npm run build    # regenera pdf/*.pdf (4 variantes por idioma) + print-zoom.js
 npm run og       # regenera og.png
-npm run check    # PDF de una página y ATS, web, maquetación responsive (18 tamaños) y WCAG AA
+npm run check    # PDF y ATS, web, maquetación responsive y comprobaciones WCAG 2.2 AA
 ```
 
 Para regenerar `foto.webp` y `foto.jpg` desde la foto original (recorte fijo de 720 × 720 desde x=24, y=165):
@@ -44,6 +44,10 @@ node scripts/generate-headshot.mjs "ruta/a/la/foto-original.jpg"
 ```
 
 La función PDF usa `VERCEL_URL` en Vercel y el dominio público del CV como alternativa. Las pruebas locales fijan `CV_SITE_ORIGIN` al servidor de prueba; las cabeceras de la petición no determinan el destino del navegador.
+
+La prueba de accesibilidad combina axe-core con navegación por teclado, gestión del foco, estados de los controles y redistribución a 320 px con espaciado de texto ampliado. Informa de las reglas que axe deja pendientes de revisión manual. Pasar estas comprobaciones no certifica conformidad completa: también se debe revisar con lectores de pantalla y tecnologías de asistencia reales.
+
+El CV incrustado conserva la altura del iframe y usa su desplazamiento nativo. No envía su altura total al portfolio: hacerlo mientras la portada depende de `vh` provoca un bucle de redimensionado que desplaza el contenido fuera del área visible.
 
 ### Licencia
 

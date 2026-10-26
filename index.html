@@ -5,7 +5,6 @@
   <script src="theme.js"></script>
   <link rel="icon" type="image/svg+xml"
     href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230f172a'/%3E%3Ctext x='50' y='66' font-family='sans-serif' font-size='48' font-weight='bold' fill='%23b8894d' text-anchor='middle'%3EER%3C/text%3E%3C/svg%3E" />
-  <link rel="icon" type="image/png" sizes="32x32" href="favicon.png" />
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="color-scheme" content="light dark" />
@@ -217,13 +216,15 @@
   </div>
 
   <div id="root-container">
+  <a class="skip-link hide-print" href="#main-content" data-i18n="skip_content">Saltar al contenido</a>
+  <div id="action-status" class="sr-only hide-print" role="status" aria-live="polite" aria-atomic="true"></div>
 
   <!-- ── TOPBAR ────────────────────────────────────────── -->
-  <nav id="topbar" aria-label="Controles del sitio">
+  <nav id="topbar" aria-label="Controles del sitio" data-i18n="aria_controls">
   <div class="topbar-inner">
     <div class="topbar-actions">
       <div id="lang-wrap">
-      <button id="lang-trigger" class="ctrl" aria-haspopup="listbox" aria-expanded="false"
+      <button id="lang-trigger" class="ctrl" aria-haspopup="listbox" aria-expanded="false" aria-controls="lang-menu"
         data-i18n="aria_lang">
         <span id="lang-label">Español</span>
         <span id="lang-short" aria-hidden="true">ES</span>
@@ -232,7 +233,7 @@
           <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
         </svg>
       </button>
-      <div id="lang-menu" role="listbox" aria-label="Idiomas"></div>
+      <div id="lang-menu" role="listbox" aria-labelledby="lang-trigger"></div>
     </div>
 
     <div class="pdf-split">
@@ -363,7 +364,7 @@
 </nav>
 
   <!-- ── ROOT ──────────────────────────────────────────── -->
-  <main id="main-content">
+  <main id="main-content" tabindex="-1">
     <!-- Cover letter for paper and PDF (shown only when "include letter" is on); the web has its own text in #letter-dialog -->
     <section id="letter-print" class="letter-page" aria-labelledby="cl-print-title">
       <header class="cl-head">

@@ -5,6 +5,8 @@
  */
 const T = {
   es: {
+    aria_controls: "Controles del sitio",
+    skip_content: "Saltar al contenido",
     eyebrow: "Ingeniero de Software",
     tagline: "Desarrollador Full Stack",
     location: "Rentería (Gipuzkoa), España · Presencial, híbrido o remoto",
@@ -73,7 +75,7 @@ const T = {
     letter_title: "Carta de presentación",
     letter_p1: "Me llamo Eneko Ruiz Mollón, soy de Rentería (Gipuzkoa) y en marzo de 2027 termino el Grado en Ingeniería Informática (mención en Ingeniería del Software) en la UPV/EHU. Busco incorporarme como desarrollador junior.",
     letter_lead_2: "Cómo trabajo.",
-    letter_web_p2: "Para mí, una buena solución técnica no es la más compleja, sino la que resuelve la necesidad con el mínimo código necesario, pero contemplando todos los escenarios: que sea segura, que responda ante caídas de red, que se vea limpia y que pueda usarla cualquiera. El ejemplo más directo es este propio currículum web: está hecho para cumplir su función de forma ligera y directa, pero cubriendo cada caso real (accesibilidad WCAG, 23 idiomas, exportación limpia a PDF y pruebas automáticas). Me gusta hacer las cosas con rigor: sin sobreingeniería innecesaria, pero sin dejar cabos sueltos.",
+    letter_web_p2: "Para mí, una buena solución técnica no es la más compleja, sino la que resuelve la necesidad con el mínimo código necesario, pero contemplando todos los escenarios: que sea segura, que responda ante caídas de red, que se vea limpia y que pueda usarla cualquiera. El ejemplo más directo es este propio currículum web: está hecho para cumplir su función de forma ligera y directa, pero cubriendo cada caso real (comprobaciones automáticas de accesibilidad, 23 idiomas, exportación limpia a PDF y pruebas automáticas). Me gusta hacer las cosas con rigor: sin sobreingeniería innecesaria, pero sin dejar cabos sueltos.",
     letter_print_p2: "Para mí, una buena solución técnica no es la más compleja, sino la que resuelve la necesidad con el mínimo código necesario, pero contemplando todos los escenarios: que sea segura, que no se rompa si la conexión falla, que se vea limpia y que pueda usarla cualquiera. Esa misma exigencia me acompaña en todo lo que hago, también en este currículum. Si escanean el código QR de la cabecera, llegarán a mi portfolio interactivo, que he diseñado y programado yo con la misma atención al detalle.",
     letter_lead_3: "Lo que he aprendido en entornos reales.",
     letter_p3: "He desarrollado un sistema de reservas para un negocio local y una aplicación de seguimiento con usuarios activos. Con ambos aprendí algo que no enseña ninguna asignatura: cuando hay personas usando tu software, los detalles dejan de ser opcionales. En mis prácticas aporté ese mismo criterio: modelé bases de datos en PostgreSQL, integré frontend con backend en React y Supabase, y propuse alternativas técnicas al equipo cuando vi margen de simplificar o mejorar.",
@@ -87,11 +89,11 @@ const T = {
     opt_letter_hint: "Una página aparte, antes del currículum.",
     opt_print: "Imprimir",
     aria_menu: "Más opciones",
-    menu_pdf_letter: "Descargar PDF con carta",
-    toast_letter_ask: "¿Lo quieres con carta de presentación?"
   },
 
   en: {
+    aria_controls: "Site controls",
+    skip_content: "Skip to content",
     eyebrow: "Software Engineer",
     tagline: "Full Stack Developer",
     location: "Rentería (Gipuzkoa), Spain · On-site, hybrid or remote",
@@ -160,7 +162,7 @@ const T = {
     letter_title: "Cover letter",
     letter_p1: "My name is Eneko Ruiz Mollón, I am from Rentería (Gipuzkoa), and in March 2027 I will complete my Bachelor's Degree in Computer Engineering (Software Engineering track) at UPV/EHU. I am looking to join a team as a junior developer.",
     letter_lead_2: "How I work.",
-    letter_web_p2: "To me, a good technical solution is not the most complex one, but the one that solves the need with the minimum necessary code while accounting for all scenarios: secure, resilient to network drops, clean in appearance, and accessible to anyone. The clearest example is this web CV itself: built to fulfill its purpose lightly and directly, yet covering every real-world requirement (WCAG accessibility, 23 languages, clean PDF export, and automated tests). I value doing things with rigor: no unnecessary over-engineering, but leaving no loose ends.",
+    letter_web_p2: "To me, a good technical solution is not the most complex one, but the one that solves the need with the minimum necessary code while accounting for all scenarios: secure, resilient to network drops, clean in appearance, and accessible to anyone. The clearest example is this web CV itself: built to fulfill its purpose lightly and directly, yet covering every real-world requirement (automated accessibility checks, 23 languages, clean PDF export, and automated tests). I value doing things with rigor: no unnecessary over-engineering, but leaving no loose ends.",
     letter_print_p2: "To me, a good technical solution is not the most complex one, but the one that solves the need with the minimum necessary code while accounting for all scenarios: secure, resilient if the connection drops, clean in appearance, and accessible to anyone. That same standard guides everything I do, including this résumé. Scanning the QR code in the header will take you to my interactive portfolio, which I designed and built myself with the same attention to detail.",
     letter_lead_3: "What I have learned in real environments.",
     letter_p3: "I have built a booking system for a local business and a tracking application with active users. Both taught me something no university course covers: when real people use your software, details are never optional. During my internship, I brought that same standard: I modeled databases in PostgreSQL, integrated frontend and backend with React and Supabase, and suggested technical alternatives whenever I spotted an opportunity to simplify or improve.",
@@ -174,11 +176,11 @@ const T = {
     opt_letter_hint: "A separate page before the résumé.",
     opt_print: "Print",
     aria_menu: "More options",
-    menu_pdf_letter: "Download PDF with cover letter",
-    toast_letter_ask: "Want it with the cover letter?"
   },
 
   eu: {
+    aria_controls: "Gunearen kontrolak",
+    skip_content: "Edukira joan",
     eyebrow: "Software Ingeniaria",
     tagline: "Full Stack Garatzailea",
     location: "Errenteria (Gipuzkoa), Espainia · Aurrez aurre, hibridoa edo urrunetik",
@@ -247,7 +249,7 @@ const T = {
     letter_title: "Aurkezpen-gutuna",
     letter_p1: "Eneko Ruiz Mollón naiz, Errenteriakoa (Gipuzkoa), eta 2027ko martxoan Informatika Ingeniaritzako Gradua (Software Ingeniaritzako aipamena) amaituko dut UPV/EHUn. Junior garatzaile gisa lanean hasteko aukera bila nabil.",
     letter_lead_2: "Nola egiten dudan lan.",
-    letter_web_p2: "Niretzat soluzio tekniko ona ez da konplexuena, baizik eta behar dena gutxieneko kodearekin ebazten duena egoera guztiak kontuan hartuta: segurua, sare-erorketen aurrean sendoa, itxura garbia duena eta edonork erabiltzeko modukoa. Adibiderik zuzenena web-curriculum hau bera da: bere helburua arin eta zuzen betetzeko egina dago, benetako kasu bakoitza landuz (WCAG irisgarritasuna, 23 hizkuntza, PDF esportazio garbia eta proba automatikoak). Gauzak zorroztasunez egitea dut gogoko: beharrik gabeko gain-ingeniaritzarik gabe, baina ezer airean utzi gabe.",
+    letter_web_p2: "Niretzat soluzio tekniko ona ez da konplexuena, baizik eta behar dena gutxieneko kodearekin ebazten duena egoera guztiak kontuan hartuta: segurua, sare-erorketen aurrean sendoa, itxura garbia duena eta edonork erabiltzeko modukoa. Adibiderik zuzenena web-curriculum hau bera da: bere helburua arin eta zuzen betetzeko egina dago, benetako kasu bakoitza landuz (irisgarritasunaren egiaztapen automatikoak, 23 hizkuntza, PDF esportazio garbia eta proba automatikoak). Gauzak zorroztasunez egitea dut gogoko: beharrik gabeko gain-ingeniaritzarik gabe, baina ezer airean utzi gabe.",
     letter_print_p2: "Niretzat soluzio tekniko ona ez da konplexuena, baizik eta behar dena gutxieneko kodearekin ebazten duena egoera guztiak kontuan hartuta: segurua, konexioak huts eginez gero hausten ez dena, itxura garbia duena eta edonork erabiltzeko modukoa. Exijentzia hori bera aplikatzen dut egiten dudan guztian, baita curriculum honetan ere. Goiburuko QR kodea eskaneatuz gero, xehetasun berarekin diseinatu eta programatu dudan nire portfolio interaktibora iritsiko zarete.",
     letter_lead_3: "Ingurune errealetan ikasitakoa.",
     letter_p3: "Tokiko negozio baterako erreserba-sistema bat eta erabiltzaile aktiboak dituen jarraipen-aplikazio bat garatu ditut. Biekin ikasi nuen ikasgai batek ere irakasten ez duena: jendeak zure softwarea erabiltzen duenean, xehetasunak ez dira hautazkoak. Nire praktiketan irizpide bera ekarri nuen: datu-baseak modelatu nituen PostgreSQLen, frontend-a eta backend-a integratu nituen React eta Supabase-rekin, eta taldeari alternatiba teknikoak proposatu nizkion sinplifikatzeko edo hobetzeko aukera ikusi nuenean.",
@@ -261,11 +263,11 @@ const T = {
     opt_letter_hint: "Orri bereizia, curriculumaren aurretik.",
     opt_print: "Inprimatu",
     aria_menu: "Aukera gehiago",
-    menu_pdf_letter: "Deskargatu PDFa gutunarekin",
-    toast_letter_ask: "Aurkezpen-gutunarekin nahi duzu?"
   },
 
   ca: {
+    aria_controls: "Controls del lloc",
+    skip_content: "Salta al contingut",
     eyebrow: "Enginyer de Programari",
     tagline: "Desenvolupador Full Stack",
     location: "Errenteria (Guipúscoa), Espanya · Presencial, híbrid o en remot",
@@ -334,7 +336,7 @@ const T = {
     letter_title: "Carta de presentació",
     letter_p1: "Em dic Eneko Ruiz Mollón, soc de Rentería (Gipúscoa) i el març de 2027 acabo el Grau en Enginyeria Informàtica (menció en Enginyeria del Software) a la UPV/EHU. Busco incorporar-me com a desenvolupador júnior.",
     letter_lead_2: "Com treballo.",
-    letter_web_p2: "Per a mi, una bona solució tècnica no és la més complexa, sinó la que resol la necessitat amb el mínim codi necessari, contemplant tots els escenaris: que sigui segura, que respongui davant caigudes de xarxa, que es vegi neta i que la pugui fer servir tothom. L'exemple més directe és aquest mateix currículum web: està fet per complir la seva funció de manera lleugera i directa, però cobrint cada cas real (accessibilitat WCAG, 23 idiomes, exportació neta a PDF i proves automàtiques). M'agrada fer les coses amb rigor: sense sobreenginyeria innecessària, però sense deixar caps per lligar.",
+    letter_web_p2: "Per a mi, una bona solució tècnica no és la més complexa, sinó la que resol la necessitat amb el mínim codi necessari, contemplant tots els escenaris: que sigui segura, que respongui davant caigudes de xarxa, que es vegi neta i que la pugui fer servir tothom. L'exemple més directe és aquest mateix currículum web: està fet per complir la seva funció de manera lleugera i directa, però cobrint cada cas real (comprovacions automàtiques d’accessibilitat, 23 idiomes, exportació neta a PDF i proves automàtiques). M'agrada fer les coses amb rigor: sense sobreenginyeria innecessària, però sense deixar caps per lligar.",
     letter_print_p2: "Per a mi, una bona solució tècnica no és la més complexa, sinó la que resol la necessitat amb el mínim codi necessari, contemplant tots els escenaris: que sigui segura, que no es trenqui si la connexió falla, que es vegi neta i que la pugui fer servir tothom. Aquesta mateixa exigència m'acompanya en tot el que faig, també en aquest currículum. Si escanegeu el codi QR de la capçalera, arribareu al meu portafolis interactiu, que he dissenyat i programat jo amb la mateixa atenció al detall.",
     letter_lead_3: "El que he après en entorns reals.",
     letter_p3: "He desenvolupat un sistema de reserves per a un negoci local i una aplicació de seguiment amb usuaris actius. Amb tots dos vaig aprendre quelcom que cap assignatura ensenya: quan hi ha persones utilitzant el teu programari, els detalls deixen de ser opcionals. En les meves pràctiques vaig aportar aquest mateix criteri: vaig modelar bases de dades a PostgreSQL, vaig integrar el frontend amb el backend a React i Supabase, i vaig proposar alternatives tècniques a l'equip quan vaig veure marge per simplificar o millorar.",
@@ -348,11 +350,11 @@ const T = {
     opt_letter_hint: "Una pàgina a part, abans del currículum.",
     opt_print: "Imprimir",
     aria_menu: "Més opcions",
-    menu_pdf_letter: "Descarregar PDF amb carta",
-    toast_letter_ask: "El vols amb la carta de presentació?"
   },
 
   gl: {
+    aria_controls: "Controis do sitio",
+    skip_content: "Saltar ao contido",
     eyebrow: "Enxeñeiro de Software",
     tagline: "Desenvolvedor Full Stack",
     location: "Errenteria (Guipúscoa), España · Presencial, híbrido ou en remoto",
@@ -421,7 +423,7 @@ const T = {
     letter_title: "Carta de presentación",
     letter_p1: "Chámome Eneko Ruiz Mollón, son de Rentería (Guipúscoa) e en marzo de 2027 remato o Grao en Enxeñaría Informática (mención en Enxeñaría do Software) na UPV/EHU. Busco incorporarme como desenvolvedor júnior.",
     letter_lead_2: "Como traballo.",
-    letter_web_p2: "Para min, unha boa solución técnica non é a máis complexa, senón a que resolve a necesidade co mínimo código necesario, contemplando todos os escenarios: que sexa segura, que responda ante caídas de rede, que se vexa limpa e que poida usala calquera. O exemplo máis directo é este propio currículo web: está feito para cumprir a súa función de forma lixeira e directa, pero cubrindo cada caso real (accesibilidade WCAG, 23 idiomas, exportación limpa a PDF e probas automáticas). Gústame facer as cousas con rigor: sen sobreenxeñaría innecesaria, pero sen deixar cabos soltos.",
+    letter_web_p2: "Para min, unha boa solución técnica non é a máis complexa, senón a que resolve a necesidade co mínimo código necesario, contemplando todos os escenarios: que sexa segura, que responda ante caídas de rede, que se vexa limpa e que poida usala calquera. O exemplo máis directo é este propio currículo web: está feito para cumprir a súa función de forma lixeira e directa, pero cubrindo cada caso real (comprobacións automáticas de accesibilidade, 23 idiomas, exportación limpa a PDF e probas automáticas). Gústame facer as cousas con rigor: sen sobreenxeñaría innecesaria, pero sen deixar cabos soltos.",
     letter_print_p2: "Para min, unha boa solución técnica non é a máis complexa, senón a que resolve a necesidade co mínimo código necesario, contemplando todos os escenarios: que sexa segura, que non rompa se a conexión falla, que se vexa limpa e que poida usala calquera. Esa mesma esixencia acompáñame en todo o que fago, tamén neste currículo. Se escanean o código QR da cabeceira, chegarán ao meu cartafol interactivo, que deseñei e programei eu coa mesma atención ao detalle.",
     letter_lead_3: "O que aprendín en contornas reais.",
     letter_p3: "Desenvolvín un sistema de reservas para un negocio local e unha aplicación de seguimento con usuarios activos. Con ambos aprendín algo que non ensina ningunha materia: cando hai persoas usando o teu software, os detalles deixan de ser opcionais. Nas miñas prácticas acheguei ese mesmo criterio: modelei bases de datos en PostgreSQL, integrei frontend con backend en React e Supabase, e propuxen alternativas técnicas ao equipo cando vin marxe de simplificar ou mellorar.",
@@ -435,11 +437,11 @@ const T = {
     opt_letter_hint: "Unha páxina á parte, antes do currículo.",
     opt_print: "Imprimir",
     aria_menu: "Máis opcións",
-    menu_pdf_letter: "Descargar PDF con carta",
-    toast_letter_ask: "Queres tamén a carta de presentación?"
   },
 
   fr: {
+    aria_controls: "Commandes du site",
+    skip_content: "Aller au contenu",
     eyebrow: "Ingénieur Logiciel",
     tagline: "Développeur Full Stack",
     location: "Errenteria (Guipuscoa), Espagne · Sur site, hybride ou à distance",
@@ -508,7 +510,7 @@ const T = {
     letter_title: "Lettre de motivation",
     letter_p1: "Je m'appelle Eneko Ruiz Mollón, je viens de Rentería (Guipuscoa) et j'achèverai mon diplôme d'ingénieur en informatique (spécialité génie logiciel) à l'UPV/EHU en mars 2027. Je souhaite intégrer une équipe en tant que développeur junior.",
     letter_lead_2: "Ma façon de travailler.",
-    letter_web_p2: "Pour moi, une bonne solution technique n'est pas la plus complexe, mais celle qui répond au besoin avec le strict minimum de code nécessaire, tout en anticipant chaque scénario : sécurisée, résiliente aux pannes réseau, visuellement soignée et accessible à tous. L'exemple le plus concret est ce CV web : conçu pour remplir sa fonction avec légèreté et simplicité, tout en traitant chaque cas réel (accessibilité WCAG, 23 langues, export PDF impeccable et tests automatisés). J'aime faire les choses avec rigueur : sans sur-ingénierie inutile, mais sans rien laisser au hasard.",
+    letter_web_p2: "Pour moi, une bonne solution technique n'est pas la plus complexe, mais celle qui répond au besoin avec le strict minimum de code nécessaire, tout en anticipant chaque scénario : sécurisée, résiliente aux pannes réseau, visuellement soignée et accessible à tous. L'exemple le plus concret est ce CV web : conçu pour remplir sa fonction avec légèreté et simplicité, tout en traitant chaque cas réel (contrôles automatiques d’accessibilité, 23 langues, export PDF impeccable et tests automatisés). J'aime faire les choses avec rigueur : sans sur-ingénierie inutile, mais sans rien laisser au hasard.",
     letter_print_p2: "Pour moi, une bonne solution technique n'est pas la plus complexe, mais celle qui répond au besoin avec le strict minimum de code nécessaire, tout en anticipant chaque scénario : sécurisée, qui ne plante pas en cas de perte de connexion, soignée et accessible à tous. Cette même exigence m'accompagne dans tout ce que j'entreprends, y compris ce CV. En scannant le code QR en en-tête, vous découvrirez mon portfolio interactif, que j'ai conçu et développé avec le même souci du détail.",
     letter_lead_3: "Ce que j'ai appris en situation réelle.",
     letter_p3: "J'ai développé un système de réservation pour un commerce local ainsi qu'une application de suivi comptant des utilisateurs actifs. Ces deux projets m'ont appris ce qu'aucun cours n'enseigne : lorsque de vraies personnes utilisent votre logiciel, les détails cessent d'être optionnels. Lors de mon stage, j'ai appliqué cette même exigence : modélisation de bases de données sous PostgreSQL, intégration frontend et backend avec React et Supabase, et force de proposition pour simplifier ou optimiser l'existant.",
@@ -522,11 +524,11 @@ const T = {
     opt_letter_hint: "Une page à part, avant le CV.",
     opt_print: "Imprimer",
     aria_menu: "Plus d'options",
-    menu_pdf_letter: "Télécharger le PDF avec la lettre",
-    toast_letter_ask: "Avec la lettre de motivation ?"
   },
 
   de: {
+    aria_controls: "Website-Steuerung",
+    skip_content: "Zum Inhalt springen",
     eyebrow: "Softwareentwickler",
     tagline: "Full-Stack-Entwickler",
     location: "Errenteria (Gipuzkoa), Spanien · Vor Ort, hybrid oder remote",
@@ -595,7 +597,7 @@ const T = {
     letter_title: "Anschreiben",
     letter_p1: "Mein Name ist Eneko Ruiz Mollón, ich komme aus Rentería (Gipuzkoa) und schließe im März 2027 mein Informatikstudium (Schwerpunkt Software Engineering) an der UPV/EHU ab. Ich suche eine Einstiegsposition als Junior-Entwickler.",
     letter_lead_2: "Meine Arbeitsweise.",
-    letter_web_p2: "Eine gute technische Lösung ist für mich nicht die komplexeste, sondern diejenige, die Anforderungen mit minimalem Code präzise erfüllt und zugleich alle Szenarien abdeckt: sicher, ausfallsicher bei Netzwerkabbrüchen, übersichtlich gestaltet und barrierefrei für jeden zugänglich. Das deutlichste Beispiel ist dieser Online-Lebenslauf: geradlinig und performant umgesetzt, dabei für jeden realen Anwendungsfall gerüstet (WCAG-Barrierefreiheit, 23 Sprachen, sauberer PDF-Export und automatisierte Tests). Ich schätze echte Ingenieursdisziplin: keine unnötige Überfrachtung, aber auch keine offenen Baustellen.",
+    letter_web_p2: "Eine gute technische Lösung ist für mich nicht die komplexeste, sondern diejenige, die Anforderungen mit minimalem Code präzise erfüllt und zugleich alle Szenarien abdeckt: sicher, ausfallsicher bei Netzwerkabbrüchen, übersichtlich gestaltet und barrierefrei für jeden zugänglich. Das deutlichste Beispiel ist dieser Online-Lebenslauf: geradlinig und performant umgesetzt, dabei für jeden realen Anwendungsfall gerüstet (automatisierte Barrierefreiheitsprüfungen, 23 Sprachen, sauberer PDF-Export und automatisierte Tests). Ich schätze echte Ingenieursdisziplin: keine unnötige Überfrachtung, aber auch keine offenen Baustellen.",
     letter_print_p2: "Eine gute technische Lösung ist für mich nicht die komplexeste, sondern diejenige, die Anforderungen mit minimalem Code präzise erfüllt und alle Szenarien mitdenkt: sicher, stabil bei Verbindungsabbrüchen, visuell aufgeräumt und für alle nutzbar. Denselben Anspruch verfolge ich bei allem, was ich baue, auch bei diesem Lebenslauf. Wenn Sie den QR-Code scannen, gelangen Sie zu meinem interaktiven Portfolio, das ich mit derselben Liebe zum Detail entworfen und programmiert habe.",
     letter_lead_3: "Erfahrungen in realen Umgebungen.",
     letter_p3: "Ich habe ein Buchungssystem für ein lokales Geschäft sowie eine Tracking-App mit aktiven Nutzern entwickelt. Beide Projekte lehrten mich etwas, das keine Vorlesung vermittelt: Wenn Menschen deine Software täglich nutzen, ist kein Detail nebensächlich. Im Praktikum brachte ich dieselbe Haltung ein: Datenmodellierung in PostgreSQL, Frontend-Backend-Integration mit React und Supabase sowie proaktive technische Vorschläge zur Vereinfachung.",
@@ -609,11 +611,11 @@ const T = {
     opt_letter_hint: "Eine eigene Seite vor dem Lebenslauf.",
     opt_print: "Drucken",
     aria_menu: "Weitere Optionen",
-    menu_pdf_letter: "PDF mit Anschreiben herunterladen",
-    toast_letter_ask: "Mit Anschreiben?"
   },
 
   it: {
+    aria_controls: "Controlli del sito",
+    skip_content: "Vai al contenuto",
     eyebrow: "Ingegnere del Software",
     tagline: "Sviluppatore Full Stack",
     location: "Errenteria (Gipuzkoa), Spagna · In sede, ibrido o da remoto",
@@ -682,7 +684,7 @@ const T = {
     letter_title: "Lettera di presentazione",
     letter_p1: "Mi chiamo Eneko Ruiz Mollón, sono di Rentería (Gipuzkoa) e a marzo 2027 conseguirò la laurea in Ingegneria Informatica (indirizzo Ingegneria del Software) presso la UPV/EHU. Cerco un'opportunità come sviluppatore junior.",
     letter_lead_2: "Come lavoro.",
-    letter_web_p2: "Per me una buona soluzione tecnica non è la più complessa, ma quella che risolve il problema con il minimo codice necessario, contemplando ogni scenario: sicura, resiliente alle cadute di connessione, curata nel design e accessibile a chiunque. L'esempio più evidente è questo stesso CV web: progettato per assolvere al suo compito in modo snello e diretto, coprendo al contempo ogni esigenza concreta (accessibilità WCAG, 23 lingue, esportazione PDF pulita e test automatizzati). Amo lavorare con rigore: niente over-engineering superfluo, ma nessun dettaglio lasciato al caso.",
+    letter_web_p2: "Per me una buona soluzione tecnica non è la più complessa, ma quella che risolve il problema con il minimo codice necessario, contemplando ogni scenario: sicura, resiliente alle cadute di connessione, curata nel design e accessibile a chiunque. L'esempio più evidente è questo stesso CV web: progettato per assolvere al suo compito in modo snello e diretto, coprendo al contempo ogni esigenza concreta (controlli automatici di accessibilità, 23 lingue, esportazione PDF pulita e test automatizzati). Amo lavorare con rigore: niente over-engineering superfluo, ma nessun dettaglio lasciato al caso.",
     letter_print_p2: "Per me una buona soluzione tecnica non è la più complessa, ma quella che risolve il problema con il minimo codice necessario, prevedendo tutti gli scenari: sicura, affidabile anche in assenza di rete, pulita e accessibile a chiunque. La medesima cura guida tutto ciò che realizzo, incluso questo curriculum. Scansionando il codice QR nell'intestazione accederete al mio portfolio interattivo, progettato e sviluppato da me con la stessa attenzione ai dettagli.",
     letter_lead_3: "Cosa ho imparato sul campo.",
     letter_p3: "Ho sviluppato un sistema di prenotazione per un'attività locale e un'app di monitoraggio con utenti attivi. Entrambi i progetti mi hanno insegnato una cosa che l'università non spiega: quando persone reali usano il tuo software, i dettagli non sono mai facoltativi. Durante il mio tirocinio ho applicato questo stesso standard: ho modellato database in PostgreSQL, integrato frontend e backend con React e Supabase, e suggerito soluzioni tecniche per semplificare e migliorare il codice.",
@@ -696,11 +698,11 @@ const T = {
     opt_letter_hint: "Una pagina a parte, prima del curriculum.",
     opt_print: "Stampa",
     aria_menu: "Altre opzioni",
-    menu_pdf_letter: "Scarica PDF con lettera",
-    toast_letter_ask: "Lo vuoi con la lettera di presentazione?"
   },
 
   pt: {
+    aria_controls: "Controlos do site",
+    skip_content: "Saltar para o conteúdo",
     eyebrow: "Engenheiro de Software",
     tagline: "Desenvolvedor Full Stack",
     location: "Errenteria (Guipúscoa), Espanha · Presencial, híbrido ou remoto",
@@ -769,7 +771,7 @@ const T = {
     letter_title: "Carta de apresentação",
     letter_p1: "Chamo-me Eneko Ruiz Mollón, sou de Rentería (Gipuzkoa) e em março de 2027 concluo a Licenciatura em Engenharia Informática (ramo de Engenharia de Software) na UPV/EHU. Procuro uma oportunidade como desenvolvedor júnior.",
     letter_lead_2: "Como trabalho.",
-    letter_web_p2: "Para mim, uma boa solução técnica não é a mais complexa, mas a que resolve a necessidade com o mínimo de código necessário, prevendo todos os cenários: segura, resiliente a quebras de rede, com interface limpa e acessível a qualquer pessoa. O exemplo mais direto é este próprio currículo web: concebido para cumprir o seu propósito de forma leve e direta, cobrindo cada caso real (acessibilidade WCAG, 23 idiomas, exportação limpa para PDF e testes automatizados). Gosto de trabalhar com rigor: sem sobre-engenharia desnecessária, mas sem pontas soltas.",
+    letter_web_p2: "Para mim, uma boa solução técnica não é a mais complexa, mas a que resolve a necessidade com o mínimo de código necessário, prevendo todos os cenários: segura, resiliente a quebras de rede, com interface limpa e acessível a qualquer pessoa. O exemplo mais direto é este próprio currículo web: concebido para cumprir o seu propósito de forma leve e direta, cobrindo cada caso real (verificações automáticas de acessibilidade, 23 idiomas, exportação limpa para PDF e testes automatizados). Gosto de trabalhar com rigor: sem sobre-engenharia desnecessária, mas sem pontas soltas.",
     letter_print_p2: "Para mim, uma boa solução técnica não é a mais complexa, mas a que resolve a necessidade com o mínimo de código necessário, prevendo todos os cenários: segura, estável perante falhas de ligação, visualmente limpa e acessível a todos. Essa mesma exigência guia tudo o que faço, inclusive este currículo. Ao ler o código QR no cabeçalho, acederá ao meu portfólio interativo, desenhado e programado por mim com a mesma atenção ao detalhe.",
     letter_lead_3: "O que aprendi em ambientes reais.",
     letter_p3: "Desenvolvi um sistema de marcações para um negócio local e uma aplicação de acompanhamento com utilizadores ativos. Ambos me ensinaram algo que nenhuma disciplina ensina: quando há pessoas reais a usar o seu software, os detalhes deixam de ser opcionais. No meu estágio apliquei esse mesmo critério: modelei bases de dados em PostgreSQL, integrei o frontend com o backend em React e Supabase, e propus alternativas técnicas à equipa com vista a simplificar e otimizar.",
@@ -783,11 +785,11 @@ const T = {
     opt_letter_hint: "Uma página à parte, antes do currículo.",
     opt_print: "Imprimir",
     aria_menu: "Mais opções",
-    menu_pdf_letter: "Transferir PDF com carta",
-    toast_letter_ask: "Quer com a carta de apresentação?"
   },
 
   nl: {
+    aria_controls: "Websitebediening",
+    skip_content: "Ga naar inhoud",
     eyebrow: "Software Engineer",
     tagline: "Full-stackontwikkelaar",
     location: "Errenteria (Gipuzkoa), Spanje · Op locatie, hybride of op afstand",
@@ -856,7 +858,7 @@ const T = {
     letter_title: "Motivatiebrief",
     letter_p1: "Mijn naam is Eneko Ruiz Mollón, ik kom uit Rentería (Gipuzkoa) en in maart 2027 rond ik mijn bachelor Informatica (afstudeerrichting Software Engineering) af aan de UPV/EHU. Ik ben op zoek naar een functie als junior developer.",
     letter_lead_2: "Hoe ik werk.",
-    letter_web_p2: "Voor mij is een goede technische oplossing niet de meest complexe, maar juist diegene die de behoefte oplost met minimale code, rekening houdend met alle scenario's: veilig, bestand tegen netwerkuitval, visueel verzorgd en toegankelijk voor iedereen. Het duidelijkste voorbeeld is dit online cv zelf: ontworpen om zijn doel licht en direct te vervullen, maar voorbereid op elke reële situatie (WCAG-toegankelijkheid, 23 talen, vlekkeloze PDF-export en geautomatiseerde tests). Ik werk met nauwkeurigheid: geen overbodige over-engineering, maar zonder losse eindjes.",
+    letter_web_p2: "Voor mij is een goede technische oplossing niet de meest complexe, maar juist diegene die de behoefte oplost met minimale code, rekening houdend met alle scenario's: veilig, bestand tegen netwerkuitval, visueel verzorgd en toegankelijk voor iedereen. Het duidelijkste voorbeeld is dit online cv zelf: ontworpen om zijn doel licht en direct te vervullen, maar voorbereid op elke reële situatie (geautomatiseerde toegankelijkheidscontroles, 23 talen, vlekkeloze PDF-export en geautomatiseerde tests). Ik werk met nauwkeurigheid: geen overbodige over-engineering, maar zonder losse eindjes.",
     letter_print_p2: "Voor mij is een goede technische oplossing niet de meest complexe, maar diegene die het probleem oplost met minimale code en alle scenario's meeweegt: veilig, stabiel bij verbindingsverlies, overzichtelijk en voor iedereen te gebruiken. Diezelfde standaard hanteer ik bij alles wat ik maak, inclusief dit cv. Met de QR-code in de koptekst opent u mijn interactieve portfolio, dat ik met dezelfde oog voor detail heb ontworpen en gebouwd.",
     letter_lead_3: "Wat ik heb geleerd in de praktijk.",
     letter_p3: "Ik heb een reserveringssysteem voor een lokaal bedrijf gebouwd en een tracking-app met actieve gebruikers ontwikkeld. Beide leerden me iets wat geen enkel vak behandelt: wanneer echte mensen je software gebruiken, zijn details nooit optioneel. Tijdens mijn stage bracht ik diezelfde maatstaf mee: datamodellen ontwerpen in PostgreSQL, frontend en backend koppelen met React en Supabase, en technische alternatieven aandragen om zaken te versimpelen of te verbeteren.",
@@ -870,11 +872,11 @@ const T = {
     opt_letter_hint: "Een aparte pagina vóór het cv.",
     opt_print: "Afdrukken",
     aria_menu: "Meer opties",
-    menu_pdf_letter: "Pdf met motivatiebrief downloaden",
-    toast_letter_ask: "Met motivatiebrief?"
   },
 
   sv: {
+    aria_controls: "Webbplatskontroller",
+    skip_content: "Hoppa till innehållet",
     eyebrow: "Mjukvaruingenjör",
     tagline: "Fullstackutvecklare",
     location: "Errenteria (Gipuzkoa), Spanien · På plats, hybrid eller på distans",
@@ -943,7 +945,7 @@ const T = {
     letter_title: "Personligt brev",
     letter_p1: "Jag heter Eneko Ruiz Mollón, kommer från Rentería (Gipuzkoa) och avslutar i mars 2027 min kandidatexamen i datavetenskap (inriktning programvaruteknik) vid UPV/EHU. Jag söker en tjänst som juniorutvecklare.",
     letter_lead_2: "Hur jag arbetar.",
-    letter_web_p2: "För mig är en bra teknisk lösning inte den mest komplexa, utan den som löser problemet med minsta möjliga kod och samtidigt hanterar alla scenarier: säker, tålig vid nätverksavbrott, visuellt ren och tillgänglig för alla. Det tydligaste exemplet är detta webb-CV: skapat för att fylla sin funktion lätt och direkt, men rustat för varje verkligt fall (WCAG-tillgänglighet, 23 språk, ren PDF-export och automatiska tester). Jag värdesätter ingenjörsmässig noggrannhet: ingen onödig överdesign, men inga lösa trådar.",
+    letter_web_p2: "För mig är en bra teknisk lösning inte den mest komplexa, utan den som löser problemet med minsta möjliga kod och samtidigt hanterar alla scenarier: säker, tålig vid nätverksavbrott, visuellt ren och tillgänglig för alla. Det tydligaste exemplet är detta webb-CV: skapat för att fylla sin funktion lätt och direkt, men rustat för varje verkligt fall (automatiska tillgänglighetskontroller, 23 språk, ren PDF-export och automatiska tester). Jag värdesätter ingenjörsmässig noggrannhet: ingen onödig överdesign, men inga lösa trådar.",
     letter_print_p2: "För mig är en bra teknisk lösning inte den mest komplexa, utan den som löser problemet med minsta möjliga kod och förutser alla scenarier: säker, stabil vid anslutningsbortfall, ren och användbar för alla. Samma kvalitetskrav följer mig i allt jag gör, även i detta CV. Skanna QR-koden i sidhuvudet för att komma till min interaktiva portfolio, som jag designat och utvecklat med samma omsorg om detaljerna.",
     letter_lead_3: "Vad jag lärt mig i verkliga miljöer.",
     letter_p3: "Jag har utvecklat ett bokningssystem för en lokal verksamhet samt en uppföljningsapp med aktiva användare. Båda projekten lärde mig något som ingen universitetskurs lär ut: när riktiga människor använder din programvara är detaljer aldrig valfria. Under min praktik bidrog jag med samma inställning: modellerade databaser i PostgreSQL, integrerade frontend och backend med React och Supabase, och föreslog tekniska förenklingar för teamet.",
@@ -957,11 +959,11 @@ const T = {
     opt_letter_hint: "En separat sida före cv:t.",
     opt_print: "Skriv ut",
     aria_menu: "Fler alternativ",
-    menu_pdf_letter: "Ladda ner PDF med personligt brev",
-    toast_letter_ask: "Vill du ha det med personligt brev?"
   },
 
   no: {
+    aria_controls: "Nettstedskontroller",
+    skip_content: "Hopp til innholdet",
     eyebrow: "Programvareingeniør",
     tagline: "Fullstack-utvikler",
     location: "Errenteria (Gipuzkoa), Spania · På kontoret, hybrid eller eksternt",
@@ -1030,7 +1032,7 @@ const T = {
     letter_title: "Søknadsbrev",
     letter_p1: "Jeg heter Eneko Ruiz Mollón, er fra Rentería (Gipuzkoa) og fullfører i mars 2027 min bachelorgrad i informatikk (retning programvareutvikling) ved UPV/EHU. Jeg søker en stilling som juniorutvikler.",
     letter_lead_2: "Hvordan jeg jobber.",
-    letter_web_p2: "For meg er en god teknisk løsning ikke den mest kompliserte, men den som løser behovet med minst mulig kode og tar høyde for alle scenarier: sikker, robust ved nettverksbrudd, visuelt ren og universelt utformet for alle. Det beste eksempelet er denne nett-CV-en: laget for å oppfylle formålet sitt lett og direkte, men med dekning av alle reelle krav (WCAG-tilgjengelighet, 23 språk, ren PDF-eksport og automatiske tester). Jeg liker å gjøre ting grundig: ingen unødvendig overkonstruksjon, men ingen løse tråder.",
+    letter_web_p2: "For meg er en god teknisk løsning ikke den mest kompliserte, men den som løser behovet med minst mulig kode og tar høyde for alle scenarier: sikker, robust ved nettverksbrudd, visuelt ren og universelt utformet for alle. Det beste eksempelet er denne nett-CV-en: laget for å oppfylle formålet sitt lett og direkte, men med dekning av alle reelle krav (automatiske tilgjengelighetskontroller, 23 språk, ren PDF-eksport og automatiske tester). Jeg liker å gjøre ting grundig: ingen unødvendig overkonstruksjon, men ingen løse tråder.",
     letter_print_p2: "For meg er en god teknisk løsning ikke den mest kompliserte, men den som løser behovet med minst mulig kode og ivaretar alle scenarioer: sikker, stabil om nettet faller ut, ryddig og tilgjengelig for alle. De samme kravene stiller jeg til alt jeg gjør, også denne CV-en. Skanner du QR-koden i toppteksten, kommer du til min interaktive portefølje, som jeg har designet og programmert med samme sans for detaljer.",
     letter_lead_3: "Hva jeg har lært i praksis.",
     letter_p3: "Jeg har utviklet et bookingsystem for en lokal bedrift og en sporingsapp med aktive brukere. Begge lærte meg noe intet studium kan lære bort: når ekte mennesker bruker programvaren din, er detaljer aldri valgfrie. I praksisperioden bidro jeg med samme standard: modellerte databaser i PostgreSQL, integrerte frontend og backend med React og Supabase, og foreslo tekniske forenklinger for teamet.",
@@ -1044,11 +1046,11 @@ const T = {
     opt_letter_hint: "En egen side foran CV-en.",
     opt_print: "Skriv ut",
     aria_menu: "Flere valg",
-    menu_pdf_letter: "Last ned PDF med søknadsbrev",
-    toast_letter_ask: "Vil du ha det med søknadsbrev?"
   },
 
   da: {
+    aria_controls: "Webstedets kontroller",
+    skip_content: "Gå til indholdet",
     eyebrow: "Softwareingeniør",
     tagline: "Fullstack-udvikler",
     location: "Errenteria (Gipuzkoa), Spanien · På stedet, hybrid eller remote",
@@ -1117,7 +1119,7 @@ const T = {
     letter_title: "Ansøgning",
     letter_p1: "Mit navn er Eneko Ruiz Mollón, jeg kommer fra Rentería (Gipuzkoa) og færdiggør i marts 2027 min bachelor i datalogi (retning software engineering) ved UPV/EHU. Jeg søger en stilling som juniorudvikler.",
     letter_lead_2: "Sådan arbejder jeg.",
-    letter_web_p2: "For mig er en god teknisk løsning ikke den mest komplekse, men den der opfylder behovet med mindst muligt kode, mens alle scenarier tilgodeses: sikker, modstandsdygtig over for netværksudfald, visuelt indbydende og tilgængelig for enhver. Det klareste eksempel er dette web-CV i sig selv: skabt til at virke let og direkte, men med håndtering af alle praktiske krav (WCAG-tilgængelighed, 23 sprog, ren PDF-eksport og automatiske tests). Jeg sætter en ære i grundighed: ingen unødig overengineering, men ingen løse ender.",
+    letter_web_p2: "For mig er en god teknisk løsning ikke den mest komplekse, men den der opfylder behovet med mindst muligt kode, mens alle scenarier tilgodeses: sikker, modstandsdygtig over for netværksudfald, visuelt indbydende og tilgængelig for enhver. Det klareste eksempel er dette web-CV i sig selv: skabt til at virke let og direkte, men med håndtering af alle praktiske krav (automatiske tilgængelighedstjek, 23 sprog, ren PDF-eksport og automatiske tests). Jeg sætter en ære i grundighed: ingen unødig overengineering, men ingen løse ender.",
     letter_print_p2: "For mig er en god teknisk løsning ikke den mest indviklede, men den der løser opgaven med et minimum af kode og dækker alle scenarier: sikker, stabil ved afbrudt forbindelse, ren og tilgængelig for alle. Samme krav stiller jeg til alt mit arbejde, også dette CV. Scanner du QR-koden i sidehovedet, ledes du til min interaktive portfolio, som jeg selv har designet og bygget med samme fokus på detaljen.",
     letter_lead_3: "Erfaringer fra virkelige projekter.",
     letter_p3: "Jeg har udviklet et bookingsystem til en lokal virksomhed samt en sporingsapp med aktive brugere. Begge lærte mig noget, intet kursus kan formidle: når virkelige mennesker bruger din software, er detaljer aldrig valgfrie. I min praktiktid bidrog jeg med samme tilgang: modellerede databaser i PostgreSQL, integrerede frontend og backend med React og Supabase, og fremsatte tekniske alternativer for at forenkle løsningerne.",
@@ -1131,11 +1133,11 @@ const T = {
     opt_letter_hint: "En separat side før cv'et.",
     opt_print: "Udskriv",
     aria_menu: "Flere muligheder",
-    menu_pdf_letter: "Download PDF med ansøgning",
-    toast_letter_ask: "Vil du have den med ansøgning?"
   },
 
   pl: {
+    aria_controls: "Sterowanie witryną",
+    skip_content: "Przejdź do treści",
     eyebrow: "Inżynier Oprogramowania",
     tagline: "Full Stack Developer",
     location: "Errenteria (Gipuzkoa), Hiszpania · Stacjonarnie, hybrydowo lub zdalnie",
@@ -1204,7 +1206,7 @@ const T = {
     letter_title: "List motywacyjny",
     letter_p1: "Nazywam się Eneko Ruiz Mollón, pochodzę z Renteríi (Gipuzkoa) i w marcu 2027 r. kończę studia inżynierskie na kierunku Informatyka (specjalność Inżynieria Oprogramowania) na uczelni UPV/EHU. Poszukuję pracy na stanowisku młodszego programisty (junior developer).",
     letter_lead_2: "Jak pracuję.",
-    letter_web_p2: "Dla mnie dobre rozwiązanie techniczne to nie to najbardziej skomplikowane, lecz takie, które realizuje potrzebę minimalną ilością kodu, uwzględniając przy tym każdy scenariusz: bezpieczne, odporne na utratę łączności, czytelne i dostępne dla każdego. Najlepszym dowodem jest to internetowe CV: stworzone, by działać lekko i bezpośrednio, a zarazem spełniać wszelkie realne wymogi (dostępność WCAG, 23 języki, bezbłędny eksport do PDF oraz testy automatyczne). Cenię rzetelność: zero zbędnego over-engineeringu, ale bez niedopowiedzeń.",
+    letter_web_p2: "Dla mnie dobre rozwiązanie techniczne to nie to najbardziej skomplikowane, lecz takie, które realizuje potrzebę minimalną ilością kodu, uwzględniając przy tym każdy scenariusz: bezpieczne, odporne na utratę łączności, czytelne i dostępne dla każdego. Najlepszym dowodem jest to internetowe CV: stworzone, by działać lekko i bezpośrednio, a zarazem spełniać wszelkie realne wymogi (automatyczne testy dostępności, 23 języki, bezbłędny eksport do PDF oraz testy automatyczne). Cenię rzetelność: zero zbędnego over-engineeringu, ale bez niedopowiedzeń.",
     letter_print_p2: "Dla mnie dobre rozwiązanie techniczne to nie to najbardziej skomplikowane, lecz takie, które spełnia cel przy minimalnej ilości kodu i zabezpiecza wszystkie scenariusze: stabilne przy braku sieci, bezpieczne, estetyczne i powszechnie dostępne. Te same standardy stosuję we wszystkim, co tworzę, również w tym dokumencie. Zeskanowanie kodu QR w nagłówku przeniesie Państwa do mojego interaktywnego portfolio, zaprojektowanego i zakodowanego przeze mnie z tą samą dbałością o detale.",
     letter_lead_3: "Czego nauczyłem się w realnych środowiskach.",
     letter_p3: "Stworzyłem system rezerwacji dla lokalnej firmy oraz aplikację do monitorowania nawyków z aktywnymi użytkownikami. Oba projekty nauczyły mnie tego, czego nie uczy żadna uczelnia: gdy z oprogramowania korzystają ludzie, detale przestają być opcjonalne. Podczas stażu wniosłem dokładnie takie samo podejście: modelowałem bazy w PostgreSQL, integrowałem frontend i backend w oparciu o React i Supabase oraz proponowałem usprawnienia upraszczające architekturę.",
@@ -1218,11 +1220,11 @@ const T = {
     opt_letter_hint: "Osobna strona przed CV.",
     opt_print: "Drukuj",
     aria_menu: "Więcej opcji",
-    menu_pdf_letter: "Pobierz PDF z listem motywacyjnym",
-    toast_letter_ask: "Chcesz z listem motywacyjnym?"
   },
 
   cs: {
+    aria_controls: "Ovládání webu",
+    skip_content: "Přejít na obsah",
     eyebrow: "Softwarový inženýr",
     tagline: "Full Stack vývojář",
     location: "Errenteria (Gipuzkoa), Španělsko · Na místě, hybridně nebo na dálku",
@@ -1291,7 +1293,7 @@ const T = {
     letter_title: "Motivační dopis",
     letter_p1: "Jmenuji se Eneko Ruiz Mollón, pocházím z Renteríe (Gipuzkoa) a v březnu 2027 dokončím bakalářské studium softwarového inženýrství na UPV/EHU. Hledám uplatnění jako junior vývojář.",
     letter_lead_2: "Můj přístup k práci.",
-    letter_web_p2: "Dobré technické řešení pro mě není to nejsložitější, ale to, které vyřeší problém s minimem kódu a současně počítá se všemi scénáři: bezpečné, odolné při výpadku sítě, vizuálně čisté a přístupné pro každého. Přímým příkladem je tento webový životopis: postavený lehce a přímočaře, přitom pokrývající všechny reálné nároky (přístupnost WCAG, 23 jazyků, čistý export do PDF a automatické testy). Záleží mi na preciznosti: žádný zbytečný over-engineering, ale ani žádné nedodělky.",
+    letter_web_p2: "Dobré technické řešení pro mě není to nejsložitější, ale to, které vyřeší problém s minimem kódu a současně počítá se všemi scénáři: bezpečné, odolné při výpadku sítě, vizuálně čisté a přístupné pro každého. Přímým příkladem je tento webový životopis: postavený lehce a přímočaře, přitom pokrývající všechny reálné nároky (automatické kontroly přístupnosti, 23 jazyků, čistý export do PDF a automatické testy). Záleží mi na preciznosti: žádný zbytečný over-engineering, ale ani žádné nedodělky.",
     letter_print_p2: "Dobré technické řešení pro mě není to nejkomplexnější, nýbrž to, které splní zadání s minimem potřebného kódu a zohlední všechny scénáře: bezpečné, spolehlivé i při ztrátě spojení, čisté a přístupné všem. Stejný přístup uplatňuji ve všem, co dělám, včetně tohoto životopisu. Po naskenování QR kódu v záhlaví se dostanete do mého interaktivního portfolia, které jsem navrhl a naprogramoval se stejným důrazem na detail.",
     letter_lead_3: "Zkušenosti z reálných projektů.",
     letter_p3: "Vyvinul jsem rezervační systém pro místní podnik a aplikaci pro sledování návyků s aktivními uživateli. Oba projekty mě naučily to, co žádná přednáška nenaučí: když software používají skuteční lidé, detaily přestávají být volitelné. Během své stáže jsem přinesl stejný standard: navrhoval jsem databázové modely v PostgreSQL, propojoval frontend s backendem v Reactu a Supabase a navrhoval technické alternativy vedoucí ke zjednodušení.",
@@ -1305,11 +1307,11 @@ const T = {
     opt_letter_hint: "Samostatná stránka před životopisem.",
     opt_print: "Tisk",
     aria_menu: "Další možnosti",
-    menu_pdf_letter: "Stáhnout PDF s motivačním dopisem",
-    toast_letter_ask: "Chcete jej s motivačním dopisem?"
   },
 
   ro: {
+    aria_controls: "Comenzile site-ului",
+    skip_content: "Sari la conținut",
     eyebrow: "Inginer Software",
     tagline: "Dezvoltator Full Stack",
     location: "Errenteria (Gipuzkoa), Spania · La birou, hibrid sau de la distanță",
@@ -1378,7 +1380,7 @@ const T = {
     letter_title: "Scrisoare de intenție",
     letter_p1: "Mă numesc Eneko Ruiz Mollón, sunt din Rentería (Gipuzkoa) și în martie 2027 voi absolvi Facultatea de Informatică (specializarea Inginerie Software) la UPV/EHU. Îmi doresc să mă alătur unei echipe în rolul de dezvoltator junior.",
     letter_lead_2: "Cum lucrez.",
-    letter_web_p2: "Pentru mine, o soluție tehnică reușită nu este cea mai complicată, ci aceea care rezolvă nevoia cu minimum de cod necesar, anticipând fiecare scenariu: sigură, rezilientă la căderile de rețea, cu un design curat și accesibilă oricui. Cel mai elocvent exemplu este chiar acest CV web: conceput să își îndeplinească rolul suplu și direct, acoperind fiecare cerință reală (accesibilitate WCAG, 23 de limbi, export impecabil în PDF și teste automate). Îmi place să lucrez cu rigoare: fără supradimensionare inutilă a codului, dar fără a lăsa detalii la voia întâmplării.",
+    letter_web_p2: "Pentru mine, o soluție tehnică reușită nu este cea mai complicată, ci aceea care rezolvă nevoia cu minimum de cod necesar, anticipând fiecare scenariu: sigură, rezilientă la căderile de rețea, cu un design curat și accesibilă oricui. Cel mai elocvent exemplu este chiar acest CV web: conceput să își îndeplinească rolul suplu și direct, acoperind fiecare cerință reală (verificări automate de accesibilitate, 23 de limbi, export impecabil în PDF și teste automate). Îmi place să lucrez cu rigoare: fără supradimensionare inutilă a codului, dar fără a lăsa detalii la voia întâmplării.",
     letter_print_p2: "Pentru mine, o soluție tehnică valoroasă nu este cea mai complexă, ci aceea care răspunde nevoii cu minimum de cod, acoperind toate scenariile: sigură, stabilă când conexiunea cedează, curată și accesibilă tuturor. Aceeași exigență mă ghidează în tot ceea ce construiesc, inclusiv în acest CV. Scanând codul QR din antet veți accesa portofoliul meu interactiv, proiectat și dezvoltat de mine cu aceeași atenție la detalii.",
     letter_lead_3: "Ce am învățat din proiecte reale.",
     letter_p3: "Am dezvoltat un sistem de rezervări pentru o afacere locală și o aplicație de monitorizare cu utilizatori activi. Ambele proiecte m-au învățat ceva ce nicio materie nu predă: când software-ul tău are utilizatori reali, detaliile nu mai sunt opționale. În perioada de practică am aplicat aceeași abordare: am modelat baze de date în PostgreSQL, am integrat frontend-ul și backend-ul cu React și Supabase și am propus soluții tehnice de simplificare și îmbunătățire.",
@@ -1392,11 +1394,11 @@ const T = {
     opt_letter_hint: "O pagină separată, înaintea CV-ului.",
     opt_print: "Tipărește",
     aria_menu: "Mai multe opțiuni",
-    menu_pdf_letter: "Descarcă PDF cu scrisoare",
-    toast_letter_ask: "Îl vrei cu scrisoarea de intenție?"
   },
 
   tr: {
+    aria_controls: "Site kontrolleri",
+    skip_content: "İçeriğe geç",
     eyebrow: "Yazılım Mühendisi",
     tagline: "Full Stack Geliştirici",
     location: "Errenteria (Gipuzkoa), İspanya · Ofiste, hibrit veya uzaktan",
@@ -1465,7 +1467,7 @@ const T = {
     letter_title: "Ön yazı",
     letter_p1: "Adım Eneko Ruiz Mollón, Rentería (Gipuzkoa) doğumluyum ve Mart 2027'de UPV/EHU Bilgisayar Mühendisliği (Yazılım Mühendisliği alanı) lisans programından mezun oluyorum. Junior yazılım geliştirici olarak bir ekibe katılmak istiyorum.",
     letter_lead_2: "Nasıl çalışırım.",
-    letter_web_p2: "Bana göre iyi bir teknik çözüm en karmaşık olanı değil; tüm senaryoları öngörerek ihtiyacı gereken asgari kodla çözen çözümdür: güvenli, ağ kesintilerine dayanıklı, görsel olarak sade ve herkes için erişilebilir. Bunun en somut kanıtı bu web özgeçmişinin kendisidir: amacını hafif ve yalın bir şekilde yerine getirirken tüm gerçek dünya gereksinimlerini eksiksiz karşılar (WCAG erişilebilirliği, 23 dil, kusursuz PDF dışa aktarımı ve otomatik testler). İşimi titizlikle yapmayı severim: gereksiz karmaşıklıktan uzak, ancak hiçbir ayrıntıyı açıkta bırakmadan.",
+    letter_web_p2: "Bana göre iyi bir teknik çözüm en karmaşık olanı değil; tüm senaryoları öngörerek ihtiyacı gereken asgari kodla çözen çözümdür: güvenli, ağ kesintilerine dayanıklı, görsel olarak sade ve herkes için erişilebilir. Bunun en somut kanıtı bu web özgeçmişinin kendisidir: amacını hafif ve yalın bir şekilde yerine getirirken tüm gerçek dünya gereksinimlerini eksiksiz karşılar (otomatik erişilebilirlik kontrolleri, 23 dil, kusursuz PDF dışa aktarımı ve otomatik testler). İşimi titizlikle yapmayı severim: gereksiz karmaşıklıktan uzak, ancak hiçbir ayrıntıyı açıkta bırakmadan.",
     letter_print_p2: "Benim için iyi bir teknik çözüm en karmaşık olan değil, ihtiyacı en az kodla çözen ve tüm senaryoları kapsayan çözümdür: güvenli, bağlantı kopsa bile bozulmayan, temiz ve herkesin rahatça kullanabileceği. Aynı titizliği ürettiğim her şeye, bu özgeçmişe de yansıtırım. Başlıktaki QR kodu taratarak aynı özenle tasarlayıp kodladığım etkileşimli portfolyoma ulaşabilirsiniz.",
     letter_lead_3: "Gerçek ortamlardan öğrendiklerim.",
     letter_p3: "Yerel bir işletme için randevu sistemi ve aktif kullanıcıları olan bir takip uygulaması geliştirdim. Her ikisinde de hiçbir dersin öğretemeyeceği bir şey öğrendim: yazılımınızı gerçek insanlar kullandığında ayrıntılar asla isteğe bağlı değildir. Stajımda da aynı kalite anlayışını sundum: PostgreSQL veri modellerini tasarladım, frontend ve backend'i React ile Supabase üzerinde entegre ettim ve ekibe sadeleştirme sağlayacak teknik alternatifler sundum.",
@@ -1479,11 +1481,11 @@ const T = {
     opt_letter_hint: "Özgeçmişten önce ayrı bir sayfa.",
     opt_print: "Yazdır",
     aria_menu: "Daha fazla seçenek",
-    menu_pdf_letter: "PDF'yi ön yazıyla indir",
-    toast_letter_ask: "Ön yazıyla birlikte ister misiniz?"
   },
 
   ru: {
+    aria_controls: "Управление сайтом",
+    skip_content: "Перейти к содержимому",
     eyebrow: "Инженер-программист",
     tagline: "Full Stack разработчик",
     location: "Эррентерия (Гипускоа), Испания · Офис, гибрид или удалённо",
@@ -1552,7 +1554,7 @@ const T = {
     letter_title: "Сопроводительное письмо",
     letter_p1: "Меня зовут Энеко Руис Мольон, я из Рентерии (Гипускоа) и в марте 2027 года оканчиваю бакалавриат по компьютерной инженерии (профиль: программная инженерия) в Университете Страны Басков (UPV/EHU). Ищу позицию junior-разработчика.",
     letter_lead_2: "Мой подход к работе.",
-    letter_web_p2: "Для меня отличное техническое решение — это не самое сложное, а то, которое решает задачу минимально необходимым объемом кода с учетом всех возможных сценариев: надежное, устойчивое к сбоям сети, визуально чистое и доступное каждому. Наглядный пример — этот интерактивный сайт-резюме: он спроектирован легко и прямолинейно, при этом охватывает все практические требования (доступность WCAG, 23 языка, чистый экспорт в PDF и автоматические тесты). Я ценю инженерную дисциплину: без избыточного оверинжиниринга, но и без компромиссов в деталях.",
+    letter_web_p2: "Для меня отличное техническое решение — это не самое сложное, а то, которое решает задачу минимально необходимым объемом кода с учетом всех возможных сценариев: надежное, устойчивое к сбоям сети, визуально чистое и доступное каждому. Наглядный пример — этот интерактивный сайт-резюме: он спроектирован легко и прямолинейно, при этом охватывает все практические требования (автоматические проверки доступности, 23 языка, чистый экспорт в PDF и автоматические тесты). Я ценю инженерную дисциплину: без избыточного оверинжиниринга, но и без компромиссов в деталях.",
     letter_print_p2: "Для меня качественное техническое решение — это решение с минимальным объемом кода, которое надежно закрывает все сценарии: безопасное, не ломающееся при потере связи, аккуратное и удобное для каждого. Этот же принцип лежит в основе всей моей работы, включая это резюме. Отсканировав QR-код в шапке, вы перейдете в мое интерактивное портфолио, которое я разработал с тем же вниманием к деталям.",
     letter_lead_3: "Опыт в реальных условиях.",
     letter_p3: "Я разработал систему онлайн-записи для локального бизнеса и приложение для отслеживания с активными пользователями. Оба проекта научили меня тому, чему не учат в университете: когда твоим продуктом пользуются живые люди, мелочей не бывает. Во время стажировки я следовал тем же стандартам: проектировал базы данных в PostgreSQL, интегрировал фронтенд с бэкендом на React и Supabase и предлагал технические решения для оптимизации архитектуры.",
@@ -1566,11 +1568,11 @@ const T = {
     opt_letter_hint: "Отдельная страница перед резюме.",
     opt_print: "Печать",
     aria_menu: "Ещё",
-    menu_pdf_letter: "Скачать PDF с письмом",
-    toast_letter_ask: "Нужно с сопроводительным письмом?"
   },
 
   uk: {
+    aria_controls: "Керування сайтом",
+    skip_content: "Перейти до вмісту",
     eyebrow: "Інженер-програміст",
     tagline: "Full Stack розробник",
     location: "Еррентерія (Гіпускоа), Іспанія · Офіс, гібрид або віддалено",
@@ -1639,7 +1641,7 @@ const T = {
     letter_title: "Супровідний лист",
     letter_p1: "Мене звати Енеко Руїс Мольон, я з Рентерії (Гіпускоа) і в березні 2027 року завершую бакалаврат з комп'ютерної інженерії (спеціалізація: програмна інженерія) в Університеті Країни Басків (UPV/EHU). Шукаю позицію junior-розробника.",
     letter_lead_2: "Мій підхід до роботи.",
-    letter_web_p2: "Для мене якісне технічне рішення — це не найскладніше, а те, що вирішує завдання мінімально необхідною кількістю коду з урахуванням усіх можливих сценаріїв: безпечне, стійке до збоїв мережі, візуально вивірене та доступне кожному. Найкращий приклад — це саме резюме: створене легко та лаконічно, але з опрацюванням кожного реального випадку (доступність WCAG, 23 мови, бездоганний експорт у PDF та автоматичні тести). Я люблю робити речі з інженерною ретельністю: без зайвого ускладнення, але не залишаючи білих плям.",
+    letter_web_p2: "Для мене якісне технічне рішення — це не найскладніше, а те, що вирішує завдання мінімально необхідною кількістю коду з урахуванням усіх можливих сценаріїв: безпечне, стійке до збоїв мережі, візуально вивірене та доступне кожному. Найкращий приклад — це саме резюме: створене легко та лаконічно, але з опрацюванням кожного реального випадку (автоматичні перевірки доступності, 23 мови, бездоганний експорт у PDF та автоматичні тести). Я люблю робити речі з інженерною ретельністю: без зайвого ускладнення, але не залишаючи білих плям.",
     letter_print_p2: "Для мене вдале технічне рішення — це рішення з мінімумом коду, яке надійно покриває всі сценарії: безпечне, стабільне навіть без інтернету, охайне та доступне для всіх. Ця вимога супроводжує все, що я створюю, зокрема й це резюме. Відсканувавши QR-код у заголовку, ви потрапите до мого інтерактивного портфоліо, яке я розробив з такою ж увагою до деталей.",
     letter_lead_3: "Досвід у реальних умовах.",
     letter_p3: "Я розробив систему бронювання для місцевого бізнесу та додаток для відстеження з реальними користувачами. Обидва проєкти навчили мене тому, чого не навчають на лекціях: коли програмним забезпеченням користуються люди, деталі перестають бути необов'язковими. На стажуванні я застосовував ті самі принципи: моделював бази даних у PostgreSQL, інтегрував фронтенд і бекенд на React та Supabase, і пропонував рішення для спрощення й оптимізації.",
@@ -1653,11 +1655,11 @@ const T = {
     opt_letter_hint: "Окрема сторінка перед резюме.",
     opt_print: "Друк",
     aria_menu: "Ще",
-    menu_pdf_letter: "Завантажити PDF з листом",
-    toast_letter_ask: "Потрібно із супровідним листом?"
   },
 
   zh: {
+    aria_controls: "网站控件",
+    skip_content: "跳转到主要内容",
     eyebrow: "软件工程师",
     tagline: "全栈开发工程师",
     location: "西班牙 吉普斯夸省 埃伦特里亚 · 可现场、混合或远程办公",
@@ -1726,7 +1728,7 @@ const T = {
     letter_title: "求职信",
     letter_p1: "我叫 Eneko Ruiz Mollón，来自雷特里亚（吉普斯夸）。我将于 2027 年 3 月从巴斯克大学（UPV/EHU）计算机工程专业（软件工程方向）毕业，目前正在寻找初级软件开发岗位。",
     letter_lead_2: "我的工作理念。",
-    letter_web_p2: "在我看来，优秀的工程方案不在于多复杂，而在于以最精炼的代码满足需求，同时周全考虑各种边界情况：确保安全、具备弱网容错能力、界面整洁且人人皆可无障碍使用。最直接的例证便是本在线简历网站：它旨在轻量直接地完成使命，却严谨覆盖了每个现实需求（WCAG 无障碍规范、23 种语言支持、精美的 PDF 单页排版及全面的自动化测试套件）。我坚持严谨做事：杜绝不必要的过度工程，但也绝不留下任何疏漏。",
+    letter_web_p2: "在我看来，优秀的工程方案不在于多复杂，而在于以最精炼的代码满足需求，同时周全考虑各种边界情况：确保安全、具备弱网容错能力、界面整洁且人人皆可无障碍使用。最直接的例证便是本在线简历网站：它旨在轻量直接地完成使命，却严谨覆盖了每个现实需求（无障碍自动化检查、23 种语言支持、精美的 PDF 单页排版及全面的自动化测试套件）。我坚持严谨做事：杜绝不必要的过度工程，但也绝不留下任何疏漏。",
     letter_print_p2: "在我看来，优秀的工程方案绝非最复杂的，而是用最精简的代码解决问题，同时顾及所有现实场景：兼顾安全、网络断开时不崩溃、版面清晰且所有人均可轻松使用。同样的严谨态度贯穿我所有的作品，包括这份简历。扫描页眉中的二维码，即可访问由我精心设计并开发的互动式作品集。",
     letter_lead_3: "真实场景中的实践积累。",
     letter_p3: "我曾为一家实体店铺开发预约系统，并独立开发过拥有活跃用户的健康追踪应用。这两次实践让我领悟到课堂之外最重要的一课：当真实用户使用你的软件时，没有任何细节是次要的。在实习期间我也秉持这一准则：在 PostgreSQL 中设计数据模型，利用 React 与 Supabase 深度集成前后端，并在发现架构优化空间时主动向团队提出简化方案。",
@@ -1740,11 +1742,11 @@ const T = {
     opt_letter_hint: "位于简历之前的单独一页。",
     opt_print: "打印",
     aria_menu: "更多选项",
-    menu_pdf_letter: "下载含求职信的 PDF",
-    toast_letter_ask: "需要附上求职信吗？"
   },
 
   ja: {
+    aria_controls: "サイトの操作",
+    skip_content: "本文へスキップ",
     eyebrow: "ソフトウェアエンジニア",
     tagline: "フルスタック開発者",
     location: "スペイン ギプスコア県 エレンテリア · 出社・ハイブリッド・リモート可",
@@ -1813,7 +1815,7 @@ const T = {
     letter_title: "カバーレター",
     letter_p1: "Eneko Ruiz Mollón（エネコ・ルイス・モジョン）と申します。ギプスコア県レンテリア出身で、2027年3月にバスク大学（UPV/EHU）コンピュータ工学部（ソフトウェア工学専攻）を卒業見込みです。ジュニア開発者としての就職を希望しております。",
     letter_lead_2: "開発に対するスタンス。",
-    letter_web_p2: "私にとって優れた技術的ソリューションとは、複雑なものではなく、必要最小限のコードで課題を解決し、あらゆるシナリオを想定したものです。セキュアであること、通信切断時にも破綻しないこと、クリーンな外観、そして誰もが利用できるアクセシビリティを備えていることです。その最たる例が、私自身が制作したこのWeb履歴書です。軽快で直接的な動作を追求しつつ、現実のあらゆる要件（WCAG適合、23言語対応、高精度なPDF出力、自動テスト）を網羅しています。不要なオーバーエンジニアリングを排しつつ、細部まで徹底して作り込む姿勢を大切にしています。",
+    letter_web_p2: "私にとって優れた技術的ソリューションとは、複雑なものではなく、必要最小限のコードで課題を解決し、あらゆるシナリオを想定したものです。セキュアであること、通信切断時にも破綻しないこと、クリーンな外観、そして誰もが利用できるアクセシビリティを備えていることです。その最たる例が、私自身が制作したこのWeb履歴書です。軽快で直接的な動作を追求しつつ、現実のあらゆる要件（アクセシビリティの自動チェック、23言語対応、高精度なPDF出力、自動テスト）を網羅しています。不要なオーバーエンジニアリングを排しつつ、細部まで徹底して作り込む姿勢を大切にしています。",
     letter_print_p2: "私にとって優れた技術的アプローチとは、最も複雑なものではなく、必要最小限のコードで目的を果たし、想定されるすべてのケースをカバーするものです。安全で、接続トラブル時にも安定し、見やすく、誰もが快適に扱えること。そのこだわりはこの履歴書にも息づいています。ヘッダーのQRコードを読み取っていただければ、同様の細部への配慮をもって設計・開発したポートフォリオをご覧いただけます。",
     letter_lead_3: "実務環境で培った経験。",
     letter_p3: "実店舗向けの予約システムや、実際のアクティブユーザーを抱える追跡アプリを開発してきました。いずれの開発でも、大学の講義では学べない本質を学びました。実際のユーザーがソフトウェアに触れる以上、細部の配慮は決して妥協できないということです。インターンシップでも同様の基準で臨み、PostgreSQLでのデータモデリング、ReactとSupabaseを用いたフロントエンド・バックエンド統合、そして簡潔化に向けた技術提案を積極的に行いました。",
@@ -1827,11 +1829,11 @@ const T = {
     opt_letter_hint: "履歴書の前に別ページとして追加します。",
     opt_print: "印刷",
     aria_menu: "その他のオプション",
-    menu_pdf_letter: "カバーレター付きでPDFをダウンロード",
-    toast_letter_ask: "カバーレターも付けますか？"
   },
 
   ko: {
+    aria_controls: "사이트 제어",
+    skip_content: "본문으로 건너뛰기",
     eyebrow: "소프트웨어 엔지니어",
     tagline: "풀스택 개발자",
     location: "스페인 기푸스코아 에렌테리아 · 출근·하이브리드·원격 근무 가능",
@@ -1900,7 +1902,7 @@ const T = {
     letter_title: "자기소개서",
     letter_p1: "저는 스페인 기푸스코아 렌테리아 출신의 에네코 루이스 몰론(Eneko Ruiz Mollón)입니다. 2027년 3월 바스크 대학교(UPV/EHU) 컴퓨터공학부(소프트웨어 공학 전공)를 졸업할 예정이며, 주니어 개발자로 합류할 기회를 찾고 있습니다.",
     letter_lead_2: "일하는 방식.",
-    letter_web_p2: "제가 생각하는 훌륭한 기술 솔루션은 가장 복잡한 것이 아니라, 모든 시나리오를 고려하면서 최소한의 코드로 요구사항을 해결하는 것입니다. 안전하고, 네트워크 장애 시에도 안정적으로 반응하며, 깔끔하고 누구나 편리하게 쓸 수 있어야 합니다. 가장 직접적인 예시가 바로 이 웹 이력서입니다. 가볍고 직관적인 목적 수행을 위해 개발되었으면서도 실제 모든 요구사항(WCAG 접근성, 23개 언어 지원, 깔끔한 단일 페이지 PDF 내보내기, 자동화 테스트)을 빈틈없이 충족합니다. 불필요한 과잉 엔지니어링을 지양하되, 사소한 부분도 결코 놓치지 않는 엄격함을 추구합니다.",
+    letter_web_p2: "제가 생각하는 훌륭한 기술 솔루션은 가장 복잡한 것이 아니라, 모든 시나리오를 고려하면서 최소한의 코드로 요구사항을 해결하는 것입니다. 안전하고, 네트워크 장애 시에도 안정적으로 반응하며, 깔끔하고 누구나 편리하게 쓸 수 있어야 합니다. 가장 직접적인 예시가 바로 이 웹 이력서입니다. 가볍고 직관적인 목적 수행을 위해 개발되었으면서도 실제 모든 요구사항(접근성 자동 검사, 23개 언어 지원, 깔끔한 단일 페이지 PDF 내보내기, 자동화 테스트)을 빈틈없이 충족합니다. 불필요한 과잉 엔지니어링을 지양하되, 사소한 부분도 결코 놓치지 않는 엄격함을 추구합니다.",
     letter_print_p2: "저에게 훌륭한 엔지니어링이란 가장 화려한 것이 아니라, 필요한 최소한의 코드로 목적을 완벽히 달성하고 모든 예외를 챙기는 것입니다. 안전성, 네트워크 유실에 대한 내구성, 깔끔한 사용성을 모두 갖추어야 합니다. 이러한 기준은 이 이력서를 포함해 제가 만드는 모든 작업물에 반영되어 있습니다. 상단의 QR 코드를 스캔하시면 동일한 세심함으로 직접 설계하고 개발한 인터랙티브 포트폴리오를 확인하실 수 있습니다.",
     letter_lead_3: "실제 환경에서 배운 것.",
     letter_p3: "실제 로컬 비즈니스를 위한 예약 시스템과 실사용자를 보유한 트래킹 애플리케이션을 개발했습니다. 두 프로젝트를 통해 어떤 전공 수업에서도 알려주지 않는 점을 배웠습니다. 실제 사람이 소프트웨어를 사용하기 시작하면 디테일은 결코 선택 사항이 아니라는 것입니다. 인턴십에서도 동일한 기준을 고수했습니다. PostgreSQL 데이터 모델링, React와 Supabase를 활용한 프론트엔드·백엔드 연동, 그리고 아키텍처를 단순화하고 개선하기 위한 기술적 대안을 주도적으로 제안했습니다.",
@@ -1914,11 +1916,11 @@ const T = {
     opt_letter_hint: "이력서 앞에 별도 페이지로 추가됩니다.",
     opt_print: "인쇄",
     aria_menu: "더 보기",
-    menu_pdf_letter: "자기소개서 포함 PDF 다운로드",
-    toast_letter_ask: "자기소개서도 함께 받으시겠어요?"
   },
 
   ar: {
+    aria_controls: "عناصر التحكم بالموقع",
+    skip_content: "تخطي إلى المحتوى",
     eyebrow: "مهندس برمجيات",
     tagline: "مطوّر Full Stack",
     location: "إرينتيريا (غيبوثكوا)، إسبانيا · حضوريًا أو هجينًا أو عن بُعد",
@@ -1987,7 +1989,7 @@ const T = {
     letter_title: "رسالة تقديم",
     letter_p1: "اسمي إينيكو رويز مولون، من رينتيريا (غيبوثكوا)، وسأتخرج في مارس 2027 بدرجة البكالوريوس في هندسة الحاسوب (مسار هندسة البرمجيات) من جامعة إقليم الباسك (UPV/EHU). أتطلع للانضمام كفرد في الفريق كمطور مبتدئ (Junior).",
     letter_lead_2: "طريقتي في العمل.",
-    letter_web_p2: "بالنسبة لي، الحل التقني الممتاز ليس الأكثر تعقيداً، بل هو الذي يلبي الاحتياج بأقل قدر ممكن من الكود مع مراعاة كافة السيناريوهات الواقعية: أن يكون آمناً، ويصمد أمام انقطاع الشبكة، ويبدو نظيفاً، ومتاحاً للاستخدام من قبل الجميع. والمثال الأوضح هو موقع السيرة الذاتية هذا نفسه: صُمم ليؤدي غرضه بخفة ومباشرة، مع تغطية كل حالة واقعية (إمكانية الوصول WCAG، 23 لغة، تصدير نظيف إلى PDF واختبارات مؤتمتة). أحب إنجاز العمل بانضباط وإحكام: دون إفراط هندسي غير مبرر، ودون ترك أي تفاصيل معلقة.",
+    letter_web_p2: "بالنسبة لي، الحل التقني الممتاز ليس الأكثر تعقيداً، بل هو الذي يلبي الاحتياج بأقل قدر ممكن من الكود مع مراعاة كافة السيناريوهات الواقعية: أن يكون آمناً، ويصمد أمام انقطاع الشبكة، ويبدو نظيفاً، ومتاحاً للاستخدام من قبل الجميع. والمثال الأوضح هو موقع السيرة الذاتية هذا نفسه: صُمم ليؤدي غرضه بخفة ومباشرة، مع تغطية كل حالة واقعية (فحوصات آلية لإمكانية الوصول، 23 لغة، تصدير نظيف إلى PDF واختبارات مؤتمتة). أحب إنجاز العمل بانضباط وإحكام: دون إفراط هندسي غير مبرر، ودون ترك أي تفاصيل معلقة.",
     letter_print_p2: "بالنسبة لي، الحل التقني الجيد ليس الأكثر تعقيداً، بل الذي يعالج الاحتياج بالحد الأدنى من الكود مع تغطية كل الاحتمالات: أن يكون آمناً، ولا يتعطل عند فقدان الاتصال، ومتقناً وسهل الاستخدام للجميع. هذا المعيار يرافقني في كل عمل أنجزه، بما في ذلك هذه السيرة الذاتية. عند مسح رمز QR في الترويسة، ستصلون إلى معرض أعمالي التفاعلي الذي صممته وبرمجته بنفس العناية بأدق التفاصيل.",
     letter_lead_3: "ما تعلمته في بيئات عمل حقيقية.",
     letter_p3: "طوّرتُ نظام حجوزات لنشاط تجاري محلي وتطبيق متابعة يستخدمه مستخدمون حقيقيون. تعلمت من كليهما أمراً لا تُدرسه أي مادة جامعية: عندما يستخدم الناس برمجياتك، تصبح التفاصيل جوهرية وغير قابلة للإهمال. وفي فترة تدريبي قدمت نفس المنهج: قمت بنمذجة قواعد البيانات في PostgreSQL، وربطت الواجهة الأمامية بالخلفية عبر React وSupabase، واقترحت بدائل تقنية لتبسيط وتحسين البنية البرمجية.",
@@ -2001,8 +2003,6 @@ const T = {
     opt_letter_hint: "صفحة منفصلة قبل السيرة الذاتية.",
     opt_print: "طباعة",
     aria_menu: "المزيد من الخيارات",
-    menu_pdf_letter: "تنزيل PDF مع رسالة التقديم",
-    toast_letter_ask: "هل تريده مع رسالة التقديم؟"
   }
 };
 

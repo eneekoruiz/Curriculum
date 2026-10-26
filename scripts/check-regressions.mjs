@@ -64,7 +64,7 @@ const config = JSON.parse(readFileSync(join(ROOT, 'vercel.json'), 'utf8'));
 const pdfCache = config.headers.find(rule => rule.source === '/pdf/(.*)').headers.find(h => h.key === 'Cache-Control').value;
 assert.match(pdfCache, /must-revalidate/);
 assert.doesNotMatch(pdfCache, /immutable/);
-assert.equal(loadTranslations().T.es.letter_web_p2.includes('cumple la accesibilidad WCAG'), false);
+assert.match(loadTranslations().T.es.letter_web_p2, /comprobaciones automáticas de accesibilidad/);
 const missingPortrait = spawnSync(process.execPath, [join(ROOT, 'scripts/generate-headshot.mjs')], { encoding: 'utf8' });
 assert.notEqual(missingPortrait.status, 0);
 assert.match(missingPortrait.stderr, /Usage:/);
@@ -90,12 +90,35 @@ try {
   await page.reload({ waitUntil: 'networkidle' });
   assert.equal(await page.locator('html').getAttribute('lang'), 'en');
   assert.equal(await page.locator('.footer-link').count(), 1);
+  const favicon = await page.locator('link[rel="icon"]').getAttribute('href');
+  await page.locator('#theme-btn').click();
+  assert.equal(await page.locator('link[rel="icon"]').getAttribute('href'), favicon, 'theme changes must preserve the site icon');
   await page.click('#lang-trigger');
   await page.locator('[data-code="auto"]').click();
   assert.equal(new URL(page.url()).searchParams.has('lang'), false);
 
-  await page.setContent('<iframe src="/?lang=es"></iframe>', { waitUntil: 'networkidle' });
+  await page.setViewportSize({ width: 1280, height: 720 });
+  await page.setContent(`<iframe title="Curriculum" src="/?lang=es" style="width:100%;height:650px;border:0"></iframe>
+    <script>addEventListener('message', event => {
+      const frame = document.querySelector('iframe');
+      if (event.source === frame.contentWindow && event.data?.type === 'set-cv-height') {
+        frame.style.height = event.data.height + 'px';
+      }
+    });</script>`, { waitUntil: 'networkidle' });
   const frame = page.frames().find(frame => frame !== page.mainFrame());
+  await frame.waitForFunction(() => !document.documentElement.classList.contains('cv-loading'));
+  for (const width of [1280, 375]) {
+    await page.setViewportSize({ width, height: 720 });
+    const iframeHeight = await page.locator('iframe').evaluate(el => el.getBoundingClientRect().height);
+    assert.equal(iframeHeight, 650, 'the iframe must not grow with its own viewport');
+    const name = await frame.locator('h1').boundingBox();
+    assert.ok(name.y >= 0 && name.y + name.height < 650, 'the name must be visible inside the iframe');
+    await frame.locator('#letter-btn').evaluate(el => el.click());
+    const dialog = await frame.locator('#letter-dialog').boundingBox();
+    assert.ok(dialog.y >= 0 && dialog.y + dialog.height <= 651, 'embedded dialogs must fit the iframe viewport');
+    await frame.locator('#letter-close-btn').click();
+  }
+  await page.setViewportSize({ width: 1280, height: 720 });
   const send = data => page.evaluate(data => document.querySelector('iframe').contentWindow.postMessage(data, location.origin), data);
   await send({ type: 'set-theme', theme: 'dark' });
   await frame.waitForFunction(() => document.documentElement.dataset.theme === 'dark');

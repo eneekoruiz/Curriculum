@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   # One-page ATS-safe PDFs in every language (and up to date), first screen at 12 viewports,
-  # no JS errors, language detection, Ctrl+P, a responsive layout audit and a WCAG 2.1 AA audit (axe-core).
+  # no JS errors, language detection, Ctrl+P, responsive layout and WCAG 2.2 AA checks (axe-core + keyboard).
   checks:
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -46,5 +46,5 @@ jobs:
         run: node check-headers.mjs
       - name: PDF fallback function (api/pdf.js) as Vercel runs it
         run: node check-api-pdf.mjs
-      - name: Accessibility (WCAG 2.1 AA)
+      - name: Accessibility (WCAG 2.2 AA, keyboard, focus and reflow)
         run: node check-a11y.mjs
