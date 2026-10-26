@@ -98,15 +98,32 @@ try {
   assert.equal(new URL(page.url()).searchParams.has('lang'), false);
 
   await page.setViewportSize({ width: 1280, height: 720 });
+  let releaseImage;
+  const imageReleased = new Promise(resolve => { releaseImage = resolve; });
+  await page.route('**/__delayed-load.png', async route => {
+    await imageReleased;
+    await route.fulfill({ contentType: 'image/svg+xml', body: '<svg xmlns="http://www.w3.org/2000/svg"/>' });
+  });
+  await page.addInitScript(() => {
+    if (window.parent !== window) {
+      const image = new Image();
+      image.src = 'https://slow-resource.example/__delayed-load.png';
+      window.__delayedImage = image;
+    }
+  });
   await page.setContent(`<iframe title="Curriculum" src="/?lang=es" style="width:100%;height:650px;border:0"></iframe>
-    <script>addEventListener('message', event => {
+    <script>window.readyMessages = 0; addEventListener('message', event => {
       const frame = document.querySelector('iframe');
       if (event.source === frame.contentWindow && event.data?.type === 'set-cv-height') {
         frame.style.height = event.data.height + 'px';
+        window.readyMessages++;
       }
-    });</script>`, { waitUntil: 'networkidle' });
+    });</script>`, { waitUntil: 'domcontentloaded' });
   const frame = page.frames().find(frame => frame !== page.mainFrame());
   await frame.waitForFunction(() => !document.documentElement.classList.contains('cv-loading'));
+  await page.waitForFunction(() => window.readyMessages === 1);
+  assert.equal(await frame.evaluate(() => document.readyState), 'interactive', 'the host must know the CV is ready before slow resources finish');
+  releaseImage();
   for (const width of [1280, 375]) {
     await page.setViewportSize({ width, height: 720 });
     const iframeHeight = await page.locator('iframe').evaluate(el => el.getBoundingClientRect().height);
@@ -118,8 +135,12 @@ try {
     assert.ok(dialog.y >= 0 && dialog.y + dialog.height <= 651, 'embedded dialogs must fit the iframe viewport');
     await frame.locator('#letter-close-btn').click();
   }
+  assert.equal(await page.evaluate(() => window.readyMessages), 1, 'resizing must not start another height feedback loop');
   await page.setViewportSize({ width: 1280, height: 720 });
   const send = data => page.evaluate(data => document.querySelector('iframe').contentWindow.postMessage(data, location.origin), data);
+  await page.evaluate(() => { window.readyMessages = 0; });
+  await send({ type: 'request-cv-ready' });
+  await page.waitForFunction(() => window.readyMessages === 1);
   await send({ type: 'set-theme', theme: 'dark' });
   await frame.waitForFunction(() => document.documentElement.dataset.theme === 'dark');
   await frame.evaluate(() => {

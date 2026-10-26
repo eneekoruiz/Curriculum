@@ -797,6 +797,8 @@ const setupPrintScale = () => {
       }
       applied = true;
     }
+    // Font metrics differ across platforms; remeasure once print styles are active.
+    if (applied && window.matchMedia('print').matches) window.fitPrintToOnePage();
   });
   window.addEventListener('afterprint', () => {
     if (applied) {
@@ -1136,6 +1138,9 @@ const setupScrollReveal = () => {
         typeof event.data !== 'object' || typeof event.data.type !== 'string') {
       return;
     }
+    if (event.data.type === 'request-cv-ready') {
+      window.parent.postMessage({ type: 'set-cv-height', height: window.innerHeight }, event.origin);
+    }
     if (event.data.type === 'set-theme') {
       if (!['light', 'dark'].includes(event.data.theme)) return;
       applyTheme(event.data.theme === 'dark');
@@ -1202,7 +1207,13 @@ const setupScrollReveal = () => {
   }
 
   // Calm first paint: reveal once fonts are ready (max 1000ms), with a single fade
-  const revealPage = () => requestAnimationFrame(() => html.classList.remove('cv-loading'));
+  const revealPage = () => requestAnimationFrame(() => {
+    html.classList.remove('cv-loading');
+    // Signal readiness once using the viewport, never the vh-based document height.
+    if (window.parent !== window) {
+      window.parent.postMessage({ type: 'set-cv-height', height: window.innerHeight }, '*');
+    }
+  });
   const loadFonts = document.fonts ? Promise.all([
     document.fonts.load('16px "Bricolage Grotesque"'),
     document.fonts.load('16px "Manrope"')
