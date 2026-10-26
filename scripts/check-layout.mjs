@@ -151,7 +151,7 @@ for (const lang of LANGS) {
       const r = document.getElementById('portrait-btn').getBoundingClientRect();
       const name = document.querySelector('h1').getBoundingClientRect();
       const identity = document.querySelector('.header-main').getBoundingClientRect();
-      const contacts = document.querySelector('.contacts').getBoundingClientRect();
+      const contacts = document.querySelector('.site-header .contacts').getBoundingClientRect();
       const overlap = (a, b) => a.left < b.right - 1 && a.right > b.left + 1 && a.top < b.bottom - 1 && a.bottom > b.top + 1;
       return { l: r.left, r: r.right, w: r.width, top: r.top, identityBottom: identity.bottom, name: overlap(r, name), contacts: overlap(r, contacts), scroll: document.documentElement.scrollWidth };
     });
@@ -159,6 +159,16 @@ for (const lang of LANGS) {
     if (portrait.l < -1 || portrait.r > width + 1 || portrait.scroll > width + 1) issues.push(`portrait: outside the screen [${Math.round(portrait.l)}, ${Math.round(portrait.r)}]`);
     if (portrait.name || portrait.contacts) issues.push('portrait: overlaps the name or the contacts');
     if (width <= 860 && portrait.top < portrait.identityBottom - 1) issues.push('portrait: must appear below the name and location');
+    const photoLayout = await page.evaluate(() => {
+      const profile = document.querySelector('.hero .profile').getBoundingClientRect();
+      const clippedContacts = [...document.querySelectorAll('.site-header .contact-row span')].some(el =>
+        el.getBoundingClientRect().width > 2 && el.scrollWidth > el.clientWidth + 1 && /hidden|clip/.test(getComputedStyle(el).overflow));
+      return { profileTop: profile.top + scrollY, profileBottom: profile.bottom + scrollY, clippedContacts };
+    });
+    if (portrait.w > (width <= 860 ? 120 : 164) + 1) issues.push('portrait: too large for the compact header');
+    if (photoLayout.clippedContacts) issues.push('portrait: contact text is cut');
+    if (width >= 900 && height >= 700 && photoLayout.profileBottom > height) issues.push('portrait: professional profile must fit on the first desktop screen');
+    if (lang === 'es' && height >= 568 && photoLayout.profileTop > height - 48) issues.push('portrait: professional profile must start on the first screen');
     await page.click('#portrait-btn');
     await page.waitForTimeout(250);
     if (!(await page.evaluate(() => document.getElementById('photo-dialog').open))) issues.push('portrait: click does not open the photo dialog');

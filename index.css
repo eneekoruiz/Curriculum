@@ -3085,8 +3085,7 @@ html.scroll-reveal .dashboard > section.is-instant {
 }
 
 /* ── Opt-in portrait ──
-   Off by default. "Photo" (bar or menu) switches it on; it then takes real room: a large portrait above the
-   contacts on wide screens, below the name on phones. A click opens it in #photo-dialog. */
+   The photo shares the header with the identity or contacts instead of adding a separate tall block. */
 .header-side {
   display: flex;
   flex-direction: column;
@@ -3100,7 +3099,7 @@ html.scroll-reveal .dashboard > section.is-instant {
 
 .show-portrait .portrait {
   display: block;
-  width: clamp(160px, 19vw, 220px);
+  width: clamp(150px, 12vw, 164px);
   aspect-ratio: 1;
   padding: 0;
   border: 0;
@@ -3142,18 +3141,84 @@ html.scroll-reveal .dashboard > section.is-instant {
   color: var(--c-brand-ink);
 }
 
-@media (max-width: 860px) {
-  .show-portrait .site-header {
-    grid-template-columns: minmax(0, 1fr);
-  }
+.show-portrait .hero {
+  min-height: 0;
+  justify-content: flex-start;
+}
 
+.show-portrait .hero .site-header {
+  grid-template-columns: minmax(0, 1fr) auto;
+  row-gap: var(--s3);
+  align-items: start;
+}
+
+.show-portrait .header-side {
+  display: contents;
+}
+
+@media (min-width: 861px) {
+  .show-portrait .hero h1 {
+    font-size: clamp(2.8rem, min(5.2vw, 8svh), 3.6rem);
+  }
+}
+
+.show-portrait .hero .contacts {
+  grid-column: 1 / -1;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 4px var(--s5);
+}
+
+@media (max-width: 860px) {
   .header-side {
     display: contents;
   }
 
+  .show-portrait .header-main {
+    grid-column: 1 / -1;
+  }
+
+  .show-portrait .hero .site-header {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: var(--s3);
+  }
+
   .show-portrait .portrait {
-    width: 132px;
-    margin-top: var(--s2);
+    width: 120px;
     border-radius: 24px;
+  }
+
+  .show-portrait .hero .contacts {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    grid-column: 2;
+    gap: 2px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    min-width: 0;
+  }
+
+  .show-portrait .hero .contact-row {
+    min-height: 32px;
+    max-width: 100%;
+  }
+
+  .show-portrait .hero .contact-row .ct,
+  .show-portrait .hero .contact-row .ct-label,
+  .show-portrait .hero #vcard-btn span {
+    white-space: normal;
+    overflow: visible;
+    overflow-wrap: anywhere;
+  }
+}
+
+@media (min-width: 600px) and (max-width: 860px) {
+  .show-portrait .hero .contacts {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2px var(--s3);
   }
 }
