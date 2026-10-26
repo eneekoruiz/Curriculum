@@ -95,13 +95,19 @@ for (const lang of LANGS) {
         return { shown: getComputedStyle(el).visibility === 'visible' && Number(getComputedStyle(el).opacity) > 0.9, l: r.left, r: r.right, b: r.bottom };
       });
       await printButton.hover();
-      await page.waitForTimeout(600);
+      await page.waitForFunction(() => {
+        const style = getComputedStyle(document.querySelector('.pdf-preview'));
+        return style.visibility === 'visible' && Number(style.opacity) > 0.9;
+      }, null, { timeout: 3000 }).catch(() => {});
       let p = await previewState();
       if (!p.shown) issues.push('PDF preview does not show on hover');
       else if (p.l < -1 || p.r > width + 1 || p.b > height + 1) issues.push(`PDF preview cut on hover [${Math.round(p.l)}, ${Math.round(p.r)}] bottom ${Math.round(p.b)}`);
       await page.mouse.move(width / 2, height / 2);
       await page.evaluate(() => document.getElementById('print-btn').setAttribute('data-loading', 'true'));
-      await page.waitForTimeout(600);
+      await page.waitForFunction(() => {
+        const style = getComputedStyle(document.querySelector('.pdf-preview'));
+        return style.visibility === 'visible' && Number(style.opacity) > 0.9;
+      }, null, { timeout: 3000 }).catch(() => {});
       p = await previewState();
       if (!p.shown) issues.push('PDF preview hides while the PDF is being prepared');
       else if (p.l < -1 || p.r > width + 1 || p.b > height + 1) issues.push(`PDF preview cut while preparing [${Math.round(p.l)}, ${Math.round(p.r)}]`);
