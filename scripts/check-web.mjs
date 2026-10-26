@@ -72,8 +72,23 @@ try {
     await page.setViewportSize({ width: 1366, height: 800 });
     await page.goto(`${origin}/?lang=${lang}`, { waitUntil: 'networkidle' });
     await page.waitForFunction(() => !document.documentElement.classList.contains('cv-loading'));
-    await page.evaluate(() => window.dispatchEvent(new Event('beforeprint')));
+    const scrollBefore = await page.evaluate(() => {
+      document.querySelector('.footer-link').focus({ preventScroll: true });
+      window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'instant' });
+      return window.scrollY;
+    });
+    await page.evaluate(() => {
+      delete window.PRINT_FIT; // Browser printing must measure this browser's font metrics.
+      window.dispatchEvent(new Event('beforeprint'));
+    });
+    const mediaRestored = await page.evaluate(() =>
+      document.body.style.width === '' &&
+      document.querySelector('link[href="index.css"]').media === 'screen' &&
+      document.querySelector('link[href="print.css"]').media === 'print');
+    if (!mediaRestored) fail(`Ctrl+P (${lang}): temporary print styles leaked into the screen layout`);
     const { pages, text } = await pdfText(await page.pdf({ format: 'A4', printBackground: true, preferCSSPageSize: true }));
+    const returnState = await page.evaluate(() => ({ y: window.scrollY, focused: document.activeElement.matches('.footer-link') }));
+    if (Math.abs(returnState.y - scrollBefore) > 1 || !returnState.focused) fail(`Ctrl+P (${lang}): reading position or keyboard focus was lost`);
     if (pages !== 1) fail(`Ctrl+P (${lang}): ${pages} pages`);
     if (!text.includes('Capacitor') || !text.includes('UPV/EHU')) fail(`Ctrl+P (${lang}): sections missing from the printout`);
     await page.close();

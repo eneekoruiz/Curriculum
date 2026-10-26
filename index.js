@@ -770,45 +770,41 @@ window.fitPrintToOnePage = () => {
   return zoom;
 };
 
-/**
- * Printing from the browser (Ctrl+P) uses the same one-page scale that
- * scripts/build-pdfs.mjs measured for each language (print-zoom.js).
- * A scale already set (fitPrintToOnePage in the PDF renderers, which newer Chromium
- * also fires beforeprint for) is left untouched.
- */
+/** Measure the A4 print layout before the browser switches media; preserve renderer-owned fits. */
 const setupPrintScale = () => {
   const wrapper = document.querySelector('.wrapper');
-  if (!wrapper) {
-    return;
-  }
+  const screenSheet = document.querySelector('link[href="index.css"]');
+  const printSheet = document.querySelector('link[href="print.css"]');
+  if (!wrapper || !screenSheet || !printSheet) return;
   const letter = document.getElementById('letter-print');
   const role = document.querySelector('.header-id .eyebrow');
   let applied = false;
+  let scrollPosition;
   window.addEventListener('beforeprint', () => {
-    const fit = window.PRINT_FIT && window.PRINT_FIT[currentLang];
-    if (fit && !wrapper.style.zoom) {
-      const cv = printOptions.photo ? fit.photo : fit.nophoto;
-      wrapper.style.zoom = String(cv.zoom);
-      if (cv.role && role) {
-        role.style.fontSize = `${cv.role}px`;
-      }
-      if (printOptions.letter && letter) {
-        letter.style.zoom = String(fit.letter);
-      }
+    if (wrapper.style.zoom) return;
+    scrollPosition = { left: window.scrollX, top: window.scrollY, behavior: 'instant' };
+    const width = document.body.style.width;
+    const screenMedia = screenSheet.media;
+    const printMedia = printSheet.media;
+    try {
+      screenSheet.media = 'not all';
+      printSheet.media = 'all';
+      document.body.style.width = '184mm'; // A4 minus the two 13mm page margins.
+      window.fitPrintToOnePage();
       applied = true;
+    } finally {
+      document.body.style.width = width;
+      screenSheet.media = screenMedia;
+      printSheet.media = printMedia;
+      window.scrollTo(scrollPosition);
     }
-    // Font metrics differ across platforms; remeasure once print styles are active.
-    if (applied && window.matchMedia('print').matches) window.fitPrintToOnePage();
   });
   window.addEventListener('afterprint', () => {
     if (applied) {
       wrapper.style.zoom = '';
-      if (letter) {
-        letter.style.zoom = '';
-      }
-      if (role) {
-        role.style.fontSize = '';
-      }
+      if (letter) letter.style.zoom = '';
+      if (role) role.style.fontSize = '';
+      window.scrollTo(scrollPosition);
       applied = false;
     }
   });
