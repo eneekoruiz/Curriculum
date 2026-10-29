@@ -3193,13 +3193,6 @@ html.scroll-reveal .dashboard > section.is-instant {
     border-radius: 30px;
   }
 
-  @media (max-height: 500px) {
-    .show-portrait .portrait {
-      width: 120px;
-      border-radius: 20px;
-    }
-  }
-
   .show-portrait .hero .contacts {
     display: flex;
     flex-direction: column;

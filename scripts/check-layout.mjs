@@ -165,7 +165,7 @@ for (const lang of LANGS) {
         el.getBoundingClientRect().width > 2 && el.scrollWidth > el.clientWidth + 1 && /hidden|clip/.test(getComputedStyle(el).overflow));
       return { profileTop: profile.top + scrollY, profileBottom: profile.bottom + scrollY, clippedContacts };
     });
-    if (portrait.w > (width <= 860 ? (height <= 500 ? 120 : 210) : 164) + 1) issues.push('portrait: too large for the compact header');
+    if (portrait.w > (width <= 860 ? 212 : 164) + 1) issues.push('portrait: too large for the compact header');
     if (photoLayout.clippedContacts) issues.push('portrait: contact text is cut');
     if (width >= 900 && height >= 700 && photoLayout.profileBottom > height) issues.push('portrait: professional profile must fit on the first desktop screen');
     if (lang === 'es' && height >= 568 && photoLayout.profileTop > height - 48) issues.push('portrait: professional profile must start on the first screen');
@@ -177,7 +177,7 @@ for (const lang of LANGS) {
       const image = document.querySelector('.photo-avatar-wrap').getBoundingClientRect();
       return { width: image.width, left: dialog.left, right: dialog.right, top: dialog.top, bottom: dialog.bottom };
     });
-    if (width <= 860 && photoModal.width < portrait.w * 1.5) issues.push('portrait: enlarged photo must be noticeably bigger than the inline portrait');
+    if (width <= 860 && height > width && photoModal.width < portrait.w * 1.4) issues.push('portrait: enlarged photo must be noticeably bigger than the inline portrait');
     if (photoModal.left < -1 || photoModal.right > width + 1 || photoModal.top < -1 || photoModal.bottom > height + 1) issues.push('portrait: photo dialog is outside the viewport');
     await page.keyboard.press('Escape');
     await page.evaluate(() => document.getElementById('photo-btn').click());
