@@ -800,7 +800,7 @@ h1 strong {
   grid-template-columns: 292px 1fr;
   gap: var(--s6);
   align-items: start;
-  margin-bottom: var(--s4);
+  margin-bottom: 0;
 }
 
 /* ── SECTION TITLE ──────────────────────────────────── */
@@ -2428,7 +2428,7 @@ html:not(.pdf-render) #root-container {
     text-align: start;
   }
 
-  @media (max-height: 660px) {
+  @media (max-height: 680px) {
     :root {
       --wrap-top: 56px;
     }
