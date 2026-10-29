@@ -2430,18 +2430,22 @@ html:not(.pdf-render) #root-container {
 
   @media (max-height: 660px) {
     :root {
-      --wrap-top: 64px;
+      --wrap-top: 56px;
     }
     .hero .site-header {
-      padding-bottom: 8px;
-      margin-bottom: 10px;
+      padding-bottom: 6px;
+      margin-bottom: 8px;
     }
     .hero .contacts {
-      padding-top: 6px;
-      margin-top: 4px;
+      padding-top: 4px;
+      margin-top: 2px;
     }
     .hero .contact-row {
-      min-height: 32px;
+      min-height: 28px;
+    }
+    .hero .profile-text {
+      font-size: 13.8px;
+      line-height: 1.5;
     }
   }
 
