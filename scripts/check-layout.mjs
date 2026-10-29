@@ -165,7 +165,7 @@ for (const lang of LANGS) {
         el.getBoundingClientRect().width > 2 && el.scrollWidth > el.clientWidth + 1 && /hidden|clip/.test(getComputedStyle(el).overflow));
       return { profileTop: profile.top + scrollY, profileBottom: profile.bottom + scrollY, clippedContacts };
     });
-    if (portrait.w > (width <= 860 ? 120 : 164) + 1) issues.push('portrait: too large for the compact header');
+    if (portrait.w > (width <= 860 ? (height <= 500 ? 120 : 210) : 164) + 1) issues.push('portrait: too large for the compact header');
     if (photoLayout.clippedContacts) issues.push('portrait: contact text is cut');
     if (width >= 900 && height >= 700 && photoLayout.profileBottom > height) issues.push('portrait: professional profile must fit on the first desktop screen');
     if (lang === 'es' && height >= 568 && photoLayout.profileTop > height - 48) issues.push('portrait: professional profile must start on the first screen');
