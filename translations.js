@@ -11,7 +11,7 @@ const T = {
     tagline: "Desarrollador Full Stack",
     location: "Rentería (Gipuzkoa), España · Presencial, híbrido o remoto",
     profile_title: "Perfil profesional",
-    profile_text: "Ingeniero de Software junior con base sólida en desarrollo full stack (React, TypeScript, Node.js, Supabase...) y capacidad para aprender y adaptarme con rapidez a cualquier tecnología según las necesidades del proyecto. Experiencia en proyectos personales y soluciones para negocios locales, con ganas de integrarme en un equipo para seguir creciendo profesionalmente.",
+    profile_text: "Ingeniero de Software junior con base sólida en desarrollo full stack (React, TypeScript, Node.js, .NET). Capacidad para aprender y adaptarme con rapidez a cualquier tecnología según las necesidades del proyecto. Experiencia en proyectos personales y soluciones para negocios locales. Con ganas de integrarme en un equipo para seguir creciendo profesionalmente.",
     lang_eu_cert: "Certificado oficial HABE",
     lang_en_cert: "Certificado oficial Cambridge",
     exp_title: "Experiencia profesional",

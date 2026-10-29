@@ -271,7 +271,7 @@ html.cv-loading *:not(.precision-motion, .precision-motion *) {
   display: flex;
   flex-direction: column;
   margin: 0 auto;
-  padding: clamp(78px, 10vw, 118px) clamp(var(--s4), 6vw, var(--s6)) calc(var(--s4) + 8px);
+  padding: clamp(78px, 10vw, 118px) clamp(var(--s4), 6vw, var(--s6)) var(--s3);
   background: var(--c-bg);
 }
 
@@ -800,7 +800,7 @@ h1 strong {
   grid-template-columns: 292px 1fr;
   gap: var(--s6);
   align-items: start;
-  margin-bottom: clamp(var(--s4), 4vw, 48px);
+  margin-bottom: var(--s4);
 }
 
 /* ── SECTION TITLE ──────────────────────────────────── */
@@ -1068,7 +1068,7 @@ h1 strong {
   width: 100%;
   background: var(--c-surface);
   border-top: 1px solid var(--c-rule);
-  padding: var(--s4) 0;
+  padding: var(--s3) 0;
   text-align: center;
   font-family: var(--f-sans);
   font-size: 11px;
@@ -1190,7 +1190,7 @@ h1 strong {
   }
   .wrapper {
     padding-top: 80px;
-    padding-bottom: var(--s5);
+    padding-bottom: var(--s3);
     padding-left: var(--s3);
     padding-right: var(--s3);
   }
@@ -3185,8 +3185,8 @@ html.scroll-reveal .dashboard > section.is-instant {
   }
 
   .show-portrait .portrait {
-    width: 120px;
-    border-radius: 24px;
+    width: clamp(140px, 38vw, 158px);
+    border-radius: 26px;
   }
 
   .show-portrait .hero .contacts {
