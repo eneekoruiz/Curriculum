@@ -3185,8 +3185,8 @@ html.scroll-reveal .dashboard > section.is-instant {
   }
 
   .show-portrait .portrait {
-    width: clamp(140px, 38vw, 158px);
-    border-radius: 26px;
+    width: clamp(150px, 44vw, 186px);
+    border-radius: 28px;
   }
 
   .show-portrait .hero .contacts {
