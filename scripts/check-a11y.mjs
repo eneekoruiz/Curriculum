@@ -128,26 +128,44 @@ try {
     if (viewport.width <= 920) await audit(`${label} · menu`, '#more-btn');
     await page.close();
   }
-  for (const lang of ['es', 'ar']) {
+  for (const lang of ['es', 'ar', 'fr', 'ru']) {
     for (const theme of ['light', 'dark']) {
-      const page = await context.newPage();
-      await page.setViewportSize({ width: 320, height: 800 });
-      await page.goto(`${origin}/?lang=${lang}&theme=${theme}`, { waitUntil: 'networkidle' });
-      await page.waitForFunction(() => !document.documentElement.classList.contains('cv-loading'));
-      await page.addStyleTag({ content: '* { line-height: 1.5 !important; letter-spacing: .12em !important; word-spacing: .16em !important; } p { margin-bottom: 2em !important; }' });
-      const problems = await page.evaluate(() => {
-        const out = [];
-        if (document.documentElement.scrollWidth > innerWidth + 1) out.push('horizontal overflow');
-        for (const el of document.querySelectorAll('a,button,h1,h2,h3,p,.pill')) {
-          const style = getComputedStyle(el);
-          if (!el.getClientRects().length || style.visibility === 'hidden' || el.closest('.sr-only')) continue;
-          if (el.clientWidth && el.scrollWidth > el.clientWidth + 1 && /(hidden|clip)/.test(style.overflowX)) out.push(el.textContent.trim().slice(0, 60));
+      for (const width of [320, 360]) {
+        const page = await context.newPage();
+        await page.setViewportSize({ width, height: 568 });
+        await page.goto(`${origin}/?lang=${lang}&theme=${theme}`, { waitUntil: 'networkidle' });
+        await page.waitForFunction(() => !document.documentElement.classList.contains('cv-loading'));
+        await page.addStyleTag({ content: '* { line-height: 1.5 !important; letter-spacing: .12em !important; word-spacing: .16em !important; } p { margin-bottom: 2em !important; }' });
+        for (const photo of [false, true]) {
+          await page.evaluate(on => {
+            if (document.documentElement.classList.contains('show-portrait') !== on) document.getElementById('photo-btn').click();
+          }, photo);
+          const problems = await page.evaluate(() => {
+            const out = [];
+            if (document.documentElement.scrollWidth > innerWidth + 1) out.push('horizontal overflow');
+            for (const el of document.querySelectorAll('a,button,h1,h2,h3,p,.pill,#vcard-btn span,.ct-label')) {
+              const style = getComputedStyle(el);
+              if (!el.getClientRects().length || style.visibility === 'hidden' || el.closest('.sr-only') || el.offsetWidth <= 1 || el.offsetHeight <= 1) continue;
+              if (el.clientWidth && el.scrollWidth > el.clientWidth + 1 && /(hidden|clip)/.test(style.overflowX)) out.push(el.textContent.trim().slice(0, 60));
+              const range = document.createRange();
+              range.selectNodeContents(el);
+              const r = range.getBoundingClientRect();
+              if (r.right > innerWidth + 1 || r.left < -1) out.push(`overflow: ${el.textContent.trim().slice(0, 40)}`);
+            }
+            return out;
+          });
+          assert.deepEqual(problems, [], `${lang} ${theme}: ${width}px reflow with text spacing, photo ${photo}`);
+          console.log(`✓ ${lang} ${theme} · ${width}px reflow and text spacing · photo ${photo}`);
         }
-        return out;
-      });
-      assert.deepEqual(problems, [], `${lang} ${theme}: 320px reflow with WCAG text spacing`);
-      console.log(`✓ ${lang} ${theme} · 320px reflow and text spacing`);
-      await page.close();
+        if (lang === 'es' && theme === 'light' && width === 320) {
+          await page.setViewportSize({ width: 320, height: 256 });
+          await page.locator('#portrait-btn').click();
+          const image = await page.locator('.photo-avatar-wrap').boundingBox();
+          assert.ok(image.width >= 90 && Math.abs(image.width - image.height) <= 1, 'short-screen modal photo must remain square and visible');
+          await page.keyboard.press('Escape');
+        }
+        await page.close();
+      }
     }
   }
 } finally {
