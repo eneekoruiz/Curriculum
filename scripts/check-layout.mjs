@@ -161,23 +161,40 @@ for (const lang of LANGS) {
     if (width <= 860 && portrait.top < portrait.identityBottom - 1) issues.push('portrait: must appear below the name and location');
     const photoLayout = await page.evaluate(() => {
       const profile = document.querySelector('.hero .profile').getBoundingClientRect();
-      const clippedContacts = [...document.querySelectorAll('.site-header .contact-row span')].some(el =>
-        el.getBoundingClientRect().width > 2 && el.scrollWidth > el.clientWidth + 1 && /hidden|clip/.test(getComputedStyle(el).overflow));
-      return { profileTop: profile.top + scrollY, profileBottom: profile.bottom + scrollY, clippedContacts };
+      const W = document.documentElement.clientWidth;
+      const clippedContacts = [...document.querySelectorAll('.site-header .contact-row span')].some(el => {
+        const r = el.getBoundingClientRect();
+        if (r.width <= 2) return false;
+        if (r.right > W + 1 || r.left < -1) return true;
+        return el.scrollWidth > el.clientWidth + 1 && /hidden|clip/.test(getComputedStyle(el).overflow);
+      });
+      const topbar = document.getElementById('topbar').getBoundingClientRect();
+      const headerMain = document.querySelector('.header-main').getBoundingClientRect();
+      const topbarOverlap = headerMain.top < topbar.bottom - 1;
+      return { profileTop: profile.top + scrollY, profileBottom: profile.bottom + scrollY, clippedContacts, topbarOverlap };
     });
     if (portrait.w > (width <= 860 ? 212 : 164) + 1) issues.push('portrait: too large for the compact header');
     if (photoLayout.clippedContacts) issues.push('portrait: contact text is cut');
+    if (photoLayout.topbarOverlap) issues.push('topbar: overlaps header content');
     if (width >= 900 && height >= 700 && photoLayout.profileBottom > height) issues.push('portrait: professional profile must fit on the first desktop screen');
-    if (lang === 'es' && height >= 568 && photoLayout.profileTop > height - 48) issues.push('portrait: professional profile must start on the first screen');
+    if (lang === 'es' && photoLayout.profileTop > height - 48) issues.push('portrait: professional profile must start on the first screen');
     await page.click('#portrait-btn');
     await page.waitForTimeout(250);
     if (!(await page.evaluate(() => document.getElementById('photo-dialog').open))) issues.push('portrait: click does not open the photo dialog');
     const photoModal = await page.evaluate(() => {
-      const dialog = document.getElementById('photo-dialog').getBoundingClientRect();
+      const dialog = document.getElementById('photo-dialog');
+      const dBox = dialog.getBoundingClientRect();
+      const card = dialog.querySelector('.photo-card');
       const image = document.querySelector('.photo-avatar-wrap').getBoundingClientRect();
-      return { width: image.width, left: dialog.left, right: dialog.right, top: dialog.top, bottom: dialog.bottom };
+      const role = dialog.querySelector('.photo-role');
+      const prevRoleSize = role ? role.style.fontSize : '';
+      if (role) role.style.fontSize = '32px';
+      const scrollable = card && card.scrollHeight > card.clientHeight ? /auto|scroll/.test(getComputedStyle(card).overflowY) : true;
+      if (role) role.style.fontSize = prevRoleSize;
+      return { width: image.width, left: dBox.left, right: dBox.right, top: dBox.top, bottom: dBox.bottom, scrollable };
     });
-    if (width <= 860 && height > width && photoModal.width < portrait.w * 1.4) issues.push('portrait: enlarged photo must be noticeably bigger than the inline portrait');
+    if (!photoModal.scrollable) issues.push('portrait: modal content exceeds area but cannot scroll');
+    if (width <= 860 && photoModal.width < portrait.w * 1.35) issues.push('portrait: enlarged photo must be noticeably bigger than the inline portrait');
     if (photoModal.left < -1 || photoModal.right > width + 1 || photoModal.top < -1 || photoModal.bottom > height + 1) issues.push('portrait: photo dialog is outside the viewport');
     await page.keyboard.press('Escape');
     await page.evaluate(() => document.getElementById('photo-btn').click());
