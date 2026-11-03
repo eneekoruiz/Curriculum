@@ -2391,14 +2391,38 @@ html:not(.pdf-render) #root-container {
 
   .hero .site-header {
     grid-template-columns: minmax(0, 1fr);
-    gap: 10px;
-    padding-bottom: 14px;
-    margin-bottom: 20px;
+    gap: clamp(8px, 1.5svh, 14px);
+    padding-bottom: clamp(8px, 1.8svh, 18px);
+    margin-bottom: clamp(8px, 2svh, 20px);
     border-bottom: 1px solid var(--c-rule);
   }
 
+  .hero h1 {
+    font-size: clamp(30px, min(9vw, 5.5svh), 44px);
+    line-height: 1.15;
+  }
+
+  .hero .eyebrow {
+    font-size: clamp(12.5px, 3.4vw, 14px);
+    margin-bottom: clamp(4px, 1svh, 8px);
+  }
+
+  .hero .tagline-loc {
+    font-size: clamp(12px, 3.2vw, 13.5px);
+    margin-top: clamp(4px, 1svh, 8px);
+  }
+
+  .hero .profile {
+    margin-top: clamp(8px, 1.8svh, 18px);
+  }
+
+  .hero .profile-label {
+    font-size: clamp(1.15rem, 3.8vw, 1.3rem);
+    margin-bottom: clamp(6px, 1.2svh, 12px);
+  }
+
   .hero .profile-text {
-    font-size: 14.5px;
+    font-size: clamp(13.6px, 3.6vw, 15.2px);
     line-height: 1.55;
   }
 
@@ -2407,9 +2431,9 @@ html:not(.pdf-render) #root-container {
   .hero .contacts {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 2px 16px;
-    margin-top: 6px;
-    padding-top: 10px;
+    gap: clamp(3px, 1.2svh, 10px) 16px;
+    margin-top: clamp(6px, 1.2svh, 12px);
+    padding-top: clamp(8px, 1.8svh, 16px);
     border-top: 1px solid var(--c-rule);
   }
 
@@ -2419,13 +2443,14 @@ html:not(.pdf-render) #root-container {
     justify-content: flex-start;
     gap: 8px;
     min-width: 0;
-    min-height: 36px;
+    min-height: clamp(28px, 4.2svh, 38px);
     margin: 0;
     padding: 0;
     border: 0;
     border-radius: 0;
     background: none;
     text-align: start;
+    font-size: clamp(11.5px, 3.1vw, 13.5px);
   }
 
   @media (max-height: 680px) {
@@ -2435,21 +2460,6 @@ html:not(.pdf-render) #root-container {
     }
     :root {
       --wrap-top: 66px;
-    }
-    .hero .site-header {
-      padding-bottom: 6px;
-      margin-bottom: 8px;
-    }
-    .hero .contacts {
-      padding-top: 4px;
-      margin-top: 2px;
-    }
-    .hero .contact-row {
-      min-height: 28px;
-    }
-    .hero .profile-text {
-      font-size: 13.8px;
-      line-height: 1.5;
     }
   }
 
@@ -2672,10 +2682,10 @@ html.scroll-reveal .dashboard > section.is-instant {
   }
 }
 
-/* Very narrow phones (≤ 340px): one contact per line so nothing is cut */
+/* Keep the address and phone whole while profiles share the remaining rows. */
 @media (max-width: 340px) {
-  .hero .contacts {
-    grid-template-columns: minmax(0, 1fr);
+  .hero .contact-row[data-copy] {
+    grid-column: 1 / -1;
   }
 }
 
@@ -2738,12 +2748,13 @@ html.scroll-reveal .dashboard > section.is-instant {
 }
 
 .photo-dialog {
+  --photo-size: min(640px, max(192px, calc(100dvh - 84px)));
   border: 0;
   padding: 0;
   background: transparent;
-  width: min(92vw, 480px);
-  max-width: 92vw;
-  max-height: calc(100dvh - 32px);
+  width: min(94vw, calc(var(--photo-size) + 24px));
+  max-width: 94vw;
+  max-height: calc(100dvh - 24px);
   margin: auto;
   border-radius: 16px;
   box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.28), 0 0 0 1px var(--c-rule);
@@ -2760,13 +2771,14 @@ html.scroll-reveal .dashboard > section.is-instant {
 .photo-card {
   position: relative;
   background: var(--c-bg);
-  padding: clamp(32px, 5vh, 44px) 20px clamp(16px, 2.5vh, 24px);
+  padding: 12px;
+  gap: 8px;
   border-radius: 16px;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  max-height: calc(100dvh - 32px);
+  max-height: calc(100dvh - 24px);
   overflow-y: auto;
   overflow-x: hidden;
   overscroll-behavior: contain;
@@ -2807,39 +2819,30 @@ html.scroll-reveal .dashboard > section.is-instant {
 }
 
 .photo-avatar-wrap {
-  width: min(85vw, 380px, max(90px, calc(100dvh - 200px)));
+  width: min(100%, var(--photo-size));
   height: auto;
   aspect-ratio: 1;
   flex-shrink: 0;
-  border-radius: 50%;
+  border-radius: 16px;
   overflow: hidden;
   border: 3px solid var(--c-bg);
   box-shadow: 0 0 0 1.5px var(--c-rule-2), 0 12px 28px -6px rgba(0, 0, 0, 0.2);
-  margin-bottom: clamp(10px, 2vh, 16px);
+  margin-bottom: 0;
   background: var(--c-surface);
 }
 
 .photo-dialog .photo-close {
+  position: sticky;
+  top: 0;
+  right: auto;
+  left: auto;
+  align-self: flex-end;
+  flex-shrink: 0;
+  z-index: 1;
   width: 44px;
   height: 44px;
-}
-
-@media (max-height: 500px) and (min-width: 481px) {
-  .photo-card {
-    flex-direction: row;
-    gap: var(--s3);
-    padding: 48px 16px 16px;
-  }
-
-  .photo-avatar-wrap {
-    width: min(48%, calc(100dvh - 96px));
-    margin-bottom: 0;
-  }
-
-  .photo-info {
-    flex: 1;
-    min-width: 0;
-  }
+  margin-bottom: -44px;
+  background: var(--c-bg);
 }
 
 .photo-img {
@@ -2851,24 +2854,16 @@ html.scroll-reveal .dashboard > section.is-instant {
 
 .photo-name {
   font-family: var(--f-display);
-  font-size: 20px;
+  font-size: 14px;
+  line-height: 1.4;
   font-weight: 600;
   color: var(--c-ink);
-  margin: 0 0 4px;
-}
-
-.photo-role {
-  font-size: 13.5px;
-  font-weight: 600;
-  color: var(--c-brand-ink);
-  margin: 0 0 6px;
-}
-
-.photo-loc {
-  font-size: 12px;
-  color: var(--c-ink-3);
   margin: 0;
-  line-height: 1.4;
+}
+
+.photo-role,
+.photo-loc {
+  display: none;
 }
 
 /* ── Cover letter & PDF options ──────────────────────────────────────────
@@ -3198,26 +3193,49 @@ html.scroll-reveal .dashboard > section.is-instant {
     display: contents;
   }
 
-  .show-portrait .header-main {
-    grid-column: 1 / -1;
+  .show-portrait .header-main,
+  .show-portrait .header-id {
+    display: contents;
   }
 
   .show-portrait .hero .site-header {
-    grid-template-columns: auto minmax(0, 1fr);
-    gap: clamp(10px, 2.5vw, var(--s3));
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: "name photo" "role photo" "location location" "contacts contacts";
+    gap: 8px 12px;
+  }
+
+  .show-portrait .hero h1 {
+    grid-area: name;
+    margin: 0;
+    font-size: clamp(28px, 8vw, 40px);
+    line-height: 1.1;
+  }
+
+  .show-portrait .hero .eyebrow {
+    grid-area: role;
+    order: 0;
+    margin: 0;
+    font-size: 13.5px;
+    line-height: 1.4;
+  }
+
+  .show-portrait .hero .tagline-loc {
+    grid-area: location;
+    margin: 0;
   }
 
   .show-portrait .portrait {
-    width: clamp(120px, 45vw, 208px);
-    border-radius: 30px;
+    grid-area: photo;
+    width: clamp(88px, 24vw, 120px);
+    align-self: start;
+    border-radius: 20px;
   }
 
   .show-portrait .hero .contacts {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    grid-column: 2;
-    gap: 2px;
+    display: grid;
+    grid-area: contacts;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2px 16px;
     margin: 0;
     padding: 0;
     border: 0;
@@ -3240,11 +3258,18 @@ html.scroll-reveal .dashboard > section.is-instant {
   }
 }
 
-@media (min-width: 600px) and (max-width: 860px) {
-  .show-portrait .hero .contacts {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 2px var(--s3);
+@media (max-width: 380px) {
+  .hero .site-header {
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+  }
+
+  .hero .profile {
+    margin-top: 0;
+  }
+
+  .show-portrait .hero .contact-row[data-copy] {
+    grid-column: 1 / -1;
   }
 }
 
@@ -3262,8 +3287,44 @@ html.scroll-reveal .dashboard > section.is-instant {
     margin-top: 2px;
   }
   .show-portrait .portrait {
-    width: 120px !important;
-    height: 120px !important;
-    border-radius: 20px !important;
+    width: 120px;
+    border-radius: 20px;
+  }
+}
+
+@media (max-height: 500px) and (max-width: 860px) {
+  .show-portrait .portrait {
+    width: 88px;
+  }
+}
+
+@media (max-height: 500px) and (max-width: 860px) {
+  :root {
+    --wrap-top: 54px;
+  }
+
+  #topbar {
+    padding: 4px clamp(var(--s3), 4vw, var(--s5));
+  }
+
+  .show-portrait .hero .site-header {
+    gap: 6px 12px;
+  }
+}
+
+@media (max-height: 500px) and (min-width: 600px) and (max-width: 860px) {
+  .hero .site-header .contacts {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2px 12px;
+    grid-column: 1 / -1;
+  }
+
+  .hero .contact-row:not([data-copy]) .ct {
+    display: none;
+  }
+
+  .hero .contact-row:not([data-copy]) .ct-label {
+    display: block;
   }
 }

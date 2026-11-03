@@ -15,7 +15,7 @@
 import { ROOT, loadTranslations, startServer, launch } from './lib.mjs';
 
 const SIZES = [[1920, 1080], [1440, 900], [1366, 768], [1280, 720], [1024, 768], [900, 700], [820, 1180], [768, 1024],
-  [700, 900], [600, 900], [480, 800], [430, 932], [390, 844], [375, 667], [360, 640], [320, 568], [844, 390], [667, 375]];
+  [700, 900], [600, 900], [480, 800], [430, 932], [390, 844], [375, 667], [360, 640], [320, 568], [844, 390], [667, 375], [812, 305]];
 const { langs: all } = loadTranslations();
 const LANGS = (process.argv[2] || 'es,en,de,ru,ar,ja').split(',');
 for (const l of LANGS) if (!all.includes(l)) throw new Error(`unknown language "${l}"`);
@@ -149,16 +149,17 @@ for (const lang of LANGS) {
     await page.waitForTimeout(200);
     const portrait = await page.evaluate(() => {
       const r = document.getElementById('portrait-btn').getBoundingClientRect();
-      const name = document.querySelector('h1').getBoundingClientRect();
-      const identity = document.querySelector('.header-main').getBoundingClientRect();
+      const name = document.querySelector('.site-header h1').getBoundingClientRect();
+      const phone = document.querySelector('.site-header [href^="tel:"] .ct');
       const contacts = document.querySelector('.site-header .contacts').getBoundingClientRect();
       const overlap = (a, b) => a.left < b.right - 1 && a.right > b.left + 1 && a.top < b.bottom - 1 && a.bottom > b.top + 1;
-      return { l: r.left, r: r.right, w: r.width, top: r.top, identityBottom: identity.bottom, name: overlap(r, name), contacts: overlap(r, contacts), scroll: document.documentElement.scrollWidth };
+      return { l: r.left, r: r.right, w: r.width, top: r.top, nameTop: name.top, phoneLines: phone.getBoundingClientRect().height / parseFloat(getComputedStyle(phone).lineHeight), name: overlap(r, name), contacts: overlap(r, contacts), scroll: document.documentElement.scrollWidth };
     });
-    if (portrait.w < 120) issues.push(`portrait: only ${Math.round(portrait.w)}px wide`);
+    if (portrait.w < (width > 860 && height > 500 ? 150 : 88)) issues.push(`portrait: only ${Math.round(portrait.w)}px wide`);
     if (portrait.l < -1 || portrait.r > width + 1 || portrait.scroll > width + 1) issues.push(`portrait: outside the screen [${Math.round(portrait.l)}, ${Math.round(portrait.r)}]`);
     if (portrait.name || portrait.contacts) issues.push('portrait: overlaps the name or the contacts');
-    if (width <= 860 && portrait.top < portrait.identityBottom - 1) issues.push('portrait: must appear below the name and location');
+    if (width <= 860 && Math.abs(portrait.top - portrait.nameTop) > 2) issues.push('portrait: must sit beside the name on compact screens');
+    if (width <= 380 && portrait.phoneLines > 1.1) issues.push('portrait: phone number must fit on one line');
     const photoLayout = await page.evaluate(() => {
       const profile = document.querySelector('.hero .profile').getBoundingClientRect();
       const W = document.documentElement.clientWidth;
@@ -172,11 +173,11 @@ for (const lang of LANGS) {
         return el.scrollWidth > el.clientWidth + 1 && /hidden|clip/.test(getComputedStyle(el).overflow);
       });
       const topbar = document.getElementById('topbar').getBoundingClientRect();
-      const headerMain = document.querySelector('.header-main').getBoundingClientRect();
+      const headerMain = document.querySelector('.site-header h1').getBoundingClientRect();
       const topbarOverlap = headerMain.top < topbar.bottom - 1;
       return { profileTop: profile.top + scrollY, profileBottom: profile.bottom + scrollY, clippedContacts, topbarOverlap };
     });
-    if (portrait.w > (width <= 860 ? 212 : 164) + 1) issues.push('portrait: too large for the compact header');
+    if (portrait.w > (width <= 860 ? 120 : 164) + 1) issues.push('portrait: too large for the compact header');
     if (photoLayout.clippedContacts) issues.push('portrait: contact text is cut');
     if (photoLayout.topbarOverlap) issues.push('topbar: overlaps header content');
     if (width >= 900 && height >= 700 && photoLayout.profileBottom > height) issues.push('portrait: professional profile must fit on the first desktop screen');
@@ -189,23 +190,29 @@ for (const lang of LANGS) {
       const dBox = dialog.getBoundingClientRect();
       const card = dialog.querySelector('.photo-card');
       const image = document.querySelector('.photo-avatar-wrap').getBoundingClientRect();
-      const text = [...dialog.querySelectorAll('.photo-name, .photo-role')];
+      const frameSpace = card.clientWidth - image.width;
+      const text = [...dialog.querySelectorAll('.photo-name')];
       const prevSizes = text.map(el => el.style.fontSize);
       const largeSizes = text.map(el => `${parseFloat(getComputedStyle(el).fontSize) * 2}px`);
       text.forEach((el, i) => { el.style.fontSize = largeSizes[i]; });
       const enlargedImage = dialog.querySelector('.photo-avatar-wrap').getBoundingClientRect();
       const scrollable = card && card.scrollHeight > card.clientHeight ? /auto|scroll/.test(getComputedStyle(card).overflowY) : true;
       card.scrollTop = card.scrollHeight;
-      const textReachable = dialog.querySelector('.photo-info').getBoundingClientRect().bottom <= card.getBoundingClientRect().bottom + 1;
+      const cardBox = card.getBoundingClientRect();
+      const textReachable = dialog.querySelector('.photo-info').getBoundingClientRect().bottom <= cardBox.bottom + 1;
+      const closeBox = dialog.querySelector('.photo-close').getBoundingClientRect();
+      const closeReachable = closeBox.top >= cardBox.top - 1 && closeBox.bottom <= cardBox.bottom + 1;
       text.forEach((el, i) => { el.style.fontSize = prevSizes[i]; });
       card.scrollTop = 0;
       const square = Math.abs(image.width - image.height) <= 1 && Math.abs(enlargedImage.width - enlargedImage.height) <= 1;
-      return { width: image.width, height: image.height, square, left: dBox.left, right: dBox.right, top: dBox.top, bottom: dBox.bottom, scrollable, textReachable };
+      return { width: image.width, frameSpace, square, left: dBox.left, right: dBox.right, top: dBox.top, bottom: dBox.bottom, scrollable, textReachable, closeReachable };
     });
     if (!photoModal.scrollable) issues.push('portrait: modal content exceeds area but cannot scroll');
     if (!photoModal.square) issues.push('portrait: modal photo loses its square aspect ratio with enlarged text');
+    if (photoModal.frameSpace > 26) issues.push('portrait: modal frame leaves unnecessary space beside the photo');
+    if (!photoModal.closeReachable) issues.push('portrait: close control must stay visible while scrolling');
     if (!photoModal.textReachable) issues.push('portrait: enlarged modal text cannot be reached by scrolling');
-    if (width <= 860 && photoModal.width < portrait.w * 1.35) issues.push('portrait: enlarged photo must be noticeably bigger than the inline portrait');
+    if (photoModal.width < portrait.w * 1.5) issues.push('portrait: enlarged photo must be noticeably bigger than the inline portrait');
     if (photoModal.left < -1 || photoModal.right > width + 1 || photoModal.top < -1 || photoModal.bottom > height + 1) issues.push('portrait: photo dialog is outside the viewport');
     await page.keyboard.press('Escape');
     await page.evaluate(() => document.getElementById('photo-btn').click());

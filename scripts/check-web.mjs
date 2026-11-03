@@ -42,6 +42,7 @@ try {
     page.on('pageerror', error => errors.push(error.message));
     await page.goto(`${origin}/?lang=es`, { waitUntil: 'networkidle' });
     await page.waitForFunction(() => !document.documentElement.classList.contains('cv-loading'), null, { timeout: 5000 });
+    await page.evaluate(() => document.fonts.ready);
     const m = await page.evaluate(() => {
       const box = selector => document.querySelector(selector).getBoundingClientRect();
       return {
@@ -208,7 +209,7 @@ try {
     if ((await portrait()).shown) fail('portrait: shown by default, it must be opt-in');
     await choose(T.es.btn_photo);
     const shown = await portrait();
-    if (!shown.on || !shown.shown || shown.w < 120 || shown.pressed !== 'true') fail(`portrait (phone): after switching on it is ${JSON.stringify(shown)}`);
+    if (!shown.on || !shown.shown || shown.w < 88 || shown.pressed !== 'true') fail(`portrait (phone): after switching on it is ${JSON.stringify(shown)}`);
     await page.click('#portrait-btn');
     if (!(await page.evaluate(() => document.getElementById('photo-dialog').open))) fail('portrait (phone): a click did not open the photo dialog');
     await page.keyboard.press('Escape');

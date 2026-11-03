@@ -159,9 +159,10 @@ try {
         }
         if (lang === 'es' && theme === 'light' && width === 320) {
           await page.setViewportSize({ width: 320, height: 256 });
+          const inlinePhoto = await page.locator('#portrait-btn').boundingBox();
           await page.locator('#portrait-btn').click();
           const image = await page.locator('.photo-avatar-wrap').boundingBox();
-          assert.ok(image.width >= 90 && Math.abs(image.width - image.height) <= 1, 'short-screen modal photo must remain square and visible');
+          assert.ok(image.width >= inlinePhoto.width * 1.5 && Math.abs(image.width - image.height) <= 1, 'short-screen modal photo must remain square and clearly enlarge the portrait');
           await page.keyboard.press('Escape');
         }
         await page.close();
