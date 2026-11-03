@@ -18,19 +18,26 @@ const pdfPage = {
   on(_event, listener) { intercept = listener; },
   goto: async (url) => { destination = url; return { status: () => navigationStatus }; },
   url: () => destination, emulateMediaType: async () => {}, evaluate: async () => {},
-  pdf: async () => new Uint8Array(Buffer.from('%PDF-1.7\n/Type /Page\n')),
+  pdf: async ({ tagged }) => {
+    assert.equal(tagged, true);
+    return new Uint8Array(Buffer.from('%PDF-1.7\n/Type /Page\n'));
+  },
   close: async () => {}
 };
 const env = {};
 const sandbox = {
   module: { exports: {} }, Buffer, URL, setTimeout, console: { error() {} }, process: { env },
-  require(name) {
+  require,
+  async importBrowserModule(name) {
     if (name === '@sparticuz/chromium') return { default: { executablePath: async () => '/test/chromium', args: [] } };
-    if (name === 'puppeteer-core') return { launch: async () => ({ connected: true, newPage: async () => pdfPage }) };
-    return require(name);
+    if (name === 'puppeteer-core') return { default: { launch: async () => ({ connected: true, newPage: async () => pdfPage }) } };
+    throw new Error(`Unexpected browser module: ${name}`);
   }
 };
-vm.runInNewContext(readFileSync(join(ROOT, 'api/pdf.js'), 'utf8'), sandbox);
+// Substitute only the browser imports so this test needs neither native Chromium nor VM module flags.
+const pdfHandler = readFileSync(join(ROOT, 'api/pdf.js'), 'utf8')
+  .replace(/\bimport\(/g, 'importBrowserModule(');
+vm.runInNewContext(pdfHandler, sandbox);
 const requestPdf = async () => {
   const response = { setHeader() {}, status(code) { this.code = code; return this; }, json() {}, end(body) { this.body = body; } };
   await sandbox.module.exports({ method: 'GET', query: {}, headers: {
@@ -58,6 +65,10 @@ assert.equal((await requestPdf()).code, 500);
 env.VERCEL_URL = 'preview.vercel.app';
 assert.equal((await requestPdf()).code, 200);
 assert.equal(new URL(destination).origin, 'https://preview.vercel.app');
+delete env.CV_SITE_ORIGIN;
+env.VERCEL_ENV = 'production';
+assert.equal((await requestPdf()).code, 200);
+assert.equal(new URL(destination).origin, 'https://eneko-ruiz-curriculum.vercel.app');
 console.log('PDF origin, redirect destinations, failed navigation and Uint8Array output checked');
 
 const config = JSON.parse(readFileSync(join(ROOT, 'vercel.json'), 'utf8'));

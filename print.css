@@ -528,6 +528,16 @@ h1,
   border-color: var(--brand);
 }
 
+[dir="rtl"] .pill,
+[dir="rtl"] .proj-stack {
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+[dir="rtl"] .proj-stack {
+  text-align: right;
+}
+
 .skills {
   gap: 1.2mm;
 }
@@ -540,7 +550,7 @@ h1,
       track share a line. Frees vertical space so the text can be bigger. ── */
 .proj-name {
   flex-basis: auto;
-  margin-right: 2.2mm;
+  margin-inline-end: 2.2mm;
 }
 
 .proj-stack {

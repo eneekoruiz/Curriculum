@@ -5,6 +5,7 @@
 import { createRequire } from 'node:module';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
+import { PDFDocument, PDFName } from 'pdf-lib';
 import { ROOT, VARIANTS, variantName, startServer, pdfText } from './lib.mjs';
 
 if (process.platform !== 'linux' && !process.env.CV_API_CHECK) {
@@ -33,6 +34,9 @@ for (const lang of ['es', 'en', 'ru']) {
     continue;
   }
   const { pages, text } = await pdfText(response.body);
+  if (!(await PDFDocument.load(response.body)).catalog.has(PDFName.of('StructTreeRoot'))) {
+    failures.push(`${label}: missing PDF tags`);
+  }
   if (response.headers['Content-Type'] !== 'application/pdf') failures.push(`${label}: wrong content type ${response.headers['Content-Type']}`);
   const expectedPages = variant.letter ? 2 : 1;
   if (pages !== expectedPages) failures.push(`${label}: ${pages} pages (must be ${expectedPages})`);

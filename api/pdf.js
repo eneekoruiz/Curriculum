@@ -5,8 +5,6 @@
  */
 
 const path = require('path');
-const { default: chromium } = require('@sparticuz/chromium');
-const puppeteer = require('puppeteer-core');
 
 const VALID_LANGS = [
   'es', 'en', 'eu', 'fr', 'de', 'it', 'pt', 'ca', 'gl', 'nl',
@@ -28,6 +26,10 @@ const getBrowser = async () => {
 
   browserLaunchLock = (async () => {
     try {
+      const [{ default: chromium }, { default: puppeteer }] = await Promise.all([
+        import('@sparticuz/chromium'),
+        import('puppeteer-core')
+      ]);
       let retries = 3;
 
       while (retries > 0) {
@@ -94,8 +96,10 @@ module.exports = async function handler(request, response) {
     // Same options as the download dialog: ?photo=0 leaves the photo out, ?letter=1 puts the cover letter first
     const withPhoto = String(request.query?.photo) !== '0';
     const withLetter = String(request.query?.letter) === '1';
-    const site = new URL(process.env.VERCEL_URL
-      ? `https://${process.env.VERCEL_URL}`
+    // Production's deployment URL can be protected even when the public alias is open.
+    const deploymentHost = process.env.VERCEL_ENV !== 'production' && process.env.VERCEL_URL;
+    const site = new URL(deploymentHost
+      ? `https://${deploymentHost}`
       : process.env.CV_SITE_ORIGIN || 'https://eneko-ruiz-curriculum.vercel.app');
     const localTest = !process.env.VERCEL && site.protocol === 'http:' && site.hostname === '127.0.0.1';
     if (site.protocol !== 'https:' && !localTest) throw new Error('Invalid PDF site origin');
@@ -171,6 +175,7 @@ module.exports = async function handler(request, response) {
       printBackground: true,
       margin: { top: '0px', right: '0px', bottom: '0px', left: '0px' },
       displayHeaderFooter: false,
+      tagged: true,
       preferCSSPageSize: true
     }));
     // Raw Chromium output has one "/Type /Page" dictionary per page: the CV is one page, the letter another

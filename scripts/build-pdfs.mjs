@@ -12,7 +12,7 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { createHash } from 'node:crypto';
-import { PDFDocument } from 'pdf-lib';
+import { PDFDocument, PDFName } from 'pdf-lib';
 import { ROOT, PRINT_VIEWPORT, VARIANTS, variantName, loadTranslations, pdfPath, startServer, launch, pdfText } from './lib.mjs';
 
 const CHECK = process.argv.includes('--check');
@@ -57,7 +57,7 @@ async function renderOnePage(page, { letter }) {
   const expectedPages = letter ? 2 : 1;
   let zoom = await page.evaluate(() => window.fitPrintToOnePage());
   for (;;) {
-    const buffer = await page.pdf({ format: 'A4', printBackground: true, preferCSSPageSize: true });
+    const buffer = await page.pdf({ format: 'A4', printBackground: true, preferCSSPageSize: true, tagged: true });
     if ((await pdfText(buffer)).pages === expectedPages || zoom <= 0.8) {
       return { buffer, zoom, role: await roleSize(page), roleWrapped: await roleWraps(page), letterZoom: letter ? await letterZoom(page) : null };
     }
@@ -98,6 +98,7 @@ function atsProblems(lang, { pages, text: fullText }, { letter }) {
 
 async function withMetadata(buffer, lang, title, creator) {
   const doc = await PDFDocument.load(buffer);
+  if (!doc.catalog.has(PDFName.of('StructTreeRoot'))) throw new Error(`Missing PDF tags: ${creator}`);
   doc.setTitle(title);
   doc.setAuthor('Eneko Ruiz Mollón');
   doc.setSubject(T[lang].meta_desc);
@@ -157,8 +158,12 @@ try {
           found.push(`missing ${committed.replace(ROOT, '')}`);
         } else {
           const committedBytes = await readFile(committed);
-          if ((await PDFDocument.load(committedBytes)).getCreator() !== creator) {
+          const committedDoc = await PDFDocument.load(committedBytes);
+          if (committedDoc.getCreator() !== creator) {
             found.push(`committed ${name}: source hash, language or variant is out of date`);
+          }
+          if (!committedDoc.catalog.has(PDFName.of('StructTreeRoot'))) {
+            found.push(`committed ${name}: missing PDF tags`);
           }
           found.push(...atsProblems(lang, await pdfText(committedBytes), variant).map(p => `committed ${name}: ${p}`));
         }
