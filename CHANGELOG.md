@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.5.0] - 2026-11-11
+
+### Changed
+- **Section order: profile → experience → projects → skills → education → languages.** The strongest material (internship and projects) is now in the first half of the page and of the PDF; the ATS reading-order check follows the new order.
+- Profile rewritten as three factual sentences (stack, internship and published apps, graduation date) in all 23 languages. Role line is "Full Stack and DevOps" (no "Cloud").
+- Each project is two one-line bullets instead of a paragraph; the internship bullets start with a verb (es, en).
+- Skills and project stacks are plain text (main skills in bold) instead of pills and boxed tags. Removed the skills that added least: Bash, C, Vite, HTML5/CSS3, REST APIs and Git.
+- Dark theme accent is the portfolio's blue; the light theme and the PDF keep the gold.
+
+### Removed
+- High school and the list of degree subjects.
+
 ## [2.4.1] - 2026-10-19
 
 ### Changed

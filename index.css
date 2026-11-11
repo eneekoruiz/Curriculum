@@ -48,7 +48,7 @@
 /* ── TOKENS ────────────────────────────────────────── */
 :root {
   --c-bg: #ffffff;
-  /* gold for text and icons: 5.1:1 on white (WCAG AA); --c-brand stays for lines and accents */
+  /* gold for text and icons: 5.1:1 on white (WCAG AA); --c-brand stays for lines and accents. The dark theme uses the portfolio's blue */
   --c-brand-ink: #8d6632;
   --c-surface: #f8fafc;
   --c-rule: #f1f5f9;
@@ -89,7 +89,7 @@
 /* ── DARK THEME ────────────────────────────────────── */
 [data-theme="dark"] {
   --c-bg: #020617;
-  --c-brand-ink: #d4a66a;
+  --c-brand-ink: #8fa5ff;
   --c-surface: #0f172a;
   --c-rule: #1e293b;
   --c-rule-2: #334155;
@@ -97,12 +97,12 @@
   --c-ink-2: #f1f5f9;
   --c-ink-3: #cbd5e1;
   --c-accent: #cbd5e1;
-  --c-brand: #d4a66a;
-    --c-brand-rgb: 212, 166, 106;
-  --c-accent-s: rgba(212, 166, 106, 0.06);
-  --c-accent-b: rgba(212, 166, 106, 0.14);
-  --c-key-bg: rgba(212, 166, 106, 0.08);
-  --c-key-bdr: rgba(212, 166, 106, 0.28);
+  --c-brand: #8fa5ff;
+    --c-brand-rgb: 143, 165, 255;
+  --c-accent-s: rgba(143, 165, 255, 0.06);
+  --c-accent-b: rgba(143, 165, 255, 0.14);
+  --c-key-bg: rgba(143, 165, 255, 0.08);
+  --c-key-bdr: rgba(143, 165, 255, 0.28);
 }
 
 /* ── RESET ─────────────────────────────────────────── */
@@ -3333,4 +3333,82 @@ html.scroll-reveal .dashboard > section.is-instant {
   .hero .contact-row:not([data-copy]) .ct-label {
     display: block;
   }
+}
+
+/* ── Plain-text stacks and skills: one line of words, no boxes ── */
+.proj-stack {
+  display: block;
+  margin: 3px 0 8px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--c-ink-3);
+}
+
+.proj-stack .stack-tag,
+[data-theme="dark"] .proj-stack .stack-tag {
+  display: inline;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  font-size: inherit;
+  color: inherit;
+  white-space: nowrap;
+}
+
+.proj-stack .stack-tag:not(:last-child)::after,
+.sg-list .sk:not(:last-child)::after {
+  content: '\00a0· ';
+  font-weight: 400;
+  color: var(--c-ink-3);
+  white-space: normal;
+}
+
+.sg-list .sk {
+  white-space: nowrap;
+  color: var(--c-ink-2);
+}
+
+.sg-list strong.sk {
+  font-weight: 700;
+  color: var(--c-ink);
+}
+
+[dir="rtl"] .sg-list,
+[dir="rtl"] .proj-stack {
+  direction: ltr;
+  unicode-bidi: isolate;
+  text-align: right;
+}
+
+.skills .skill-group {
+  align-items: baseline;
+}
+
+/* Projects: two one-line facts instead of a paragraph */
+.proj-points {
+  order: 3;
+  flex: 1 0 100%;
+  list-style: none;
+  display: grid;
+  gap: 4px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--c-ink-2);
+}
+
+.proj-points li {
+  position: relative;
+  padding-inline-start: 16px;
+}
+
+.proj-points li::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: 2px;
+  top: .72em;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--c-brand);
 }
