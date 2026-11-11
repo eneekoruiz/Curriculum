@@ -515,7 +515,7 @@ h1,
 .pill {
   display: inline-block;
   padding: .15mm 1.7mm;
-  border: .5pt solid #dccbb2;
+  border: .5pt solid var(--rule);
   border-radius: 3mm;
   font-size: 8.7pt;
   line-height: 1.35;
@@ -654,4 +654,39 @@ h1,
   font-family: var(--f-display);
   font-size: 12pt;
   color: var(--ink);
+}
+
+/* ── Skills as plain text: comma + space, like the project stacks (a middle dot is extracted glued to the next word) ── */
+.sg-list .sk:not(:last-child)::after {
+  content: ', ';
+  font-weight: 400;
+}
+
+.sg-list strong.sk {
+  font-weight: 700;
+  color: var(--ink);
+}
+
+[dir="rtl"] .sg-list {
+  direction: ltr;
+  unicode-bidi: isolate;
+  text-align: right;
+}
+
+.skill-group {
+  align-items: baseline;
+}
+
+/* ── Projects: two one-line facts ── */
+.proj-points {
+  order: 2;
+  flex-basis: 100%;
+  padding-inline-start: 4.4mm;
+  font-size: 9.1pt;
+  color: var(--ink-2);
+}
+
+/* Room for the longest group label on one line */
+.skill-group {
+  grid-template-columns: 44mm minmax(0, 1fr);
 }

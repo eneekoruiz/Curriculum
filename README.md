@@ -2,7 +2,7 @@
 
 # Eneko Ruiz Mollón
 
-**Ingeniero de Software · Full Stack**
+**Ingeniero de Software · Full Stack y DevOps**
 
 Ingeniería Informática — UPV/EHU · Inglés C1 · Euskera C1
 

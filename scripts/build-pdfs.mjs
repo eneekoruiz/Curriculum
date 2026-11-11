@@ -84,10 +84,11 @@ function atsProblems(lang, { pages, text: fullText }, { letter }) {
   const cvStart = letter ? fullText.indexOf(email, fullText.indexOf(email) + 1) : 0;
   const text = cvStart > 0 ? fullText.slice(cvStart) : fullText;
   const at = (s, from = 0) => text.indexOf(s, from);
-  // Education → languages → experience → projects (the section order of the page)
-  const order = [at('UPV/EHU')];
+  // Experience → projects → skills → education → languages (the section order of the page)
   // Project titles are translated, so the first and last project are found by their stack
-  order.push(at('C1', order[0]), at('SST PRO DYNAMICS'), at('Resend'), at('Capacitor'));
+  const order = [at('SST PRO DYNAMICS')];
+  order.push(at('Resend', order[0]), at('Capacitor', order[0]), at('GitHub Actions', at('Capacitor', order[0])));
+  order.push(at('UPV/EHU', order[3]), at('C1', at('UPV/EHU', order[3])));
   if (order.some(i => i < 0) || order.some((i, n) => n && i <= order[n - 1])) problems.push(`reading order broken ${JSON.stringify(order)}`);
   if (/[ﬀ-ﬆ]/.test(fullText)) problems.push('contains ligature glyphs (ﬁ/ﬂ…) that break keyword search');
   for (const needle of ['eneekoruiz@gmail.com', '+34 600 02 51 61', 'linkedin.com/in/eneko-ruiz-421254410', 'github.com/eneekoruiz']) {
