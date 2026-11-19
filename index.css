@@ -2381,8 +2381,8 @@ html:not(.pdf-render) #root-container {
 
 
 
-/* Phones: contacts become one row of round icon buttons (names stay for screen readers) */
-@media (max-width: 700px) {
+/* Phones and compact screens: full screen hero and compact contacts */
+@media (max-width: 860px) {
   :root {
     --wrap-top: 72px;
   }
@@ -3166,7 +3166,6 @@ html.scroll-reveal .dashboard > section.is-instant {
 }
 
 .show-portrait .hero {
-  min-height: 0;
   justify-content: flex-start;
 }
 
@@ -3314,7 +3313,13 @@ html.scroll-reveal .dashboard > section.is-instant {
   }
 
   .show-portrait .hero .site-header {
-    gap: 6px 12px;
+    gap: 4px 12px;
+    padding-bottom: 4px;
+    margin-bottom: 4px;
+  }
+
+  .show-portrait .hero .profile {
+    margin-top: 0;
   }
 }
 
