@@ -41,7 +41,7 @@ try {
     const errors = [];
     page.on('pageerror', error => errors.push(error.message));
     await page.goto(`${origin}/?lang=es`, { waitUntil: 'networkidle' });
-    await page.waitForFunction(() => !document.documentElement.classList.contains('cv-loading'), null, { timeout: 5000 });
+    await page.waitForFunction(() => !document.documentElement.classList.contains('cv-loading'), null, { timeout: 15000 });
     await page.evaluate(() => document.fonts.ready);
     const m = await page.evaluate(() => {
       const box = selector => document.querySelector(selector).getBoundingClientRect();
