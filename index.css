@@ -1512,7 +1512,7 @@ html.pdf-render .precision-motion {
     radial-gradient(circle at 50% 50%, rgba(var(--c-brand-rgb, 196, 150, 90), 0.08), transparent 48vw),
     var(--c-bg);
   background-size: 32px 32px, 32px 32px, auto, auto;
-  animation: precision-overlay-exit 1.25s cubic-bezier(0.42, 0, 0.16, 1) forwards;
+  animation: precision-overlay-exit 2.1s cubic-bezier(0.4, 0, 0.15, 1) forwards;
 }
 
 .precision-motion__stage {
@@ -1540,19 +1540,19 @@ html.pdf-render .precision-motion {
   border: 1px solid currentColor;
   opacity: 0;
   box-shadow: 0 0 20px var(--motion-color-soft), inset 0 0 16px var(--motion-color-soft);
-  animation: precision-ring 1.25s cubic-bezier(0.42, 0, 0.16, 1) forwards;
+  animation: precision-ring 2.1s cubic-bezier(0.4, 0, 0.15, 1) forwards;
 }
 
 .precision-motion__ring.ring-2 {
   width: 132px;
   height: 132px;
-  animation-delay: 60ms;
+  animation-delay: 90ms;
 }
 
 .precision-motion__ring.ring-3 {
   width: 172px;
   height: 172px;
-  animation-delay: 140ms;
+  animation-delay: 200ms;
 }
 
 .precision-motion__core {
@@ -1560,7 +1560,7 @@ html.pdf-render .precision-motion {
   height: 8px;
   background: currentColor;
   box-shadow: 0 0 24px currentColor;
-  animation: precision-core 1.25s cubic-bezier(0.42, 0, 0.16, 1) forwards;
+  animation: precision-core 2.1s cubic-bezier(0.4, 0, 0.15, 1) forwards;
 }
 
 .precision-motion__particle {
@@ -1569,14 +1569,14 @@ html.pdf-render .precision-motion {
   background: currentColor;
   opacity: 0;
   box-shadow: 0 0 18px currentColor;
-  animation: precision-particle 1.25s cubic-bezier(0.42, 0, 0.16, 1) forwards;
+  animation: precision-particle 2.1s cubic-bezier(0.4, 0, 0.15, 1) forwards;
 }
 
-.precision-motion__particle.p1 { --py: -22px; animation-delay: 280ms; }
-.precision-motion__particle.p2 { --py: -10px; animation-delay: 340ms; }
-.precision-motion__particle.p3 { --py: 0px; animation-delay: 400ms; }
-.precision-motion__particle.p4 { --py: 10px; animation-delay: 460ms; }
-.precision-motion__particle.p5 { --py: 22px; animation-delay: 520ms; }
+.precision-motion__particle.p1 { --py: -22px; animation-delay: 400ms; }
+.precision-motion__particle.p2 { --py: -10px; animation-delay: 480ms; }
+.precision-motion__particle.p3 { --py: 0px; animation-delay: 560ms; }
+.precision-motion__particle.p4 { --py: 10px; animation-delay: 640ms; }
+.precision-motion__particle.p5 { --py: 22px; animation-delay: 720ms; }
 
 .precision-motion__beam {
   left: 50%;
@@ -1587,46 +1587,46 @@ html.pdf-render .precision-motion {
   transform: translate(-50%, -50%) scaleX(0);
   transform-origin: left center;
   box-shadow: 0 0 16px currentColor, 0 0 32px var(--motion-color-soft);
-  animation: precision-beam 1.25s cubic-bezier(0.42, 0, 0.16, 1) forwards;
+  animation: precision-beam 2.1s cubic-bezier(0.4, 0, 0.15, 1) forwards;
 }
 
 @keyframes precision-ring {
   0% { opacity: 0; transform: translate(-50%, -50%) scale(0.08) rotate(0deg); }
-  16% { opacity: 0.95; transform: translate(-50%, -50%) scale(0.86) rotate(90deg); }
-  34% { opacity: 0.8; transform: translate(-50%, -50%) scale(1) rotate(180deg); }
-  62% { opacity: 0; transform: translate(170%, -50%) scale(0.08) rotate(270deg); }
+  18% { opacity: 0.95; transform: translate(-50%, -50%) scale(0.88) rotate(90deg); }
+  36% { opacity: 0.85; transform: translate(-50%, -50%) scale(1) rotate(180deg); }
+  64% { opacity: 0; transform: translate(170%, -50%) scale(0.08) rotate(270deg); }
   100% { opacity: 0; transform: translate(170%, -50%) scale(0.08) rotate(270deg); }
 }
 
 @keyframes precision-core {
   0% { opacity: 0; transform: translate(-50%, -50%) scale(0.2); }
-  12% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-  50% { opacity: 1; transform: translate(520%, -50%) scale(0.85); }
-  76%, 100% { opacity: 0; transform: translate(520%, -50%) scale(0.4); }
+  14% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  52% { opacity: 1; transform: translate(520%, -50%) scale(0.85); }
+  78%, 100% { opacity: 0; transform: translate(520%, -50%) scale(0.4); }
 }
 
 @keyframes precision-particle {
   0%, 22% { opacity: 0; transform: translate(-50%, -50%) translateX(0) translateY(0) scale(0.6); }
-  45% { opacity: 1; transform: translate(-50%, -50%) translateX(185px) translateY(var(--py)) scale(1); }
+  46% { opacity: 1; transform: translate(-50%, -50%) translateX(185px) translateY(var(--py)) scale(1); }
   76% { opacity: 0.75; transform: translate(-50%, -50%) translateX(370px) translateY(0) scale(0.7); }
   100% { opacity: 0; transform: translate(-50%, -50%) translateX(430px) translateY(0) scale(0.4); }
 }
 
 @keyframes precision-beam {
-  0%, 58% { opacity: 0; transform: translate(-50%, -50%) scaleX(0); }
-  76% { opacity: 1; transform: translate(-50%, -50%) scaleX(0.72); }
-  90% { opacity: 1; transform: translate(-50%, -50%) scaleX(1); }
+  0%, 56% { opacity: 0; transform: translate(-50%, -50%) scaleX(0); }
+  74% { opacity: 1; transform: translate(-50%, -50%) scaleX(0.72); }
+  88% { opacity: 1; transform: translate(-50%, -50%) scaleX(1); }
   100% { opacity: 0; transform: translate(-50%, -50%) scaleX(1); }
 }
 
 @keyframes precision-overlay-exit {
-  0%, 65% { opacity: 1; visibility: visible; }
+  0%, 68% { opacity: 1; visibility: visible; }
   100%    { opacity: 0; visibility: hidden; }
 }
 
 /* ── Staggered entrance: orchestrated unveil synced with Precision Motion ── */
 html:not(.pdf-render) #topbar {
-  animation: topbarDrop 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.58s both;
+  animation: topbarDrop 0.85s cubic-bezier(0.22, 1, 0.36, 1) 1.25s both;
 }
 
 @keyframes topbarDrop {
@@ -1640,11 +1640,11 @@ html:not(.pdf-render) #topbar {
 }
 
 html:not(.pdf-render) .hero .site-header {
-  animation: staggerIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.55s both;
+  animation: staggerIn 0.95s cubic-bezier(0.22, 1, 0.36, 1) 1.2s both;
 }
 
 html:not(.pdf-render) .hero .profile {
-  animation: staggerIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.68s both;
+  animation: staggerIn 0.95s cubic-bezier(0.22, 1, 0.36, 1) 1.38s both;
 }
 
 /* ── ATS layout (screen): single reading column, title → org → dates ── */
@@ -2381,55 +2381,55 @@ html:not(.pdf-render) #root-container {
 
 
 
-/* Phones and compact screens: full screen hero and compact contacts */
+/* Phones and compact screens: airy, naturally spaced hero and compact contacts */
 @media (max-width: 860px) {
   :root {
     --wrap-top: 72px;
   }
 
   .hero {
-    min-height: calc(100svh - var(--wrap-top) - 16px);
+    min-height: auto;
     justify-content: flex-start;
-    padding-top: clamp(4px, 1svh, 12px);
-    padding-bottom: clamp(8px, 1.5svh, 16px);
-    margin-bottom: 24px;
+    padding-top: clamp(8px, 1.8vh, 16px);
+    padding-bottom: clamp(10px, 2vh, 18px);
+    margin-bottom: clamp(36px, 5vh, 48px);
   }
 
   .hero .site-header {
     grid-template-columns: minmax(0, 1fr);
-    gap: clamp(10px, 2svh, 18px);
-    padding-bottom: clamp(12px, 2.2svh, 22px);
-    margin-bottom: clamp(12px, 2.2svh, 22px);
+    gap: clamp(12px, 2.2vh, 20px);
+    padding-bottom: clamp(16px, 2.6vh, 24px);
+    margin-bottom: clamp(16px, 2.6vh, 24px);
     border-bottom: 1px solid var(--c-rule);
   }
 
   .hero h1 {
-    font-size: clamp(30px, min(9vw, 5.5svh), 44px);
+    font-size: clamp(32px, min(9.2vw, 5.8vh), 46px);
     line-height: 1.15;
   }
 
   .hero .eyebrow {
-    font-size: clamp(12.5px, 3.4vw, 14px);
-    margin-bottom: clamp(6px, 1.2svh, 10px);
+    font-size: clamp(13px, 3.5vw, 14.5px);
+    margin-bottom: clamp(8px, 1.4vh, 12px);
   }
 
   .hero .tagline-loc {
-    font-size: clamp(12px, 3.2vw, 13.5px);
-    margin-top: clamp(6px, 1.2svh, 10px);
+    font-size: clamp(12.5px, 3.3vw, 14px);
+    margin-top: clamp(8px, 1.4vh, 12px);
   }
 
   .hero .profile {
-    margin-top: clamp(12px, 2.2svh, 22px);
+    margin-top: clamp(16px, 2.6vh, 26px);
   }
 
   .hero .profile-label {
-    font-size: clamp(1.15rem, 3.8vw, 1.3rem);
-    margin-bottom: clamp(8px, 1.5svh, 14px);
+    font-size: clamp(1.2rem, 4vw, 1.35rem);
+    margin-bottom: clamp(10px, 1.8vh, 16px);
   }
 
   .hero .profile-text {
-    font-size: clamp(14px, 3.7vw, 15.5px);
-    line-height: 1.65;
+    font-size: clamp(14.8px, 3.8vw, 16.2px);
+    line-height: 1.72;
   }
 
   /* Contacts as a quiet two-column list: gold icon + text, no boxes (the CV's editorial style).
@@ -2437,9 +2437,9 @@ html:not(.pdf-render) #root-container {
   .hero .contacts {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: clamp(5px, 1.4svh, 12px) 16px;
-    margin-top: clamp(6px, 1.2svh, 12px);
-    padding-top: clamp(8px, 1.8svh, 16px);
+    gap: clamp(8px, 1.6vh, 14px) 16px;
+    margin-top: clamp(8px, 1.4vh, 14px);
+    padding-top: clamp(12px, 2.2vh, 18px);
     border-top: 1px solid var(--c-rule);
   }
 
@@ -2449,14 +2449,14 @@ html:not(.pdf-render) #root-container {
     justify-content: flex-start;
     gap: 8px;
     min-width: 0;
-    min-height: clamp(28px, 4.2svh, 38px);
+    min-height: clamp(32px, 4.4vh, 38px);
     margin: 0;
     padding: 0;
     border: 0;
     border-radius: 0;
     background: none;
     text-align: start;
-    font-size: clamp(11.5px, 3.1vw, 13.5px);
+    font-size: clamp(12px, 3.2vw, 13.8px);
   }
 
   @media (max-height: 680px) {
@@ -2466,6 +2466,28 @@ html:not(.pdf-render) #root-container {
     }
     :root {
       --wrap-top: 66px;
+    }
+    .hero .site-header {
+      padding-bottom: 10px;
+      margin-bottom: 10px;
+      gap: 8px;
+    }
+    .hero .contacts {
+      gap: 4px 16px;
+      margin-top: 6px;
+      padding-top: 8px;
+    }
+    .hero .contact-row {
+      min-height: 28px;
+    }
+    .hero .profile {
+      margin-top: 10px;
+    }
+    .hero .profile-label {
+      margin-bottom: 6px;
+    }
+    .hero .profile-text {
+      line-height: 1.6;
     }
   }
 
@@ -2555,12 +2577,11 @@ html:not(.pdf-render) #root-container {
 /* ── Scroll reveal: each section below the cover rises and fades in once, just before it
    reaches the screen (see setupScrollReveal). is-instant skips the animation (fast scrolling). ── */
 html.scroll-reveal .dashboard > section {
-  transition: opacity 0.38s cubic-bezier(0.22, 1, 0.36, 1), transform 0.38s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: opacity 0.32s ease-out;
 }
 
 html.scroll-reveal .dashboard > section:not(.is-revealed) {
   opacity: 0;
-  transform: translateY(12px);
 }
 
 html.scroll-reveal .dashboard > section.is-instant {
@@ -2819,6 +2840,11 @@ html.scroll-reveal .dashboard > section.is-instant {
   transform: rotate(90deg);
 }
 
+.photo-close:focus-visible {
+  outline: 2px solid var(--c-brand);
+  outline-offset: 2px;
+}
+
 .photo-close svg {
   width: 16px;
   height: 16px;
@@ -2893,6 +2919,26 @@ html.scroll-reveal .dashboard > section.is-instant {
 
 .letter-dialog {
   width: min(94vw, 680px);
+}
+
+.letter-dialog .photo-close {
+  position: sticky;
+  top: 14px;
+  float: right;
+  margin-top: -26px;
+  margin-right: -26px;
+  margin-bottom: -10px;
+  z-index: 20;
+  width: 36px;
+  height: 36px;
+  background: var(--c-bg);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.22);
+}
+
+[dir="rtl"] .letter-dialog .photo-close {
+  float: left;
+  margin-right: 0;
+  margin-left: -26px;
 }
 
 .opt-dialog {
@@ -3102,6 +3148,17 @@ html.scroll-reveal .dashboard > section.is-instant {
     padding: 32px 22px 24px;
   }
 
+  .letter-dialog .photo-close {
+    top: 12px;
+    margin-top: -20px;
+    margin-right: -10px;
+  }
+
+  [dir="rtl"] .letter-dialog .photo-close {
+    margin-right: 0;
+    margin-left: -10px;
+  }
+
   .cl-web-body,
   .cl-sign {
     font-size: 15px;
@@ -3212,7 +3269,7 @@ html.scroll-reveal .dashboard > section.is-instant {
   .show-portrait .hero .site-header {
     grid-template-columns: minmax(0, 1fr) auto;
     grid-template-areas: "name photo" "role photo" "location location" "contacts contacts";
-    gap: clamp(10px, 1.8svh, 16px) 14px;
+    gap: clamp(12px, 2vh, 18px) 14px;
   }
 
   .show-portrait .hero h1 {
@@ -3237,7 +3294,7 @@ html.scroll-reveal .dashboard > section.is-instant {
 
   .show-portrait .portrait {
     grid-area: photo;
-    width: clamp(88px, 24vw, 120px);
+    width: clamp(92px, 25vw, 120px);
     align-self: start;
     border-radius: 20px;
   }
@@ -3246,7 +3303,7 @@ html.scroll-reveal .dashboard > section.is-instant {
     display: grid;
     grid-area: contacts;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: clamp(4px, 1.2svh, 10px) 16px;
+    gap: clamp(6px, 1.4vh, 12px) 16px;
     margin: 0;
     padding: 0;
     border: 0;
@@ -3254,7 +3311,7 @@ html.scroll-reveal .dashboard > section.is-instant {
   }
 
   .show-portrait .hero .contact-row {
-    min-height: 32px;
+    min-height: 34px;
     max-width: 100%;
   }
 
@@ -3318,10 +3375,22 @@ html.scroll-reveal .dashboard > section.is-instant {
     padding: 4px clamp(var(--s3), 4vw, var(--s5));
   }
 
+  .hero {
+    padding-top: 0;
+  }
+
   .show-portrait .hero .site-header {
     gap: 4px 12px;
     padding-bottom: 4px;
     margin-bottom: 4px;
+  }
+
+  .show-portrait .hero .contacts {
+    gap: 2px 12px;
+  }
+
+  .show-portrait .hero .contact-row {
+    min-height: 24px;
   }
 
   .show-portrait .hero .profile {
@@ -3330,7 +3399,8 @@ html.scroll-reveal .dashboard > section.is-instant {
 }
 
 @media (max-height: 500px) and (min-width: 600px) and (max-width: 860px) {
-  .hero .site-header .contacts {
+  .hero .site-header .contacts,
+  .show-portrait .hero .contacts {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 2px 12px;

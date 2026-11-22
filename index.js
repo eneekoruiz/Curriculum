@@ -914,7 +914,7 @@ const setupScrollReveal = () => {
           motionOverlay.remove();
         }
       });
-      setTimeout(() => motionOverlay.remove(), 2200);
+      setTimeout(() => motionOverlay.remove(), 3400);
     }
   }
 
