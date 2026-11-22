@@ -2342,8 +2342,8 @@ html:not(.pdf-render) #root-container {
 
 .hero .site-header {
   column-gap: var(--s4);
-  padding-bottom: clamp(16px, 2svh, 24px);
-  margin-bottom: clamp(16px, 2svh, 24px);
+  padding-bottom: clamp(20px, 3svh, 36px);
+  margin-bottom: clamp(20px, 3svh, 36px);
 }
 
 .hero .profile {
@@ -2359,24 +2359,24 @@ html:not(.pdf-render) #root-container {
 }
 
 .hero .eyebrow {
-  margin-bottom: clamp(8px, 1.6svh, 16px);
+  margin-bottom: clamp(10px, 1.8svh, 18px);
 }
 
 .hero .tagline {
-  margin-top: clamp(8px, 1.8svh, 16px);
+  margin-top: clamp(10px, 1.8svh, 18px);
 }
 
 .hero .contacts {
-  gap: 0;
+  gap: clamp(4px, 1svh, 8px) 0;
 }
 
 .hero .contact-row {
-  padding: 5px 10px;
+  padding: 6px 12px;
 }
 
 .hero .profile-text {
   font-size: 16px;
-  line-height: 1.7;
+  line-height: 1.75;
 }
 
 
@@ -2390,16 +2390,16 @@ html:not(.pdf-render) #root-container {
   .hero {
     min-height: calc(100svh - var(--wrap-top) - 16px);
     justify-content: flex-start;
-    padding-top: 0;
-    padding-bottom: 0;
-    margin-bottom: 20px;
+    padding-top: clamp(4px, 1svh, 12px);
+    padding-bottom: clamp(8px, 1.5svh, 16px);
+    margin-bottom: 24px;
   }
 
   .hero .site-header {
     grid-template-columns: minmax(0, 1fr);
-    gap: clamp(8px, 1.5svh, 14px);
-    padding-bottom: clamp(8px, 1.8svh, 18px);
-    margin-bottom: clamp(8px, 2svh, 20px);
+    gap: clamp(10px, 2svh, 18px);
+    padding-bottom: clamp(12px, 2.2svh, 22px);
+    margin-bottom: clamp(12px, 2.2svh, 22px);
     border-bottom: 1px solid var(--c-rule);
   }
 
@@ -2410,26 +2410,26 @@ html:not(.pdf-render) #root-container {
 
   .hero .eyebrow {
     font-size: clamp(12.5px, 3.4vw, 14px);
-    margin-bottom: clamp(4px, 1svh, 8px);
+    margin-bottom: clamp(6px, 1.2svh, 10px);
   }
 
   .hero .tagline-loc {
     font-size: clamp(12px, 3.2vw, 13.5px);
-    margin-top: clamp(4px, 1svh, 8px);
+    margin-top: clamp(6px, 1.2svh, 10px);
   }
 
   .hero .profile {
-    margin-top: clamp(8px, 1.8svh, 18px);
+    margin-top: clamp(12px, 2.2svh, 22px);
   }
 
   .hero .profile-label {
     font-size: clamp(1.15rem, 3.8vw, 1.3rem);
-    margin-bottom: clamp(6px, 1.2svh, 12px);
+    margin-bottom: clamp(8px, 1.5svh, 14px);
   }
 
   .hero .profile-text {
-    font-size: clamp(13.6px, 3.6vw, 15.2px);
-    line-height: 1.55;
+    font-size: clamp(14px, 3.7vw, 15.5px);
+    line-height: 1.65;
   }
 
   /* Contacts as a quiet two-column list: gold icon + text, no boxes (the CV's editorial style).
@@ -2437,7 +2437,7 @@ html:not(.pdf-render) #root-container {
   .hero .contacts {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: clamp(3px, 1.2svh, 10px) 16px;
+    gap: clamp(5px, 1.4svh, 12px) 16px;
     margin-top: clamp(6px, 1.2svh, 12px);
     padding-top: clamp(8px, 1.8svh, 16px);
     border-top: 1px solid var(--c-rule);
@@ -3169,9 +3169,15 @@ html.scroll-reveal .dashboard > section.is-instant {
   justify-content: flex-start;
 }
 
+@media (min-width: 861px) {
+  .show-portrait .hero {
+    justify-content: center;
+  }
+}
+
 .show-portrait .hero .site-header {
   grid-template-columns: minmax(0, 1fr) auto;
-  row-gap: var(--s3);
+  row-gap: clamp(16px, 2.5svh, 24px);
   align-items: start;
 }
 
@@ -3190,7 +3196,7 @@ html.scroll-reveal .dashboard > section.is-instant {
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: flex-start;
-  gap: 4px var(--s5);
+  gap: clamp(6px, 1.2svh, 10px) var(--s5);
 }
 
 @media (max-width: 860px) {
@@ -3206,7 +3212,7 @@ html.scroll-reveal .dashboard > section.is-instant {
   .show-portrait .hero .site-header {
     grid-template-columns: minmax(0, 1fr) auto;
     grid-template-areas: "name photo" "role photo" "location location" "contacts contacts";
-    gap: 8px 12px;
+    gap: clamp(10px, 1.8svh, 16px) 14px;
   }
 
   .show-portrait .hero h1 {
@@ -3240,7 +3246,7 @@ html.scroll-reveal .dashboard > section.is-instant {
     display: grid;
     grid-area: contacts;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 2px 16px;
+    gap: clamp(4px, 1.2svh, 10px) 16px;
     margin: 0;
     padding: 0;
     border: 0;
