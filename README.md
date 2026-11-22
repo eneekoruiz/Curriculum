@@ -1,54 +1,29 @@
-<div align="center">
+# Curriculum Vitae Interactivo
 
-# Eneko Ruiz Mollón
+Currículum vítae web interactivo y generador de PDF desarrollado en HTML5 semántico, CSS moderno y JavaScript vanilla, con soporte multiidioma y maquetación de impresión profesional A4.
 
-**Ingeniero de Software · Full Stack y DevOps**
+- **Demo en vivo:** [curriculum-eneekoruiz.vercel.app](https://curriculum-eneekoruiz.vercel.app)
 
-Ingeniería Informática — UPV/EHU · Inglés C1 · Euskera C1
+## Características y Valor Técnico
 
-<br>
+- **Arquitectura Vanilla Ultraligera:** Cero dependencias pesadas de framework para el frontend; carga instantánea y máxima compatibilidad en cualquier navegador.
+- **Soporte Multiidioma (i18n):** Selector dinámico de idioma en tiempo real (Castellano, Euskara e Inglés) gestionado mediante diccionarios locales y atributos `data-i18n`.
+- **Maquetación Tipográfica A4:** Reglas CSS avanzadas bajo `@media print` para asegurar saltos de página limpios, márgenes proporcionales y ajuste exacto a formato A4 estándar para selección de personal.
+- **Generación de PDF en la Nube:** Endpoint serverless en Vercel (`api/pdf.js`) que renderiza y descarga el CV en PDF vectorial utilizando Puppeteer Core y Chromium headless (`@sparticuz/chromium`).
 
-[🌐 Ver CV online](https://eneko-ruiz-curriculum.vercel.app/) · [📄 Descargar PDF](https://eneko-ruiz-curriculum.vercel.app/pdf/Eneko_Ruiz_CV_ES.pdf)
+## Stack Técnico
 
-</div>
+- **Frontend:** HTML5 semántico, CSS3 moderno (Variables CSS, Flexbox/Grid, print styles), JavaScript (ES6+)
+- **Generador de PDF:** Node.js, `puppeteer-core`, `@sparticuz/chromium`
 
----
-
-CV interactivo construido con HTML, CSS y JavaScript vanilla — sin dependencias, sin build step. PDF pregenerado en 23 idiomas, optimizado para ATS y una sola página A4. Cada idioma incluye carta de presentación y se descarga con o sin foto y con o sin carta.
-
-### Estructura
-
-- **`index.html` · `index.css` · `index.js`** — La web completa, sin build
-- **`translations.js`** — Contenido del CV y de la carta de presentación en 23 idiomas
-- **`print.css`** — Layout A4 de una columna, compatible con ATS
-- **`pdf/`** — PDFs pregenerados por idioma y variante (`_NoPhoto`, `_Letter`, `_Letter_NoPhoto`)
-- **`og.png`** — Tarjeta social (WhatsApp, LinkedIn, Twitter)
-- **`api/pdf.js`** — Función Vercel que renderiza PDF bajo demanda
-- **`scripts/`** — Herramientas de build y calidad (Playwright)
-
-### Tras editar el CV
+## Puesta en Marcha Local
 
 ```bash
-npm ci --ignore-scripts
-cd scripts && npm ci
-npx playwright install chromium   # solo la primera vez
-npm run build    # regenera pdf/*.pdf (4 variantes por idioma) + print-zoom.js
-npm run og       # regenera og.png
-npm run check    # PDF y ATS, web, maquetación responsive y comprobaciones WCAG 2.2 AA
+git clone https://github.com/eneekoruiz/Curriculum.git
+cd Curriculum
+
+# Servir localmente con cualquier servidor estático
+npx serve .
+# o con Python
+python -m http.server 8080
 ```
-
-Para regenerar `foto.webp` y `foto.jpg` desde la foto original (recorte fijo de 720 × 720 desde x=24, y=165):
-
-```bash
-node scripts/generate-headshot.mjs "ruta/a/la/foto-original.jpg"
-```
-
-La función PDF usa `VERCEL_URL` en Vercel y el dominio público del CV como alternativa. Las pruebas locales fijan `CV_SITE_ORIGIN` al servidor de prueba; las cabeceras de la petición no determinan el destino del navegador.
-
-La prueba de accesibilidad combina axe-core con navegación por teclado, gestión del foco, estados de los controles y redistribución a 320 px con espaciado de texto ampliado. Informa de las reglas que axe deja pendientes de revisión manual. Pasar estas comprobaciones no certifica conformidad completa: también se debe revisar con lectores de pantalla y tecnologías de asistencia reales.
-
-El CV incrustado conserva la altura del iframe y usa su desplazamiento nativo. No envía su altura total al portfolio: hacerlo mientras la portada depende de `vh` provoca un bucle de redimensionado que desplaza el contenido fuera del área visible.
-
-### Licencia
-
-MIT
