@@ -2461,33 +2461,33 @@ html:not(.pdf-render) #root-container {
 
   @media (max-height: 680px) {
     #topbar {
-      padding-top: 5px;
-      padding-bottom: 5px;
+      padding-top: 4px;
+      padding-bottom: 4px;
     }
     :root {
-      --wrap-top: 66px;
+      --wrap-top: 56px;
     }
     .hero .site-header {
-      padding-bottom: 10px;
-      margin-bottom: 10px;
-      gap: 8px;
+      padding-bottom: 8px;
+      margin-bottom: 8px;
+      gap: 6px;
     }
     .hero .contacts {
-      gap: 4px 16px;
-      margin-top: 6px;
-      padding-top: 8px;
+      gap: 3px 14px;
+      margin-top: 4px;
+      padding-top: 6px;
     }
     .hero .contact-row {
-      min-height: 28px;
+      min-height: 26px;
     }
     .hero .profile {
-      margin-top: 10px;
+      margin-top: 8px;
     }
     .hero .profile-label {
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
     .hero .profile-text {
-      line-height: 1.6;
+      line-height: 1.55;
     }
   }
 
