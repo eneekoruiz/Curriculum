@@ -177,7 +177,7 @@ for (const lang of LANGS) {
       const topbarOverlap = headerMain.top < topbar.bottom - 1;
       return { profileTop: profile.top + scrollY, profileBottom: profile.bottom + scrollY, clippedContacts, topbarOverlap };
     });
-    if (portrait.w > (width <= 860 ? 120 : 164) + 1) issues.push('portrait: too large for the compact header');
+    if (portrait.w > (width <= 860 ? 120 : 216) + 1) issues.push('portrait: too large for the compact header');
     if (photoLayout.clippedContacts) issues.push('portrait: contact text is cut');
     if (photoLayout.topbarOverlap) issues.push('topbar: overlaps header content');
     if (width >= 900 && height >= 700 && photoLayout.profileBottom > height) issues.push('portrait: professional profile must fit on the first desktop screen');

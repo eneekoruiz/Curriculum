@@ -91,7 +91,7 @@ function atsProblems(lang, { pages, text: fullText }, { letter }) {
   order.push(at('UPV/EHU', order[3]), at('C1', at('UPV/EHU', order[3])));
   if (order.some(i => i < 0) || order.some((i, n) => n && i <= order[n - 1])) problems.push(`reading order broken ${JSON.stringify(order)}`);
   if (/[ﬀ-ﬆ]/.test(fullText)) problems.push('contains ligature glyphs (ﬁ/ﬂ…) that break keyword search');
-  for (const needle of ['eneekoruiz@gmail.com', '+34 600 02 51 61', 'linkedin.com/in/eneko-ruiz-421254410', 'github.com/eneekoruiz']) {
+  for (const needle of ['eneekoruiz@gmail.com', '+34 600 02 51 61', 'linkedin.com/in/eneekoruiz', 'github.com/eneekoruiz']) {
     if (!fullText.includes(needle)) problems.push(`missing "${needle}"`);
   }
   return problems;

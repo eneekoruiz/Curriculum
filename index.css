@@ -2923,22 +2923,23 @@ html.scroll-reveal .dashboard > section.is-instant {
 
 .letter-dialog .photo-close {
   position: sticky;
-  top: 14px;
+  top: 10px;
   float: right;
   margin-top: -26px;
-  margin-right: -26px;
+  margin-right: -44px;
   margin-bottom: -10px;
   z-index: 20;
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
   background: var(--c-bg);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.22);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
 }
 
 [dir="rtl"] .letter-dialog .photo-close {
   float: left;
   margin-right: 0;
-  margin-left: -26px;
+  margin-left: -44px;
 }
 
 .opt-dialog {
@@ -2963,7 +2964,7 @@ html.scroll-reveal .dashboard > section.is-instant {
   max-height: min(90vh, 900px);
   overflow-y: auto;
   overscroll-behavior: contain;
-  padding: 40px 40px 32px;
+  padding: 36px 56px 32px 36px;
 }
 
 .opt-card {
@@ -2987,6 +2988,7 @@ html.scroll-reveal .dashboard > section.is-instant {
   font-size: 15.5px;
   line-height: 1.65;
   color: var(--c-ink-2);
+  padding-inline-end: 48px;
 }
 
 .cl-p {
@@ -3145,18 +3147,24 @@ html.scroll-reveal .dashboard > section.is-instant {
 
 @media (max-width: 540px) {
   .letter-card {
-    padding: 32px 22px 24px;
+    padding: 30px 42px 24px 20px;
   }
 
   .letter-dialog .photo-close {
-    top: 12px;
-    margin-top: -20px;
-    margin-right: -10px;
+    top: 8px;
+    margin-top: -22px;
+    margin-right: -34px;
+    width: 30px;
+    height: 30px;
   }
 
   [dir="rtl"] .letter-dialog .photo-close {
     margin-right: 0;
-    margin-left: -10px;
+    margin-left: -34px;
+  }
+
+  .cl-web-body {
+    padding-inline-end: 38px;
   }
 
   .cl-web-body,
@@ -3226,34 +3234,59 @@ html.scroll-reveal .dashboard > section.is-instant {
   justify-content: flex-start;
 }
 
-@media (min-width: 861px) {
-  .show-portrait .hero {
-    justify-content: center;
-  }
-}
-
-.show-portrait .hero .site-header {
-  grid-template-columns: minmax(0, 1fr) auto;
-  row-gap: clamp(16px, 2.5svh, 24px);
-  align-items: start;
-}
-
 .show-portrait .header-side {
   display: contents;
 }
 
 @media (min-width: 861px) {
-  .show-portrait .hero h1 {
-    font-size: clamp(2.8rem, min(5.2vw, 8svh), 3.6rem);
+  .show-portrait .hero {
+    justify-content: center;
   }
-}
 
-.show-portrait .hero .contacts {
-  grid-column: 1 / -1;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  gap: clamp(6px, 1.2svh, 10px) var(--s5);
+  .show-portrait .hero .site-header {
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: clamp(28px, 4vw, 48px);
+    row-gap: 0;
+    align-items: center;
+  }
+
+  .show-portrait .header-main {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .show-portrait .hero h1 {
+    font-size: clamp(3.2rem, min(5.6vw, 8.5svh), 4.2rem);
+    line-height: 1.08;
+  }
+
+  .show-portrait .hero .contacts {
+    grid-column: 1;
+    grid-row: 2;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(6px, 1.2svh, 10px) clamp(16px, 2.5vw, 28px);
+    margin: clamp(14px, 2vh, 20px) 0 0 0;
+    padding: 0;
+    border: 0;
+    width: 100%;
+    align-items: center;
+  }
+
+  .show-portrait .hero .contact-row {
+    margin: 0;
+    padding: 6px 8px;
+    justify-content: flex-start;
+    max-width: 100%;
+  }
+
+  .show-portrait .portrait {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    align-self: center;
+    width: clamp(180px, 16vw, 216px);
+    border-radius: 26px;
+  }
 }
 
 @media (max-width: 860px) {
@@ -3270,6 +3303,7 @@ html.scroll-reveal .dashboard > section.is-instant {
     grid-template-columns: minmax(0, 1fr) auto;
     grid-template-areas: "name photo" "role photo" "location location" "contacts contacts";
     gap: clamp(12px, 2vh, 18px) 14px;
+    align-items: start;
   }
 
   .show-portrait .hero h1 {

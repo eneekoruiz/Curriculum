@@ -42,7 +42,7 @@ for (const lang of ['es', 'en', 'ru']) {
   if (pages !== expectedPages) failures.push(`${label}: ${pages} pages (must be ${expectedPages})`);
   if (!text.trim().startsWith('Eneko Ruiz Mollón')) failures.push(`${label}: the name is not the first line`);
   if (text.split('eneekoruiz@gmail.com').length - 1 !== expectedPages) failures.push(`${label}: letter missing or present though not chosen`);
-  for (const needle of ['eneekoruiz@gmail.com', 'linkedin.com/in/eneko-ruiz-421254410', 'Capacitor']) {
+  for (const needle of ['eneekoruiz@gmail.com', 'linkedin.com/in/eneekoruiz', 'Capacitor']) {
     if (!text.includes(needle)) failures.push(`${label}: missing "${needle}"`);
   }
   console.log(`api/pdf ${label}: ${response.body.length} bytes, ${pages} page(s), ${Date.now() - started} ms`);
