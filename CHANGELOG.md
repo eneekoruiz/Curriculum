@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.5.0] - 2026-10-21
+## [2.6.0] - 2026-11-25
 
 ### Added
 - **Personalised link for each application:** `…/?para=Iberdrola` adds one sentence naming the company to the cover letter ("Me encantaría aportar todo esto en Iberdrola."), on the web and in the PDF with the letter, in all 23 languages. The link is made by hand when applying; nothing is detected. The name is reduced to plain text (letters, digits and a few name characters, 40 at most). That PDF cannot be pre-rendered, so it comes from `/api/pdf`, which now accepts `para`.
@@ -12,20 +12,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - **Fonts are self-hosted** (`fonts/`): Bricolage Grotesque and Manrope as variable woff2 files per script subset, the two Latin ones preloaded. No request to Google any more, so no visitor IP leaves the site (German courts have ruled embedded Google Fonts a GDPR breach); one less third-party connection, and the Content-Security-Policy no longer allows Google's domains.
-- Social card (`og.png`): same design; the empty lower half now carries the main stack (React · TypeScript · Node.js · PostgreSQL). It is rendered with the self-hosted fonts.
 
 ### Removed
 - `foto.jpg` from the Service Worker pre-cache (the page does not use it; every visitor downloaded 96 KB for nothing).
 - The Google Fonts workaround in the build and check scripts.
 
-## [2.4.2] - 2026-10-20
+## [2.5.0] - 2026-11-11
 
 ### Changed
-- **The theme switch is back in the phone bar** (Language · PDF · theme · menu): the transition is worth having at hand. The menu keeps only the extras: letter, PDF with letter, PDF options, photo and share.
-- **Portrait on: a proper header.** On tablets and wider it is a three-part row (portrait · name · contacts), vertically centred, with the name a step smaller so it keeps two lines; it no longer floats above the title. On phones it is a round avatar beside the two-line name, in the space that was already there, so the first screen does not grow.
+- **Section order: profile → experience → projects → skills → education → languages.** The strongest material (internship and projects) is now in the first half of the page and of the PDF; the ATS reading-order check follows the new order.
+- Profile rewritten as three factual sentences (stack, internship and published apps, graduation date) in all 23 languages. Role line is "Full Stack and DevOps" (no "Cloud").
+- Each project is two one-line bullets instead of a paragraph; the internship bullets start with a verb (es, en).
+- Skills and project stacks are plain text (main skills in bold) instead of pills and boxed tags. Removed the skills that added least: Bash, C, Vite, HTML5/CSS3, REST APIs and Git.
+- Dark theme accent is the portfolio's blue; the light theme and the PDF keep the gold.
 
 ### Removed
-- The unused `menu_theme` text.
+- High school and the list of degree subjects.
 
 ## [2.4.1] - 2026-10-19
 

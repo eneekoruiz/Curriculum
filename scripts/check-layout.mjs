@@ -4,8 +4,8 @@
 //  - no text clipped by its own box (overflow hidden/ellipsis)
 //  - the language menu fits the screen when open
 //  - the cover letter and PDF options dialogs open whole inside the screen; the letter scrolls to its signature
-//  - the opt-in portrait, switched on: sized for the screen, whole on screen, clear of the name and contacts, opens the photo dialog
-//  - the top bar: language · PDF · theme · menu up to 920px (menu whole on screen, 44px targets), the full bar above it
+//  - the opt-in portrait, switched on: large, whole on screen, clear of the contacts, opens the photo dialog
+//  - the top bar: language · PDF · menu up to 920px (menu whole on screen, 44px targets), the full bar above it
 //  - the PDF preview appears whole on hover, stays while the PDF is prepared and hides when the toast shows
 //  - tap targets on phones are at least 24×24 CSS px (WCAG 2.2, 2.5.8)
 //  - no JavaScript errors and no failed requests
@@ -15,7 +15,7 @@
 import { ROOT, loadTranslations, startServer, launch } from './lib.mjs';
 
 const SIZES = [[1920, 1080], [1440, 900], [1366, 768], [1280, 720], [1024, 768], [900, 700], [820, 1180], [768, 1024],
-  [700, 900], [600, 900], [480, 800], [430, 932], [390, 844], [375, 667], [360, 640], [320, 568], [844, 390], [667, 375]];
+  [700, 900], [600, 900], [480, 800], [430, 932], [390, 844], [375, 667], [360, 640], [320, 568], [844, 390], [667, 375], [812, 305]];
 const { langs: all } = loadTranslations();
 const LANGS = (process.argv[2] || 'es,en,de,ru,ar,ja').split(',');
 for (const l of LANGS) if (!all.includes(l)) throw new Error(`unknown language "${l}"`);
@@ -72,6 +72,13 @@ for (const lang of LANGS) {
       return out;
     }, width <= 700));
 
+    const footer = await page.evaluate(() => {
+      const icon = document.querySelector('.footer-icon').getBoundingClientRect();
+      const link = document.querySelector('.footer-link');
+      return { iconWidth: icon.width, iconHeight: icon.height, fontSize: parseFloat(getComputedStyle(link).fontSize), height: link.getBoundingClientRect().height };
+    });
+    if (footer.iconWidth > 16 || footer.iconHeight > 16 || footer.fontSize > 12 || footer.height > 44) issues.push('footer: source link or icon is oversized');
+
     const trigger = page.locator('#lang-trigger');
     if (await trigger.isVisible()) {
       await trigger.click();
@@ -88,30 +95,38 @@ for (const lang of LANGS) {
         return { shown: getComputedStyle(el).visibility === 'visible' && Number(getComputedStyle(el).opacity) > 0.9, l: r.left, r: r.right, b: r.bottom };
       });
       await printButton.hover();
-      await page.waitForTimeout(600);
+      await page.waitForFunction(() => {
+        const style = getComputedStyle(document.querySelector('.pdf-preview'));
+        return style.visibility === 'visible' && Number(style.opacity) > 0.9;
+      }, null, { timeout: 3000 }).catch(() => {});
       let p = await previewState();
       if (!p.shown) issues.push('PDF preview does not show on hover');
       else if (p.l < -1 || p.r > width + 1 || p.b > height + 1) issues.push(`PDF preview cut on hover [${Math.round(p.l)}, ${Math.round(p.r)}] bottom ${Math.round(p.b)}`);
       await page.mouse.move(width / 2, height / 2);
       await page.evaluate(() => document.getElementById('print-btn').setAttribute('data-loading', 'true'));
-      await page.waitForTimeout(600);
+      await page.waitForFunction(() => {
+        const style = getComputedStyle(document.querySelector('.pdf-preview'));
+        return style.visibility === 'visible' && Number(style.opacity) > 0.9;
+      }, null, { timeout: 3000 }).catch(() => {});
       p = await previewState();
       if (!p.shown) issues.push('PDF preview hides while the PDF is being prepared');
       else if (p.l < -1 || p.r > width + 1 || p.b > height + 1) issues.push(`PDF preview cut while preparing [${Math.round(p.l)}, ${Math.round(p.r)}]`);
       await page.evaluate(() => document.getElementById('print-btn').classList.add('is-success'));
-      await page.waitForTimeout(600);
+      await page.waitForFunction(() => {
+        const style = getComputedStyle(document.querySelector('.pdf-preview'));
+        return style.visibility === 'hidden' && Number(style.opacity) === 0;
+      }, null, { timeout: 3000 }).catch(() => {});
       p = await previewState();
       if (p.shown) issues.push('PDF preview stays visible after the download finished');
     }
-    // Top bar: phones/tablets get language · PDF · menu; the secondary controls live in the menu
+    // Sharing and theme stay outside the three document options on phones/tablets.
     const bar = await page.evaluate(() => {
       const shown = (selector) => { const el = document.querySelector(selector); return !!el && getComputedStyle(el).display !== 'none' && el.getBoundingClientRect().width > 0; };
-      return { more: shown('#more-btn'), pdf: shown('#print-btn'), others: ['#print-opts-btn', '#letter-btn'].filter(shown), theme: shown('#theme-btn') && document.querySelector('#theme-btn').getBoundingClientRect().height >= 44 };
+      return { more: shown('#more-btn'), pdf: shown('#print-btn'), share: shown('#share-btn'), theme: shown('#theme-btn'), others: ['#print-opts-btn', '#letter-btn', '#photo-btn'].filter(shown) };
     });
     if (width <= 920) {
-      if (!bar.more || !bar.pdf) issues.push('top bar: the PDF button or the menu button is missing');
+      if (!bar.more || !bar.pdf || !bar.theme || !bar.share) issues.push('top bar: PDF, share, theme or menu button is missing');
       if (bar.others.length) issues.push(`top bar: ${bar.others.join(', ')} still crowd the bar (they belong in the menu)`);
-      if (!bar.theme) issues.push('top bar: the theme button is missing or smaller than 44px');
       await page.evaluate(() => document.getElementById('lang-menu').classList.remove('open'));
       await page.click('#more-btn');
       await page.waitForTimeout(350);
@@ -122,7 +137,7 @@ for (const lang of LANGS) {
       });
       if (menu.open !== 'true') issues.push('top bar: the menu button does not report the menu as open');
       if (menu.l < -1 || menu.r > width + 1 || menu.b > height + 1) issues.push(`top bar: menu outside the screen [${Math.round(menu.l)}, ${Math.round(menu.r)}] bottom ${Math.round(menu.b)}`);
-      if (menu.items < 4 || menu.small) issues.push(`top bar: menu has ${menu.items} items, ${menu.small} under 44px tall`);
+      if (menu.items !== 3 || menu.small) issues.push(`top bar: menu has ${menu.items} items, ${menu.small} under 44px tall`);
       await page.keyboard.press('Escape');
       if ((await page.evaluate(() => document.getElementById('more-btn').getAttribute('aria-expanded'))) !== 'false') issues.push('top bar: Escape does not close the menu');
     } else if (bar.more) {
@@ -134,17 +149,71 @@ for (const lang of LANGS) {
     await page.waitForTimeout(200);
     const portrait = await page.evaluate(() => {
       const r = document.getElementById('portrait-btn').getBoundingClientRect();
-      const name = document.querySelector('h1').getBoundingClientRect();
-      const contacts = document.querySelector('.contacts').getBoundingClientRect();
+      const name = document.querySelector('.site-header h1').getBoundingClientRect();
+      const phone = document.querySelector('.site-header [href^="tel:"] .ct');
+      const contacts = document.querySelector('.site-header .contacts').getBoundingClientRect();
       const overlap = (a, b) => a.left < b.right - 1 && a.right > b.left + 1 && a.top < b.bottom - 1 && a.bottom > b.top + 1;
-      return { l: r.left, r: r.right, w: r.width, name: overlap(r, name), contacts: overlap(r, contacts), scroll: document.documentElement.scrollWidth };
+      return { l: r.left, r: r.right, w: r.width, top: r.top, nameTop: name.top, phoneLines: phone.getBoundingClientRect().height / parseFloat(getComputedStyle(phone).lineHeight), name: overlap(r, name), contacts: overlap(r, contacts), scroll: document.documentElement.scrollWidth };
     });
-    if (portrait.w < (width <= 700 ? 70 : 90)) issues.push(`portrait: only ${Math.round(portrait.w)}px wide`);
+    if (portrait.w < (width > 860 && height > 500 ? 150 : 88)) issues.push(`portrait: only ${Math.round(portrait.w)}px wide`);
     if (portrait.l < -1 || portrait.r > width + 1 || portrait.scroll > width + 1) issues.push(`portrait: outside the screen [${Math.round(portrait.l)}, ${Math.round(portrait.r)}]`);
     if (portrait.name || portrait.contacts) issues.push('portrait: overlaps the name or the contacts');
+    if (width <= 860 && Math.abs(portrait.top - portrait.nameTop) > 2) issues.push('portrait: must sit beside the name on compact screens');
+    if (width <= 380 && portrait.phoneLines > 1.1) issues.push('portrait: phone number must fit on one line');
+    const photoLayout = await page.evaluate(() => {
+      const profile = document.querySelector('.hero .profile').getBoundingClientRect();
+      const W = document.documentElement.clientWidth;
+      const clippedContacts = [...document.querySelectorAll('.site-header .contact-row span')].some(el => {
+        const r = el.getBoundingClientRect();
+        if (r.width <= 2) return false;
+        const range = document.createRange();
+        range.selectNodeContents(el);
+        const tr = range.getBoundingClientRect();
+        if (tr.right > W + 1 || tr.left < -1) return true;
+        return el.scrollWidth > el.clientWidth + 1 && /hidden|clip/.test(getComputedStyle(el).overflow);
+      });
+      const topbar = document.getElementById('topbar').getBoundingClientRect();
+      const headerMain = document.querySelector('.site-header h1').getBoundingClientRect();
+      const topbarOverlap = headerMain.top < topbar.bottom - 1;
+      return { profileTop: profile.top + scrollY, profileBottom: profile.bottom + scrollY, clippedContacts, topbarOverlap };
+    });
+    if (portrait.w > (width <= 860 ? 120 : 216) + 1) issues.push('portrait: too large for the compact header');
+    if (photoLayout.clippedContacts) issues.push('portrait: contact text is cut');
+    if (photoLayout.topbarOverlap) issues.push('topbar: overlaps header content');
+    if (width >= 900 && height >= 700 && photoLayout.profileBottom > height) issues.push('portrait: professional profile must fit on the first desktop screen');
+    if (lang === 'es' && photoLayout.profileTop > height - 48) issues.push('portrait: professional profile must start on the first screen');
     await page.click('#portrait-btn');
     await page.waitForTimeout(250);
     if (!(await page.evaluate(() => document.getElementById('photo-dialog').open))) issues.push('portrait: click does not open the photo dialog');
+    const photoModal = await page.evaluate(() => {
+      const dialog = document.getElementById('photo-dialog');
+      const dBox = dialog.getBoundingClientRect();
+      const card = dialog.querySelector('.photo-card');
+      const image = document.querySelector('.photo-avatar-wrap').getBoundingClientRect();
+      const frameSpace = card.clientWidth - image.width;
+      const text = [...dialog.querySelectorAll('.photo-name')];
+      const prevSizes = text.map(el => el.style.fontSize);
+      const largeSizes = text.map(el => `${parseFloat(getComputedStyle(el).fontSize) * 2}px`);
+      text.forEach((el, i) => { el.style.fontSize = largeSizes[i]; });
+      const enlargedImage = dialog.querySelector('.photo-avatar-wrap').getBoundingClientRect();
+      const scrollable = card && card.scrollHeight > card.clientHeight ? /auto|scroll/.test(getComputedStyle(card).overflowY) : true;
+      card.scrollTop = card.scrollHeight;
+      const cardBox = card.getBoundingClientRect();
+      const textReachable = dialog.querySelector('.photo-info').getBoundingClientRect().bottom <= cardBox.bottom + 1;
+      const closeBox = dialog.querySelector('.photo-close').getBoundingClientRect();
+      const closeReachable = closeBox.top >= cardBox.top - 1 && closeBox.bottom <= cardBox.bottom + 1;
+      text.forEach((el, i) => { el.style.fontSize = prevSizes[i]; });
+      card.scrollTop = 0;
+      const square = Math.abs(image.width - image.height) <= 1 && Math.abs(enlargedImage.width - enlargedImage.height) <= 1;
+      return { width: image.width, frameSpace, square, left: dBox.left, right: dBox.right, top: dBox.top, bottom: dBox.bottom, scrollable, textReachable, closeReachable };
+    });
+    if (!photoModal.scrollable) issues.push('portrait: modal content exceeds area but cannot scroll');
+    if (!photoModal.square) issues.push('portrait: modal photo loses its square aspect ratio with enlarged text');
+    if (photoModal.frameSpace > 26) issues.push('portrait: modal frame leaves unnecessary space beside the photo');
+    if (!photoModal.closeReachable) issues.push('portrait: close control must stay visible while scrolling');
+    if (!photoModal.textReachable) issues.push('portrait: enlarged modal text cannot be reached by scrolling');
+    if (photoModal.width < portrait.w * 1.5) issues.push('portrait: enlarged photo must be noticeably bigger than the inline portrait');
+    if (photoModal.left < -1 || photoModal.right > width + 1 || photoModal.top < -1 || photoModal.bottom > height + 1) issues.push('portrait: photo dialog is outside the viewport');
     await page.keyboard.press('Escape');
     await page.evaluate(() => document.getElementById('photo-btn').click());
 

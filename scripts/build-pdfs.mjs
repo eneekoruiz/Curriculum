@@ -6,20 +6,20 @@
 //                                  rebuild), if a committed PDF breaks an ATS rule, or if a fresh
 //                                  render in this browser breaks one
 //
-// Staleness is judged on the sources (a hash of the files the PDFs are made from), not on the PDF
+// Each PDF carries its source hash, language and variant in its metadata, not a hash of the PDF
 // bytes or text: those shift slightly between Chromium versions without any content change.
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { createHash } from 'node:crypto';
-import { PDFDocument } from 'pdf-lib';
+import { PDFDocument, PDFName } from 'pdf-lib';
 import { ROOT, PRINT_VIEWPORT, VARIANTS, variantName, loadTranslations, pdfPath, startServer, launch, pdfText } from './lib.mjs';
 
 const CHECK = process.argv.includes('--check');
 const { T, M, langs } = loadTranslations();
 
 /** Files the PDFs are rendered from; any change to them requires a rebuild. */
-const SOURCES = ['index.html', 'print.css', 'translations.js', 'index.js', 'foto-small.jpg'];
+const SOURCES = ['index.html', 'print.css', 'translations.js', 'index.js', 'theme.js', 'foto-small.jpg', 'scripts/lib.mjs', 'scripts/build-pdfs.mjs'];
 const sourceHash = () => {
   const hash = createHash('sha1');
   // Normalise line endings of the text files: Windows checkouts use CRLF, CI (Linux) uses LF; the hash must not depend on it.
@@ -57,7 +57,7 @@ async function renderOnePage(page, { letter }) {
   const expectedPages = letter ? 2 : 1;
   let zoom = await page.evaluate(() => window.fitPrintToOnePage());
   for (;;) {
-    const buffer = await page.pdf({ format: 'A4', printBackground: true, preferCSSPageSize: true });
+    const buffer = await page.pdf({ format: 'A4', printBackground: true, preferCSSPageSize: true, tagged: true });
     if ((await pdfText(buffer)).pages === expectedPages || zoom <= 0.8) {
       return { buffer, zoom, role: await roleSize(page), roleWrapped: await roleWraps(page), letterZoom: letter ? await letterZoom(page) : null };
     }
@@ -84,26 +84,29 @@ function atsProblems(lang, { pages, text: fullText }, { letter }) {
   const cvStart = letter ? fullText.indexOf(email, fullText.indexOf(email) + 1) : 0;
   const text = cvStart > 0 ? fullText.slice(cvStart) : fullText;
   const at = (s, from = 0) => text.indexOf(s, from);
-  // Education → languages → experience → projects (the section order of the page)
-  const order = [at('UPV/EHU')];
+  // Experience → languages → projects → skills → education (the section order of the page)
   // Project titles are translated, so the first and last project are found by their stack
-  order.push(at('C1', order[0]), at('SST PRO DYNAMICS'), at('Resend'), at('Capacitor'));
+  const order = [at('SST PRO DYNAMICS')];
+  order.push(at('C1', order[0]));
+  order.push(at('Resend', order[1]), at('Capacitor', order[1]), at('GitHub Actions', at('Capacitor', order[1])));
+  order.push(at('UPV/EHU', order[4]));
   if (order.some(i => i < 0) || order.some((i, n) => n && i <= order[n - 1])) problems.push(`reading order broken ${JSON.stringify(order)}`);
   if (/[ﬀ-ﬆ]/.test(fullText)) problems.push('contains ligature glyphs (ﬁ/ﬂ…) that break keyword search');
-  for (const needle of ['eneekoruiz@gmail.com', '+34 600 02 51 61', 'linkedin.com/in/eneko-ruiz-421254410', 'github.com/eneekoruiz']) {
+  for (const needle of ['eneekoruiz@gmail.com', '+34 600 02 51 61', 'linkedin.com/in/eneekoruiz', 'github.com/eneekoruiz']) {
     if (!fullText.includes(needle)) problems.push(`missing "${needle}"`);
   }
   return problems;
 }
 
-async function withMetadata(buffer, lang, title) {
+async function withMetadata(buffer, lang, title, creator) {
   const doc = await PDFDocument.load(buffer);
+  if (!doc.catalog.has(PDFName.of('StructTreeRoot'))) throw new Error(`Missing PDF tags: ${creator}`);
   doc.setTitle(title);
   doc.setAuthor('Eneko Ruiz Mollón');
   doc.setSubject(T[lang].meta_desc);
   doc.setKeywords(KEYWORDS);
   doc.setLanguage(lang);
-  doc.setCreator('eneko-cv build-pdfs');
+  doc.setCreator(creator);
   return Buffer.from(await doc.save());
 }
 
@@ -121,7 +124,7 @@ const committedSource = (() => {
 
 if (CHECK && committedSource !== sourceHash()) {
   failures.push('sources');
-  console.log('✗ PDFs are out of date with index.html / print.css / translations.js / index.js / foto-small.jpg: run `npm run build` in scripts/ and commit pdf/ and print-zoom.js');
+  console.log('✗ PDFs are out of date with their sources or build script: run `npm run build` in scripts/ and commit pdf/ and print-zoom.js');
 }
 
 try {
@@ -145,7 +148,8 @@ try {
       if (variant.letter && variant.photo) fits[lang].letter = letterFit || 1;
       summary.push(`${zoom.toFixed(2)}${letterFit ? `/${letterFit.toFixed(2)}` : ''}`);
 
-      const pdf = await withMetadata(raw, lang, title);
+      const creator = `eneko-cv build-pdfs ${sourceHash()} ${lang}${variantName(variant)}`;
+      const pdf = await withMetadata(raw, lang, title, creator);
       const found = atsProblems(lang, await pdfText(pdf), variant).map(p => `render ${name}: ${p}`);
       if (roleWrapped) found.push(`render ${name}: the role line is split over two lines`);
       if (variant.letter && letterFit && letterFit < 0.8) found.push(`render ${name}: the letter had to shrink to ${letterFit}`);
@@ -155,7 +159,15 @@ try {
         if (!existsSync(committed)) {
           found.push(`missing ${committed.replace(ROOT, '')}`);
         } else {
-          found.push(...atsProblems(lang, await pdfText(await readFile(committed)), variant).map(p => `committed ${name}: ${p}`));
+          const committedBytes = await readFile(committed);
+          const committedDoc = await PDFDocument.load(committedBytes);
+          if (committedDoc.getCreator() !== creator) {
+            found.push(`committed ${name}: source hash, language or variant is out of date`);
+          }
+          if (!committedDoc.catalog.has(PDFName.of('StructTreeRoot'))) {
+            found.push(`committed ${name}: missing PDF tags`);
+          }
+          found.push(...atsProblems(lang, await pdfText(committedBytes), variant).map(p => `committed ${name}: ${p}`));
         }
       } else {
         await writeFile(pdfPath(lang, variant), pdf);

@@ -43,7 +43,8 @@ try {
     const errors = [];
     page.on('pageerror', error => errors.push(error.message));
     await page.goto(`${origin}/?lang=es`, { waitUntil: 'networkidle' });
-    await page.waitForFunction(() => !document.documentElement.classList.contains('cv-loading'), null, { timeout: 5000 });
+    await page.waitForFunction(() => !document.documentElement.classList.contains('cv-loading'), null, { timeout: 15000 });
+    await page.evaluate(() => document.fonts.ready);
     const m = await page.evaluate(() => {
       const box = selector => document.querySelector(selector).getBoundingClientRect();
       return {
@@ -74,8 +75,23 @@ try {
     await page.setViewportSize({ width: 1366, height: 800 });
     await page.goto(`${origin}/?lang=${lang}`, { waitUntil: 'networkidle' });
     await page.waitForFunction(() => !document.documentElement.classList.contains('cv-loading'));
-    await page.evaluate(() => window.dispatchEvent(new Event('beforeprint')));
+    const scrollBefore = await page.evaluate(() => {
+      document.querySelector('.footer-link').focus({ preventScroll: true });
+      window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'instant' });
+      return window.scrollY;
+    });
+    await page.evaluate(() => {
+      delete window.PRINT_FIT; // Browser printing must measure this browser's font metrics.
+      window.dispatchEvent(new Event('beforeprint'));
+    });
+    const mediaRestored = await page.evaluate(() =>
+      document.body.style.width === '' &&
+      document.querySelector('link[href="index.css"]').media === 'screen' &&
+      document.querySelector('link[href="print.css"]').media === 'print');
+    if (!mediaRestored) fail(`Ctrl+P (${lang}): temporary print styles leaked into the screen layout`);
     const { pages, text } = await pdfText(await page.pdf({ format: 'A4', printBackground: true, preferCSSPageSize: true }));
+    const returnState = await page.evaluate(() => ({ y: window.scrollY, focused: document.activeElement.matches('.footer-link') }));
+    if (Math.abs(returnState.y - scrollBefore) > 1 || !returnState.focused) fail(`Ctrl+P (${lang}): reading position or keyboard focus was lost`);
     if (pages !== 1) fail(`Ctrl+P (${lang}): ${pages} pages`);
     if (!text.includes('Capacitor') || !text.includes('UPV/EHU')) fail(`Ctrl+P (${lang}): sections missing from the printout`);
     await page.close();
@@ -194,11 +210,17 @@ try {
   {
     const fresh = await browser.newContext({ acceptDownloads: true, viewport: { width: 390, height: 844 } });
     const page = await fresh.newPage();
+    await page.addInitScript(() => {
+      Object.defineProperty(navigator, 'share', { value: async data => { window.__shared = data; } });
+    });
     await page.goto(`${origin}/?lang=es`, { waitUntil: 'networkidle' });
     await page.waitForFunction(() => !document.documentElement.classList.contains('cv-loading'));
     const visible = (selector) => page.evaluate((s) => getComputedStyle(document.querySelector(s)).display !== 'none', selector);
-    for (const selector of ['#lang-trigger', '#print-btn', '#theme-btn', '#more-btn']) if (!(await visible(selector))) fail(`phone bar: ${selector} is not shown`);
-    for (const selector of ['#print-opts-btn', '#letter-btn', '#share-btn', '#photo-btn']) if (await visible(selector)) fail(`phone bar: ${selector} crowds the bar`);
+    for (const selector of ['#lang-trigger', '#print-btn', '#share-btn', '#theme-btn', '#more-btn']) if (!(await visible(selector))) fail(`phone bar: ${selector} is not shown`);
+    for (const selector of ['#print-opts-btn', '#letter-btn', '#photo-btn']) if (await visible(selector)) fail(`phone bar: ${selector} crowds the bar`);
+    if (await page.locator('#more-menu .mm-item').count() !== 3) fail('phone menu: must contain only photo, PDF options and cover letter');
+    await page.click('#share-btn');
+    if (await page.evaluate(() => window.__shared?.url) !== page.url()) fail('phone share: the visible button did not share the current URL');
 
     const openMenu = async () => { await page.click('#more-btn'); await page.waitForTimeout(300); };
     const choose = (text) => page.locator('#more-menu .mm-item', { hasText: text }).click();
@@ -213,7 +235,7 @@ try {
     if ((await portrait()).shown) fail('portrait: shown by default, it must be opt-in');
     await choose(T.es.btn_photo);
     const shown = await portrait();
-    if (!shown.on || !shown.shown || shown.w < 70 || shown.pressed !== 'true') fail(`portrait (phone): after switching on it is ${JSON.stringify(shown)}`);
+    if (!shown.on || !shown.shown || shown.w < 88 || shown.pressed !== 'true') fail(`portrait (phone): after switching on it is ${JSON.stringify(shown)}`);
     await page.click('#portrait-btn');
     if (!(await page.evaluate(() => document.getElementById('photo-dialog').open))) fail('portrait (phone): a click did not open the photo dialog');
     await page.keyboard.press('Escape');
@@ -226,32 +248,32 @@ try {
     await page.keyboard.press('Escape');
     const theme = () => page.evaluate(() => document.documentElement.getAttribute('data-theme'));
     const before = await theme();
-    await page.click('#theme-btn');   // the theme switch stays in the bar, one tap
+    await page.click('#theme-btn');
     await page.waitForTimeout(900);   // the theme change plays a short transition
     if ((await theme()) === before) fail('phone bar: the theme button did not switch the theme');
     await openMenu();
     await page.mouse.click(20, 400);
     if ((await page.getAttribute('#more-btn', 'aria-expanded')) !== 'false') fail('phone menu: a tap outside did not close it');
 
-    // The PDF button downloads at once; the offer after it gets the cover-letter variant; the menu has the same shortcut
+    // The PDF button downloads at once cleanly without interruptions
     const [plain] = await Promise.all([page.waitForEvent('download'), page.click('#print-btn')]);
     if (plain.suggestedFilename() !== 'Eneko_Ruiz_CV_ES.pdf') fail(`phone PDF button: downloaded "${plain.suggestedFilename()}" instead of Eneko_Ruiz_CV_ES.pdf`);
-    await page.waitForSelector('.pdf-snack', { timeout: 5000 }).catch(() => fail('phone PDF button: no offer for the cover letter after the download'));
-    const [offered] = await Promise.all([page.waitForEvent('download'), page.click('.pdf-snack button')]);
-    if (offered.suggestedFilename() !== 'Eneko_Ruiz_CV_ES_Letter.pdf') fail(`phone PDF offer: downloaded "${offered.suggestedFilename()}"`);
-    if (await page.locator('.pdf-snack').count()) fail('phone PDF offer: it stays after being used');
-    await openMenu();
-    const [viaMenu] = await Promise.all([page.waitForEvent('download'), choose(T.es.menu_pdf_letter)]);
-    const letterPdf = await pdfText(readFileSync(await viaMenu.path()));
-    if (viaMenu.suggestedFilename() !== 'Eneko_Ruiz_CV_ES_Letter.pdf' || letterPdf.pages !== 2) fail(`phone menu: "PDF with letter" gave ${viaMenu.suggestedFilename()} with ${letterPdf.pages} pages`);
-    // ...and none of this changed the saved options
-    if ((await page.evaluate(() => localStorage.getItem('cv-print-options'))) !== null) fail('phone menu: asking for the letter changed the saved options');
+    if (await page.locator('.pdf-snack').count() > 0) fail('phone PDF button: snackbar should not appear');
+    if ((await page.evaluate(() => localStorage.getItem('cv-print-options'))) !== null) fail('phone menu: download changed the saved options');
     await fresh.close();
 
     const wide = await browser.newContext({ viewport: { width: 1366, height: 800 } });
     const desktop = await wide.newPage();
     await desktop.goto(`${origin}/?lang=es`, { waitUntil: 'networkidle' });
     if (await desktop.evaluate(() => document.getElementById('more-btn').getBoundingClientRect().width > 0)) fail('wide bar: the phone menu button is shown');
+    const splitOk = await desktop.evaluate(() => {
+      const p = document.getElementById('photo-btn').getBoundingClientRect();
+      const l = document.getElementById('letter-btn').getBoundingClientRect();
+      const d = document.getElementById('print-btn').getBoundingClientRect();
+      return !document.querySelector('#photo-btn span') && !document.querySelector('#letter-btn span') &&
+        p.left < l.left && Math.abs(l.left - (p.right - 1)) <= 1.5 && Math.abs(p.height - d.height) <= 1.5;
+    });
+    if (!splitOk) fail('wide bar: photo and letter buttons must form a single icon-only split pill aligned with the PDF pill');
     await desktop.click('#photo-btn');
     const big = await desktop.evaluate(() => document.getElementById('portrait-btn').getBoundingClientRect().width);
     if (big < 150) fail(`portrait (wide): only ${Math.round(big)}px wide`);
