@@ -28,7 +28,7 @@ for (const lang of LANGS) {
     const page = await context.newPage();
     const issues = [];
     page.on('pageerror', e => issues.push(`JavaScript error: ${e.message}`));
-    page.on('requestfailed', r => { if (!/_vercel|googleapis|gstatic/.test(r.url())) issues.push(`request failed: ${r.url()}`); });
+    page.on('requestfailed', r => { if (!/_vercel/.test(r.url())) issues.push(`request failed: ${r.url()}`); });
     page.on('response', r => { if (r.status() >= 400 && !/_vercel/.test(r.url())) issues.push(`HTTP ${r.status()}: ${r.url()}`); });
     await page.setViewportSize({ width, height });
     await page.goto(`${origin}/?lang=${lang}`, { waitUntil: 'networkidle' });

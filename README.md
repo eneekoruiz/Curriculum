@@ -27,3 +27,9 @@ npx serve .
 # o con Python
 python -m http.server 8080
 ```
+
+## Enlace personalizado por candidatura
+
+Añade `?para=` con el nombre de la empresa al enlace que envías, por ejemplo
+`https://eneko-ruiz-curriculum.vercel.app/?para=Iberdrola`. La carta de presentación (web y PDF con carta)
+incluirá una frase con ese nombre. Se combina con el idioma: `?lang=en&para=Iberdrola`.

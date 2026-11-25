@@ -96,6 +96,13 @@ module.exports = async function handler(request, response) {
     // Same options as the download dialog: ?photo=0 leaves the photo out, ?letter=1 puts the cover letter first
     const withPhoto = String(request.query?.photo) !== '0';
     const withLetter = String(request.query?.letter) === '1';
+    // ?para=Company: the letter names the company (same plain-text filter as the page)
+    const company = String(request.query?.para || '')
+      .normalize('NFC')
+      .replace(/[^\p{L}\p{N} &.,'’()+-]/gu, '')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .slice(0, 40);
     // Production's deployment URL can be protected even when the public alias is open.
     const deploymentHost = process.env.VERCEL_ENV !== 'production' && process.env.VERCEL_URL;
     const site = new URL(deploymentHost
@@ -104,6 +111,9 @@ module.exports = async function handler(request, response) {
     const localTest = !process.env.VERCEL && site.protocol === 'http:' && site.hostname === '127.0.0.1';
     if (site.protocol !== 'https:' && !localTest) throw new Error('Invalid PDF site origin');
     const targetUrl = new URL(`/?pdf=1&lang=${lang}&theme=light`, site.origin);
+    if (withLetter && company) {
+      targetUrl.searchParams.set('para', company);
+    }
 
     const browser = await getBrowser();
     page = await browser.newPage();

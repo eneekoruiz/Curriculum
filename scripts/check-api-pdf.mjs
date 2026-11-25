@@ -49,6 +49,20 @@ for (const lang of ['es', 'en', 'ru']) {
  }
 }
 
+// The personalised link: ?para= names the company in the letter, as plain text only
+{
+  const response = { headers: {}, setHeader(key, value) { this.headers[key] = value; }, status(code) { this.code = code; return this; }, json(body) { this.body = JSON.stringify(body); }, end(body) { this.body = body; } };
+  await handler({ method: 'GET', query: { lang: 'es', letter: '1', para: 'Acme <b>Corp</b>' }, headers: { host: `127.0.0.1:${port}`, 'x-forwarded-proto': 'http' } }, response);
+  if (response.code !== 200 || !Buffer.isBuffer(response.body)) {
+    failures.push(`es letter for a company: status ${response.code}`);
+  } else {
+    const { pages, text } = await pdfText(response.body);
+    if (pages !== 2) failures.push(`es letter for a company: ${pages} pages (must be 2)`);
+    if (!text.includes('Acme bCorpb') || text.includes('<')) failures.push('es letter for a company: the company is not named as plain text');
+    console.log(`api/pdf es + letter for a company: ${pages} page(s)`);
+  }
+}
+
 server.close();
 if (failures.length) {
   console.log(failures.map(f => `✗ ${f}`).join('\n'));
