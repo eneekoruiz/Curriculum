@@ -240,6 +240,14 @@ try {
     const desktop = await wide.newPage();
     await desktop.goto(`${origin}/?lang=es`, { waitUntil: 'networkidle' });
     if (await desktop.evaluate(() => document.getElementById('more-btn').getBoundingClientRect().width > 0)) fail('wide bar: the phone menu button is shown');
+    const splitOk = await desktop.evaluate(() => {
+      const p = document.getElementById('photo-btn').getBoundingClientRect();
+      const l = document.getElementById('letter-btn').getBoundingClientRect();
+      const d = document.getElementById('print-btn').getBoundingClientRect();
+      return !document.querySelector('#photo-btn span') && !document.querySelector('#letter-btn span') &&
+        p.left < l.left && Math.abs(l.left - (p.right - 1)) <= 1.5 && Math.abs(p.height - d.height) <= 1.5;
+    });
+    if (!splitOk) fail('wide bar: photo and letter buttons must form a single icon-only split pill aligned with the PDF pill');
     await desktop.click('#photo-btn');
     const big = await desktop.evaluate(() => document.getElementById('portrait-btn').getBoundingClientRect().width);
     if (big < 150) fail(`portrait (wide): only ${Math.round(big)}px wide`);

@@ -374,33 +374,55 @@ html.cv-loading *:not(.precision-motion, .precision-motion *) {
   position: relative;
 }
 
-/* PDF button + its options: one capsule, two buttons, so the options read as part of the download */
-.pdf-split {
+/* Split capsules: one pill, two adjacent controls (PDF + options, Photo + cover letter) */
+.ctrl-split {
   display: flex;
   align-items: stretch;
 }
 
 @media (min-width: 921px) {
-  .pdf-split > .ctrl:hover {
+  .ctrl-split > .ctrl[aria-pressed="true"] {
     z-index: 1;
+  }
+
+  .ctrl-split > .ctrl:hover {
+    z-index: 2;
     transform: none;
   }
 
-  .pdf-split > #print-btn {
+  .ctrl-split > .ctrl:focus-visible {
+    z-index: 3;
+  }
+
+  .ctrl-split > .ctrl:first-child {
     border-start-end-radius: 0;
     border-end-end-radius: 0;
   }
 
-  .pdf-split > #print-opts-btn {
+  .ctrl-split > .ctrl:last-child {
     margin-inline-start: -1px;
-    padding-inline: 12px;
     border-start-start-radius: 0;
     border-end-start-radius: 0;
+  }
+
+  .pdf-split > #print-opts-btn,
+  .doc-split > .ctrl {
+    padding-inline: 12px;
+  }
+
+  .doc-split > .ctrl {
+    min-height: 36px;
+    justify-content: center;
+  }
+
+  .doc-split > .ctrl svg {
+    width: 14px;
+    height: 14px;
   }
 }
 
 @media (max-width: 920px) {
-  .pdf-split {
+  .ctrl-split {
     display: contents;
   }
 }
@@ -3221,6 +3243,11 @@ html.scroll-reveal .dashboard > section.is-instant {
 #photo-btn[aria-pressed="true"] {
   background: var(--c-accent-b);
   border-color: var(--c-brand);
+  color: var(--c-brand-ink);
+}
+
+#photo-btn[aria-pressed="true"]:hover {
+  border-color: var(--c-brand-ink);
 }
 
 .mm-item[aria-pressed="true"]::after {

@@ -102,6 +102,9 @@ const applyTranslations = (langCode, activeMenuCode = langCode) => {
       
       if (translationKey.startsWith('aria_')) {
         element.setAttribute('aria-label', translatedValue);
+        if (element.classList.contains('ctrl') && !element.querySelector('span:not(.sr-only)')) {
+          element.setAttribute('title', translatedValue);
+        }
       } else {
         element.textContent = translatedValue;
       }
