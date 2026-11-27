@@ -190,14 +190,14 @@ try {
     await page.goto(`${origin}/?lang=es`, { waitUntil: 'networkidle' });
     await page.waitForFunction(() => !document.documentElement.classList.contains('cv-loading'));
     const visible = (selector) => page.evaluate((s) => getComputedStyle(document.querySelector(s)).display !== 'none', selector);
-    for (const selector of ['#lang-trigger', '#print-btn', '#share-btn', '#theme-btn', '#more-btn']) if (!(await visible(selector))) fail(`phone bar: ${selector} is not shown`);
-    for (const selector of ['#print-opts-btn', '#letter-btn', '#photo-btn']) if (await visible(selector)) fail(`phone bar: ${selector} crowds the bar`);
-    if (await page.locator('#more-menu .mm-item').count() !== 3) fail('phone menu: must contain only photo, PDF options and cover letter');
-    await page.click('#share-btn');
-    if (await page.evaluate(() => window.__shared?.url) !== page.url()) fail('phone share: the visible button did not share the current URL');
-
+    for (const selector of ['#lang-trigger', '#print-btn', '#theme-btn', '#more-btn']) if (!(await visible(selector))) fail(`phone bar: ${selector} is not shown`);
+    for (const selector of ['#print-opts-btn', '#letter-btn', '#photo-btn', '#share-btn']) if (await visible(selector)) fail(`phone bar: ${selector} crowds the bar`);
+    if (await page.locator('#more-menu .mm-item').count() !== 4) fail('phone menu: must contain photo, PDF options, cover letter and share');
     const openMenu = async () => { await page.click('#more-btn'); await page.waitForTimeout(300); };
     const choose = (text) => page.locator('#more-menu .mm-item', { hasText: text }).click();
+    await openMenu();
+    await choose(T.es.btn_share);
+    if (await page.evaluate(() => window.__shared?.url) !== page.url()) fail('phone share: the menu item did not share the current URL');
     await openMenu();
     if ((await page.getAttribute('#more-btn', 'aria-expanded')) !== 'true') fail('phone bar: the menu does not report itself open');
     await choose(T.es.letter_title);

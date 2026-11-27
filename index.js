@@ -118,11 +118,11 @@ const applyTranslations = (langCode, activeMenuCode = langCode) => {
   
   const langLabel = document.getElementById('lang-label');
   if (langLabel) {
-    langLabel.textContent = activeMenuCode === 'auto' ? 'Auto' : metadata.name;
+    langLabel.textContent = metadata.name;
   }
   const langShort = document.getElementById('lang-short');
   if (langShort) {
-    langShort.textContent = activeMenuCode === 'auto' ? 'Auto' : metadata.iso;
+    langShort.textContent = metadata.iso;
   }
   
   // Search Engine & Metadata synchronization
@@ -1068,6 +1068,10 @@ const setupScrollReveal = () => {
   if (shareButton) { 
     shareButton.hidden = !(navigator.share || navigator.clipboard);
     shareButton.addEventListener('click', handleShare);
+    const mmShare = document.getElementById('mm-share');
+    if (mmShare) {
+      mmShare.hidden = shareButton.hidden;
+    }
   }
 
   const vcardBtn = document.getElementById('vcard-btn');

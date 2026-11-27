@@ -119,13 +119,13 @@ for (const lang of LANGS) {
       p = await previewState();
       if (p.shown) issues.push('PDF preview stays visible after the download finished');
     }
-    // Sharing and theme stay outside the three document options on phones/tablets.
+    // Theme stays outside the menu on phones/tablets; share moves into the three-dots menu.
     const bar = await page.evaluate(() => {
       const shown = (selector) => { const el = document.querySelector(selector); return !!el && getComputedStyle(el).display !== 'none' && el.getBoundingClientRect().width > 0; };
-      return { more: shown('#more-btn'), pdf: shown('#print-btn'), share: shown('#share-btn'), theme: shown('#theme-btn'), others: ['#print-opts-btn', '#letter-btn', '#photo-btn'].filter(shown) };
+      return { more: shown('#more-btn'), pdf: shown('#print-btn'), share: shown('#share-btn'), theme: shown('#theme-btn'), others: ['#print-opts-btn', '#letter-btn', '#photo-btn', '#share-btn'].filter(shown) };
     });
     if (width <= 920) {
-      if (!bar.more || !bar.pdf || !bar.theme || !bar.share) issues.push('top bar: PDF, share, theme or menu button is missing');
+      if (!bar.more || !bar.pdf || !bar.theme) issues.push('top bar: PDF, theme or menu button is missing');
       if (bar.others.length) issues.push(`top bar: ${bar.others.join(', ')} still crowd the bar (they belong in the menu)`);
       await page.evaluate(() => document.getElementById('lang-menu').classList.remove('open'));
       await page.click('#more-btn');
@@ -137,7 +137,7 @@ for (const lang of LANGS) {
       });
       if (menu.open !== 'true') issues.push('top bar: the menu button does not report the menu as open');
       if (menu.l < -1 || menu.r > width + 1 || menu.b > height + 1) issues.push(`top bar: menu outside the screen [${Math.round(menu.l)}, ${Math.round(menu.r)}] bottom ${Math.round(menu.b)}`);
-      if (menu.items !== 3 || menu.small) issues.push(`top bar: menu has ${menu.items} items, ${menu.small} under 44px tall`);
+      if (menu.items !== 4 || menu.small) issues.push(`top bar: menu has ${menu.items} items, ${menu.small} under 44px tall`);
       await page.keyboard.press('Escape');
       if ((await page.evaluate(() => document.getElementById('more-btn').getAttribute('aria-expanded'))) !== 'false') issues.push('top bar: Escape does not close the menu');
     } else if (bar.more) {

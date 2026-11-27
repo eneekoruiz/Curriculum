@@ -364,6 +364,10 @@
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" /></svg>
           <span data-i18n="btn_photo">Foto</span>
         </button>
+        <button class="mm-item" id="mm-share" type="button" data-forward="#share-btn" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0-10.628a2.25 2.25 0 1 0 0-4.5 2.25 2.25 0 0 0 0 4.5Zm0 10.628a2.25 2.25 0 1 0 0-4.5 2.25 2.25 0 0 0 0 4.5Z" /></svg>
+          <span data-i18n="btn_share">Compartir</span>
+        </button>
       </div>
     </div>
     </div>
@@ -639,12 +643,12 @@
       </div>
     </dialog>
     <dialog id="letter-dialog" class="letter-dialog hide-print" aria-labelledby="cl-web-title">
+      <button id="letter-close-btn" class="photo-close" type="button" data-i18n="aria_close" aria-label="Cerrar">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+        </svg>
+      </button>
       <div class="letter-card">
-        <button id="letter-close-btn" class="photo-close" type="button" data-i18n="aria_close" aria-label="Cerrar">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-          </svg>
-        </button>
         <h3 class="cl-web-title" id="cl-web-title" data-i18n="letter_title">Carta de presentación</h3>
         <div class="cl-web-body">
         <p class="cl-p"><span data-i18n="letter_p1">p1</span></p>
